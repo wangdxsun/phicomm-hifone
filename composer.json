@@ -36,7 +36,8 @@
         "zizaco/entrust": "dev-laravel-5",
         "cmgmyr/messenger": "2.11",
         "barryvdh/laravel-debugbar": "dev-master",
-        "watson/sitemap": "^2.0"
+        "watson/sitemap": "^2.0",
+        "barryvdh/laravel-ide-helper": "^2.2"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.5",
@@ -70,16 +71,10 @@
             "php artisan key:generate"
         ],
         "post-install-cmd": [
-            "Illuminate\\Foundation\\ComposerScripts::postInstall",
-            "php artisan optimize --force",
-            "php artisan config:cache",
-            "php artisan route:cache"
+            "Illuminate\\Foundation\\ComposerScripts::postInstall"
         ],
         "post-update-cmd": [
-            "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-            "php artisan optimize --force",
-            "php artisan config:cache",
-            "php artisan route:cache"
+            "Illuminate\\Foundation\\ComposerScripts::postUpdate"
         ]
     },
     "config": {

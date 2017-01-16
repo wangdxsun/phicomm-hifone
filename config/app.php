@@ -187,6 +187,7 @@ return [
         Hifone\Providers\ParserServiceProvider::class,
         Hifone\Providers\RepositoryServiceProvider::class,
         Hifone\Providers\RouteServiceProvider::class,
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
     ],
 
     /*

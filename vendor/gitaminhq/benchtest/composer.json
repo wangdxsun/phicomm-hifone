@@ -1,0 +1,43 @@
+{
+    "name": "gitaminhq/benchtest",
+    "description": "BenchTest Provides Some Testing Functionality For Laravel 5",
+    "keywords": ["laravel", "framework", "BenchTest"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gitamin",
+            "email": "support@gitamin.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.9"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8|^5.0"
+    },
+    "suggest": {
+        "illuminate/support": "Required to use the laravel trait.",
+        "mockery/mockery": "Required to use the mockery trait.",
+        "phpunit/phpunit": "Required to use the most of the features."
+    },
+    "autoload": {
+        "psr-4": {
+            "GitaminHQ\\BenchTest\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\GitaminHQ\\BenchTest\\": "tests/"
+        }
+    },
+    "config": {
+        "preferred-install": "dist"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
