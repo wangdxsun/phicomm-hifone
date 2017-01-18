@@ -127,6 +127,15 @@ class ForumRoutes
                 'as'         => 'sitemap.show',
                 'uses'       => 'SitemapController@show',
             ]);
+            $router->get('/about', function () {
+                return view('other.about');
+            });
+            $router->get('/contact', function () {
+                return view('other.contact');
+            });
+            $router->get('/faq', function () {
+                return view('other.faq');
+            });
 
             $router->resource('node', 'NodeController');
             $router->resource('thread', 'ThreadController');
