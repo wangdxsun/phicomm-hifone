@@ -39,6 +39,8 @@ class UploadImageCommandHandler
         $safeNameOrig = $random_string.'_orig.'.$extension;
         //Path to LightBox Size
         $safeNameLightbox = $random_string.'_lightbox.'.$extension;
+        //If dir don't exists, then create
+        is_dir($destinationPath) || mkdir($destinationPath, 0777, true);
         // Copy the File for Preserving the Original Image
         copy($file, $destinationPath.'/'.$safeNameOrig);
         copy($file, $destinationPath.'/'.$safeNameLightbox);
