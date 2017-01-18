@@ -27,7 +27,7 @@ class AjaxRoutes
      */
     public function map(Registrar $router)
     {
-        $router->group(['middleware' => ['web', 'ready', 'auth']], function (Registrar $router) {
+        $router->group(['middleware' => ['web', 'auth']], function (Registrar $router) {
 
             //下沉
             $router->post('thread/{thread}/sink', [

@@ -27,7 +27,7 @@ class ZenRoutes
      */
     public function map(Registrar $router)
     {
-        $router->group(['middleware' => ['web', 'ready']], function (Registrar $router) {
+        $router->group(['middleware' => 'web'], function (Registrar $router) {
             //Pages
             $router->get('/{slug}', [
                 'as'   => 'page',
