@@ -188,12 +188,12 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function getAvatarAttribute()
     {
-        return $this->avatar_url ? $this->avatar_url : '/images/avatar.jpg';
+        return $this->avatar_url ? $this->avatar_url : '/images/discuz_big.gif';
     }
 
     public function getAvatarSmallAttribute()
     {
-        return $this->avatar_url ? $this->avatar_url : '/images/avatar_small.jpg';
+        return $this->avatar_url ? $this->avatar_url : '/images/discuz_small.gif';
     }
 
     /**
