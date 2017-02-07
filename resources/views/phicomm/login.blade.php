@@ -1,37 +1,48 @@
 @extends('layouts.default')
-@section('css')
-    <link rel="stylesheet" href="/css/phicommLogin.css">
-@endsection
-@section('title')
-    {{ trans('hifone.login.login') }}
-@stop
 
 @section('content')
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-5 col-md-offset-2">
+                <div class="panel panel-default">
+                    <div class="panel-heading">{{ trans('hifone.login.login') }}</div>
+                    <div class="panel-body">
+                        @if($connect_data)
+                            <div class="alert alert-info">
+                                {{ trans('hifone.login.oauth.login.note', ['provider' => $connect_data['provider_name'], 'name' => $connect_data['nickname']]) }}
+                            </div>
+                        @endif
+                        <form role="form" method="POST" action="/auth/login">
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                            @if(Session::has('error'))
+                                <p class="alert alert-danger">{{ Session::get('error') }}</p>
+                            @endif
+                            <div class="form-group">
+                                <input type="login" class="form-control" name="login" value="{{ Input::old('login') }}" placeholder="{{ trans('hifone.login.login_placeholder') }}">
+                            </div>
 
-    <div class="content">
-        <div class="inputBox">
-            <div class="userNameImg"></div>
-            <input id="phone" type="text" placeholder="手机号" class="userName" name="username" required autofocus>
-        </div>
-        <div class="inputBox">
-            <div class="passwordImg"></div>
-            <form method="POST" action="" name="forms">
-                <div id="box">
-                    <input id="password" type="password" placeholder="密码" class="password" name="password" required>
+                            <div class="form-group">
+                                <input type="password" class="form-control" name="password" placeholder="{{ trans('hifone.login.password') }}">
+                            </div>
+                            @if(!$captcha_login_disabled)
+                                @include('partials.captcha')
+                            @endif
+                            <div class="form-group checkbox">
+                                <label for="remember_me">
+                                    <input type="checkbox" name="remember">{{ trans('hifone.login.remember') }}
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" name="commit" value="{{ trans('forms.login') }}" class="btn btn-primary btn-lg btn-block">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="panel-footer">
+                        <a href="/auth/register">{{ trans('forms.register') }}</a>
+                        <!--<a href="/password/email">忘记密码?</a>-->
+                    </div>
                 </div>
-                <div id="eyes">
-                    <a href="javascript:showps()"></a>
-                </div>
-            </form>
-        </div>
-        <a class="forgetPW" href="forgetPwd.html">忘记密码？</a>
-
-        <div class="loginS">
-            <a onclick="phicommLogin()">登录</a>
-        </div>
-        <div class="loginX">
-            <a href="registerPhicomm.html">注册</a>
+            </div>
         </div>
     </div>
-
-@stop
+@endsection
