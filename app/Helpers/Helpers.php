@@ -160,3 +160,19 @@ if (!function_exists('admin_url')) {
         return env('APP_URL')."/admin/$path".($id ? '/'.$id : '');
     }
 }
+
+if (!function_exists('isH5')) {
+    function isH5()
+    {
+        $ua = $_SERVER['HTTP_USER_AGENT'];
+        return strpos(strtolower($ua), 'iphone') || strpos(strtolower($ua), 'android');
+    }
+}
+
+if (!function_exists('isApp')) {
+    function isApp()
+    {
+        $ua = $_SERVER['HTTP_USER_AGENT'];
+        return strpos(strtolower($ua), 'phiwifi');
+    }
+}
