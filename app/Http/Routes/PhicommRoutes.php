@@ -14,25 +14,18 @@ class PhicommRoutes
 {
     public function map(Registrar $router)
     {
-        $router->group(['as' => 'phicomm.','middleware' => ['web', 'localize'], 'prefix' => 'phicomm'], function (Registrar $router) {
+        $router->group(['as' => 'phicomm.','middleware' => ['web', 'localize', 'guest'], 'prefix' => 'phicomm'], function (Registrar $router) {
             $router->get('login', [
                 'as' => 'login',
                 'uses' => 'PhicommController@getLogin',
-                'middleware' => 'guest',
             ]);
-            $router->post('login', [
-                'uses' => 'PhicommController@postLogin',
-                'middleware' => 'guest',
-            ]);
+            $router->post('login', 'PhicommController@postLogin');
             $router->get('register', [
                 'as' => 'register',
                 'uses' => 'PhicommController@getRegister',
-                'middleware' => 'guest',
             ]);
-            $router->post('register', [
-                'uses' => 'PhicommController@postRegister',
-                'middleware' => 'guest',
-            ]);
+            $router->post('register', 'PhicommController@postRegister');
+            $router->post('verifyCode', 'PhicommController@sendVerifyCode');
         });
     }
 }

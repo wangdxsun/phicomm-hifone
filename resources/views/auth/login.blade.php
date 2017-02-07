@@ -43,18 +43,6 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-3">
-			<div class="panel panel-default">
-				<div class="panel-heading">{{ trans('hifone.login.login_with_oauth') }}</div>
-				<ul class="list-group">
-					<li class="list-group-item">
-						@foreach($providers as $provider)
-						<a href="/auth/{{ $provider->slug }}" class="btn btn-default btn-lg btn-block"><i class="{{ $provider->icon ? $provider->icon : 'fa fa-user' }}"></i> {{ $provider->name }}</a>
-						@endforeach
-					</li>
-				</ul>
-			</div>
-		</div>
 	</div>
 </div>
 @endsection

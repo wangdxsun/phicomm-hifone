@@ -50,6 +50,7 @@ class ThreadController extends Controller
      */
     public function index()
     {
+//        return array_reverse(debug_backtrace());
         $repository = app('repository');
         $repository->pushCriteria(new Filter(Input::query('filter')));
         $repository->pushCriteria(new Search(Input::query('q')));

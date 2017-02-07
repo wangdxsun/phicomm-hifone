@@ -10,6 +10,11 @@
  - @parent
 @endif
 @stop
+@unless (Auth::check())
+    <script>
+        autoLogin();
+    </script>
+@endunless
 
 @section('content')
 
@@ -17,28 +22,28 @@
     <div class="panel panel-default">
 
         <div class="panel-heading">
-        <div class="pull-left hidden-sm hidden-xs">
-          @if (Request::is('/'))
-            <i class="fa fa-list"></i> {{ trans('hifone.home') }}
-          @elseif (isset($node))
-          <div class="node-info">
-            <strong>{{ $node->name }}</strong>
-            <span class="total">{{ trans('hifone.threads.thread_count', ['threads' => $node->thread_count ]) }}</span>
-            @if($node->description)<div class="summary">{{ $node->description }}</div>@endif
-          </div>
-          @elseif (isset($tag))
-          <div class="node-info">
-          {{ trans('hifone.tags.name') }}: <strong>{{ $tag->name }}</strong>
-          <span class="total">, {{ trans('hifone.threads.thread_count', ['threads' => $tag->threads->count() ]) }}</span>
-          </div>
-          @else
-          <i class="fa fa-comments-o"></i> {{ trans('hifone.threads.threads') }}
-          @endif
-          </div>
-          @if (!isset($tag))
+            <div class="pull-left hidden-sm hidden-xs">
+                @if (Request::is('/'))
+                    <i class="fa fa-list"></i> {{ trans('hifone.home') }}
+                @elseif (isset($node))
+                    <div class="node-info">
+                        <strong>{{ $node->name }}</strong>
+                        <span class="total">{{ trans('hifone.threads.thread_count', ['threads' => $node->thread_count ]) }}</span>
+                        @if($node->description)<div class="summary">{{ $node->description }}</div>@endif
+                    </div>
+                @elseif (isset($tag))
+                    <div class="node-info">
+                        {{ trans('hifone.tags.name') }}: <strong>{{ $tag->name }}</strong>
+                        <span class="total">, {{ trans('hifone.threads.thread_count', ['threads' => $tag->threads->count() ]) }}</span>
+                    </div>
+                @else
+                    <i class="fa fa-comments-o"></i> {{ trans('hifone.threads.threads') }}
+                @endif
+            </div>
+            @if (!isset($tag))
             @include('threads.partials.filter')
-          @endif
-          <div class="clearfix"></div>
+            @endif
+            <div class="clearfix"></div>
         </div>
 
         @if ( ! $threads->isEmpty())
@@ -66,6 +71,5 @@
 </div>
 
 @include('partials.sidebar')
-
 
 @stop

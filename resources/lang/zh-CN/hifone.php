@@ -33,7 +33,7 @@ return [
     'whoops'              => '很遗憾，',
     'success'             => '操作成功!',
     'failure'             => '操作失败!',
-    'powered_by'          => 'Copyright &copy; 2015-2016 <a href="http://hifone.com">Hifone</a> ',
+    'powered_by'          => 'Copyright &copy; 2015-2016',
     'feed'                => 'Feed',
     'registered_users'    => '已注册用户请',
     'ranking'             => '积分榜',
@@ -279,6 +279,7 @@ return [
 // 登录
     'login' => [
         'login'                => '登录',
+        'register'             => '注册',
         'username'             => '用户名',
         'login_placeholder'    => '用户名或邮箱地址',
         'password'             => '密码',

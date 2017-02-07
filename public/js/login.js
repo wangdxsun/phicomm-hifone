@@ -19,13 +19,13 @@ function phicommLoginCallback(result) {
 }
 
 function phicommLogin(token, register) {
-    $.post("/login/phicommLogin.php", {phicommToken: token}).done(function(result) {
+    $.post("/phicomm/login", {phicommToken: token}).done(function(result) {
         if (result.error > 0) {
             showAlertBox(result.message);
         } else {
             if(result.data.bind == 1) {
                 //如果已经关联过账号就跳转到首页
-                location.href = '/forum.php';
+                location.href = '/';
             } else {
                 if (register) {
                     location.href = '/login/registerDiscuz.html';
@@ -78,26 +78,13 @@ function register() {
 
 function autoLogin() {
     if ((isApp())) {
-        $.post("/login/checkDiscuzLogin.php").done(function(result) {
-            //如果还没有登录，则尝试自动登录
-            if (result.error == 1) {
-                FXJSBridge.callMethod('JsInvokeJavaScope', 'requestTokenFromNative', {
-                    'data': {
-                        'isRefresh': 0,
-                        'hasOldToken': 0,
-                        'token': ""
-                    }
-                }, autoLoginCallback);
-            } else {//如果已经登录，检查是否需要自动关联
-                FXJSBridge.callMethod('JsInvokeJavaScope', 'requestTokenFromNative', {
-                    'data': {
-                        'isRefresh': 0,
-                        'hasOldToken': 0,
-                        'token': ""
-                    }
-                }, autoBindCallback);
+        FXJSBridge.callMethod('JsInvokeJavaScope', 'requestTokenFromNative', {
+            data: {
+                isRefresh: 0,
+                hasOldToken: 0,
+                token: ""
             }
-        });
+        }, autoLoginCallback);
     }
 }
 
@@ -164,17 +151,5 @@ function clearCookies(){
     var keys = document.cookie.match(new RegExp("([^ ;][^;]*)(?=(=[^;]*)(;|$))", "gi"));
     for (var i in keys){
         document.cookie = keys[i] + "=;expires=Mon, 26 Jul 1997 05:00:00 GMT; path=/;";
-    }
-}
-
-function autoBindCallback(result) {
-    if (result.status.code == 0) {
-        if (result.data.token) {
-            $.post('/login/autoBind.php', {phicommToken: result.data.token}).done(function(result) {
-                if (result.error == 0) {
-                    showAlertBox('自动关联成功！');
-                }
-            });
-        }
     }
 }

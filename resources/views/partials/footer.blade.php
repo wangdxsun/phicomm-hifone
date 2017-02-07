@@ -3,7 +3,7 @@
         <div class="copyright">
             <blockquote class="pull-left">
                 <p>{!! Config::get('setting.site_about') !!}</p>
-                <p>{!! trans('hifone.powered_by') !!} {{ HIFONE_VERSION }} <span class="pipe">|</span><a href="http://www.miitbeian.gov.cn/">沪ICP备09048395号-17</a></p>
+                <p>{!! trans('hifone.powered_by') !!} <span class="pipe">|</span><a href="http://www.miitbeian.gov.cn/">沪ICP备09048395号-17</a></p>
             </blockquote>
         </div>
         <div class="pull-right hidden-sm hidden-xs">
