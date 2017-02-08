@@ -26,7 +26,44 @@ class PhicommController extends Controller
 
     public function postRegister(Request $request)
     {
+        $this->validate($request, [
+            'phone' => 'required|phone',
+            'password' => 'required',
+            'verifyCode' => 'required',
+        ]);
+        $password = strtoupper(md5($request->get('password')));
+        $this->phicommRegister($request->phone, $password, $request->verifyCode);
+    }
 
+    private function phicommRegister($phone, $password, $verifyCode)
+    {
+        $data = [
+            'authorizationcode' => $this->getAccessCode(),
+            'password' => $password,
+            'phonenumber' => $phone,
+            'registersource' => env('PHICLOUND_CLIENT_ID'),
+            'verificationcode' => $verifyCode
+        ];
+        $url = $url = env('PHICLOUND_DOMAIN') . 'account';
+        $output = json_decode(curlPost($url, $data), true);
+        if($output){
+            switch($output['error']){
+                case 0:
+                    return $output;break;
+                case 1:
+                    throw new \Exception('验证码错误！');
+                case 2:
+                    throw new \Exception('验证码过期，请重新获取！');
+                case 14:
+                    throw new \Exception('账户已存在！');
+                case 23:
+                    throw new \Exception('验证码已被使用！');
+                default:
+                    throw new \Exception('服务器异常！', 500);
+            }
+        } else {
+            throw new \Exception('服务器异常！', 500);
+        }
     }
 
     public function getLogin()
@@ -64,7 +101,7 @@ class PhicommController extends Controller
     private function phicommLogin($phone, $password)
     {
         $accessCode = $this->getAccessCode();
-        $data = ['authorizationcode' => $accessCode,'phonenumber' => $phone,'password' => $password];
+        $data = ['authorizationcode' => $accessCode, 'phonenumber' => $phone, 'password' => $password];
         $url = env('PHICLOUND_DOMAIN') . 'login';
         $output = json_decode(curlPost($url, $data), true);
         if ($output['error'] > 0) {
@@ -91,12 +128,8 @@ class PhicommController extends Controller
             'verificationtype' => $codeType,
         ];
         $url = env('PHICLOUND_DOMAIN') . 'verificationCode?' . http_build_query($data);
-        $rel = json_decode($this->curlGet($url), true);
-        if ($rel) {
-            if ($rel['error'] > 0) {
-                throw new \Exception('验证码发送失败！');
-            }
-        } else {
+        $rel = json_decode(curlGet($url), true);
+        if ($rel || $rel['error'] > 0) {
             throw new \Exception('验证码发送失败！');
         }
     }
