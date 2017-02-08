@@ -94,10 +94,10 @@ trait ValidatesRequests
      * Create the response for when a request fails validation.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  array  $errors
+     * @param  string $errors
      * @return \Illuminate\Http\Response
      */
-    protected function buildFailedValidationResponse(Request $request, array $errors)
+    protected function buildFailedValidationResponse(Request $request, $errors)
     {
         if (($request->ajax() && ! $request->pjax()) || $request->wantsJson()) {
             return new JsonResponse($errors, 422);
@@ -116,7 +116,8 @@ trait ValidatesRequests
      */
     protected function formatValidationErrors(Validator $validator)
     {
-        return $validator->errors()->getMessages();
+        $msg = $validator->errors()->getMessages();
+        return array_first(array_first($msg));
     }
 
     /**

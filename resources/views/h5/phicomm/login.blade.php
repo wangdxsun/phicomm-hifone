@@ -30,8 +30,27 @@
             <a onclick="phicommLogin()">登录</a>
         </div>
         <div class="loginX">
-            <a href="registerPhicomm.html">注册</a>
+            <a href="/phicomm/register">注册</a>
         </div>
     </div>
-
+    <script>
+        function phicommLogin() {
+            $.post('phicomm/login', {
+                phone: $("#phone").val(),
+                password: $("#password").val(),
+                _token: "{{ csrf_token() }}"
+            }).then(function(res) {
+                if (res.error > 0) {
+                    alert(res.message);
+                } else {
+                    if (result.data.bind == 1) {
+                        //如果已经关联过账号就跳转到首页
+                        location.href = '/';
+                    } else {
+                        location.href = '/bbs/create';
+                    }
+                }
+            });
+        }
+    </script>
 @stop

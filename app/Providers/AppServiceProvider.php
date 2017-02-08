@@ -14,6 +14,7 @@ namespace Hifone\Providers;
 use Collective\Bus\Dispatcher;
 use Hifone\Pipes\UseDatabaseTransactions;
 use Hifone\Services\Dates\DateFactory;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 
@@ -34,6 +35,13 @@ class AppServiceProvider extends ServiceProvider
 
         Str::macro('canonicalize', function ($url) {
             return preg_replace('/([^\/])$/', '$1/', $url);
+        });
+
+        Validator::extend('phone', function($attribute, $value, $parameters, $validator) {
+            if(preg_match('/^1[34578]\d{9}$/', $value)){
+                return true;
+            }
+            return false;
         });
     }
 

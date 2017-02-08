@@ -176,3 +176,54 @@ if (!function_exists('isApp')) {
         return strpos(strtolower($ua), 'phiwifi');
     }
 }
+
+if (!function_exists('error')) {
+    function error($message = "")
+    {
+        return [
+            'code' => 1,
+            'msg' => $message
+        ];
+    }
+}
+
+if (!function_exists('success')) {
+    function success($data = []) {
+        return [
+            'code' => 0,
+            'data' => $data
+        ];
+    }
+}
+
+if (!function_exists('curlGet')) {
+    function curlGet($url, $header=null)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,FALSE);
+        curl_setopt($ch,CURLOPT_SSL_VERIFYHOST,FALSE);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        if(!empty($header)){
+            curl_setopt($ch,CURLOPT_HTTPHEADER,$header);
+        }
+        $output = curl_exec($ch);
+        curl_close($ch);
+        return $output;
+    }
+}
+
+if (!function_exists('curlPost')) {
+    function curlPost($url, $data)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+        $output = curl_exec($ch);
+        curl_close($ch);
+        return $output;
+    }
+}

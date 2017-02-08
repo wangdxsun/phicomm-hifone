@@ -40,13 +40,30 @@ class PhicommController extends Controller
             ->withPageTitle(trans('hifone.login.login'));
     }
 
-    public function postLogin()
+    public function postLogin(Request $request)
     {
-
+        $this->validate($request, [
+            'phicommToken' => 'required_without:phone',
+            'phone' => 'required_without:phicommToken|phone',
+            'password' => 'required_with:phone',
+        ], [
+            'phone.required' => 'æ‰‹æœºå·ä¸èƒ½ä¸ºç©º',
+        ]);
+        $phicommToken = $request->get('phicommToken');
+        $phone = $request->get('phone');
+        $password = $request->get('password');
+        if ($phicommToken) {
+            session("phicommToken", $phicommToken);
+            $phicommId = $this->getIdFromToken($phicommToken);
+        } else {
+            $password = strtoupper(md5($password));
+            $phicomm = new PhicommUtil();
+            $phicommId = $phicomm->login($phone, $password);
+        }
     }
 
     /**
-     * ·¢ËÍ¶ÌÐÅÑéÖ¤Âë
+     * å‘é€çŸ­ä¿¡éªŒè¯ç 
      */
     public function sendVerifyCode($phone, $codeType = 0)
     {
@@ -61,32 +78,32 @@ class PhicommController extends Controller
         $rel = json_decode($this->curlGet($url), true);
         if ($rel) {
             if ($rel['error'] > 0) {
-                throw new \Exception('ÑéÖ¤Âë·¢ËÍÊ§°Ü£¡');
+                throw new \Exception('éªŒè¯ç å‘é€å¤±è´¥ï¼');
             }
         } else {
-            throw new \Exception('ÑéÖ¤Âë·¢ËÍÊ§°Ü£¡');
+            throw new \Exception('éªŒè¯ç å‘é€å¤±è´¥ï¼');
         }
     }
 
     /**
-     * ¼ì²âÊÖ»úºÅÊÇ·ñÒÑ×¢²á
+     * æ£€æµ‹æ‰‹æœºå·æ˜¯å¦å·²æ³¨å†Œ
      */
     private function checkPhoneAvailable($phone){
         $accessCode = $this->getAccessCode();
         $url = env('PHICLOUND_DOMAIN') . 'checkPhonenumber?authorizationcode=' . $accessCode . '&phonenumber=' . $phone;
-        $output = json_decode($this->curlGet($url), true);
+        $output = json_decode(curlGet($url), true);
         if($output){
             switch($output['error']){
                 case 0:
                     break;
                 case 14:
-                    throw new \Exception('¸ÃÊÖ»úºÅÒÑ×¢²á£¡');
+                    throw new \Exception('è¯¥æ‰‹æœºå·å·²æ³¨å†Œï¼');
                     break;
                 default:
-                    throw new \Exception('²Ù×÷Ê§°Ü£¬ÇëÁªÏµ¿Í·þ£¡');
+                    throw new \Exception('æ“ä½œå¤±è´¥ï¼Œè¯·è”ç³»å®¢æœï¼');
             }
         }else{
-            throw new \Exception('²Ù×÷Ê§°Ü£¬ÇëÁªÏµ¿Í·þ£¡');
+            throw new \Exception('æ“ä½œå¤±è´¥ï¼Œè¯·è”ç³»å®¢æœï¼');
         }
     }
 
@@ -99,35 +116,13 @@ class PhicommController extends Controller
             'scope' => 'write',
         ];
         $url = env('PHICLOUND_DOMAIN') . 'authorization?' . http_build_query($data);
-        $output = json_decode($this->curlGet($url), true);
+        $output = json_decode(curlGet($url), true);
         return $output['authorizationcode'];
     }
 
-    private function curlGet($url, $header=null)
-    {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,FALSE);
-        curl_setopt($ch,CURLOPT_SSL_VERIFYHOST,FALSE);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        if(!empty($header)){
-            curl_setopt($ch,CURLOPT_HTTPHEADER,$header);
-        }
-        $output = curl_exec($ch);
-        curl_close($ch);
-        return $output;
-    }
-
-    private function curlPost($url, $data)
-    {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
-        $output = curl_exec($ch);
-        curl_close($ch);
-        return $output;
+    private function getIdFromToken($token) {
+        $tokens = explode('.', $token);
+        $tokenInfo = json_decode(base64_decode($tokens[1]), true);
+        return $tokenInfo['uid'];
     }
 }

@@ -36,7 +36,8 @@ $app->singleton(
 
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
-    GrahamCampbell\Exceptions\ExceptionHandler::class
+//    GrahamCampbell\Exceptions\ExceptionHandler::class
+    Hifone\Exceptions\Handler::class
 );
 
 /*
