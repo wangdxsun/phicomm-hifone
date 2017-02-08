@@ -9,6 +9,7 @@
 namespace Hifone\Http\Controllers;
 
 use Hifone\Models\Provider;
+use Hifone\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
@@ -46,20 +47,35 @@ class PhicommController extends Controller
             'phicommToken' => 'required_without:phone',
             'phone' => 'required_without:phicommToken|phone',
             'password' => 'required_with:phone',
-        ], [
-            'phone.required' => '手机号不能为空',
         ]);
         $phicommToken = $request->get('phicommToken');
         $phone = $request->get('phone');
-        $password = $request->get('password');
-        if ($phicommToken) {
-            session("phicommToken", $phicommToken);
-            $phicommId = $this->getIdFromToken($phicommToken);
+        $password = strtoupper(md5($request->get('password')));
+        $phicommId = $phicommToken ? $this->getIdFromToken($phicommToken) : $this->phicommLogin($phone, $password);
+        $user = User::findUserByPhicommId($phicommId);
+        if ($user) {
+            \Auth::loginUsingId($user->id);
+            return success(['bind' => 1]);
         } else {
-            $password = strtoupper(md5($password));
-            $phicomm = new PhicommUtil();
-            $phicommId = $phicomm->login($phone, $password);
+            return success(['bind' => 0]);
         }
+    }
+
+    private function phicommLogin($phone, $password)
+    {
+        $accessCode = $this->getAccessCode();
+        $data = ['authorizationcode' => $accessCode,'phonenumber' => $phone,'password' => $password];
+        $url = env('PHICLOUND_DOMAIN') . 'login';
+        $output = json_decode(curlPost($url, $data), true);
+        if ($output['error'] > 0) {
+            throw new \Exception('用户名或密码错误');
+        }
+        return $output['uid'];
+    }
+
+    public function getCreate()
+    {
+        return view('phicomm.create');
     }
 
     /**

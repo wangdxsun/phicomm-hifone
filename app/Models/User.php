@@ -73,15 +73,18 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      *
      * @return User
      */
-    public static function findByUsernameOrFail(
-        $username,
-        $columns = ['*']
-    ) {
+    public static function findByUsernameOrFail($username, $columns = ['*'])
+    {
         if (!is_null($user = static::whereUsername($username)->first($columns))) {
             return $user;
         }
 
         throw new ModelNotFoundException();
+    }
+
+    public static function findUserByPhicommId($phicommId)
+    {
+        return static::where('phicomm_id', $phicommId)->first();
     }
 
     public function favoriteThreads()

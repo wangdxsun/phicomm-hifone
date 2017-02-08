@@ -35,7 +35,7 @@
     </div>
     <script>
         function phicommLogin() {
-            $.post('phicomm/login', {
+            $.post('/phicomm/login', {
                 phone: $("#phone").val(),
                 password: $("#password").val(),
                 _token: "{{ csrf_token() }}"
@@ -43,11 +43,10 @@
                 if (res.error > 0) {
                     alert(res.message);
                 } else {
-                    if (result.data.bind == 1) {
-                        //如果已经关联过账号就跳转到首页
+                    if (res.data.bind == 1) {
                         location.href = '/';
                     } else {
-                        location.href = '/bbs/create';
+                        location.href = '/phicomm/create';
                     }
                 }
             });

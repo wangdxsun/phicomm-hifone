@@ -26,6 +26,7 @@ class PhicommRoutes
             ]);
             $router->post('register', 'PhicommController@postRegister');
             $router->post('verifyCode', 'PhicommController@sendVerifyCode');
+            $router->get('create', 'PhicommController@getCreate');
         });
     }
 }
