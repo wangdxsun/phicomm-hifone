@@ -33,6 +33,9 @@ class PhicommController extends Controller
         ]);
         $password = strtoupper(md5($request->get('password')));
         $this->phicommRegister($request->phone, $password, $request->verifyCode);
+        $phicommId = $this->phicommLogin($request->phone, $password);
+        session(['phicommId', $phicommId]);
+        return success();
     }
 
     private function phicommRegister($phone, $password, $verifyCode)
@@ -94,6 +97,7 @@ class PhicommController extends Controller
             \Auth::loginUsingId($user->id);
             return success(['bind' => 1]);
         } else {
+            session(['phicommId', $phicommId]);
             return success(['bind' => 0]);
         }
     }
