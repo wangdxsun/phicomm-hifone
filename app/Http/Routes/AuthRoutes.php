@@ -64,6 +64,10 @@ class AuthRoutes
             ]);
             $router->get('{provider}', 'AuthController@provider');
             $router->get('{provider}/callback', 'AuthController@callback');
+
+            $router->get('password/reset/{token?}', 'PasswordController@showResetForm');
+            $router->post('password/reset', 'PasswordController@reset');
+            $router->post('password/email', 'PasswordController@sendResetLinkEmail');
         });
     }
 }
