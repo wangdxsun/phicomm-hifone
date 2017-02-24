@@ -114,7 +114,10 @@ class Handler implements ExceptionHandlerContract
             return $this->toIlluminateResponse($this->renderHttpException($e), $e);
         } else {
 //            return $this->toIlluminateResponse($this->convertExceptionToResponse($e), $e);
-            return new JsonResponse($e->getMessage(), $e->getCode() ?: 200);
+            return new JsonResponse($e->getMessage(), $e->getCode() ?: 200, [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
         }
     }
 
