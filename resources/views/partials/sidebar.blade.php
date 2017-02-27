@@ -69,11 +69,7 @@
       @foreach($top_users as $index => $user)
         <tr>
         <td style="text-align: center;"><div class="avatar">
-                @if($user->nickname)
-                    <a href="{{ route('user.home',$user->username) }}"><img class="media-object img-thumbnail avatar-32" alt="{{ $user->nickname }}" src="{{ $user->avatar }}"></a>
-                @else
-                    <a href="{{ route('user.home',$user->username) }}"><img class="media-object img-thumbnail avatar-32" alt="{{ $user->username }}" src="{{ $user->avatar }}"></a>
-                @endif
+            <a href="{{ route('user.home',$user->username) }}"><img class="media-object img-thumbnail avatar-32" src="{{ $user->avatar }}"></a>
         </div></td>
         <td style="vertical-align: middle; font-size: 80%;">
             @if($user->nickname)
@@ -82,7 +78,7 @@
                 <a href="{{ route('user.home',$user->username) }}">{{ $user->username }}</a>
             @endif
         <td>
-        <td style="vertical-align: middle;"><small data-toggle="tooltip" data-placement="top" title="{{ $user->score }}">{!! $user->coins !!}</small></td>
+        <td style="vertical-align: middle;"><small data-toggle="tooltip" data-placement="top" title="{{ $user->score }}">{!! $user->score !!}</small></td>
         </tr>
       @endforeach
       </tbody>
