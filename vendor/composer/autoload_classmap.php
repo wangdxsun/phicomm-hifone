@@ -30,6 +30,7 @@ return array(
     'CreateNotificationsTable' => $baseDir . '/database/migrations/2016_05_29_013615_create_notifications_table.php',
     'CreatePagesTable' => $baseDir . '/database/migrations/2016_05_23_153224_create_pages_table.php',
     'CreateParticipantsTable' => $baseDir . '/database/migrations/2014_10_28_180224_create_participants_table.php',
+    'CreatePasswordResetsTable' => $baseDir . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
     'CreatePhotosTable' => $baseDir . '/database/migrations/2016_06_08_180211_create_photos_table.php',
     'CreatePmMetasTable' => $baseDir . '/database/migrations/2016_06_22_171904_create_pm_metas_table.php',
     'CreatePmsTable' => $baseDir . '/database/migrations/2016_06_22_171748_create_pms_table.php',

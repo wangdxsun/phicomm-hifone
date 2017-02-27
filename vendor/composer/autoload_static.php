@@ -572,6 +572,7 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
         'CreateNotificationsTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_29_013615_create_notifications_table.php',
         'CreatePagesTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_23_153224_create_pages_table.php',
         'CreateParticipantsTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_28_180224_create_participants_table.php',
+        'CreatePasswordResetsTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
         'CreatePhotosTable' => __DIR__ . '/../..' . '/database/migrations/2016_06_08_180211_create_photos_table.php',
         'CreatePmMetasTable' => __DIR__ . '/../..' . '/database/migrations/2016_06_22_171904_create_pm_metas_table.php',
         'CreatePmsTable' => __DIR__ . '/../..' . '/database/migrations/2016_06_22_171748_create_pms_table.php',
