@@ -23,102 +23,102 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         // Advertisement
-        'Hifone\Events\Advertisement\AdvertisementWasUpdatedEvent' => [
-            'Hifone\Handlers\Listeners\Advertisement\RemoveAdvertisementCacheHandler',
+        \Hifone\Events\Advertisement\AdvertisementWasUpdatedEvent::class => [
+            \Hifone\Handlers\Listeners\Advertisement\RemoveAdvertisementCacheHandler::class,
         ],
          // Append
-        'Hifone\Events\Append\AppendWasAddedEvent' => [
-            'Hifone\Handlers\Listeners\Notification\SendAppendNotificationHandler',
+        \Hifone\Events\Append\AppendWasAddedEvent::class => [
+            \Hifone\Handlers\Listeners\Notification\SendAppendNotificationHandler::class,
         ],
 
         // Credit
-        'Hifone\Events\Credit\CreditWasAddedEvent' => [
-            'Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler',
+        \Hifone\Events\Credit\CreditWasAddedEvent::class => [
+            \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
 
         // Favorite
-        'Hifone\Events\Favorite\FavoriteWasAddedEvent' => [
-            'Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler',
+        \Hifone\Events\Favorite\FavoriteWasAddedEvent::class => [
+            \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
 
          //
-        'Hifone\Events\Follow\FollowWasAddedEvent' => [
-            'Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler',
+        \Hifone\Events\Follow\FollowWasAddedEvent::class => [
+            \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
 
         // Image
 
-        'Hifone\Events\Image\ImageWasUploadedEvent' => [
-            'Hifone\Handlers\Listeners\Photo\AddPhotoRecordHandler',
-            'Hifone\Handlers\Listeners\Stats\UpdateStatsHandler',
-            'Hifone\Handlers\Listeners\Credit\AddCreditHandler',
+        \Hifone\Events\Image\ImageWasUploadedEvent::class => [
+            \Hifone\Handlers\Listeners\Photo\AddPhotoRecordHandler::class,
+            \Hifone\Handlers\Listeners\Stats\UpdateStatsHandler::class,
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
 
         // 按赞
-        'Hifone\Events\Like\LikeWasAddedEvent' => [
-            'Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler',
+        \Hifone\Events\Like\LikeWasAddedEvent::class => [
+            \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
 
         // Links
-        'Hifone\Events\Link\LinkWasUpdatedEvent' => [
-            'Hifone\Handlers\Listeners\Link\RemoveLinkCacheHandler',
+        \Hifone\Events\Link\LinkWasUpdatedEvent::class => [
+            \Hifone\Handlers\Listeners\Link\RemoveLinkCacheHandler::class,
         ],
 
         // 回帖
-        'Hifone\Events\Reply\ReplyWasAddedEvent' => [
-            'Hifone\Handlers\Listeners\Notification\SendReplyNotificationHandler',
-            'Hifone\Handlers\Listeners\Stats\UpdateStatsHandler',
-            'Hifone\Handlers\Listeners\Credit\AddCreditHandler',
+        \Hifone\Events\Reply\ReplyWasAddedEvent::class => [
+            \Hifone\Handlers\Listeners\Notification\SendReplyNotificationHandler::class,
+            \Hifone\Handlers\Listeners\Stats\UpdateStatsHandler::class,
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
-        'Hifone\Events\Reply\ReplyWasRemovedEvent' => [
-            'Hifone\Handlers\Listeners\Reply\UpdateReplyThreadHandler',
-            'Hifone\Handlers\Listeners\Credit\AddCreditHandler',
-        ],
-
-        //
-        'Hifone\Events\Thread\ThreadWasAddedEvent' => [
-            'Hifone\Handlers\Listeners\Notification\SendThreadNotificationHandler',
-            'Hifone\Handlers\Listeners\Stats\UpdateStatsHandler',
-            'Hifone\Handlers\Listeners\Credit\AddCreditHandler',
+        \Hifone\Events\Reply\ReplyWasRemovedEvent::class => [
+            \Hifone\Handlers\Listeners\Reply\UpdateReplyThreadHandler::class,
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
 
         //
-        'Hifone\Events\Thread\ThreadWasMarkedExcellentEvent' => [
-            'Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler',
+        \Hifone\Events\Thread\ThreadWasAddedEvent::class => [
+            \Hifone\Handlers\Listeners\Notification\SendThreadNotificationHandler::class,
+            \Hifone\Handlers\Listeners\Stats\UpdateStatsHandler::class,
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
 
         //
-        'Hifone\Events\Thread\ThreadWasMovedEvent' => [
-            'Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler',
-            'Hifone\Handlers\Listeners\Thread\UpdateThreadNodesHandler',
+        \Hifone\Events\Thread\ThreadWasMarkedExcellentEvent::class => [
+            \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
 
         //
-        'Hifone\Events\Thread\ThreadWasRemovedEvent' => [
-            'Hifone\Handlers\Listeners\Thread\CleanupThreadRepliesHandler',
+        \Hifone\Events\Thread\ThreadWasMovedEvent::class => [
+            \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
+            \Hifone\Handlers\Listeners\Thread\UpdateThreadNodesHandler::class,
         ],
 
         //
-        'Hifone\Events\Thread\ThreadWasUpdatedEvent' => [
+        \Hifone\Events\Thread\ThreadWasRemovedEvent::class => [
+            \Hifone\Handlers\Listeners\Thread\CleanupThreadRepliesHandler::class,
+        ],
+
+        //
+        \Hifone\Events\Thread\ThreadWasUpdatedEvent::class => [
             //
         ],
 
         //
-        'Hifone\Events\Thread\ThreadWasViewedEvent' => [
-            'Hifone\Handlers\Listeners\Thread\UpdateThreadViewCountHandler',
+        \Hifone\Events\Thread\ThreadWasViewedEvent::class => [
+            \Hifone\Handlers\Listeners\Thread\UpdateThreadViewCountHandler::class,
         ],
 
-        'Hifone\Events\User\UserWasAddedEvent' => [
-            'Hifone\Handlers\Listeners\Stats\UpdateStatsHandler',
-            'Hifone\Handlers\Listeners\Identity\ChangeUsernameHandler',
-            'Hifone\Handlers\Listeners\Credit\AddCreditHandler',
+        \Hifone\Events\User\UserWasAddedEvent::class => [
+            \Hifone\Handlers\Listeners\Stats\UpdateStatsHandler::class,
+            \Hifone\Handlers\Listeners\Identity\ChangeUsernameHandler::class,
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
 
-        'Hifone\Events\User\UserWasLoggedinEvent' => [
-            'Hifone\Handlers\Listeners\Credit\AddCreditHandler',
+        \Hifone\Events\User\UserWasLoggedinEvent::class => [
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
 
-        'SocialiteProviders\Manager\SocialiteWasCalled' => [
+        \SocialiteProviders\Manager\SocialiteWasCalled::class => [
             'SocialiteProviders\QQ\QqExtendSocialite@handle',
             'SocialiteProviders\Weibo\WeiboExtendSocialite@handle',
             'SocialiteProviders\GitLab\GitLabExtendSocialite@handle',
