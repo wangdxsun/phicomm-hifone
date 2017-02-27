@@ -1,7 +1,7 @@
 @extends('layouts.default')
 
 @section('title')
-{{{ $user->username }}} {{ trans('hifone.users.info') }}_@parent
+{{ $user->username }}} {{ trans('hifone.users.info') }}_@parent
 @stop
 
 @section('content')
@@ -40,7 +40,8 @@
                 <ul class="status">
                   <li><a href="{!! route('user.threads', $user->id) !!}"><strong>{{ $user->thread_count }}</strong>{{ trans('hifone.threads.threads') }}</a></li>
                   <li><a href="{!! route('user.replies', $user->id) !!}"><strong>{{ $user->reply_count }}</strong>{{ trans('hifone.replies.replies') }}</a></li>
-                  <li><a href="#"><strong>0</strong>{{ trans('hifone.users.followers') }}</a></li>
+                  <li><a href="#"><strong>{{ $user->follow_count }}</strong>{{ trans('hifone.follow') }}</a></li>
+                  <li><a href="#"><strong>{{ $user->follower_count }}</strong>{{ trans('hifone.users.followers') }}</a></li>
                 </ul>
                 <div class="footer">
                 {{ $user->bio }}

@@ -2,7 +2,7 @@
 <html lang="{{ $user_locale or $site_locale }}">
 	<head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, user-scalable=no />
+        <meta name="viewport" content="width=device-width, user-scalable=no" />
         <title>@yield('title') {{ $site_name }}@if($site_about) - {{ $site_about }}@endif</title>
         <meta name="keywords" content="@if(Config::get('setting.meta_keywords')){{ Config::get('setting.meta_keywords') }}@else{{ 'Hifone,BBS,Forum,PHP,Laravel' }}@endif" />
         <meta name="author" content="@if(Config::get('setting.meta_author')){{ Config::get('setting.meta_author') }}@else{{ 'The Hifone Team' }}@endif" />

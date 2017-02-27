@@ -1,7 +1,7 @@
 @extends('layouts.default')
 
 @section('title')
-{{{ $user->username }}} {{ trans('hifone.threads.list') }}_@parent
+{{ $user->username }}} {{ trans('hifone.threads.list') }}_@parent
 @stop
 
 @section('content')

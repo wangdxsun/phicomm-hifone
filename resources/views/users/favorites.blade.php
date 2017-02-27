@@ -1,7 +1,7 @@
 @extends('layouts.default')
 
 @section('title')
-{{{ $user->username }}} {{ trans('hifone.favorites.favorites') }}_@parent
+{{ $user->username }}} {{ trans('hifone.favorites.favorites') }}_@parent
 @stop
 
 @section('content')

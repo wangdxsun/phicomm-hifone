@@ -1,10 +1,10 @@
 <div class="panel-footer operate">
 
   <div class="pull-left" style="font-size:15px;">
-    <a class="" href="http://service.weibo.com/share/share.php?url={!! urlencode(Request::url()) !!}&type=3&pic=&title={{{ $thread->title }}}" target="_blank" title="{{ trans('hifone.threads.share2weibo') }}">
+    <a class="" href="http://service.weibo.com/share/share.php?url={!! urlencode(Request::url()) !!}&type=3&pic=&title={{ $thread->title }}" target="_blank" title="{{ trans('hifone.threads.share2weibo') }}">
       <i class="fa fa-weibo"></i>
     </a>
-    <a href="https://twitter.com/intent/tweet?url={!! urlencode(Request::url()) !!}&text={{{ $thread->title }}}&via=hifone.com" class=""  target="_blank" title="{{ trans('hifone.threads.share2twitter') }}">
+    <a href="https://twitter.com/intent/tweet?url={!! urlencode(Request::url()) !!}&text={{ $thread->title }}&via=hifone.com" class=""  target="_blank" title="{{ trans('hifone.threads.share2twitter') }}">
       <i class="fa fa-twitter"></i>
     </a>
     <a href="http://www.facebook.com/sharer.php?u={!! urlencode(Request::url()) !!}" class=""  target="_blank" title="{{ trans('hifone.threads.share2facebook') }}">

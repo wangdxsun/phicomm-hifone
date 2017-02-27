@@ -205,7 +205,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function cacheAvatar()
     {
         //Download Image
-        $guzzle = new GuzzleHttp\Client();
+        $guzzle = new \GuzzleHttp\Client();
         $response = $guzzle->get($this->image_url);
 
         //Get ext

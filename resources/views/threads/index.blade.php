@@ -10,11 +10,6 @@
  - @parent
 @endif
 @stop
-@unless (Auth::check())
-    <script>
-        autoLogin();
-    </script>
-@endunless
 
 @section('content')
 

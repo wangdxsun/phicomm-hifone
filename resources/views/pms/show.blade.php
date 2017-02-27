@@ -1,11 +1,11 @@
 @extends('layouts.default')
 
 @section('title')
-{{{ $thread->title }}} - @parent
+{{ $thread->title }} - @parent
 @stop
 
 @section('description')
-{{{ $thread->excerpt }}}
+{{ $thread->excerpt }}
 @stop
 
 @section('content')
@@ -15,7 +15,7 @@
   <!-- Reply List -->
   <div class="replies panel panel-default list-panel replies-index">
     <div class="panel-heading">
-      <h1 class="panel-title thread-title">{{{ $thread->subject }}}</h1>
+      <h1 class="panel-title thread-title">{{ $thread->subject }}</h1>
       <div class="total">{{ trans('hifone.replies.total') }}: <b>{{ $thread->messages->count() }}</b> </div>
     </div>
 

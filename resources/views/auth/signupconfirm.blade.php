@@ -22,19 +22,19 @@
                     </div>
                 </div>
 
-                <div class="form-group {{{ $errors->has('name') ? 'has-error' : '' }}}">
+                <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
                     <label class="control-label" for="name">{{ trans('hifone.users.username') }}</label>
                     {{ Form::text('name', ($githubUser['name'] ?: ''), ['class' => 'form-control']) }}
                     {{ $errors->first('name', '<span class="help-block">:message</span>') }}
                 </div>
 
-                <div class="form-group {{{ $errors->has('github_name') ? 'has-error' : '' }}}">
+                <div class="form-group {{ $errors->has('github_name') ? 'has-error' : '' }}">
                     <label class="control-label" for="github_name">Github Name</label>
                     {{ Form::text('github_name', (isset($githubUser['github_name']) ? $githubUser['github_name'] : $githubUser['name']), ['class' => 'form-control', 'readonly'=>'readonly']) }}
                     {{ $errors->first('github_name', '<span class="help-block">:message</span>') }}
                 </div>
 
-                <div class="form-group {{{ $errors->has('email') ? 'has-error' : '' }}}">
+                <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
                     <label class="control-label" for="email">{{ trans('hifone.users.email') }}</label>
                     {{ Form::select('email', $githubUser['emails'], $githubUser['email'], ['class' => 'form-control']) }}
                     {{ $errors->first('email', '<span class="help-block">:message</span>') }}
