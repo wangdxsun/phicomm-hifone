@@ -16,23 +16,25 @@
         @include('partials.errors')
         <table class="table table-bordered table-striped table-condensed">
         <tbody>
-          <tr class="head">
-            <td class="first">#</td>
-            <td style="width:60%">标题</td>
-            <td>发帖人</td>
-            <td>时间</td>
-            <td style="width:10%">操作</td>
-          </tr>
+            <tr class="head">
+                <td class="first">#</td>
+                <td style="width:5%">话题</td>
+                <td style="width:50%">回帖内容</td>
+                <td>回帖人</td>
+                <td>回帖时间</td>
+                <td style="width:10%">操作</td>
+            </tr>
             @foreach($replies as $reply)
             <tr>
-            <td>{{ $reply->id }}</td>
-            <td>{{ Str::words($reply->body_original, 5) }}</td>
-            <td>{{ $reply->user->username }}</td>
-            <td>{{ $reply->created_at }}</td>
-            <td>
-                <a href="/dashboard/reply/{{ $reply->id }}/edit"><i class="fa fa-pencil"></i></a> 
-                <a data-url="/dashboard/reply/{{ $reply->id }}" data-method="delete" class="confirm-action"><i class="fa fa-trash"></i></a>
-            </td>
+                <td>{{ $reply->id }}</td>
+                <td><a target="_blank" href="{{ $reply->thread_url }}">{{ $reply->thread_id }}</a></td>
+                <td>{{ Str::words($reply->body_original, 5) }}</td>
+                <td><a data-name="{{ $reply->user->username }}" href="{{ $reply->author_url }}">{{ $reply->user->username }}</a></td>
+                <td>{{ $reply->created_at }}</td>
+                <td>
+                    <a href="/dashboard/reply/{{ $reply->id }}/edit"><i class="fa fa-pencil"></i></a>
+                    <a data-url="/dashboard/reply/{{ $reply->id }}" data-method="delete" class="confirm-action"><i class="fa fa-trash"></i></a>
+                </td>
             </tr>
             @endforeach
         </tbody>

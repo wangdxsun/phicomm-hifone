@@ -17,42 +17,49 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="toolbar">
-                  <form class="form-inline">
-                    <div class="form-group">
-                      <input type="text" name="q" class="form-control" value="" placeholder="用户名">
-                    </div>
-                    <button class="btn btn-default">搜索</button>
-                  </form>
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <input type="text" name="q" class="form-control" value="" placeholder="用户名">
+                        </div>
+                        <button class="btn btn-default">搜索</button>
+                    </form>
                 </div>
 
-                <div class="striped-list">
+                @include('partials.errors')
+                <table class="table table-bordered table-striped table-condensed">
+                    <tbody>
+                    <tr class="head">
+                        <td class="first">#</td>
+                        <td>用户名</td>
+                        <td>昵称</td>
+                        <td>邮箱</td>
+                        <td>角色</td>
+                        <td>发帖数</td>
+                        <td>积分</td>
+                        <td>注册时间</td>
+                        <td style="width:10%">操作</td>
+                    </tr>
                     @foreach($users as $user)
-                    <div class="row striped-list-item">
-                        <div class="col-xs-2">
-                            <a href="{{ route('user.show',['id'=>$user->id]) }}" target="_blank">{{ $user->username }}</a>
-                        </div>
-                        <div class="col-xs-6">
-                            <small>{{ trans('dashboard.users.user', ['email' => $user->email, 'date' => $user->created_at]) }}</small>
-                        </div>
-                        <div class="col-xs-2">
-                           <select class="form-control small change-role" name="only-role">
-                            <option value="all">所属角色</option>
-                            @foreach ($roles as $role)
-                                <option value="{{$role->name}}" {{ $user->hasRole($role->name) ? 'selected' : null }}>{{$role->display_name}}</option>
-                            @endforeach
-                            </select>
-                        </div>
-                        <div class="col-xs-2 text-right">
-                            <a href="/dashboard/user/{{ $user->id }}/edit" class="btn btn-default btn-sm">{{ trans('forms.edit') }}</a>
-                            <a data-url="/dashboard/user/{{ $user->id }}/delete" class="btn btn-danger btn-sm confirm-action" data-method='delete'>{{ trans('forms.delete') }}</a>
-                        </div>
-                    </div>
+                        <tr>
+                            <td>{{ $user->id }}</td>
+                            <td><a href="{{ route('user.show',['id'=>$user->id]) }}" target="_blank">{{ $user->username }}</a></td>
+                            <td>{{ $user->nickname }}</td>
+                            <td>{{ $user->email }}</td>
+                            <td>{{ $user->badgeName }}</td>
+                            <td>{{ $user->thread_count }}</td>
+                            <td>{{ $user->score }}</td>
+                            <td>{{ $user->created_at }}</td>
+                            <td>
+                                <a href="/dashboard/user/{{ $user->id }}/edit"><i class="fa fa-pencil"></i></a>
+                                <a data-url="/dashboard/user/{{ $user->id }}" data-method="delete" class="confirm-action"><i class="fa fa-trash"></i></a>
+                            </td>
+                        </tr>
                     @endforeach
-                </div>
-
+                    </tbody>
+                </table>
                 <div class="text-right">
-                <!-- Pager -->
-                {!! $users->appends(Request::except('page', '_pjax'))->render() !!}
+                    <!-- Pager -->
+                    {!! $users->appends(Request::except('page', '_pjax'))->render() !!}
                 </div>
             </div>
         </div>

@@ -45,7 +45,7 @@ class UserController extends Controller
     public function index()
     {
         $q = Input::query('q');
-        $users = User::orderBy('created_at', 'desc')->search($q)->paginate(10);
+        $users = User::orderBy('created_at', 'desc')->search($q)->paginate(20);
         $roles = Role::all();
 
         return View::make('dashboard.users.index')

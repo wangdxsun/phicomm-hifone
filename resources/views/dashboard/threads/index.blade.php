@@ -14,12 +14,19 @@
     <div class="row">
         <div class="col-sm-12">
             @include('partials.errors')
-
+            <div class="toolbar">
+                <form class="form-inline">
+                    <div class="form-group">
+                        <input type="text" name="q" class="form-control" value="" placeholder="帖子标题">
+                    </div>
+                    <button class="btn btn-default">搜索</button>
+                </form>
+            </div>
             <table class="table table-bordered table-striped table-condensed">
             <tbody>
               <tr class="head">
                 <td class="first">#</td>
-                <td style="width:50%">标题</td>
+                <td style="width:40%">标题</td>
                 <td>节点</td>
                 <td>发帖人</td>
                 <td>回帖</td>
@@ -30,7 +37,7 @@
               <tr>
                 <td>{{ $thread->id }}</td>
                 <td>
-                  <a target="_blank" href="{{ $thread->url }}"><i class="{{ $thread->icon }}"></i> {{ $thread->title }}</a>
+                  <a target="_blank" href="{{ $thread->url }}"><i class="{{ $thread->icon }}"></i> {{ Str::substr($thread->title, 0, 20) }}</a>
                 </td>
                 <td>{{ $thread->node->name }}</td>
                 <td><a data-name="{{ $thread->user->username }}" href="{{ $thread->author_url }}">{{ $thread->user->username }}</a></td>
