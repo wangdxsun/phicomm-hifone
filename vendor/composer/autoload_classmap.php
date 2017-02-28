@@ -6,9 +6,11 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'AddNullableToLastReadInParticipantsTable' => $baseDir . '/database/migrations/2014_11_10_083449_add_nullable_to_last_read_in_participants_table.php',
     'AddPhicommIdToUsersTable' => $baseDir . '/database/migrations/2017_01_19_142026_add_phicomm_id_to_users_table.php',
     'AddSoftDeletesToParticipantsTable' => $baseDir . '/database/migrations/2014_11_03_154831_add_soft_deletes_to_participants_table.php',
     'AddSoftdeletesToThreadsTable' => $baseDir . '/database/migrations/2014_12_04_124531_add_softdeletes_to_threads_table.php',
+    'AlterLastReadInParticipantsTable' => $baseDir . '/database/migrations/2014_11_20_131739_alter_last_read_in_participants_table.php',
     'AlterTableTagsAddCountColumn' => $baseDir . '/database/migrations/2016_06_29_120100_alter_table_tags_add_count_column.php',
     'AlterTableUsersAddLocaleColumn' => $baseDir . '/database/migrations/2016_06_29_185009_alter_table_users_add_locale_column.php',
     'CreateAdblocksTable' => $baseDir . '/database/migrations/2016_06_02_162707_create_adblocks_table.php',
@@ -41,14 +43,13 @@ return array(
     'CreateStatsTable' => $baseDir . '/database/migrations/2016_05_29_012617_create_stats_table.php',
     'CreateTaggablesTable' => $baseDir . '/database/migrations/2016_06_22_211501_create_taggables_table.php',
     'CreateTagsTable' => $baseDir . '/database/migrations/2016_06_22_211408_create_tags_table.php',
-    'CreateThreadsTable' => $baseDir . '/database/migrations/2016_05_29_013243_create_threads_table.php',
+    'CreateThreadsTable' => $baseDir . '/database/migrations/2014_10_28_175635_create_threads_table.php',
     'CreateTipsTable' => $baseDir . '/database/migrations/2016_05_29_013448_create_tips_table.php',
     'CreateUsersTable' => $baseDir . '/database/migrations/2016_05_29_013222_create_users_table.php',
     'DatabaseSeeder' => $baseDir . '/database/seeds/DatabaseSeeder.php',
     'File_Iterator' => $vendorDir . '/phpunit/php-file-iterator/src/Iterator.php',
     'File_Iterator_Facade' => $vendorDir . '/phpunit/php-file-iterator/src/Facade.php',
     'File_Iterator_Factory' => $vendorDir . '/phpunit/php-file-iterator/src/Factory.php',
-    'Frozennode\\Administrator\\AdminController' => $vendorDir . '/hifone/dashboard/src/controllers/AdminController.php',
     'Hamcrest\\Arrays\\IsArray' => $vendorDir . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Arrays/IsArray.php',
     'Hamcrest\\Arrays\\IsArrayContaining' => $vendorDir . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Arrays/IsArrayContaining.php',
     'Hamcrest\\Arrays\\IsArrayContainingInAnyOrder' => $vendorDir . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Arrays/IsArrayContainingInAnyOrder.php',

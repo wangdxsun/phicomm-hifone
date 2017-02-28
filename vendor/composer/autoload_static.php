@@ -17,9 +17,9 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
         'e7223560d890eab89cda23685e711e2c' => __DIR__ . '/..' . '/psy/psysh/src/Psy/functions.php',
+        '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
         'f0906e6318348a765ffb6eb24e0d0938' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/helpers.php',
         '58571171fd5812e6e447dce228f52f4d' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/helpers.php',
-        '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
         '4a1f389d6ce373bda9e57857d3b61c84' => __DIR__ . '/..' . '/barryvdh/laravel-debugbar/src/helpers.php',
         'f18cc91337d49233e5754e93f3ed9ec3' => __DIR__ . '/..' . '/laravelcollective/html/src/helpers.php',
         'cb61d74ad51d00867155534456b38b23' => __DIR__ . '/..' . '/mews/purifier/src/helpers.php',
@@ -497,13 +497,6 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
                 0 => __DIR__ . '/..' . '/ezyang/htmlpurifier/library',
             ),
         ),
-        'F' => 
-        array (
-            'Frozennode\\Administrator' => 
-            array (
-                0 => __DIR__ . '/..' . '/hifone/dashboard/src',
-            ),
-        ),
         'D' => 
         array (
             'Doctrine\\DBAL\\' => 
@@ -548,9 +541,11 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
     );
 
     public static $classMap = array (
+        'AddNullableToLastReadInParticipantsTable' => __DIR__ . '/../..' . '/database/migrations/2014_11_10_083449_add_nullable_to_last_read_in_participants_table.php',
         'AddPhicommIdToUsersTable' => __DIR__ . '/../..' . '/database/migrations/2017_01_19_142026_add_phicomm_id_to_users_table.php',
         'AddSoftDeletesToParticipantsTable' => __DIR__ . '/../..' . '/database/migrations/2014_11_03_154831_add_soft_deletes_to_participants_table.php',
         'AddSoftdeletesToThreadsTable' => __DIR__ . '/../..' . '/database/migrations/2014_12_04_124531_add_softdeletes_to_threads_table.php',
+        'AlterLastReadInParticipantsTable' => __DIR__ . '/../..' . '/database/migrations/2014_11_20_131739_alter_last_read_in_participants_table.php',
         'AlterTableTagsAddCountColumn' => __DIR__ . '/../..' . '/database/migrations/2016_06_29_120100_alter_table_tags_add_count_column.php',
         'AlterTableUsersAddLocaleColumn' => __DIR__ . '/../..' . '/database/migrations/2016_06_29_185009_alter_table_users_add_locale_column.php',
         'CreateAdblocksTable' => __DIR__ . '/../..' . '/database/migrations/2016_06_02_162707_create_adblocks_table.php',
@@ -583,14 +578,13 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
         'CreateStatsTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_29_012617_create_stats_table.php',
         'CreateTaggablesTable' => __DIR__ . '/../..' . '/database/migrations/2016_06_22_211501_create_taggables_table.php',
         'CreateTagsTable' => __DIR__ . '/../..' . '/database/migrations/2016_06_22_211408_create_tags_table.php',
-        'CreateThreadsTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_29_013243_create_threads_table.php',
+        'CreateThreadsTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_28_175635_create_threads_table.php',
         'CreateTipsTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_29_013448_create_tips_table.php',
         'CreateUsersTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_29_013222_create_users_table.php',
         'DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeds/DatabaseSeeder.php',
         'File_Iterator' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Iterator.php',
         'File_Iterator_Facade' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Facade.php',
         'File_Iterator_Factory' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Factory.php',
-        'Frozennode\\Administrator\\AdminController' => __DIR__ . '/..' . '/hifone/dashboard/src/controllers/AdminController.php',
         'Hamcrest\\Arrays\\IsArray' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Arrays/IsArray.php',
         'Hamcrest\\Arrays\\IsArrayContaining' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Arrays/IsArrayContaining.php',
         'Hamcrest\\Arrays\\IsArrayContainingInAnyOrder' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Arrays/IsArrayContainingInAnyOrder.php',

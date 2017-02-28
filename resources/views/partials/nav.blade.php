@@ -47,7 +47,7 @@
           @if(Auth::check())
             @if($current_user->hasRole(['Founder','Admin']))
                  <li>
-                   <a href="/admin" data-pjax="no" title="{{ trans('hifone.dashboard') }}"><i class="fa fa-wrench"></i> <span class="hidden-xs hidden-sm">{{ trans('hifone.dashboard') }}</span></a>
+                   <a href="/dashboard" data-pjax="no" title="{{ trans('hifone.dashboard') }}"><i class="fa fa-wrench"></i> <span class="hidden-xs hidden-sm">{{ trans('hifone.dashboard') }}</span></a>
                  </li>
             @endif
           <li {!! set_active('notification*', ['notification']) !!}>

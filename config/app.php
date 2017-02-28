@@ -168,7 +168,6 @@ return [
         GrahamCampbell\Exceptions\ExceptionsServiceProvider::class,
         Jenssegers\Date\DateServiceProvider::class,
         Roumen\Feed\FeedServiceProvider::class,
-        Frozennode\Administrator\AdministratorServiceProvider::class,
         Cmgmyr\Messenger\MessengerServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
         Watson\Sitemap\SitemapServiceProvider::class,
