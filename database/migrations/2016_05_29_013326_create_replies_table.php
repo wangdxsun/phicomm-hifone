@@ -30,7 +30,7 @@ class CreateRepliesTable extends Migration
             $table->boolean('is_block')->default(false);
             $table->integer('like_count')->default(0);
             $table->timestamps();
-
+            $table->softDeletes();
             $table->index('user_id');
             $table->index('thread_id');
             $table->index('is_block');

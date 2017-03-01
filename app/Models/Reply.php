@@ -35,6 +35,8 @@ class Reply extends Model implements HasPresenter
         'body_original',
     ];
 
+    protected $dates = ['deleted_at'];
+
     /**
      * The validation rules.
      *
