@@ -14,19 +14,31 @@
             <li {!! set_active('dashboard') !!}>
                 <a href="{{ route('dashboard.index') }}">
                     <i class="fa fa-dashboard"></i>
-                    <span>{{ trans('dashboard.overview') }}</span>
+                    <span>系统概况</span>
                 </a>
             </li>
-            <li {!! set_active('dashboard/thread*') !!} {!! set_active('dashboard/reply*') !!} {!! set_active('dashboard/page*') !!} {!! set_active('dashboard/photo*') !!}>
-                <a href="{{ route('dashboard.thread.index') }}">
+            <li {!! set_active('dashboard/thread*') !!}>
+                <a href="{{ route('dashboard.thread.audit') }}">
+                    <i class="fa fa-file-o"></i>
+                    <span>话题管理</span>
+                </a>
+            </li>
+            <li {!! set_active('dashboard/reply*') !!}>
+                <a href="{{ route('dashboard.reply.audit') }}">
                     <i class="fa fa-comments-o"></i>
-                    <span>{{ trans('dashboard.content.content') }}</span>
+                    <span>回帖管理</span>
                 </a>
             </li>
             <li {!! set_active('dashboard/user*') !!}>
                 <a href="{{ route('dashboard.user.index') }}">
                     <i class="fa fa-user"></i>
                     <span>{{ trans('dashboard.users.users') }}</span>
+                </a>
+            </li>
+            <li {!! set_active('dashboard/page*') !!} {!! set_active('dashboard/photo*') !!}>
+                <a href="{{ route('dashboard.photo.index') }}">
+                    <i class="fa fa-image"></i>
+                    <span>其他管理</span>
                 </a>
             </li>
             <li {!! set_active('dashboard/node*') !!} {!! set_active('dashboard/section*') !!}>
@@ -49,19 +61,12 @@
                     </span>
                 </a>
             </li>
+            <li>
+                <a href="{{ url('/') }}">
+                    <i class="fa fa-desktop"></i>
+                    <span>返回首页</span>
+                </a>
+            </li>
         </ul>
-        <div class="bottom-menu-sidebar">
-            <ul>
-                <li data-toggle="tooltip" data-placement="top" title="{{ trans('dashboard.help') }}">
-                    <a href="https://docs.hifone.com" target="_blank"><i class="fa fa-question"></i></a>
-                </li>
-                <li data-toggle="tooltip" data-placement="top" title="{{ trans('dashboard.home') }}">
-                    <a href="{{ url('/') }}" data-pjax="no"><i class="fa fa-desktop"></i></a>
-                </li>
-                <li data-toggle="tooltip" data-placement="top" title="{{ trans('dashboard.logout') }}">
-                    <a href="{!! url('auth/logout') !!}"><i class="fa fa-sign-out"></i></a>
-                </li>
-            </ul>
-        </div>
     </div>
 </div>

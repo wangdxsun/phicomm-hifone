@@ -16,7 +16,9 @@ use Hifone\Composers\CurrentUserComposer;
 use Hifone\Composers\Dashboard\AdvertisementMenuComposer;
 use Hifone\Composers\Dashboard\ContentMenuComposer;
 use Hifone\Composers\Dashboard\NodeMenuComposer;
+use Hifone\Composers\Dashboard\ReplyMenuComposer;
 use Hifone\Composers\Dashboard\SettingMenuComposer;
+use Hifone\Composers\Dashboard\ThreadMenuComposer;
 use Hifone\Composers\Dashboard\UserMenuComposer;
 use Hifone\Composers\LocaleComposer;
 use Hifone\Composers\SidebarComposer;
@@ -41,13 +43,10 @@ class ComposerServiceProvider extends ServiceProvider
         $factory->composer('partials.sidebar', SidebarComposer::class);
 
         // Locale
-        $factory->composer([
-            'install.*',
-            'users.edit', 'dashboard.settings.*', ], LocaleComposer::class);
+        $factory->composer(['dashboard.settings.*', ], LocaleComposer::class);
 
         //Timezone
-        $factory->composer([
-            'install.*', ], TimezoneComposer::class);
+        $factory->composer(['install.*', ], TimezoneComposer::class);
 
         // 广告
         $factory->composer([
@@ -55,12 +54,14 @@ class ComposerServiceProvider extends ServiceProvider
             'dashboard.advertisements.*',
             'dashboard.adspaces.*', ], AdvertisementMenuComposer::class);
 
-        //内容
-        $factory->composer([
-            'dashboard.threads.*',
-            'dashboard.replies.*',
-            'dashboard.photos.*',
-            'dashboard.pages.*', ], ContentMenuComposer::class);
+        //帖子
+        $factory->composer(['dashboard.threads.*',], ThreadMenuComposer::class);
+
+        //回复
+        $factory->composer(['dashboard.replies.*',], ReplyMenuComposer::class);
+
+        //其他
+        $factory->composer(['dashboard.photos.*', 'dashboard.pages.*', ], ContentMenuComposer::class);
 
         // 节点
         $factory->composer(['dashboard.nodes.*', 'dashboard.sections.*'], NodeMenuComposer::class);

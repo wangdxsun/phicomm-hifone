@@ -30,8 +30,8 @@ class ReplyController extends Controller
     public function __construct()
     {
         View::share([
-            'current_menu' => 'replies',
             'sub_title'    => trans_choice('dashboard.replies.replies', 2),
+            'sub_header'   => '回帖管理',
         ]);
     }
 
@@ -41,7 +41,7 @@ class ReplyController extends Controller
 
         return View::make('dashboard.replies.index')
             ->withPageTitle(trans('dashboard.replies.replies').' - '.trans('dashboard.dashboard'))
-            ->withReplies($replies);
+            ->withReplies($replies)->withCurrentMenu('index');
     }
 
     /**
@@ -55,7 +55,7 @@ class ReplyController extends Controller
     {
         return View::make('dashboard.replies.create_edit')
             ->withPageTitle(trans('dashboard.replies.edit.title').' - '.trans('dashboard.dashboard'))
-            ->withReply($reply);
+            ->withReply($reply)->withCurrentMenu('index');
     }
 
     /**
@@ -97,5 +97,23 @@ class ReplyController extends Controller
 
         return Redirect::route('dashboard.reply.index')
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
+    }
+
+    public function audit()
+    {
+        $replies = Reply::orderBy('created_at', 'desc')->paginate(20);
+
+        return View::make('dashboard.replies.index')
+            ->withPageTitle(trans('dashboard.replies.replies').' - '.trans('dashboard.dashboard'))
+            ->withReplies($replies)->withCurrentMenu('audit');
+    }
+
+    public function trash()
+    {
+        $replies = Reply::orderBy('created_at', 'desc')->paginate(20);
+
+        return View::make('dashboard.replies.index')
+            ->withPageTitle(trans('dashboard.replies.replies').' - '.trans('dashboard.dashboard'))
+            ->withReplies($replies)->withCurrentMenu('trash');
     }
 }

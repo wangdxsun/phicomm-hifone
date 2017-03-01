@@ -27,10 +27,31 @@ class DashboardRoutes
      */
     public function map(Registrar $router)
     {
-        $router->group(['middleware' => ['web', 'auth', 'role:Admin|Founder'], 'prefix' => 'dashboard', 'namespace' => 'Dashboard', 'as' => 'dashboard.'], function (Registrar $router) {
+        $router->group([
+            'middleware' => ['web', 'auth', 'role:Admin|Founder'],
+            'prefix' => 'dashboard',
+            'namespace' => 'Dashboard',
+            'as' => 'dashboard.'], function (Registrar $router) {
+
             $router->get('/', [
                 'as'   => 'index',
                 'uses' => 'DashboardController@index',
+            ]);
+            $router->get('thread/audit', [
+                'as' => 'thread.audit',
+                'uses' => 'ThreadController@audit'
+            ]);
+            $router->get('thread/trash', [
+                'as' => 'thread.trash',
+                'uses' => 'ThreadController@trash'
+            ]);
+            $router->get('reply/audit', [
+                'as' => 'reply.audit',
+                'uses' => 'ReplyController@audit'
+            ]);
+            $router->get('reply/trash', [
+                'as' => 'reply.trash',
+                'uses' => 'ReplyController@trash'
             ]);
 
             // Settings
@@ -65,7 +86,11 @@ class DashboardRoutes
         });
 
         //Resources
-        $router->group(['middleware' => ['web', 'auth', 'role:Admin|Founder'], 'prefix' => 'dashboard', 'namespace' => 'Dashboard'], function (Registrar $router) {
+        $router->group([
+            'middleware' => ['web', 'auth', 'role:Admin|Founder'],
+            'prefix' => 'dashboard',
+            'namespace' => 'Dashboard'], function (Registrar $router) {
+
             // Advertisements
             $router->resource('adblock', 'AdblockController');
             $router->resource('adspace', 'AdspaceController');
@@ -88,6 +113,7 @@ class DashboardRoutes
             $router->resource('user', 'UserController');
 
             $router->post('thread/{thread}/pin', 'ThreadController@pin');
+            $router->post('thread/{thread}/excellent', 'ThreadController@excellent');
         });
     }
 }

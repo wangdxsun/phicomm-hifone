@@ -30,15 +30,22 @@ class ThreadPresenter extends AbstractPresenter
         return AutoPresenter::decorate($this->wrappedObject->user)->url;
     }
 
-    public function icon()
+    public function icons()
     {
-        if ($this->wrappedObject->order > 0) {
-            return 'fa fa-thumb-tack text-danger';
-        } elseif ($this->wrappedObject->is_excellent) {
-            return 'fa fa-diamond text-success';
-        }
+        $icons = [];
+        $this->wrappedObject->is_excellent && $icons[] = 'fa fa-diamond text-success';
+        $this->wrappedObject->order > 0 && $icons[] = 'fa fa-thumb-tack text-danger';
+        return $icons;
+    }
 
-        return '';
+    public function pin()
+    {
+        return $this->wrappedObject->order ? 'fa fa-thumb-tack text-danger' : 'fa fa-thumb-tack text-success';
+    }
+
+    public function excellent()
+    {
+        return $this->wrappedObject->is_excellent ? 'fa fa-diamond text-danger' : 'fa fa-diamond text-success';
     }
 
     /**

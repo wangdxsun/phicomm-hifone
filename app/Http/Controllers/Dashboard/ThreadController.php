@@ -32,8 +32,8 @@ class ThreadController extends Controller
     public function __construct()
     {
         View::share([
-            'current_menu' => 'threads',
             'sub_title'    => trans_choice('dashboard.threads.threads', 2),
+            'sub_header'   => '帖子管理'
         ]);
     }
 
@@ -43,7 +43,8 @@ class ThreadController extends Controller
 
         return View::make('dashboard.threads.index')
             ->withPageTitle(trans('dashboard.threads.threads').' - '.trans('dashboard.dashboard'))
-            ->withThreads($threads);
+            ->withThreads($threads)
+            ->withCurrentMenu('index');
     }
 
     /**
@@ -61,7 +62,8 @@ class ThreadController extends Controller
             ->withPageTitle(trans('dashboard.threads.edit.title').' - '.trans('dashboard.dashboard'))
             ->withNode($thread->node)
             ->withSections($sections)
-            ->withThread($thread);
+            ->withThread($thread)
+            ->withCurrentMenu('index');
     }
 
     /**
@@ -99,11 +101,37 @@ class ThreadController extends Controller
             ->withSuccess(trans('dashboard.threads.edit.success'));
     }
 
+    public function excellent(Thread $thread)
+    {
+        ($thread->is_excellent > 0) ? $thread->decrement('is_excellent', 1) : $thread->increment('is_excellent', 1);
+
+        return Redirect::route('dashboard.thread.index')
+            ->withSuccess(trans('dashboard.threads.edit.success'));
+    }
+
     public function destroy(Thread $thread)
     {
         dispatch(new RemoveThreadCommand($thread));
 
         return Redirect::route('dashboard.thread.index')
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
+    }
+
+    public function audit()
+    {
+        $threads = Thread::orderBy('order', 'desc')->orderBy('created_at', 'desc')->paginate(20);
+        return view('dashboard.threads.audit')
+            ->withPageTitle(trans('dashboard.threads.threads').' - '.trans('dashboard.dashboard'))
+            ->withThreads($threads)
+            ->withCurrentMenu('audit');
+    }
+
+    public function trash()
+    {
+        $threads = Thread::orderBy('order', 'desc')->orderBy('created_at', 'desc')->paginate(20);
+        return view('dashboard.threads.trash')
+            ->withPageTitle(trans('dashboard.threads.threads').' - '.trans('dashboard.dashboard'))
+            ->withThreads($threads)
+            ->withCurrentMenu('trash');
     }
 }
