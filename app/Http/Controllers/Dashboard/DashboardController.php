@@ -17,6 +17,7 @@ use Hifone\Models\Reply;
 use Hifone\Models\Section;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
+use Hifone\Services\Parsers\Markdown;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\View;
 
@@ -66,5 +67,20 @@ class DashboardController extends Controller
             ->withRecentUsers($recentUsers)
             ->withComponents($components)
             ->withNodes($nodes);
+    }
+
+    public function markdown(Markdown $markdown)
+    {
+        $threads = Thread::all();
+        foreach ($threads as $thread) {
+            $thread->body_original = $markdown->convertHtmlToMarkdown($thread->body);
+            $thread->save();
+        }
+//        $thread = Thread::find(102);
+//        $thread->body_original = $markdown->convertHtmlToMarkdown($thread->body);
+//        return $thread->body_original;
+//        dd($thread->body_original);
+//        $thread->save();
+        return 'finish';
     }
 }

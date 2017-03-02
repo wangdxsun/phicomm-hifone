@@ -65,6 +65,11 @@ class Notification extends Model implements HasPresenter
         return $query->where('author_id', $author_id);
     }
 
+    public function scopeForObject($query, $object_id)
+    {
+        return $query->where('object_id', $object_id);
+    }
+
     public function scopeOfType($query, $type)
     {
         return $query->where('type', $type);

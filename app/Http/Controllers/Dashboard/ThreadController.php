@@ -39,7 +39,7 @@ class ThreadController extends Controller
 
     public function index()
     {
-        $threads = Thread::orderBy('order', 'desc')->orderBy('created_at', 'desc')->paginate(20);
+        $threads = Thread::visible()->orderBy('order', 'desc')->orderBy('created_at', 'desc')->paginate(20);
 
         return View::make('dashboard.threads.index')
             ->withPageTitle(trans('dashboard.threads.threads').' - '.trans('dashboard.dashboard'))
@@ -113,25 +113,39 @@ class ThreadController extends Controller
     {
         dispatch(new RemoveThreadCommand($thread));
 
-        return Redirect::route('dashboard.thread.index')
+        return Redirect::route('dashboard.thread.trash')
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
     }
 
     public function audit()
     {
-        $threads = Thread::orderBy('order', 'desc')->orderBy('created_at', 'desc')->paginate(20);
+        $threads = Thread::audit()->orderBy('order', 'desc')->orderBy('created_at', 'desc')->paginate(20);
         return view('dashboard.threads.audit')
             ->withPageTitle(trans('dashboard.threads.threads').' - '.trans('dashboard.dashboard'))
             ->withThreads($threads)
             ->withCurrentMenu('audit');
     }
 
+    public function postAudit(Thread $thread)
+    {
+        $thread->order = 0;
+        $thread->save();
+        return Redirect::back()->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
+    }
+
     public function trash()
     {
-        $threads = Thread::orderBy('order', 'desc')->orderBy('created_at', 'desc')->paginate(20);
+        $threads = Thread::trash()->orderBy('order', 'desc')->orderBy('created_at', 'desc')->paginate(20);
         return view('dashboard.threads.trash')
             ->withPageTitle(trans('dashboard.threads.threads').' - '.trans('dashboard.dashboard'))
             ->withThreads($threads)
             ->withCurrentMenu('trash');
+    }
+
+    public function postTrash(Thread $thread)
+    {
+        $thread->order = -1;
+        $thread->save();
+        return Redirect::back()->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
     }
 }

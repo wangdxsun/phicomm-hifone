@@ -68,6 +68,21 @@ class Reply extends Model implements HasPresenter
         return $this->belongsTo(Thread::class);
     }
 
+    public function scopeVisible($query)
+    {
+        return $query->where('status', '>=', 0);
+    }
+
+    public function scopeAudit($query)
+    {
+        return $query->where('status', -2);//审核中
+    }
+
+    public function scopeTrash($query)
+    {
+        return $query->where('status', -1)->orWhere('status', -5);//回收站
+    }
+
     /**
      * Get the presenter class.
      *

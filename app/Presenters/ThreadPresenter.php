@@ -33,19 +33,19 @@ class ThreadPresenter extends AbstractPresenter
     public function icons()
     {
         $icons = [];
-        $this->wrappedObject->is_excellent && $icons[] = 'fa fa-diamond text-success';
+        $this->wrappedObject->is_excellent && $icons[] = 'fa fa-diamond text-danger';
         $this->wrappedObject->order > 0 && $icons[] = 'fa fa-thumb-tack text-danger';
         return $icons;
     }
 
     public function pin()
     {
-        return $this->wrappedObject->order ? 'fa fa-thumb-tack text-danger' : 'fa fa-thumb-tack text-success';
+        return $this->wrappedObject->order ? 'fa fa-thumb-tack text-danger' : 'fa fa-thumb-tack';
     }
 
     public function excellent()
     {
-        return $this->wrappedObject->is_excellent ? 'fa fa-diamond text-danger' : 'fa fa-diamond text-success';
+        return $this->wrappedObject->is_excellent ? 'fa fa-diamond text-danger' : 'fa fa-diamond';
     }
 
     /**

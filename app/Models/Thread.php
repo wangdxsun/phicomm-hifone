@@ -20,13 +20,14 @@ use Hifone\Models\Traits\Taggable;
 use Hifone\Presenters\ThreadPresenter;
 use Hifone\Services\Tag\TaggableInterface;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Input;
 use McCool\LaravelAutoPresenter\HasPresenter;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 class Thread extends Model implements HasPresenter, TaggableInterface
 {
-    use ValidatingTrait, Taggable, ForUser, Recent, RevisionableTrait;
+    use ValidatingTrait, Taggable, ForUser, Recent, RevisionableTrait, SoftDeletes;
 
     // manually maintain
     public $timestamps = false;
@@ -117,6 +118,21 @@ class Thread extends Model implements HasPresenter, TaggableInterface
         $this->save();
     }
 
+    public function scopeVisible($query)
+    {
+        return $query->where('order', '>=', 0);
+    }
+
+    public function scopeAudit($query)
+    {
+        return $query->where('order', -2);//审核中
+    }
+
+    public function scopeTrash($query)
+    {
+        return $query->where('order', -1);//回收站
+    }
+
     public function scopeSearch($query, $search)
     {
         if (!$search) {
@@ -142,19 +158,21 @@ class Thread extends Model implements HasPresenter, TaggableInterface
     public function scopePinAndRecentReply($query)
     {
         return $query->whereRaw("(`created_at` > '".Carbon::today()->subMonths(6)->toDateString()."' or (`order` > 0) )")
-                     ->orderBy('order', 'desc')
-                     ->orderBy('updated_at', 'desc');
+            ->visible()
+            ->orderBy('order', 'desc')
+            ->orderBy('updated_at', 'desc');
     }
 
     public function scopeRecentReply($query)
     {
-        return $query->orderBy('order', 'desc')
-                     ->orderBy('updated_at', 'desc');
+        return $query->visible()
+            ->orderBy('order', 'desc')
+            ->orderBy('updated_at', 'desc');
     }
 
     public function scopeExcellent($query)
     {
-        return $query->where('is_excellent', '=', true);
+        return $query->where('is_excellent', '=', true)->visible();
     }
 
     public static function makeExcerpt($body)

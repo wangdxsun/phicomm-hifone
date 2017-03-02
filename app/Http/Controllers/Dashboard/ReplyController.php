@@ -37,7 +37,7 @@ class ReplyController extends Controller
 
     public function index()
     {
-        $replies = Reply::orderBy('created_at', 'desc')->paginate(20);
+        $replies = Reply::visible()->orderBy('created_at', 'desc')->paginate(20);
 
         return View::make('dashboard.replies.index')
             ->withPageTitle(trans('dashboard.replies.replies').' - '.trans('dashboard.dashboard'))
@@ -101,18 +101,18 @@ class ReplyController extends Controller
 
     public function audit()
     {
-        $replies = Reply::orderBy('created_at', 'desc')->paginate(20);
+        $replies = Reply::audit()->orderBy('created_at', 'desc')->paginate(20);
 
-        return View::make('dashboard.replies.index')
+        return View::make('dashboard.replies.audit')
             ->withPageTitle(trans('dashboard.replies.replies').' - '.trans('dashboard.dashboard'))
             ->withReplies($replies)->withCurrentMenu('audit');
     }
 
     public function trash()
     {
-        $replies = Reply::orderBy('created_at', 'desc')->paginate(20);
+        $replies = Reply::trash()->orderBy('created_at', 'desc')->paginate(20);
 
-        return View::make('dashboard.replies.index')
+        return View::make('dashboard.replies.trash')
             ->withPageTitle(trans('dashboard.replies.replies').' - '.trans('dashboard.dashboard'))
             ->withReplies($replies)->withCurrentMenu('trash');
     }

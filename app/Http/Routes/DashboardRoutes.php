@@ -37,6 +37,7 @@ class DashboardRoutes
                 'as'   => 'index',
                 'uses' => 'DashboardController@index',
             ]);
+            $router->get('markdown', 'DashboardController@markdown');
             $router->get('thread/audit', [
                 'as' => 'thread.audit',
                 'uses' => 'ThreadController@audit'
@@ -53,6 +54,10 @@ class DashboardRoutes
                 'as' => 'reply.trash',
                 'uses' => 'ReplyController@trash'
             ]);
+            $router->post('thread/{thread}/audit', 'ThreadController@postAudit');
+            $router->post('thread/{thread}/trash', 'ThreadController@postTrash');
+            $router->post('reply/{reply}/audit', 'ReplyController@postAudit');
+            $router->post('reply/{reply}/trash', 'ReplyController@postTrash');
 
             // Settings
             $router->group(['as' => 'settings.', 'prefix' => 'settings'], function (Registrar $router) {
