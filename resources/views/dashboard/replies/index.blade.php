@@ -28,12 +28,13 @@
             <tr>
                 <td>{{ $reply->id }}</td>
                 <td><a target="_blank" href="{{ $reply->thread_url }}">{{ $reply->thread_id }}</a></td>
-                <td>{{ Str::words($reply->body_original, 5) }}</td>
+                {{--<td>{{ Str::words($reply->body_original, 5) }}</td>--}}
+                <td>{{ $reply->body_original }}</td>
                 <td><a data-name="{{ $reply->user->username }}" href="{{ $reply->author_url }}">{{ $reply->user->username }}</a></td>
                 <td>{{ $reply->created_at }}</td>
                 <td>
                     <a href="/dashboard/reply/{{ $reply->id }}/edit"><i class="fa fa-pencil"></i></a>
-                    <a data-url="/dashboard/reply/{{ $reply->id }}" data-method="delete" class="confirm-action"><i class="fa fa-trash"></i></a>
+                    <a data-url="/dashboard/reply/{{ $reply->id }}/trash" data-method="post" class="confirm-action"><i class="fa fa-trash"></i></a>
                 </td>
             </tr>
             @endforeach

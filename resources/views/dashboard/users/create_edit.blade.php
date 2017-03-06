@@ -29,6 +29,16 @@
                             {!! Form::text('user[email]', isset($user) ? $user->email : null, ['class' => 'form-control', 'id' => 'user-email', 'placeholder' => '']) !!}
                         </div>
                         <div class="form-group">
+                            <label for="user-role">所属角色</label>
+                            <select class="form-control small change-role" name="only-role" id="user-role">
+                                <option value="all">选择角色</option>
+                                @foreach ($roles as $role)
+                                    <option value="{{$role->name}}" {{ $user->hasRole($role->name) ? 'selected' : null }}>{{$role->display_name}}</option>
+                                @endforeach
+                            </select>
+{{--                            {!! Form::text('user[email]', isset($user) ? $user->email : null, ['class' => 'form-control', 'id' => 'user-email', 'placeholder' => '']) !!}--}}
+                        </div>
+                        <div class="form-group">
                             <label for="user-password">{{ trans('dashboard.users.password') }}</label>
                             {!! Form::text('user[password]', null, ['class' => 'form-control', 'id' => 'user-password', 'placeholder' => '']) !!}
                         </div>

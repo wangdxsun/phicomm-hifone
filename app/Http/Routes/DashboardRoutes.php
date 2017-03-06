@@ -58,6 +58,8 @@ class DashboardRoutes
             $router->post('thread/{thread}/trash', 'ThreadController@postTrash');
             $router->post('reply/{reply}/audit', 'ReplyController@postAudit');
             $router->post('reply/{reply}/trash', 'ReplyController@postTrash');
+            $router->post('thread/{thread}/pin', 'ThreadController@pin');
+            $router->post('thread/{thread}/excellent', 'ThreadController@excellent');
 
             // Settings
             $router->group(['as' => 'settings.', 'prefix' => 'settings'], function (Registrar $router) {
@@ -116,9 +118,9 @@ class DashboardRoutes
             $router->resource('link', 'LinkController');
             // Users
             $router->resource('user', 'UserController');
-
-            $router->post('thread/{thread}/pin', 'ThreadController@pin');
-            $router->post('thread/{thread}/excellent', 'ThreadController@excellent');
+            $router->resource('role', 'RoleController');
+            $router->resource('word', 'WordController');
+            $router->resource('announce', 'AnnounceController');
         });
     }
 }

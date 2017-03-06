@@ -13,10 +13,12 @@ namespace Hifone\Models;
 
 use Cache;
 use DB;
+use Hifone\Presenters\RolePresenter;
+use McCool\LaravelAutoPresenter\HasPresenter;
 use Venturecraft\Revisionable\RevisionableTrait;
 use Zizaco\Entrust\EntrustRole;
 
-class Role extends EntrustRole
+class Role extends EntrustRole implements HasPresenter
 {
     use RevisionableTrait;
 
@@ -32,5 +34,20 @@ class Role extends EntrustRole
         return Cache::remember('all_roles', $minutes = 60, function () {
             return DB::table('roles')->get();
         });
+    }
+
+    public function permissions()
+    {
+        return $this::belongsToMany(Permission::class);
+    }
+
+    /**
+     * Get the presenter class.
+     *
+     * @return string
+     */
+    public function getPresenterClass()
+    {
+        return RolePresenter::class;
     }
 }

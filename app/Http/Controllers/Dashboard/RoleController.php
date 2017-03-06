@@ -14,13 +14,14 @@ namespace Hifone\Http\Controllers\Dashboard;
 use AltThree\Validator\ValidationException;
 use Hifone\Hashing\PasswordHasher;
 use Hifone\Http\Controllers\Controller;
+use Hifone\Models\Permission;
 use Hifone\Models\Role;
 use Hifone\Models\User;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
 use Input;
 
-class UserController extends Controller
+class RoleController extends Controller
 {
     /**
      * Creates a new node controller instance.
@@ -32,8 +33,8 @@ class UserController extends Controller
         $this->hasher = $hasher;
 
         View::share([
-            'current_menu'  => 'nodes',
-            'sub_title'     => trans_choice('dashboard.nodes.nodes', 2),
+            'current_menu'  => 'roles',
+            'sub_title'     => '角色管理',
         ]);
     }
 
@@ -44,14 +45,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        $q = Input::query('q');
-        $users = User::orderBy('created_at', 'desc')->search($q)->paginate(20);
         $roles = Role::all();
 
-        return View::make('dashboard.users.index')
-        ->withPageTitle(trans('dashboard.users.users').' - '.trans('dashboard.dashboard'))
-        ->withUsers($users)
-        ->withRoles($roles);
+        return View::make('dashboard.roles.index')
+            ->withPageTitle('角色管理')
+            ->withRoles($roles);
     }
 
     /**
@@ -61,9 +59,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = Role::all();
-        return View::make('dashboard.users.create_edit')
-            ->withRoles($roles)
+        return View::make('dashboard.roles.create_edit')
             ->withPageTitle(trans('dashboard.users.add.title').' - '.trans('dashboard.dashboard'));
     }
 
@@ -91,16 +87,13 @@ class UserController extends Controller
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.users.add.success')));
     }
 
-    public function edit(User $user)
+    public function edit(Role $role)
     {
-        $roles = Role::all();
-        $this->subMenu['users']['active'] = true;
-
-        return View::make('dashboard.users.create_edit')
-            ->withPageTitle(trans('dashboard.users.add.title').' - '.trans('dashboard.dashboard'))
-            ->withUser($user)
-            ->withRoles($roles)
-            ->withSubMenu($this->subMenu);
+        $permissions = Permission::all();
+        return View::make('dashboard.roles.create_edit')
+            ->withPageTitle('修改角色'.' - '.trans('dashboard.dashboard'))
+            ->withRole($role)
+            ->withPermissions($permissions);
     }
 
     public function update(User $user)

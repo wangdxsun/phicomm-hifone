@@ -35,6 +35,24 @@
                     <span>{{ trans('dashboard.users.users') }}</span>
                 </a>
             </li>
+            <li {!! set_active('dashboard/role*') !!}>
+                <a href="{{ route('dashboard.role.index') }}">
+                    <i class="fa fa-lock"></i>
+                    <span>角色管理</span>
+                </a>
+            </li>
+            <li {!! set_active('dashboard/word*') !!}>
+                <a href="{{ route('dashboard.word.index') }}">
+                    <i class="fa fa-filter"></i>
+                    <span>敏感词过滤</span>
+                </a>
+            </li>
+            <li {!! set_active('dashboard/announce*') !!}>
+                <a href="{{ route('dashboard.announce.index') }}">
+                    <i class="fa fa-bullhorn"></i>
+                    <span>公告系统</span>
+                </a>
+            </li>
             <li {!! set_active('dashboard/page*') !!} {!! set_active('dashboard/photo*') !!}>
                 <a href="{{ route('dashboard.photo.index') }}">
                     <i class="fa fa-image"></i>

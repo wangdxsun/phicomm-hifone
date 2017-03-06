@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
 use Input;
 
-class UserController extends Controller
+class AnnounceController extends Controller
 {
     /**
      * Creates a new node controller instance.
@@ -44,14 +44,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        $q = Input::query('q');
-        $users = User::orderBy('created_at', 'desc')->search($q)->paginate(20);
         $roles = Role::all();
 
-        return View::make('dashboard.users.index')
-        ->withPageTitle(trans('dashboard.users.users').' - '.trans('dashboard.dashboard'))
-        ->withUsers($users)
-        ->withRoles($roles);
+        return View::make('dashboard.roles.index')
+            ->withPageTitle('权限管理')
+            ->withRoles($roles);
     }
 
     /**
@@ -61,9 +58,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = Role::all();
-        return View::make('dashboard.users.create_edit')
-            ->withRoles($roles)
+        return View::make('dashboard.roles.create_edit')
             ->withPageTitle(trans('dashboard.users.add.title').' - '.trans('dashboard.dashboard'));
     }
 
@@ -93,13 +88,11 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        $roles = Role::all();
         $this->subMenu['users']['active'] = true;
 
         return View::make('dashboard.users.create_edit')
             ->withPageTitle(trans('dashboard.users.add.title').' - '.trans('dashboard.dashboard'))
             ->withUser($user)
-            ->withRoles($roles)
             ->withSubMenu($this->subMenu);
     }
 

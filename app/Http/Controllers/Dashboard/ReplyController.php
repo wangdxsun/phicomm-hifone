@@ -116,4 +116,18 @@ class ReplyController extends Controller
             ->withPageTitle(trans('dashboard.replies.replies').' - '.trans('dashboard.dashboard'))
             ->withReplies($replies)->withCurrentMenu('trash');
     }
+
+    public function postAudit(Reply $reply)
+    {
+        $reply->order = 0;
+        $reply->save();
+        return Redirect::back()->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
+    }
+
+    public function postTrash(Reply $reply)
+    {
+        $reply->order = -1;
+        $reply->save();
+        return Redirect::back()->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
+    }
 }

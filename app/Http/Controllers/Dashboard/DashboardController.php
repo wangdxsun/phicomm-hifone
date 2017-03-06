@@ -71,16 +71,22 @@ class DashboardController extends Controller
 
     public function markdown(Markdown $markdown)
     {
-        $threads = Thread::all();
-        foreach ($threads as $thread) {
-            $thread->body_original = $markdown->convertHtmlToMarkdown($thread->body);
-            $thread->save();
-        }
+//        $threads = Thread::all();
+//        foreach ($threads as $thread) {
+//            $thread->body_original = $markdown->convertHtmlToMarkdown($thread->body);
+//            $thread->save();
+//        }
 //        $thread = Thread::find(102);
 //        $thread->body_original = $markdown->convertHtmlToMarkdown($thread->body);
 //        return $thread->body_original;
 //        dd($thread->body_original);
 //        $thread->save();
+
+        $replies = Reply::where('id', '>', 2793)->get();
+        foreach ($replies as $reply) {
+            $reply->body_original = $markdown->convertHtmlToMarkdown($reply->body);
+            $reply->save();
+        }
         return 'finish';
     }
 }
