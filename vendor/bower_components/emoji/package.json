@@ -1,0 +1,39 @@
+{
+  "author": "fengmk2 <fengmk2@gmail.com> (http://fengmk2.github.com/)",
+  "name": "emoji",
+  "description": "This library allows the handling and conversion of Emoji in Javascript.",
+  "version": "0.3.2",
+  "homepage": "https://github.com/node-modules/emoji",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/node-modules/emoji.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "make test-all"
+  },
+  "config": {
+    "blanket": {
+      "pattern": "emoji/lib"
+    },
+    "travis-cov": {
+      "threshold": 95
+    }
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "contributors": "*",
+    "mocha": "*",
+    "blanket": "*",
+    "travis-cov": "*",
+    "coveralls": "*",
+    "mocha-lcov-reporter": "*",
+    "should": "*"
+  },
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "spm": {
+    "main": "index.js"
+  }
+}

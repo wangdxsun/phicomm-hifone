@@ -1,0 +1,35 @@
+{
+  "name": "emoji",
+  "version": "0.3.2",
+  "homepage": "https://github.com/node-modules/emoji",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/node-modules/emoji.git"
+  },
+  "authors": [
+    "fengmk2 <fengmk2@gmail.com> (http://fengmk2.github.com)"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "node_modules",
+    "bower_components",
+    "test",
+    "bin",
+    "tpl",
+    ".gitignore",
+    ".npmignore",
+    ".travis.yml",
+    "*.txt",
+    "logo.png"
+  ],
+  "main": "lib/emoji.js",
+  "_release": "0.3.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.3.2",
+    "commit": "377b16159d10f59ce31c4dbf95f37c640291bbcb"
+  },
+  "_source": "https://github.com/fengmk2/emoji.git",
+  "_target": "~0.3.2",
+  "_originalSource": "emoji"
+}
