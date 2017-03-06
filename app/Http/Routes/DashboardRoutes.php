@@ -121,6 +121,7 @@ class DashboardRoutes
             $router->resource('role', 'RoleController');
             $router->resource('word', 'WordController');
             $router->resource('announce', 'AnnounceController');
+            $router->resource('credit', 'CreditController');
         });
     }
 }

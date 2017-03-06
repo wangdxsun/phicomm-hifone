@@ -33,6 +33,11 @@ class ReplyPresenter extends AbstractPresenter
         return AutoPresenter::decorate($this->wrappedObject->thread)->url;
     }
 
+    public function title()
+    {
+        return $this->wrappedObject->thread->title;
+    }
+
     public function highlight()
     {
         return $this->wrappedObject->like_count > 0 ? 'highlight' : null;

@@ -30,7 +30,7 @@
                 <td>节点</td>
                 <td>发帖人</td>
                 <td>回帖</td>
-                <td>时间</td>
+                <td style="width: 150px">时间</td>
                 <td style="width:10%">操作</td>
               </tr>
              @foreach($threads as $thread)

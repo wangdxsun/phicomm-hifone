@@ -50,7 +50,13 @@
             <li {!! set_active('dashboard/announce*') !!}>
                 <a href="{{ route('dashboard.announce.index') }}">
                     <i class="fa fa-bullhorn"></i>
-                    <span>公告系统</span>
+                    <span>公告管理</span>
+                </a>
+            </li>
+            <li {!! set_active('dashboard/credit*') !!}>
+                <a href="{{ route('dashboard.credit.index') }}">
+                    <i class="fa fa-star"></i>
+                    <span>积分管理</span>
                 </a>
             </li>
             <li {!! set_active('dashboard/page*') !!} {!! set_active('dashboard/photo*') !!}>

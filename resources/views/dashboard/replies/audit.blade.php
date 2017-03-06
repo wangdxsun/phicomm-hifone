@@ -18,11 +18,11 @@
         <tbody>
             <tr class="head">
                 <td class="first">#</td>
-                <td style="width:5%">话题</td>
-                <td style="width:50%">回帖内容</td>
-                <td>回帖人</td>
-                <td>回帖时间</td>
-                <td style="width:10%">操作</td>
+                <td style="width: 250px">话题</td>
+                <td >回帖内容</td>
+                <td style="width: 100px;">回帖人</td>
+                <td style="width: 150px">回帖时间</td>
+                <td style="width: 100px">操作</td>
             </tr>
             @foreach($replies as $reply)
             <tr>
