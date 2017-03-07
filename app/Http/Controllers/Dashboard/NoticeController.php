@@ -14,13 +14,13 @@ namespace Hifone\Http\Controllers\Dashboard;
 use AltThree\Validator\ValidationException;
 use Hifone\Hashing\PasswordHasher;
 use Hifone\Http\Controllers\Controller;
-use Hifone\Models\Role;
 use Hifone\Models\User;
+use Hifone\Models\Notice;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
 use Input;
 
-class AnnounceController extends Controller
+class NoticeController extends Controller
 {
     /**
      * Creates a new node controller instance.
@@ -44,11 +44,11 @@ class AnnounceController extends Controller
      */
     public function index()
     {
-        $roles = Role::all();
-
-        return View::make('dashboard.roles.index')
-            ->withPageTitle('权限管理')
-            ->withRoles($roles);
+        $notices = Notice::all();
+        $user_id = session('phicommId');
+        return View::make('dashboard.notice.index')
+            ->withUserId($user_id)
+            ->withNotices($notices);
     }
 
     /**

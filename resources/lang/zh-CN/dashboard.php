@@ -73,6 +73,22 @@ return [
             'failure' => '分类更新失败！',
         ],
     ],
+    'notices' => [
+        'title'        => '标题',
+        'content'      => '内容',
+        'start_time'   => '起始时间',
+        'end_time'     => '终止时间',
+        'notice_type'=> [
+            'title'   => '公告类型',
+            'type_1'  => '文字公告',
+            'type_2'  => '网址链接'
+        ],
+        'add'         => [
+            'title'   => '添加公告',
+            'success' => '添加公告成功.',
+            'failure' => '添加公告失败',
+        ],
+    ],
     'nodes' => [
         'nodes'        => '节点管理',
         'name'         => '名称',
