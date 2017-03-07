@@ -27,7 +27,7 @@
             @foreach($replies as $reply)
             <tr>
                 <td>{{ $reply->id }}</td>
-                <td><a target="_blank" href="{{ $reply->thread_url }}">{{ $reply->thread_id }}</a></td>
+                <td><a target="_blank" href="{{ $reply->thread_url }}">{{ $reply->title }}</a></td>
                 <td>{{ Str::words($reply->body_original, 5) }}</td>
                 <td><a data-name="{{ $reply->user->username }}" href="{{ $reply->author_url }}">{{ $reply->user->username }}</a></td>
                 <td>{{ $reply->created_at }}</td>
