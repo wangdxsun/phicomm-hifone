@@ -9,6 +9,9 @@ HifoneView = Backbone.View.extend
     if $('body').data('page') in ['forum']
       window._forumView = new ForumView({parentView: @})
 
+    if $('body').data('page') in ['dashboard']
+      window._dashboardView = new DashboardView({parentView: @})
+
     if $('body').data('page') in ['install']
       window._installView = new InstallView({parentView: @})
 
@@ -91,7 +94,7 @@ window.Hifone =
         if token
           jqXHR.setRequestHeader 'X-CSRF-Token', token
       jqXHR
-  
+
     $.ajaxSetup beforeSend: (xhr) ->
       xhr.setRequestHeader 'Accept', 'application/json'
       # xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
@@ -112,9 +115,9 @@ window.Hifone =
       if button.hasClass('confirm-action')
         swal {
           type: 'warning'
-          title: Hifone.jsLang.delete_form_title
-          text: Hifone.jsLang.delete_form_text
-          confirmButtonText: Hifone.jsLang.button_yes
+          title: 'Confirm your action'
+          text: 'Are you sure you want to do this?'
+          confirmButtonText: 'Yes'
           confirmButtonColor: '#FF6F6F'
           showCancelButton: true
         }, ->
