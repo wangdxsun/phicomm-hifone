@@ -47,8 +47,8 @@
                     <span>敏感词过滤</span>
                 </a>
             </li>
-            <li {!! set_active('dashboard/announce*') !!}>
-                <a href="{{ route('dashboard.announce.index') }}">
+            <li {!! set_active('dashboard/notice*') !!}>
+                <a href="{{ route('dashboard.notice.index') }}">
                     <i class="fa fa-bullhorn"></i>
                     <span>公告管理</span>
                 </a>
