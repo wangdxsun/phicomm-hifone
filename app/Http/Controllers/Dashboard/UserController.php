@@ -75,18 +75,19 @@ class UserController extends Controller
     public function store()
     {
         $userData = Input::get('user');
-        $userData['salt'] = str_random(16);
-        $userData['password'] = $this->hasher->make($userData['password'], ['salt' => $userData['salt']]);
+        $roles = Input::get('roles');
 
         try {
-            User::create($userData);
+            \DB::transaction(function () use ($userData, $roles) {
+                $user = User::create($userData);
+                $user->roles()->attach($roles);
+            });
         } catch (ValidationException $e) {
-            return Redirect::route('dashboard.user.create')
-                ->withInput(Input::get('user'))
-                ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.users.add.failure')))
+            return Redirect::route('dashboard.user.create_edit')
+                ->withInput($userData)
+                ->withTitle('用户添加失败')
                 ->withErrors($e->getMessageBag());
         }
-
         return Redirect::route('dashboard.user.index')
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.users.add.success')));
     }
@@ -106,21 +107,25 @@ class UserController extends Controller
     public function update(User $user)
     {
         $userData = Input::get('user');
+        $roles = Input::get('roles');
         if ($userData['password']) {
             $userData['salt'] = str_random(6);
             $userData['password'] = $this->hasher->make($userData['password'], ['salt' => $userData['salt']]);
         } else {
             unset($userData['password']);
         }
+
         try {
-            $user->update($userData);
+            \DB::transaction(function () use ($user, $userData, $roles) {
+                $user->update($userData);
+                $user->roles()->sync($roles);
+            });
         } catch (ValidationException $e) {
             return Redirect::route('dashboard.user.edit', ['id' => $user->id])
                 ->withInput(Input::except('password'))
-                ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.users.edit.failure')))
+                ->withTitle(sprintf('%s %s', trans('hifone.whoops'), '用户修改失败'))
                 ->withErrors($e->getMessageBag());
         }
-
         return Redirect::route('dashboard.user.edit', ['id' => $user->id])
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.users.edit.success')));
     }

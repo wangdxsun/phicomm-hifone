@@ -28,7 +28,7 @@ class RolePresenter extends AbstractPresenter
 
     public function permissions()
     {
-        return implode(', ', array_column($this->wrappedObject->permissions->toArray(), 'display_name'));
+        return implode('，', array_column($this->wrappedObject->permissions->toArray(), 'display_name'));
     }
 
     public function toArray()

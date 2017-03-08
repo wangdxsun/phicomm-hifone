@@ -45,7 +45,7 @@
                             <td><a href="{{ route('user.show',['id'=>$user->id]) }}" target="_blank">{{ $user->username }}</a></td>
                             <td>{{ $user->nickname }}</td>
                             <td>{{ $user->email }}</td>
-                            <td>{{ $user->badgeName }}</td>
+                            <td>{{ $user->roles }}</td>
                             <td>{{ $user->thread_count }}</td>
                             <td>{{ $user->score }}</td>
                             <td>{{ $user->created_at }}</td>

@@ -63,7 +63,7 @@ class UserPresenter extends AbstractPresenter
         });
 
         if (!$relation) {
-            return '普通会员';
+            return '';
         }
 
         $roles = Role::rolesArrayWithCache();
@@ -73,6 +73,12 @@ class UserPresenter extends AbstractPresenter
         });
 
         return $role->display_name;
+    }
+
+    public function roles()
+    {
+        $roles = implode('，', array_column($this->wrappedObject->roles->toArray(), 'display_name'));
+        return $roles ?: '普通会员';
     }
 
     /**
