@@ -12,78 +12,72 @@
 namespace Hifone\Http\Controllers\Dashboard;
 
 use AltThree\Validator\ValidationException;
-use Hifone\Hashing\PasswordHasher;
 use Hifone\Http\Controllers\Controller;
-use Hifone\Models\User;
 use Hifone\Models\Notice;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\View;
-use Input;
 
 class NoticeController extends Controller
 {
     /**
-     * Creates a new node controller instance.
-     *
-     * @return void
-     */
-    public function __construct(PasswordHasher $hasher)
-    {
-        $this->hasher = $hasher;
+     * Creates a new notice controller instance.
 
+     *
+     */
+    public function __construct()
+    {
         View::share([
-            'current_menu'  => 'nodes',
-            'sub_title'     => trans_choice('dashboard.nodes.nodes', 2),
+            'current_menu'  => 'notices',
+            'sub_title'     => trans_choice('dashboard.notices.notices', 2),
         ]);
     }
-
     /**
-     * Shows the users view.
+     * Shows the notices view.
      *
      * @return \Illuminate\View\View
      */
     public function index()
     {
         $notices = Notice::all();
-        $user_id = session('phicommId');
+
         return View::make('dashboard.notice.index')
-            ->withUserId($user_id)
+            ->withPageTitle(trans('dashboard.notices.notice'))
             ->withNotices($notices);
     }
 
     /**
-     * Shows the create user view.
+     * Shows the create notice view.
      *
      * @return \Illuminate\View\View
      */
     public function create()
     {
-        return View::make('dashboard.roles.create_edit')
-            ->withPageTitle(trans('dashboard.users.add.title').' - '.trans('dashboard.dashboard'));
+        return View::make('dashboard.notice.create_edit')
+            ->withPageTitle(trans('dashboard.notices.notice').' - '.trans('dashboard.notices.add.title'));
     }
 
     /**
-     * Stores a new user.
-     *
+     * Stores a new notice.
+     * @param  Request  $request
+     * @return Response
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store()
     {
-        $userData = Input::get('user');
-        $userData['salt'] = str_random(16);
-        $userData['password'] = $this->hasher->make($userData['password'], ['salt' => $userData['salt']]);
+        $noticeData = Request::get('notice');
 
         try {
-            User::create($userData);
+            Notice::create($noticeData);
         } catch (ValidationException $e) {
-            return Redirect::route('dashboard.user.create')
-                ->withInput(Input::get('user'))
-                ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.users.add.failure')))
+            return Redirect::route('dashboard.notice.create')
+                ->withInput(Request::all())
+                ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.notices.add.failure')))
                 ->withErrors($e->getMessageBag());
         }
 
-        return Redirect::route('dashboard.user.index')
-            ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.users.add.success')));
+        return Redirect::route('dashboard.notice.index')
+            ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.notices.add.success')));
     }
 
     public function edit(User $user)

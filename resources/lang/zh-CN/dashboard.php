@@ -74,6 +74,7 @@ return [
         ],
     ],
     'notices' => [
+        'notice'        => '公告管理',
         'title'        => '标题',
         'content'      => '内容',
         'start_time'   => '起始时间',
@@ -87,6 +88,11 @@ return [
             'title'   => '添加公告',
             'success' => '添加公告成功.',
             'failure' => '添加公告失败',
+        ],
+        'edit'         => [
+            'title'   => '编辑公告',
+            'success' => '编辑公告成功.',
+            'failure' => '编辑公告失败',
         ],
     ],
     'nodes' => [
