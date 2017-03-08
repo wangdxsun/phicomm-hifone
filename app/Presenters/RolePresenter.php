@@ -26,6 +26,11 @@ class RolePresenter extends AbstractPresenter
         }
     }
 
+    public function permissions()
+    {
+        return implode(', ', array_column($this->wrappedObject->permissions->toArray(), 'display_name'));
+    }
+
     public function toArray()
     {
         return array_merge($this->wrappedObject->toArray(), [

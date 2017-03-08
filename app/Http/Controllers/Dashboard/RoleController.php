@@ -12,6 +12,7 @@
 namespace Hifone\Http\Controllers\Dashboard;
 
 use AltThree\Validator\ValidationException;
+use Hifone\Events\Role\RoleWasRemovedEvent;
 use Hifone\Hashing\PasswordHasher;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Permission;
@@ -48,7 +49,7 @@ class RoleController extends Controller
         $roles = Role::all();
 
         return View::make('dashboard.roles.index')
-            ->withPageTitle('角色管理')
+            ->withPageTitle('角色管理 - '.trans('dashboard.dashboard'))
             ->withRoles($roles);
     }
 
@@ -59,8 +60,11 @@ class RoleController extends Controller
      */
     public function create()
     {
+        $permissions = Permission::all();
+
         return View::make('dashboard.roles.create_edit')
-            ->withPageTitle(trans('dashboard.users.add.title').' - '.trans('dashboard.dashboard'));
+            ->withPageTitle('修改角色 - '.trans('dashboard.dashboard'))
+            ->withPermissions($permissions);
     }
 
     /**
@@ -70,21 +74,20 @@ class RoleController extends Controller
      */
     public function store()
     {
-        $userData = Input::get('user');
-        $userData['salt'] = str_random(16);
-        $userData['password'] = $this->hasher->make($userData['password'], ['salt' => $userData['salt']]);
-
+        $roleData = Input::get('role');
+        $permissions = Input::get('permissions');
         try {
-            User::create($userData);
+            \DB::transaction(function () use ($roleData, $permissions) {
+                $role = Role::create($roleData);
+                $role->permissions()->attach($permissions);
+            });
         } catch (ValidationException $e) {
-            return Redirect::route('dashboard.user.create')
-                ->withInput(Input::get('user'))
-                ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.users.add.failure')))
+            return Redirect::route('dashboard.role.create')
+                ->withInput($roleData)
+                ->withTitle('角色添加失败')
                 ->withErrors($e->getMessageBag());
         }
-
-        return Redirect::route('dashboard.user.index')
-            ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.users.add.success')));
+        return Redirect::route('dashboard.role.index')->withSuccess('角色添加成功');
     }
 
     public function edit(Role $role)
@@ -96,25 +99,28 @@ class RoleController extends Controller
             ->withPermissions($permissions);
     }
 
-    public function update(User $user)
+    public function update(Role $role)
     {
-        $userData = Input::get('user');
-        if ($userData['password']) {
-            $userData['salt'] = str_random(6);
-            $userData['password'] = $this->hasher->make($userData['password'], ['salt' => $userData['salt']]);
-        } else {
-            unset($userData['password']);
-        }
+        $roleData = Input::get('role');
+        $permissions = Input::get('permissions');
         try {
-            $user->update($userData);
+            \DB::transaction(function () use ($role, $roleData, $permissions) {
+                $role->update($roleData);
+                $role->permissions()->sync($permissions);
+            });
         } catch (ValidationException $e) {
-            return Redirect::route('dashboard.user.edit', ['id' => $user->id])
-                ->withInput(Input::except('password'))
-                ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.users.edit.failure')))
+            return Redirect::route('dashboard.role.create_edit')
+                ->withInput($roleData)
+                ->withTitle('角色修改失败')
                 ->withErrors($e->getMessageBag());
         }
+        return Redirect::route('dashboard.role.index')->withSuccess('角色修改成功');
+    }
 
-        return Redirect::route('dashboard.user.edit', ['id' => $user->id])
-            ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.users.edit.success')));
+    public function destroy(Role $role)
+    {
+        event(new RoleWasRemovedEvent($role));
+        $role->delete();
+        redirect(route('dashboard.role.index'))->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
     }
 }

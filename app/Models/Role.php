@@ -22,6 +22,8 @@ class Role extends EntrustRole implements HasPresenter
 {
     use RevisionableTrait;
 
+    protected $fillable = ['name', 'display_name', 'description'];
+
     public static function relationArrayWithCache()
     {
         return Cache::remember('all_assigned_roles', $minutes = 60, function () {
