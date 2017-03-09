@@ -69,14 +69,17 @@ class NoticeController extends Controller
     {
 
         $noticeData = Request::get('notice');
-
         try {
             Notice::create($noticeData);
         } catch (ValidationException $e) {
+
+            $errorMsg = json_decode( json_encode( $e->getMessageBag()),true);
+            $errorMsg['content'][0] = '内容不能为空';
+
             return Redirect::route('dashboard.notice.create')
                 ->withInput(Request::all())
                 ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.notices.add.failure')))
-                ->withErrors($e->getMessageBag());
+                ->withErrors($errorMsg);
         }
 
         return Redirect::route('dashboard.notice.index')
