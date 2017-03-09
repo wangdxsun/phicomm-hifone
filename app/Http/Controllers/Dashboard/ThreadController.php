@@ -39,7 +39,8 @@ class ThreadController extends Controller
 
     public function index()
     {
-        $threads = Thread::visible()->orderBy('order', 'desc')->orderBy('created_at', 'desc')->paginate(20);
+        $q = Input::query('q');
+        $threads = Thread::visible()->search($q)->orderBy('order', 'desc')->orderBy('created_at', 'desc')->paginate(20);
 
         return View::make('dashboard.threads.index')
             ->withPageTitle(trans('dashboard.threads.threads').' - '.trans('dashboard.dashboard'))
@@ -119,7 +120,8 @@ class ThreadController extends Controller
 
     public function audit()
     {
-        $threads = Thread::audit()->orderBy('order', 'desc')->orderBy('created_at', 'desc')->paginate(20);
+        $q = Input::query('q');
+        $threads = Thread::audit()->search($q)->orderBy('order', 'desc')->orderBy('created_at', 'desc')->paginate(20);
         return view('dashboard.threads.audit')
             ->withPageTitle(trans('dashboard.threads.threads').' - '.trans('dashboard.dashboard'))
             ->withThreads($threads)
@@ -135,7 +137,8 @@ class ThreadController extends Controller
 
     public function trash()
     {
-        $threads = Thread::trash()->orderBy('order', 'desc')->orderBy('created_at', 'desc')->paginate(20);
+        $q = Input::query('q');
+        $threads = Thread::trash()->search($q)->orderBy('order', 'desc')->orderBy('created_at', 'desc')->paginate(20);
         return view('dashboard.threads.trash')
             ->withPageTitle(trans('dashboard.threads.threads').' - '.trans('dashboard.dashboard'))
             ->withThreads($threads)

@@ -83,6 +83,14 @@ class Reply extends Model implements HasPresenter
         return $query->where('status', -1)->orWhere('status', -5);//回收站
     }
 
+    public function scopeSearch($query, $search)
+    {
+        if (!$search) {
+            return;
+        }
+        return $query->where('body', 'LIKE', "%$search%");
+    }
+
     /**
      * Get the presenter class.
      *

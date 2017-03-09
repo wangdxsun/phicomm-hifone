@@ -138,10 +138,7 @@ class Thread extends Model implements HasPresenter, TaggableInterface
         if (!$search) {
             return;
         }
-
-        return  $query->where(function ($query) use ($search) {
-            $query->where('title', 'LIKE', "%$search%");
-        });
+        return $query->where('title', 'LIKE', "%$search%");
     }
 
     /**

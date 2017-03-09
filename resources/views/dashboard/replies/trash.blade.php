@@ -14,6 +14,14 @@
 <div class="row">
     <div class="col-sm-12">
         @include('partials.errors')
+        <div class="toolbar">
+            <form class="form-inline">
+                <div class="form-group">
+                    <input type="text" name="q" class="form-control" value="" placeholder="回帖内容">
+                </div>
+                <button class="btn btn-default">搜索</button>
+            </form>
+        </div>
         <table class="table table-bordered table-striped table-condensed">
         <tbody>
             <tr class="head">

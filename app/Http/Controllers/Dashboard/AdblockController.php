@@ -13,7 +13,7 @@ namespace Hifone\Http\Controllers\Dashboard;
 
 use AltThree\Validator\ValidationException;
 use Hifone\Http\Controllers\Controller;
-use Hifone\Models\Adblock;
+use Hifone\Models\Ad\Adblock;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\View;

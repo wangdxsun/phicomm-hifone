@@ -144,9 +144,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function scopeSearch($query, $search)
     {
-        return  $query->where(function ($query) use ($search) {
-            $query->where('username', 'LIKE', "%$search%");
-        });
+        if (!$search) {
+            return;
+        }
+        return $query->where('title', 'LIKE', "%$search%");
     }
 
     /**

@@ -19,9 +19,9 @@
         <div class="col-sm-12 striped-list" id="item-list" data-item-name="section">
             @forelse($roles as $role)
             <div class="row striped-list-item" data-item-id="{{ $role->id }}">
-                <div class="col-xs-2">{{ $role->display_name }}</div>
-                <div class="col-xs-6">{{ $role->permissions }}</div>
-                <div class="col-xs-4 text-right">
+                <div class="col-xs-1">{{ $role->display_name }}</div>
+                <div class="col-xs-9">{{ $role->permissions }}</div>
+                <div class="col-xs-2 text-right">
                     <a href="/dashboard/role/{{ $role->id }}/edit" class="btn btn-default btn-sm">{{ trans('forms.edit') }}</a>
                     <a data-url="/dashboard/role/{{ $role->id }}/delete" class="btn btn-danger btn-sm confirm-action" data-method="delete">{{ trans('forms.delete') }}</a>
                 </div>
