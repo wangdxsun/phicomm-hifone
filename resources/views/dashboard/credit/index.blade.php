@@ -31,7 +31,7 @@
                         <td>{{ $credit_rule->reward }}</td>
                         <td>
                             <a href="/dashboard/creditRule/{{ $credit_rule->id }}/edit"><i class="fa fa-pencil"></i></a>
-                            <a data-url="/dashboard/creditRule/{{ $credit_rule->id }}" data-method="delete" class="confirm-action"><i class="fa fa-trash"></i></a>
+                            {{--<a data-url="/dashboard/creditRule/{{ $credit_rule->id }}" data-method="delete" class="confirm-action"><i class="fa fa-trash"></i></a>--}}
                         </td>
                     </tr>
                 @endforeach
