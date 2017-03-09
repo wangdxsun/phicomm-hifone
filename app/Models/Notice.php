@@ -1,33 +1,14 @@
 <?php
 
-/*
- * This file is part of Hifone.
- *
- * (c) Hifone.com <hifone@hifone.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Hifone\Models;
 
-use AltThree\Validator\ValidatingTrait;
-use Carbon\Carbon;
-use Config;
-use Hifone\Models\Scopes\ForUser;
-use Hifone\Models\Scopes\Recent;
-use Hifone\Models\Traits\Taggable;
-use Hifone\Presenters\ThreadPresenter;
-use Hifone\Services\Tag\TaggableInterface;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Input;
-use McCool\LaravelAutoPresenter\HasPresenter;
-use Venturecraft\Revisionable\RevisionableTrait;
+use AltThree\Validator\ValidatingTrait;
+
 
 class Notice extends Model
 {
-
+    use ValidatingTrait;
     // manually maintain
     public $timestamps = false;
 
@@ -56,10 +37,8 @@ class Notice extends Model
      * @var string[]
      */
     public $rules = [
-        /*'title'        => 'required|min:2',
-        'body'         => 'required|min:2',
-        'node_id'      => 'required|int',
-        'user_id'      => 'required|int',*/
+        'title'        => 'required|min:2',
+        'content'      => 'required|min:2'
     ];
 
     public function scopeSearch($query, $search)

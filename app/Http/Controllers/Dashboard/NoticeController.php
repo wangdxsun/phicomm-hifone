@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\View;
 use Input;
 
+
 class NoticeController extends Controller
 {
     /**
@@ -66,6 +67,7 @@ class NoticeController extends Controller
      */
     public function store()
     {
+
         $noticeData = Request::get('notice');
 
         try {
