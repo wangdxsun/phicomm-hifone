@@ -16,7 +16,6 @@ use Hifone\Events\Role\RoleWasRemovedEvent;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Permission;
 use Hifone\Models\Role;
-use Hifone\Models\User;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
 use Input;
@@ -87,8 +86,8 @@ class RoleController extends Controller
         return Redirect::route('dashboard.role.index')->withSuccess('角色添加成功');
     }
 
-    public function edit(User $role)
-    {dd($role);
+    public function edit(Role $role)
+    {
         $permissions = Permission::all();
         return View::make('dashboard.roles.create_edit')
             ->withPageTitle('修改角色'.' - '.trans('dashboard.dashboard'))
