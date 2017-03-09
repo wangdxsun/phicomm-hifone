@@ -46,8 +46,8 @@
                             <td>{{ $notice->start_time }}</td>
                             <td>{{ $notice->end_time }}</td>
                             <td>
-                                <a href="/dashboard/user/{{ $notice->id }}/edit"><i class="fa fa-pencil"></i></a>
-                                <a data-url="/dashboard/user/{{ $notice->id }}" data-method="delete" class="confirm-action"><i class="fa fa-trash"></i></a>
+                                <a href="{{ route('dashboard.notice.edit',['id'=>$notice->id]) }}"><i class="fa fa-pencil"></i></a>
+                                <a data-url="{{ route('dashboard.notice.destroy',['id'=>$notice->id]) }}" data-method="delete" class="confirm-action"><i class="fa fa-trash"></i></a>
                             </td>
                         </tr>
                     @endforeach
@@ -55,7 +55,7 @@
                 </table>
                 <div class="text-right">
                     <!-- Pager -->
-                 {{--   {!! $notice->appends(Request::except('page', '_pjax'))->render() !!}--}}
+                    {!! $notices->appends(Request::except('page', '_pjax'))->render() !!}
                 </div>
             </div>
         </div>

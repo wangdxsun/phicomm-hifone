@@ -13,10 +13,12 @@ namespace Hifone\Http\Controllers\Dashboard;
 
 use AltThree\Validator\ValidationException;
 use Hifone\Http\Controllers\Controller;
+use Hifone\Hashing\PasswordHasher;
 use Hifone\Models\Notice;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\View;
+use Input;
 
 class NoticeController extends Controller
 {
@@ -25,11 +27,12 @@ class NoticeController extends Controller
 
      *
      */
-    public function __construct()
+    public function __construct(PasswordHasher $hasher)
     {
+        $this->hasher = $hasher;
         View::share([
-            'current_menu'  => 'notices',
-            'sub_title'     => trans_choice('dashboard.notices.notices', 2),
+            'current_menu'  => 'nodes',
+            'sub_title'     => trans_choice('dashboard.nodes.nodes', 2),
         ]);
     }
     /**
@@ -39,9 +42,9 @@ class NoticeController extends Controller
      */
     public function index()
     {
-        $notices = Notice::all();
-
-        return View::make('dashboard.notice.index')
+        $q = Input::query('q');
+        $notices  = Notice::orderBy('created_at', 'desc')->search($q)->paginate(5);
+        return View::make('dashboard.notices.index')
             ->withPageTitle(trans('dashboard.notices.notice'))
             ->withNotices($notices);
     }
@@ -53,14 +56,12 @@ class NoticeController extends Controller
      */
     public function create()
     {
-        return View::make('dashboard.notice.create_edit')
+        return View::make('dashboard.notices.create_edit')
             ->withPageTitle(trans('dashboard.notices.notice').' - '.trans('dashboard.notices.add.title'));
     }
 
     /**
      * Stores a new notice.
-     * @param  Request  $request
-     * @return Response
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store()
@@ -80,35 +81,33 @@ class NoticeController extends Controller
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.notices.add.success')));
     }
 
-    public function edit(User $user)
+    public function edit(Notice $notice)
     {
-        $this->subMenu['users']['active'] = true;
-
-        return View::make('dashboard.users.create_edit')
-            ->withPageTitle(trans('dashboard.users.add.title').' - '.trans('dashboard.dashboard'))
-            ->withUser($user)
-            ->withSubMenu($this->subMenu);
+        return View::make('dashboard.notices.create_edit')
+            ->withPageTitle(trans('dashboard.nodes.edit.title'))
+            ->withNotice($notice);
     }
 
-    public function update(User $user)
+    public function update(Notice $notice)
     {
-        $userData = Input::get('user');
-        if ($userData['password']) {
-            $userData['salt'] = str_random(6);
-            $userData['password'] = $this->hasher->make($userData['password'], ['salt' => $userData['salt']]);
-        } else {
-            unset($userData['password']);
-        }
+        $noticeData = Request::get('notice');
         try {
-            $user->update($userData);
+            $notice->update($noticeData);
         } catch (ValidationException $e) {
-            return Redirect::route('dashboard.user.edit', ['id' => $user->id])
-                ->withInput(Input::except('password'))
-                ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.users.edit.failure')))
+            return Redirect::route('dashboard.notice.edit', ['id' => $notice->id])
+                ->withInput(Request::all())
+                ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.notices.edit.failure')))
                 ->withErrors($e->getMessageBag());
         }
 
-        return Redirect::route('dashboard.user.edit', ['id' => $user->id])
-            ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.users.edit.success')));
+        return Redirect::route('dashboard.notice.index', ['id' => $notice->id])
+            ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.notices.edit.success')));
+    }
+    public function destroy(Notice $notice)
+    {
+        $notice->delete();;
+
+        return Redirect::route('dashboard.notice.index')
+            ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
     }
 }

@@ -12,7 +12,7 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-                @if(isset($node))
+                @if(isset($notice))
                     {!! Form::model($notice, ['route' => ['dashboard.notice.update', $notice->id], 'id' => 'notice-create-form', 'method' => 'patch']) !!}
                 @else
                     {!! Form::open(['route' => 'dashboard.notice.store','id' => 'notice-create-form', 'method' => 'post']) !!}
@@ -41,7 +41,7 @@
                     </div>
                     <div class="form-group">
                         <label>{{ trans('dashboard.notices.content') }}</label>
-                        {!! Form::textarea('node[content]', isset($notice) ? $notice->content : null , ['class' => 'form-control',
+                        {!! Form::textarea('notice[content]', isset($notice) ? $notice->content : null , ['class' => 'form-control',
                                             'rows' => 5,
                                             'style' => "overflow:hidden",
                                             'id' => 'notice-content',
