@@ -120,7 +120,12 @@ class DashboardRoutes
             $router->resource('user', 'UserController');
             $router->resource('role', 'RoleController');
             $router->resource('word', 'WordController');
+
             $router->resource('credit', 'CreditController');
+
+            $router->resource('announce', 'AnnounceController');
+            $router->resource('creditRule', 'CreditController');
+
             $router->resource('notice', 'NoticeController');
         });
     }

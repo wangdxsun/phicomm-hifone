@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Hifone\Models\Credit;
+namespace Hifone\Models;
 
 use AltThree\Validator\ValidatingTrait;
 use Illuminate\Database\Eloquent\Model;
 
-class Rule extends Model
+class CreditRule extends Model
 {
     use ValidatingTrait;
 

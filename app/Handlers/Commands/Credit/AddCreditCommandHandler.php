@@ -14,7 +14,7 @@ namespace Hifone\Handlers\Commands\Credit;
 use Carbon\Carbon;
 use Hifone\Commands\Credit\AddCreditCommand;
 use Hifone\Models\Credit;
-use Hifone\Models\Credit\Rule as CreditRule;
+use Hifone\Models\CreditRule;
 use Hifone\Services\Dates\DateFactory;
 
 class AddCreditCommandHandler

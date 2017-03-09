@@ -13,11 +13,9 @@ namespace Hifone\Http\Controllers\Dashboard;
 
 use AltThree\Validator\ValidationException;
 use Hifone\Events\Role\RoleWasRemovedEvent;
-use Hifone\Hashing\PasswordHasher;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Permission;
 use Hifone\Models\Role;
-use Hifone\Models\User;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
 use Input;
@@ -29,10 +27,8 @@ class RoleController extends Controller
      *
      * @return void
      */
-    public function __construct(PasswordHasher $hasher)
+    public function __construct()
     {
-        $this->hasher = $hasher;
-
         View::share([
             'current_menu'  => 'roles',
             'sub_title'     => '角色管理',
@@ -109,7 +105,7 @@ class RoleController extends Controller
                 $role->permissions()->sync($permissions);
             });
         } catch (ValidationException $e) {
-            return Redirect::route('dashboard.role.create_edit')
+            return Redirect::route('dashboard.role.edit')
                 ->withInput($roleData)
                 ->withTitle('角色修改失败')
                 ->withErrors($e->getMessageBag());
