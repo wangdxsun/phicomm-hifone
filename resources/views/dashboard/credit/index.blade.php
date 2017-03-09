@@ -23,15 +23,15 @@
                     <td>奖励积分</td>
                     <td style="width:10%">操作</td>
                 </tr>
-                @foreach($rules as $rule)
+                @foreach($credit_rules as $credit_rule)
                     <tr>
-                        <td>{{ $rule->id }}</td>
-                        <td>{{ $rule->name }}</td>
-                        <td>{{ $rule->frequency }}</td>
-                        <td>{{ $rule->reward }}</td>
+                        <td>{{ $credit_rule->id }}</td>
+                        <td>{{ $credit_rule->name }}</td>
+                        <td>{{ $credit_rule->frequency }}</td>
+                        <td>{{ $credit_rule->reward }}</td>
                         <td>
-                            <a href="/dashboard/credit/{{ $rule->id }}/edit"><i class="fa fa-pencil"></i></a>
-                            <a data-url="/dashboard/credit/{{ $rule->id }}" data-method="delete" class="confirm-action"><i class="fa fa-trash"></i></a>
+                            <a href="/dashboard/creditRule/{{ $credit_rule->id }}/edit"><i class="fa fa-pencil"></i></a>
+                            <a data-url="/dashboard/creditRule/{{ $credit_rule->id }}" data-method="delete" class="confirm-action"><i class="fa fa-trash"></i></a>
                         </td>
                     </tr>
                 @endforeach

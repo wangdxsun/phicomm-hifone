@@ -53,8 +53,8 @@
                     <span>公告管理</span>
                 </a>
             </li>
-            <li {!! set_active('dashboard/credit*') !!}>
-                <a href="{{ route('dashboard.credit.index') }}">
+            <li {!! set_active('dashboard/creditRule*') !!}>
+                <a href="{{ route('dashboard.creditRule.index') }}">
                     <i class="fa fa-star"></i>
                     <span>积分管理</span>
                 </a>
