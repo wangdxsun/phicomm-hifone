@@ -11,7 +11,7 @@
 
 return [
 
-    'user_model' => App\User::class,
+    'user_model' => Hifone\Models\User::class,
 
     'message_model' => Cmgmyr\Messenger\Models\Message::class,
 
