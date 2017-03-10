@@ -30,11 +30,11 @@
                             <span class="sr-only">Toggle</span> <i class="fa fa-reorder"></i>
                         </button>
                         <ul class="dropdown-menu" role="menu">
-                            <li class=""><a href="{{ route('user.home', $current_user->username) }}">{{ trans('hifone.users.profile') }}</a></li>
+                            <li class=""><a href="{{ route('user.home', $current_user->username) }}"><i class="fa fa-home"></i> {{ trans('hifone.users.profile') }}</a></li>
                             <li><div class='divider'></div></li>
-                            <li><a href="{!! route('user.edit', Auth::user()->id) !!}">{{ trans('hifone.users.edit.title') }}</a></li>
-                            <li><a href="{{ route('user.favorites',$current_user->id) }}">{{ trans('hifone.users.favorites') }}</a></li>
-                            <li><a href="{{ route('credit.index')}}">{{ trans('hifone.users.credits') }}</a></li>
+                            <li><a href="{!! route('user.edit', Auth::user()->id) !!}"><i class="fa fa-user"></i> {{ trans('hifone.users.edit.title') }}</a></li>
+                            <li><a href="{{ route('user.favorites',$current_user->id) }}"><i class="fa fa-bookmark"></i> {{ trans('hifone.users.favorites') }}</a></li>
+                            <li><a href="{{ route('credit.index')}}"><i class="fa fa-money"></i> {{ trans('hifone.users.credits') }}</a></li>
                             <li class='divider'></li>
                             <li><a href="{!! url('auth/logout') !!}" onclick=" return confirm('{!! trans('hifone.logout_confirm') !!}')"><i class="fa fa-sign-out"></i> {!! trans('hifone.logout') !!}</a></li>
                         </ul>
@@ -54,7 +54,7 @@
                 @if(Auth::check())
                     @if($current_user->hasRole(['Founder','Admin']))
                         <li>
-                            <a href="/dashboard" data-pjax="no" title="{{ trans('hifone.dashboard') }}"><i class="fa fa-cog"></i>
+                            <a href="/dashboard" data-pjax="no" title="{{ trans('hifone.dashboard') }}"><i class="fa fa-cogs"></i>
                                 <span class="hidden-xs hidden-sm">{{ trans('hifone.dashboard') }}</span></a>
                         </li>
                     @endif

@@ -4,7 +4,7 @@
         @foreach ($threads as $thread)
             <li class="list-group-item media {!! !$column ?'':'col-sm-6' !!}" style="margin-top: 0px;">
 
-                <a class="pull-right" href="{{ route('thread.show', [$thread->id]) }}">
+                <a class="pull-right" href="{{ route('messages.show', [$thread->id]) }}">
 
                     @if ($thread->isUnread($currentUserId))
                         <span class="badge badge-reply-count" style="background-color: green;">
@@ -19,7 +19,7 @@
                 </a>
 
                 <div class="avatar pull-left">
-                    <a href="{{-- $thread->author_url --}}">
+                    <a href="{{ route('user.home', $thread->creator()->username) }}">
                         <img class="media-object img-thumbnail avatar-48" alt="{{ $thread->creator()->username }}"
                              src="{{ $thread->creator()->avatar_small }}"/>
                     </a>

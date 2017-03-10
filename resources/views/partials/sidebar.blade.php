@@ -6,7 +6,7 @@
       </div>
     <div class="panel-body text-center">
       <div class="btn-group">
-        <a href="{!! isset($node) ? URL::route('thread.create', ['node_id' => $node->id]) : URL::route('thread.create') ; !!}" class="btn btn-primary">
+        <a href="{!! isset($node) ? URL::route('thread.create', ['node_id' => $node->id]) : URL::route('thread.create') !!}" class="btn btn-primary">
           <i class="fa fa-pencil"> </i> {!! trans('hifone.threads.add') !!}
         </a>
         @if($new_thread_dropdowns)

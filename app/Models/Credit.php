@@ -12,7 +12,7 @@
 namespace Hifone\Models;
 
 use AltThree\Validator\ValidatingTrait;
-use Hifone\Models\Credit\Rule as CreditRule;
+use Hifone\Models\CreditRule;
 use Hifone\Models\Scopes\Recent;
 use Hifone\Presenters\CreditPresenter;
 use Illuminate\Database\Eloquent\Model;
