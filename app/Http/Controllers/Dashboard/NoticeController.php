@@ -89,7 +89,7 @@ class NoticeController extends Controller
     public function edit(Notice $notice)
     {
         return View::make('dashboard.notices.create_edit')
-            ->withPageTitle(trans('dashboard.nodes.edit.title'))
+            ->withPageTitle(trans('dashboard.notices.notice').' - '.trans('dashboard.notices.edit.title'))
             ->withNotice($notice);
     }
 

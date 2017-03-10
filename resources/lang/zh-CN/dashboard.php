@@ -95,6 +95,31 @@ return [
             'failure' => '编辑公告失败',
         ],
     ],
+    'words' => [
+        'word'        => '敏感词管理',
+        'content'     => '内容',
+        'action'      => '操作',
+        'substitute'  => '替换词',
+        'type'=> [
+            'title'   => '类别',
+            'type_1'  => '政治',
+            'type_2'  => '煽动'
+        ],
+        'add'         => [
+            'head_title'   => '添加',
+            'title'   => '词语添加',
+            'batch_in'=> '批量导入',
+            'success' => '添加成功.',
+            'failure' => '添加失败',
+        ],
+        'edit'         => [
+            'head_title'   => '编辑',
+            'title'   => '敏感词编辑',
+            'batch_out'=> '批量导出',
+            'success' => '编辑成功.',
+            'failure' => '编辑失败',
+        ],
+    ],
     'nodes' => [
         'nodes'        => '节点管理',
         'name'         => '名称',

@@ -14,10 +14,11 @@ namespace Hifone\Http\Controllers\Dashboard;
 use AltThree\Validator\ValidationException;
 use Hifone\Hashing\PasswordHasher;
 use Hifone\Http\Controllers\Controller;
-use Hifone\Models\Role;
+use Hifone\Models\Word;
 use Hifone\Models\User;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Request;
 use Input;
 
 class WordController extends Controller
@@ -32,8 +33,8 @@ class WordController extends Controller
         $this->hasher = $hasher;
 
         View::share([
-            'current_menu'  => 'nodes',
-            'sub_title'     => trans_choice('dashboard.nodes.nodes', 2),
+            'current_menu'  => 'words',
+            'sub_title'     => trans_choice('dashboard.words.words', 2),
         ]);
     }
 
@@ -44,11 +45,11 @@ class WordController extends Controller
      */
     public function index()
     {
-        $roles = Role::all();
-
-        return View::make('dashboard.roles.index')
-            ->withPageTitle('权限管理')
-            ->withRoles($roles);
+        $q = Input::query('q');
+        $words  = Word::orderBy('created_at', 'desc')->search($q)->paginate(5);
+        return View::make('dashboard.words.index')
+            ->withPageTitle(trans('dashboard.words.word'))
+            ->withWords($words);
     }
 
     /**
@@ -58,8 +59,8 @@ class WordController extends Controller
      */
     public function create()
     {
-        return View::make('dashboard.roles.create_edit')
-            ->withPageTitle(trans('dashboard.users.add.title').' - '.trans('dashboard.dashboard'));
+        return View::make('dashboard.words.create_edit')
+            ->withPageTitle(trans('dashboard.words.word').' - '.trans('dashboard.words.add.head_title'));
     }
 
     /**
@@ -69,31 +70,29 @@ class WordController extends Controller
      */
     public function store()
     {
-        $userData = Input::get('user');
-        $userData['salt'] = str_random(16);
-        $userData['password'] = $this->hasher->make($userData['password'], ['salt' => $userData['salt']]);
-
+        $wordData = Request::get('word');
         try {
-            User::create($userData);
+            Word::create($wordData);
         } catch (ValidationException $e) {
-            return Redirect::route('dashboard.user.create')
-                ->withInput(Input::get('user'))
-                ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.users.add.failure')))
+
+            /*$errorMsg = json_decode( json_encode( $e->getMessageBag()),true);
+            $errorMsg['content'][0] = '内容不能为空';*/
+
+            return Redirect::route('dashboard.word.create')
+                ->withInput(Request::all())
+                ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.words.add.failure')))
                 ->withErrors($e->getMessageBag());
         }
-
-        return Redirect::route('dashboard.user.index')
-            ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.users.add.success')));
+        return Redirect::route('dashboard.word.index')
+            ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.words.add.success')));
     }
 
-    public function edit(User $user)
+    public function edit(Word $word)
     {
-        $this->subMenu['users']['active'] = true;
 
-        return View::make('dashboard.users.create_edit')
-            ->withPageTitle(trans('dashboard.users.add.title').' - '.trans('dashboard.dashboard'))
-            ->withUser($user)
-            ->withSubMenu($this->subMenu);
+        return View::make('dashboard.words.create_edit')
+            ->withPageTitle(trans('dashboard.words.word').' - '.trans('dashboard.words.edit.head_title'))
+            ->withWord($word);
     }
 
     public function update(User $user)
