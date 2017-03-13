@@ -32,21 +32,15 @@
                         {!! Form::text('word[word]', isset($word) ? $word->word : null, ['class' => 'form-control', 'id' => 'word-word', 'placeholder' => '']) !!}
                     </div>
                     <div class="form-group">
-                        <label>{{ trans('dashboard.words.action') }}</label>
-                        {!! Form::text('word[action]', isset($word) ? $word->action : null, ['class' => 'form-control', 'id' => 'word-action', 'placeholder' => '']) !!}
+                        <label>{{ trans('dashboard.words.action.title') }}</label>
+                        {!!  Form::select('word[action]', ['1' => trans('dashboard.words.action.type_1'),'2' => trans('dashboard.words.action.type_2'),
+                             '3' =>trans('dashboard.words.action.type_1')], null,
+                             ['class' => 'form-control', 'id' => 'word-action', 'placeholder' => isset($word) ? $word-> action: '——请选择过滤方式——'])!!}
                     </div>
                     <div class="form-group">
                         <label>{{ trans('dashboard.words.substitute') }}</label>
                         {!! Form::text('word[substitute]', isset($word) ? $word->substitute : null, ['class' => 'form-control', 'id' => 'word-substitute', 'placeholder' => '']) !!}
                     </div>
-                   {{-- <div class="form-group">
-                        <label>{{ trans('dashboard.notices.notice_type.title') }}</label>
-                        <select name="notice[type]" class="form-control">
-                            <option value="0">请选择分类</option>
-                                <option value="1" {{ option_is_selected([$section, 'section_id', isset($notice) ? $notice : null]) }}>{{ trans('dashboard.notices.notice_type.type_1') }}</option>
-                            <option value="2" {{ option_is_selected([$section, 'section_id', isset($notice) ? $notice : null]) }}>{{ trans('dashboard.notices.notice_type.type_2') }}</option>
-                        </select>
-                    </div>--}}
                 </fieldset>
 
                 <div class="row">

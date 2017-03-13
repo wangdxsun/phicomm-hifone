@@ -98,12 +98,17 @@ return [
     'words' => [
         'word'        => '敏感词管理',
         'content'     => '内容',
-        'action'      => '操作',
         'substitute'  => '替换词',
         'type'=> [
             'title'   => '类别',
             'type_1'  => '政治',
             'type_2'  => '煽动'
+        ],
+        'action'=> [
+            'title'   => '过滤方式',
+            'type_1'  => '禁止发表',
+            'type_2'  => '需要审核',
+            'type_3'  => '内容替换'
         ],
         'add'         => [
             'head_title'   => '添加',

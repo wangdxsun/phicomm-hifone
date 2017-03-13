@@ -71,6 +71,7 @@ class WordController extends Controller
     public function store()
     {
         $wordData = Request::get('word');
+        //dd(var_dump($wordData));
         try {
             Word::create($wordData);
         } catch (ValidationException $e) {
