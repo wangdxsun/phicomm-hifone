@@ -40,13 +40,6 @@
                             <textarea name="link[description]" class="form-control" rows="5">{{ isset($link) ? $link->description : null }}</textarea>
                         </div>
                     </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="hidden" value="0" name="link[status]">
-                            <input type="checkbox" value="1" name="link[status]" {{ isset($link) && $link->status ? 'checked' : null }}>
-                            {{ trans('dashboard.links.status') }}
-                        </label>
-                    </div>
                 </fieldset>
 
                 <div class='form-group'>

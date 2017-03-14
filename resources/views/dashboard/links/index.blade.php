@@ -20,13 +20,16 @@
         <div class="striped-list" id="item-list" data-item-name="link">
             @forelse($links as $link)
             <div class="row striped-list-item" data-item-id="{{ $link->id }}">
-                <div class="col-md-6">
-                    <span class="drag-handle"><i class="fa fa-navicon"></i></span> <i class="{{ $link->icon }}"></i> <strong>{{ $link->title }}</strong>
-                    @if($link->description)
-                    <p><small>{{ Str::words($link->description, 5) }}</small></p>
-                    @endif
+                <div class="col-xs-1">
+                    <span class="drag-handle"><i class="fa fa-navicon"></i></span>
                 </div>
-                <div class="col-md-6 text-right">
+                <div class="col-md-4">
+                    <p><a href="{{ $link->url }}" target="_blank">{{ $link->title }}</a></p>
+                </div>
+                <div class="col-md-4">
+                    <p><small>{{ $link->description }}</small></p>
+                </div>
+                <div class="col-md-3 text-right">
                     <a href="{{ route('dashboard.link.edit',['id'=>$link->id]) }}" class="btn btn-default btn-sm">{{ trans('forms.edit') }}</a>
                     <a data-url="{{ route('dashboard.link.destroy',['id'=>$link->id]) }}" class="btn btn-danger btn-sm confirm-action" data-method='delete'>{{ trans('forms.delete') }}</a>
                 </div>
