@@ -25,11 +25,7 @@ class ApiRoutes
      */
     public function map(Registrar $router)
     {
-        $router->group([
-            'namespace'  => 'Api',
-            'prefix'     => 'api/v1',
-            'middleware' => ['api'],
-        ], function ($router) {
+        $router->group(['namespace' => 'Api', 'prefix' => 'api/v1', 'middleware' => 'api'], function ($router) {
             // Authorization Optional
             $router->group(['middleware' => 'auth.api'], function ($router) {
                 // General

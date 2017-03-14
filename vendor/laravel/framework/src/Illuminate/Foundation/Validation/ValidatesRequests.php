@@ -86,7 +86,7 @@ trait ValidatesRequests
     protected function throwValidationException(Request $request, $validator)
     {
         throw new ValidationException($validator, $this->buildFailedValidationResponse(
-            $request, $this->formatValidationErrors($validator)
+            $request, $this->formatValidationErrors($validator), $this->getTheFirstError($validator)
         ));
     }
 
@@ -94,13 +94,14 @@ trait ValidatesRequests
      * Create the response for when a request fails validation.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  string $errors
+     * @param  array $errors
+     * @param  string $errorMsg
      * @return \Illuminate\Http\Response
      */
-    protected function buildFailedValidationResponse(Request $request, $errors)
+    protected function buildFailedValidationResponse(Request $request, $errors, $errorMsg)
     {
         if (($request->ajax() && ! $request->pjax()) || $request->wantsJson()) {
-            return new JsonResponse($errors, 422);
+            return new JsonResponse($errors, 422, $errorMsg);
         }
 
         return redirect()->to($this->getRedirectUrl())
@@ -116,8 +117,13 @@ trait ValidatesRequests
      */
     protected function formatValidationErrors(Validator $validator)
     {
-        $msg = $validator->errors()->getMessages();
-        return array_first(array_first($msg));
+        return $validator->errors()->getMessages();
+    }
+
+    protected function getTheFirstError(Validator $validator)
+    {
+        $errors = $this->formatValidationErrors($validator);
+        return array_first(array_first($errors));
     }
 
     /**

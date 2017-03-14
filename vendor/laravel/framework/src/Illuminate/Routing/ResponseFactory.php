@@ -80,13 +80,13 @@ class ResponseFactory implements FactoryContract
      * @param  int  $options
      * @return \Illuminate\Http\JsonResponse
      */
-    public function json($data = [], $status = 200, array $headers = [], $options = 0)
+    public function json($data = [], $status = 200, $msg = 'success', array $headers = [], $options = 0)
     {
         if ($data instanceof Arrayable && ! $data instanceof JsonSerializable) {
             $data = $data->toArray();
         }
 
-        return new JsonResponse($data, $status, $headers, $options);
+        return new JsonResponse($data, $status, $msg, $headers, $options);
     }
 
     /**

@@ -21,7 +21,7 @@ class JsonResponse extends BaseJsonResponse
      * @param  array  $headers
      * @param  int    $options
      */
-    public function __construct($msg = '', $status = 200, $data = [], $headers = [], $options = 0)
+    public function __construct($data = [], $status = 200, $msg = 'success', $headers = [], $options = 0)
     {
         $this->encodingOptions = $options;
         $data = [

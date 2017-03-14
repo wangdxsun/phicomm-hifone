@@ -13,6 +13,8 @@ namespace Hifone\Http\Controllers\Api;
 
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
@@ -21,12 +23,15 @@ use McCool\LaravelAutoPresenter\Facades\AutoPresenter;
 
 abstract class AbstractApiController extends Controller
 {
+    use DispatchesJobs, ValidatesRequests;
     /**
      * The HTTP response headers.
      *
      * @var array
      */
     protected $headers = [];
+
+    protected $msg = 'success';
 
     /**
      * The HTTP response meta data.
@@ -61,6 +66,11 @@ abstract class AbstractApiController extends Controller
         $this->headers = $headers;
 
         return $this;
+    }
+
+    protected function setMsg($msg)
+    {
+        $this->msg = $msg;
     }
 
     /**
@@ -189,16 +199,12 @@ abstract class AbstractApiController extends Controller
      */
     protected function respond()
     {
-        if (!empty($this->meta)) {
-            $response['meta'] = $this->meta;
-        }
-
-        $response['data'] = $this->data;
+        $response = $this->data;
 
         if ($this->data instanceof Arrayable) {
-            $response['data'] = $this->data->toArray();
+            $response = $this->data->toArray();
         }
 
-        return Response::json($response, $this->statusCode, $this->headers);
+        return Response::json($response, $this->statusCode, $this->msg, $this->headers);
     }
 }

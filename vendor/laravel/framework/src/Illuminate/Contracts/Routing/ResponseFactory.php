@@ -34,7 +34,7 @@ interface ResponseFactory
      * @param  int  $options
      * @return \Illuminate\Http\JsonResponse
      */
-    public function json($data = [], $status = 200, array $headers = [], $options = 0);
+    public function json($data = [], $status = 200, $msg = 'success', array $headers = [], $options = 0);
 
     /**
      * Return a new JSONP response from the application.
