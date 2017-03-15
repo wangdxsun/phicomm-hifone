@@ -43,7 +43,7 @@ class ComposerServiceProvider extends ServiceProvider
         $factory->composer('partials.sidebar', SidebarComposer::class);
 
         // Locale
-        $factory->composer(['dashboard.settings.*', ], LocaleComposer::class);
+        $factory->composer(['dashboard.settings.*', 'users.edit'], LocaleComposer::class);
 
         //Timezone
         $factory->composer(['install.*', ], TimezoneComposer::class);

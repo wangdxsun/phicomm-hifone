@@ -25,8 +25,7 @@
 
                         <div class="form-group">
                             <select class="form-control selectpicker" name="thread[node_id]">
-                                <option value=""
-                                        disabled {!! $node ? null : 'selected'; !!}>{{ trans('hifone.threads.pick_node') }}</option>
+                                <option value="" disabled {!! $node ? null : 'selected' !!}>{{ trans('hifone.threads.pick_node') }}</option>
                                 @foreach ($sections as $section)
                                     <optgroup label="{{ $section->name }}">
                                         @if(isset($section->nodes))

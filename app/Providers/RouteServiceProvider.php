@@ -12,6 +12,7 @@
 namespace Hifone\Providers;
 
 use Hifone\Models\Ad\Adspace;
+use Hifone\Models\Carousel;
 use Hifone\Models\CreditRule;
 use Hifone\Models\Node;
 use Hifone\Models\Reply;
@@ -65,6 +66,7 @@ class RouteServiceProvider extends ServiceProvider
         $this->app->router->model('thread', Thread::class);
         $this->app->router->model('reply', Reply::class);
         $this->app->router->model('creditRule', CreditRule::class);
+        $this->app->router->model('carousel', Carousel::class);
 
         $this->app->router->model('tag', Tag::class, function ($name) {
             return Tag::where('name', urldecode($name))->firstOrFail();

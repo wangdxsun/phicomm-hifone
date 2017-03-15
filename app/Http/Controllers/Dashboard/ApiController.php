@@ -13,6 +13,7 @@ namespace Hifone\Http\Controllers\Dashboard;
 
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Adspace;
+use Hifone\Models\Carousel;
 use Hifone\Models\Link;
 use Hifone\Models\Location;
 use Hifone\Models\Node;
@@ -75,10 +76,20 @@ class ApiController extends Controller
         $locationData = Request::get('ids');
 
         foreach ($locationData as $order => $locationId) {
-            // Ordering should be 1-based, data comes in 0-based
             Location::find($locationId)->update(['order' => $order + 1]);
         }
 
         return $locationData;
+    }
+
+    public function postUpdateCarouselOrder()
+    {
+        $carouselData = Request::get('ids');
+
+        foreach ($carouselData as $order => $carouselId) {
+            Carousel::find($carouselId)->update(['order' => $order + 1]);
+        }
+
+        return $carouselData;
     }
 }

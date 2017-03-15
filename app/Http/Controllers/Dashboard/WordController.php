@@ -12,7 +12,6 @@
 namespace Hifone\Http\Controllers\Dashboard;
 
 use AltThree\Validator\ValidationException;
-use Hifone\Hashing\PasswordHasher;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Word;
 use Hifone\Models\User;
@@ -28,10 +27,8 @@ class WordController extends Controller
      *
      * @return void
      */
-    public function __construct(PasswordHasher $hasher)
+    public function __construct()
     {
-        $this->hasher = $hasher;
-
         View::share([
             'current_menu'  => 'words',
             'sub_title'     => trans_choice('dashboard.words.words', 2),

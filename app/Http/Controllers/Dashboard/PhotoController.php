@@ -13,6 +13,7 @@ namespace Hifone\Http\Controllers\Dashboard;
 
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Photo;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
 
 class PhotoController extends Controller
@@ -41,6 +42,8 @@ class PhotoController extends Controller
 
     public function destroy($id)
     {
-        echo $id;
+        Photo::destroy($id);
+
+        return Redirect::back()->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
     }
 }

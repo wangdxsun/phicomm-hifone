@@ -19,7 +19,7 @@
         <script type="text/javascript">
             Hifone.Config = {
                 'locale' : '{{ $user_locale or $site_locale }}',
-                'current_user_id' : {{ Auth::user() ? Auth::user()->id : 'null' }},
+                'current_user_id' : '{{ Auth::user() ? Auth::user()->id : null }}',
                 'token' : '{{ csrf_token() }}',
                 'emoj_cdn' : '{{ cdn() }}',
                 'uploader_url' : '{{ route('upload_image') }}',

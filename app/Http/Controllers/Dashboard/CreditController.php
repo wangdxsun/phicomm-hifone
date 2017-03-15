@@ -12,10 +12,8 @@
 namespace Hifone\Http\Controllers\Dashboard;
 
 use AltThree\Validator\ValidationException;
-use Hifone\Hashing\PasswordHasher;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\CreditRule;
-use Hifone\Models\User;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
 use Input;
@@ -27,7 +25,7 @@ class CreditController extends Controller
      *
      * @return void
      */
-    public function __construct(PasswordHasher $hasher)
+    public function __construct()
     {
         View::share([
             'current_menu'  => 'credit',

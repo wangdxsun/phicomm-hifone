@@ -89,6 +89,7 @@ class DashboardRoutes
                 $router->post('node/order', 'ApiController@postUpdateNodeOrder');
                 $router->post('adspace/order', 'ApiController@postUpdateAdspaceOrder');
                 $router->post('location/order', 'ApiController@postUpdateLocationOrder');
+                $router->post('carousel/order', 'ApiController@postUpdateCarouselOrder');
             });
         });
 
@@ -120,13 +121,9 @@ class DashboardRoutes
             $router->resource('user', 'UserController');
             $router->resource('role', 'RoleController');
             $router->resource('word', 'WordController');
-
-            $router->resource('credit', 'CreditController');
-
-            $router->resource('announce', 'AnnounceController');
             $router->resource('creditRule', 'CreditController');
-
             $router->resource('notice', 'NoticeController');
+            $router->resource('carousel', 'CarouselController');
         });
     }
 }

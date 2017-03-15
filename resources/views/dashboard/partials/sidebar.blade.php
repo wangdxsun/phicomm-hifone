@@ -59,10 +59,16 @@
                     <span>积分管理</span>
                 </a>
             </li>
-            <li {!! set_active('dashboard/page*') !!} {!! set_active('dashboard/photo*') !!}>
-                <a href="{{ route('dashboard.photo.index') }}">
+            {{--<li {!! set_active('dashboard/page*') !!} {!! set_active('dashboard/photo*') !!}>--}}
+                {{--<a href="{{ route('dashboard.photo.index') }}">--}}
+                    {{--<i class="fa fa-image"></i>--}}
+                    {{--<span>其他管理</span>--}}
+                {{--</a>--}}
+            {{--</li>--}}
+            <li {!! set_active('dashboard/carousel*') !!} {!! set_active('dashboard/carousel*') !!}>
+                <a href="{{ route('dashboard.carousel.index') }}">
                     <i class="fa fa-image"></i>
-                    <span>其他管理</span>
+                    <span>轮播管理</span>
                 </a>
             </li>
             <li {!! set_active('dashboard/node*') !!} {!! set_active('dashboard/section*') !!}>

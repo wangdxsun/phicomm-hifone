@@ -4,7 +4,7 @@
 
 <dl class="dl-horizontal">
 
-  <dt><lable>&nbsp; </lable></dt><dd> {!! trans('hifone.users.id') !!} {!! $user->id !!}</dd>
+  <dt><lable>{!! trans('hifone.users.id') !!}:</lable></dt><dd> {!! $user->id !!}</dd>
 
   <dt><label>{{ trans('hifone.users.username') }}:</label></dt><dd><strong>{!! $user->username !!}</strong></dd>
 

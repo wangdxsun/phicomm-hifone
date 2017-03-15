@@ -50,7 +50,7 @@ window.Hifone =
     token: ''
     emoj_cdn : ''
     notification_url: ''
-    uploader_url: ''
+    uploader_url: '/upload_image'
     asset_url : ''
     root_url : ''
 

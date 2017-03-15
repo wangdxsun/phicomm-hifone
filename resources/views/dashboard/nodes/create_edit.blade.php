@@ -21,11 +21,11 @@
                 <fieldset>
                 <div class="form-group">
                     <label>{{ trans('dashboard.nodes.name') }}</label>
-                     {!! Form::text('node[name]', isset($node) ? $node->name : null, ['class' => 'form-control', 'id' => 'node-name', 'placeholder' => '']) !!}
+                     {!! Form::text('node[name]', isset($node) ? $node->name : null, ['class' => 'form-control']) !!}
                 </div>
                 <div class="form-group">
                     <label>{{ trans('dashboard.nodes.slug') }}</label>
-                    {!! Form::text('node[slug]', isset($node) ? $node->slug : null, ['class' => 'form-control', 'id' => 'node-slug', 'placeholder' => '']) !!}
+                    {!! Form::text('node[slug]', isset($node) ? $node->slug : null, ['class' => 'form-control']) !!}
                 </div>
                 @if($sections->count() > 0)
                 <div class="form-group">

@@ -15,14 +15,12 @@ window.DashboardView = Backbone.View.extend
 
     self.initSortable()
     self.initSidebarToggle()
-
+    self.initUploadImage()
 
   initSidebarToggle: ->
     $('.sidebar-toggler').click (e) ->
       e.preventDefault()
       $('.wrapper').toggleClass 'toggled'
-      return
-    return
 
   initSortable: ->
     self = this
@@ -43,10 +41,33 @@ window.DashboardView = Backbone.View.extend
             data: ids: orderedItemIds
             success: ->
               $.notifier.notify 'Items order has been updated.', 'success'
-              return
             error: ->
               $.notifier.notify 'Items order could not be updated.', 'error'
-              return
-          return
       )
-    return
+
+  initUploadImage: ->
+    $('.btn-upload').click ->
+      $('.input-file').click()
+    $('.input-file').change ->
+      $form = $('.create_form')
+      formData = new FormData($form[0])
+      imageUrl = $('#imageUrl')
+      imagePreviewBox = $('.ImagePreviewBox')
+      $.ajax {
+        url: Hifone.Config.uploader_url
+        type: 'POST'
+        data: formData
+        cache: false
+        contentType: false
+        processData: false
+        beforeSend: ->
+          $('.btn-upload').attr 'disabled', 'disabled'
+        success: (result) ->
+          imageUrl.val result.filename
+          imagePreviewBox.attr('src', result.filename)
+        error: (err) ->
+          $.notifier.notify 'File upload failed', 'error'
+        complete: ->
+          $('.btn-upload').removeAttr 'disabled'
+      }, 'json'
+      false

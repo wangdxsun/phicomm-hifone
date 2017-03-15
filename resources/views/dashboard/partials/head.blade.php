@@ -27,12 +27,12 @@
         var Global = {};
         Global.locale = 'zh-CN';
         var Config = {
-                'cdnDomain': '{{ cdn() }}',
-                'user_id': {{ Auth::user() ? Auth::user()->id : 0 }},
-                'routes': {
-                    'upload_image' : '{{ route('upload_image') }}'
-                },
-                'token': '{{ csrf_token() }}',
+            'cdnDomain': '{{ cdn() }}',
+            'user_id': '{{ Auth::user() ? Auth::user()->id : 0 }}',
+            'routes': {
+                'upload_image' : '{{ route('upload_image') }}'
+            },
+            'token': '{{ csrf_token() }}'
         };
     </script>
     <script src="{{ elixir('dist/js/all.js') }}"></script>
