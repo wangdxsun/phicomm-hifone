@@ -28,6 +28,8 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\View;
 use Input;
 use Redirect;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class ThreadController extends Controller
 {
@@ -70,18 +72,22 @@ class ThreadController extends Controller
      */
     public function show(Thread $thread)
     {
+        if ($thread->inVisible()) {
+            throw new NotFoundHttpException;
+        }
+
         $this->breadcrumb->push([
-                $thread->node->name => $thread->node->url,
-                $thread->title      => $thread->url,
+            $thread->node->name => $thread->node->url,
+            $thread->title      => $thread->url,
         ]);
 
         $replies = $thread->replies()->visible()
-                    ->orderBy('id', 'asc')
-                    ->paginate(Config::get('setting.replies_per_page', 30));
+            ->orderBy('id', 'asc')
+            ->paginate(Config::get('setting.replies_per_page', 30));
 
         $repository = app('repository');
         $repository->pushCriteria(new BelongsToNode($thread->node_id));
-        $nodeThreads = $repository->model(Thread::class)->getThreadList(8);
+        $nodeThreads = $repository->model(Thread::class)->getThreadList(5);
 
         event(new ThreadWasViewedEvent($thread));
 

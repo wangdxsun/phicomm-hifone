@@ -118,6 +118,11 @@ class Thread extends Model implements HasPresenter, TaggableInterface
         $this->save();
     }
 
+    public function inVisible()
+    {
+        return $this->order < 0 && (!\Auth::check() || !\Auth::user()->can('view_thread'));
+    }
+
     public function scopeVisible($query)
     {
         return $query->where('order', '>=', 0);

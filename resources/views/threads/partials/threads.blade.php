@@ -6,7 +6,7 @@
         <li class="list-group-item media {!! !$column ?'':'col-sm-6' !!}" style="margin-top: 0px;">
 
         <a class="pull-right" href="{{ route('thread.show', [$thread->id]) }}" >
-            <span class="badge badge-reply-count"> {{ $thread->reply_count }} </span>
+            <span class="badge badge-reply-count"> {{ $thread->reply_count.' / '.$thread->view_count }} </span>
         </a>
 
         <div class="avatar pull-left">
