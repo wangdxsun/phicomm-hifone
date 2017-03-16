@@ -118,6 +118,10 @@ class ThreadController extends Controller
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
     }
 
+    /**
+     * 待审核列表
+     * @return mixed
+     */
     public function audit()
     {
         $q = Input::query('q');

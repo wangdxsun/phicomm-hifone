@@ -184,8 +184,8 @@ body.dashboard {
         top: 0;
         bottom: 0;
         position: fixed;
-        margin-left: 228px;
-        width: 16%;
+        margin-left: 178px;
+        width: $sub-sidebar-width;
         background: #f9fdff;
         border-right: 1px solid #E8ECF1;
 
@@ -259,8 +259,9 @@ body.dashboard {
     @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
         .sub-sidebar {
             margin-left: 80px;
-            width: 25%;
+            width: $sub-sidebar-width;
             + .content-wrapper {
+                margin-left: $sub-sidebar-width;
                 padding-left: 45px !important;
             }
         }
