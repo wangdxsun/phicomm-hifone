@@ -33,52 +33,27 @@ class DashboardRoutes
             'namespace' => 'Dashboard',
             'as' => 'dashboard.'], function (Registrar $router) {
 
-            $router->get('/', [
-                'as'   => 'index',
-                'uses' => 'DashboardController@index',
-            ]);
+            $router->get('/', 'DashboardController@index')->name('index');
             $router->get('markdown', 'DashboardController@markdown');
-            $router->get('thread/audit', [
-                'as' => 'thread.audit',
-                'uses' => 'ThreadController@audit'
-            ]);
-            $router->get('thread/trash', [
-                'as' => 'thread.trash',
-                'uses' => 'ThreadController@trash'
-            ]);
-            $router->get('reply/audit', [
-                'as' => 'reply.audit',
-                'uses' => 'ReplyController@audit'
-            ]);
-            $router->get('reply/trash', [
-                'as' => 'reply.trash',
-                'uses' => 'ReplyController@trash'
-            ]);
+            $router->get('thread/audit', 'ThreadController@audit')->name('thread.audit');
+            $router->get('thread/trash', 'ThreadController@trash')->name('thread.trash');
+            $router->get('reply/audit', 'ReplyController@audit')->name('reply.audit');
+            $router->get('reply/trash', 'ReplyController@trash')->name('reply.trash');
             $router->post('thread/{thread}/audit', 'ThreadController@postAudit');
             $router->post('thread/{thread}/trash', 'ThreadController@postTrash');
             $router->post('reply/{reply}/audit', 'ReplyController@postAudit');
             $router->post('reply/{reply}/trash', 'ReplyController@postTrash');
+            $router->post('reply/{reply}/pin', 'ReplyController@pin');
             $router->post('thread/{thread}/pin', 'ThreadController@pin');
+            $router->post('thread/{thread}/sink', 'ThreadController@sink');
             $router->post('thread/{thread}/excellent', 'ThreadController@excellent');
 
             // Settings
             $router->group(['as' => 'settings.', 'prefix' => 'settings'], function (Registrar $router) {
-                $router->get('general', [
-                    'as'   => 'general',
-                    'uses' => 'SettingsController@showGeneralView',
-                ]);
-                $router->get('localization', [
-                    'as'   => 'localization',
-                    'uses' => 'SettingsController@showLocalizationView',
-                ]);
-                $router->get('customization', [
-                    'as'   => 'customization',
-                    'uses' => 'SettingsController@showCustomizationView',
-                ]);
-                $router->get('aboutus', [
-                    'as'   => 'aboutus',
-                    'uses' => 'SettingsController@showAboutusView',
-                ]);
+                $router->get('general', 'SettingsController@showGeneralView')->name('general');
+                $router->get('localization', 'SettingsController@showLocalizationView')->name('localization');
+                $router->get('customization', 'SettingsController@showCustomizationView')->name('customization');
+                $router->get('aboutus', 'SettingsController@showAboutusView')->name('aboutus');
                 $router->post('/', 'SettingsController@postSettings');
             });
 
