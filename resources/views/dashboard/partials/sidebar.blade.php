@@ -74,7 +74,7 @@
             <li {!! set_active('dashboard/node*') !!} {!! set_active('dashboard/section*') !!}>
                 <a href="{{ route('dashboard.node.index') }}">
                     <i class="fa fa-sitemap"></i>
-                    <span>{{ trans('dashboard.nodes.nodes') }}</span>
+                    <span>板块管理</span>
                 </a>
             </li>
             <li {!! set_active('dashboard/adspace*') !!} {!! set_active('dashboard/advertisement*') !!} {!! set_active('dashboard/adblock*') !!}>

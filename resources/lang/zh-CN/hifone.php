@@ -47,9 +47,9 @@ return [
     'action_text'         => 'Are you sure you want to do this?',
 // 节点
     'nodes'            => [
-        'all'               => '节点导航',
-        'current'           => '当前节点',
-        'same_node_threads' => '同节点推荐',
+        'all'               => '板块导航',
+        'current'           => '当前板块',
+        'same_node_threads' => '同板块推荐',
     ],
 
 // 话题
@@ -79,7 +79,7 @@ return [
         'share2facebook' => '分享到 Facebook',
 
         // Create or Edit
-        'pick_node'      => '选择节点',
+        'pick_node'      => '选择板块',
         'mark_excellent' => '设为推荐主题',
         'mark_stick'     => '置顶此主题',
         'mark_sink'      => '下沉此主题',

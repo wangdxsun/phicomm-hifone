@@ -30,7 +30,7 @@ class NodeController extends Controller
     {
         View::share([
             'current_menu'  => 'nodes',
-            'sub_title'     => trans_choice('dashboard.nodes.nodes', 2),
+            'sub_title'     => '板块管理',
         ]);
     }
 
@@ -44,7 +44,7 @@ class NodeController extends Controller
         $nodes = Node::orderBy('order')->get();
 
         return View::make('dashboard.nodes.index')
-        ->withPageTitle(trans('dashboard.nodes.nodes').' - '.trans('dashboard.dashboard'))
+        ->withPageTitle('板块管理')
         ->withNodes($nodes);
     }
 
@@ -57,7 +57,7 @@ class NodeController extends Controller
     {
         return View::make('dashboard.nodes.create_edit')
             ->withSections(Section::orderBy('order')->get())
-            ->withPageTitle(trans('dashboard.nodes.add.title').' - '.trans('dashboard.dashboard'));
+            ->withPageTitle('添加板块');
     }
 
     /**

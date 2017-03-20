@@ -123,5 +123,16 @@ window.Hifone =
       else
         button.find('form').submit()
 
+  initSelect2 : ->
+    $('.selectpicker').select2
+      theme: 'classic'
+
+    $('.js-tag-tokenizer').select2
+      tags: true
+      tokenSeparators: [
+        ','
+        ' '
+      ]
+
 $ ->
   window._hifoneView = new HifoneView()

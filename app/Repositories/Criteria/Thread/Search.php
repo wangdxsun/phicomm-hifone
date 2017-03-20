@@ -28,6 +28,6 @@ class Search extends Criteria
 
     public function apply($model, Repository $repository)
     {
-        return $model->search($this->q);
+        return $model->title($this->q);
     }
 }

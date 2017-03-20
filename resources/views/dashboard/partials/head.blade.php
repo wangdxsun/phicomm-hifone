@@ -21,7 +21,6 @@
     <title>{{ $page_title or $site_title }}</title>
 
     <link rel="stylesheet" href="{{ elixir('dist/css/all.css') }}">
-    @yield('css')
 
     <script type="text/javascript">
         var Global = {};

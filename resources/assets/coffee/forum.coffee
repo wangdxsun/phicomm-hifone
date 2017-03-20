@@ -22,6 +22,7 @@ window.ForumView = Backbone.View.extend
     Hifone.initAjax()
     Hifone.initTextareaAutoResize()
     Hifone.initDeleteForm()
+    Hifone.initSelect2()
 
     self.initScrollToTop()
     self.forceImageDataType()
@@ -33,7 +34,6 @@ window.ForumView = Backbone.View.extend
     self.initHighLight()
     self.initTimeAgo()
 
-    self.initSelect2()
     self.initInlineAttach()
     self.initEditorUploader()
     self.initAutocompleteAtUser()
@@ -60,18 +60,6 @@ window.ForumView = Backbone.View.extend
 
   initScrollToTop : ->
     $.scrollUp.init()
-
-  initSelect2 : ->
-    $('.selectpicker').select2
-      theme: 'classic'
-
-    $('.js-tag-tokenizer').select2
-      tags: true
-      tokenSeparators: [
-        ','
-        ' '
-      ]
-    return
 
 # Open External Links In New Window
   initExternalLink: ->

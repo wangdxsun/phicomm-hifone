@@ -17,6 +17,7 @@ use Hifone\Commands\Thread\UpdateThreadCommand;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Section;
 use Hifone\Models\Thread;
+use Hifone\Models\User;
 use Hifone\Services\Parsers\Markdown;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
@@ -39,13 +40,20 @@ class ThreadController extends Controller
 
     public function index()
     {
-        $q = Input::query('q');
-        $threads = Thread::visible()->search($q)->orderBy('order', 'desc')->orderBy('created_at', 'desc')->paginate(20);
+        $search = array_filter(Input::get('thread', []), function($value) {
+            return !empty($value);
+        });
+        $threads = Thread::visible()->search($search)->orderBy('created_at', 'desc')->paginate(20);
+        $threadAll = Thread::visible()->get()->toArray();
+        $threadIds = array_unique(array_column($threadAll, 'user_id'));
+        $sections = Section::orderBy('order')->get();
 
         return View::make('dashboard.threads.index')
             ->withPageTitle(trans('dashboard.threads.threads').' - '.trans('dashboard.dashboard'))
             ->withThreads($threads)
-            ->withCurrentMenu('index');
+            ->withCurrentMenu('index')
+            ->withSections($sections)
+            ->withUsers(User::find($threadIds));
     }
 
     /**
@@ -102,6 +110,14 @@ class ThreadController extends Controller
             ->withSuccess(trans('dashboard.threads.edit.success'));
     }
 
+    public function sink(Thread $thread)
+    {
+        ($thread->order >= 0) ? $thread->decrement('order', 1) : $thread->increment('order', 1);
+
+        return Redirect::route('dashboard.thread.index')
+            ->withSuccess(trans('dashboard.threads.edit.success'));
+    }
+
     public function excellent(Thread $thread)
     {
         ($thread->is_excellent > 0) ? $thread->decrement('is_excellent', 1) : $thread->increment('is_excellent', 1);
@@ -124,8 +140,8 @@ class ThreadController extends Controller
      */
     public function audit()
     {
-        $q = Input::query('q');
-        $threads = Thread::audit()->search($q)->orderBy('order', 'desc')->orderBy('created_at', 'desc')->paginate(20);
+        $threads = Thread::audit()->orderBy('created_at', 'desc')->paginate(20);
+
         return view('dashboard.threads.audit')
             ->withPageTitle(trans('dashboard.threads.threads').' - '.trans('dashboard.dashboard'))
             ->withThreads($threads)
@@ -134,24 +150,34 @@ class ThreadController extends Controller
 
     public function postAudit(Thread $thread)
     {
-        $thread->order = 0;
+        $thread->status = 0;
         $thread->save();
         return Redirect::back()->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
     }
 
     public function trash()
     {
-        $q = Input::query('q');
-        $threads = Thread::trash()->search($q)->orderBy('order', 'desc')->orderBy('created_at', 'desc')->paginate(20);
+        $search = array_filter(Input::get('thread', []), function($value) {
+            return !empty($value);
+        });
+        $threads = Thread::trash()->search($search)->orderBy('created_at', 'desc')->paginate(20);
+        $threadAll = Thread::trash()->get()->toArray();
+        $userIds = array_unique(array_column($threadAll, 'user_id'));
+        $operators = array_unique(array_column($threadAll, 'last_op_user_id'));
+        $sections = Section::orderBy('order')->get();
+
         return view('dashboard.threads.trash')
             ->withPageTitle(trans('dashboard.threads.threads').' - '.trans('dashboard.dashboard'))
             ->withThreads($threads)
-            ->withCurrentMenu('trash');
+            ->withSections($sections)
+            ->withCurrentMenu('trash')
+            ->withUsers(User::find($userIds))
+            ->withOperators(User::find($operators));
     }
 
     public function postTrash(Thread $thread)
     {
-        $thread->order = -1;
+        $thread->status = -1;
         $thread->save();
         return Redirect::back()->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
     }

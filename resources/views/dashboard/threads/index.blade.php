@@ -16,9 +16,32 @@
             @include('partials.errors')
             <div class="toolbar">
                 <form class="form-inline">
-                    <div class="form-group">
-                        <input type="text" name="q" class="form-control" value="" placeholder="帖子标题">
-                    </div>
+                    <select class="form-control selectpicker" name="thread[id]" style="max-width: 300px">
+                        <option value="" selected>全部帖子标题</option>
+                        @foreach ($threads as $thread)
+                            <option value="{{ $thread->id }}">{{ $thread->title }}</option>
+                        @endforeach
+                    </select>
+                    <select class="form-control selectpicker" name="thread[node_id]">
+                        <option value="" selected>全部节点</option>
+                        @foreach ($sections as $section)
+                            <optgroup label="{{ $section->name }}">
+                                @if(isset($section->nodes))
+                                    @foreach ($section->nodes as $node)
+                                        <option value="{{ $node->id }}">{{ $node->name }}</option>
+                                    @endforeach
+                                @endif
+                            </optgroup>
+                        @endforeach
+                    </select>
+                    <select class="form-control selectpicker" name="thread[user_id]">
+                        <option value="" selected>全部发帖人</option>
+                        @foreach ($users as $user)
+                            <option value="{{ $user->id }}">{{ $user->username }}</option>
+                        @endforeach
+                    </select>
+                    <input name="thread[date_start]" size="10" type="text" class="form_date form-control" data-date-format="yyyy-mm-dd" placeholder="开始时间">
+                    <input name="thread[date_end]" size="10" type="text" class="form_date form-control" data-date-format="yyyy-mm-dd" placeholder="结束时间">
                     <button class="btn btn-default">搜索</button>
                 </form>
             </div>
@@ -30,20 +53,27 @@
                     <td>节点</td>
                     <td>发帖人</td>
                     <td>回帖</td>
-                    <td style="width: 150px">时间</td>
-                    <td style="width: 85px">操作</td>
+                    <td>查看</td>
+                    <td style="width: 150px">发帖时间</td>
+                    <td>操作人</td>
+                    <td style="width: 150px">操作时间</td>
+                    <td style="width: 110px">操作</td>
                 </tr>
                 @foreach($threads as $thread)
                 <tr>
                     <td>{{ $thread->id }}</td>
-                    <td><a target="_blank" href="{{ $thread->url }}">{{ Str::substr($thread->title, 0, 20) }}</a></td>
-                    <td>{{ $thread->node->name }}</td>
+                    <td><a target="_blank" href="{{ $thread->url }}">{{ $thread->title }}</a></td>
+                    <td><a href="{{ $thread->node->url }}" target="_blank">{{ $thread->node->name }}</a></td>
                     <td><a data-name="{{ $thread->user->username }}" href="{{ $thread->author_url }}">{{ $thread->user->username }}</a></td>
                     <td>{{ $thread->reply_count }}</td>
+                    <td>{{ $thread->view_count }}</td>
                     <td>{{ $thread->created_at }}</td>
+                    <td>{{ $thread->lastOpUser->username }}</td>
+                    <td>{{ $thread->last_op_time }}</td>
                     <td>
-                        <a data-url="/dashboard/thread/{{$thread->id}}/pin" data-method="post" class="confirm-action"><i class="{{ $thread->pin }}"></i></a>
                         <a data-url="/dashboard/thread/{{$thread->id}}/excellent" data-method="post" class="confirm-action"><i class="{{ $thread->excellent }}"></i></a>
+                        <a data-url="/dashboard/thread/{{$thread->id}}/pin" data-method="post"><i class="{{ $thread->pin }}"></i></a>
+                        <a data-url="/dashboard/thread/{{$thread->id}}/sink" data-method="post"><i class="{{ $thread->sink }}"></i></a>
                         <a href="/dashboard/thread/{{ $thread->id }}/edit"><i class="fa fa-pencil"></i></a>
                         <a data-url="/dashboard/thread/{{ $thread->id }}/trash" data-method="post" class="confirm-action"><i class="fa fa-trash"></i></a>
                     </td>

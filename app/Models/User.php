@@ -239,4 +239,9 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     {
         return UserPresenter::class;
     }
+
+    public function getUrlAttribute()
+    {
+        return route('user.home', $this->username);
+    }
 }

@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use Config;
 use Hifone\Models\Scopes\ForUser;
 use Hifone\Models\Scopes\Recent;
+use Hifone\Models\Traits\SearchTrait;
 use Hifone\Models\Traits\Taggable;
 use Hifone\Presenters\ThreadPresenter;
 use Hifone\Services\Tag\TaggableInterface;
@@ -27,7 +28,7 @@ use Venturecraft\Revisionable\RevisionableTrait;
 
 class Thread extends Model implements HasPresenter, TaggableInterface
 {
-    use ValidatingTrait, Taggable, ForUser, Recent, RevisionableTrait, SoftDeletes;
+    use ValidatingTrait, Taggable, ForUser, Recent, RevisionableTrait, SoftDeletes, SearchTrait;
 
     // manually maintain
     public $timestamps = false;
@@ -94,6 +95,11 @@ class Thread extends Model implements HasPresenter, TaggableInterface
         return $this->belongsTo(User::class);
     }
 
+    public function lastOpUser()
+    {
+        return $this->belongsTo(User::class, 'last_op_user_id');
+    }
+
     public function lastReplyUser()
     {
         return $this->belongsTo(User::class, 'last_reply_user_id');
@@ -125,23 +131,23 @@ class Thread extends Model implements HasPresenter, TaggableInterface
 
     public function scopeVisible($query)
     {
-        return $query->where('order', '>=', 0);
+        return $query->where('status', '>=', 0);
     }
 
     public function scopeAudit($query)
     {
-        return $query->where('order', -2);//审核中
+        return $query->where('status', -2);//审核中
     }
 
     public function scopeTrash($query)
     {
-        return $query->where('order', -1);//回收站
+        return $query->where('status', -1);//回收站
     }
 
-    public function scopeSearch($query, $search)
+    public function scopeTitle($query, $search)
     {
         if (!$search) {
-            return;
+            return null;
         }
         return $query->where('title', 'LIKE', "%$search%");
     }

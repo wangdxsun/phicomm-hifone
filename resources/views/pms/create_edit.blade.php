@@ -16,13 +16,13 @@
                         {!! Form::open(['route' => 'messages.store']) !!}
 
                         <div class="form-group">
-                            {!! Form::label('subject', 'Subject', ['class' => 'control-label']) !!}
-                            {!! Form::text('subject', null, ['class' => 'form-control', 'placeholder' => trans('hifone.threads.title')]) !!}
+                            {!! Form::label('subject', trans('hifone.threads.title'), ['class' => 'control-label']) !!}
+                            {!! Form::text('subject', null, ['class' => 'form-control']) !!}
                         </div>
 
                         <div class="form-group">
                             <select class="form-control selectpicker" name="thread[node_id]">
-                                <option value="">{{ trans('hifone.pms.pick_user') }}</option>
+                                <option value="" disabled>{{ trans('hifone.pms.pick_user') }}</option>
                                 @foreach ($users as $user)
                                     <option value="{{ $user->id }}"> - {{ $user->username }}</option>
                                 @endforeach

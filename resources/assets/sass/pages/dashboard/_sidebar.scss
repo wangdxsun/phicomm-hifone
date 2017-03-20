@@ -235,7 +235,7 @@ body.dashboard {
         + .content-wrapper {
             top: 0;
             position: relative;
-            margin-left: 18%;
+            margin-left: $sub-sidebar-width;
             padding-right: 40px !important;
         }
 

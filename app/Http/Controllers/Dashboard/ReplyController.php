@@ -15,6 +15,8 @@ use Hifone\Commands\Reply\RemoveReplyCommand;
 use Hifone\Commands\Reply\UpdateReplyCommand;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Reply;
+use Hifone\Models\Thread;
+use Hifone\Models\User;
 use Hifone\Parsers\Markdown;
 use Illuminate\Support\Facades\View;
 use Input;
@@ -37,12 +39,20 @@ class ReplyController extends Controller
 
     public function index()
     {
-        $q = Input::query('q');
-        $replies = Reply::visible()->search($q)->orderBy('created_at', 'desc')->paginate(20);
+        $search = array_filter(Input::get('reply', []), function($value) {
+            return !empty($value);
+        });
+        $replies = Reply::visible()->search($search)->orderBy('created_at', 'desc')->paginate(20);
+        $replyAll = Reply::visible()->get()->toArray();
+        $threadIds = array_unique(array_column($replyAll, 'thread_id'));
+        $userIds = array_unique(array_column($replyAll, 'user_id'));
 
         return View::make('dashboard.replies.index')
             ->withPageTitle(trans('dashboard.replies.replies').' - '.trans('dashboard.dashboard'))
-            ->withReplies($replies)->withCurrentMenu('index');
+            ->withReplies($replies)
+            ->withCurrentMenu('index')
+            ->withThreads(Thread::find($threadIds))
+            ->withUsers(User::find($userIds));
     }
 
     /**
@@ -100,10 +110,17 @@ class ReplyController extends Controller
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
     }
 
+    public function pin(Reply $reply)
+    {
+        ($reply->order > 0) ? $reply->decrement('order', 1) : $reply->increment('order', 1);
+
+        return Redirect::route('dashboard.reply.index')
+            ->withSuccess(trans('dashboard.reply.edit.success'));
+    }
+
     public function audit()
     {
-        $q = Input::query('q');
-        $replies = Reply::audit()->search($q)->orderBy('created_at', 'desc')->paginate(20);
+        $replies = Reply::audit()->orderBy('created_at', 'desc')->paginate(20);
 
         return View::make('dashboard.replies.audit')
             ->withPageTitle(trans('dashboard.replies.replies').' - '.trans('dashboard.dashboard'))
@@ -112,12 +129,21 @@ class ReplyController extends Controller
 
     public function trash()
     {
-        $q = Input::query('q');
-        $replies = Reply::trash()->search($q)->orderBy('created_at', 'desc')->paginate(20);
+        $search = array_filter(Input::get('reply', []), function($value) {
+            return !empty($value);
+        });
+        $replies = Reply::trash()->search($search)->orderBy('created_at', 'desc')->paginate(20);
+        $replyAll = Reply::trash()->get()->toArray();
+        $threadIds = array_unique(array_column($replyAll, 'thread_id'));
+        $userIds = array_unique(array_column($replyAll, 'user_id'));
+        $operators = array_unique(array_column($replyAll, 'last_op_user_id'));
 
         return View::make('dashboard.replies.trash')
-            ->withPageTitle(trans('dashboard.replies.replies').' - '.trans('dashboard.dashboard'))
-            ->withReplies($replies)->withCurrentMenu('trash');
+            ->withPageTitle('回复回收站')
+            ->withReplies($replies)->withCurrentMenu('trash')
+            ->withThreads(Thread::find($threadIds))
+            ->withUsers(User::find($userIds))
+            ->withOperators(User::find($operators));
     }
 
     public function postAudit(Reply $reply)

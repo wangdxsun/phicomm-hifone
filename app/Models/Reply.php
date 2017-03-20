@@ -14,6 +14,7 @@ namespace Hifone\Models;
 use AltThree\Validator\ValidatingTrait;
 use Hifone\Models\Scopes\ForUser;
 use Hifone\Models\Scopes\Recent;
+use Hifone\Models\Traits\SearchTrait;
 use Hifone\Presenters\ReplyPresenter;
 use Illuminate\Database\Eloquent\Model;
 use McCool\LaravelAutoPresenter\HasPresenter;
@@ -21,7 +22,7 @@ use Venturecraft\Revisionable\RevisionableTrait;
 
 class Reply extends Model implements HasPresenter
 {
-    use ValidatingTrait, ForUser, Recent, RevisionableTrait;
+    use ValidatingTrait, ForUser, Recent, RevisionableTrait, SearchTrait;
 
     /**
      * The fillable properties.
@@ -63,6 +64,11 @@ class Reply extends Model implements HasPresenter
         return $this->belongsTo(User::class);
     }
 
+    public function lastOpUser()
+    {
+        return $this->belongsTo(User::class, 'last_op_user_id');
+    }
+
     public function thread()
     {
         return $this->belongsTo(Thread::class);
@@ -83,14 +89,6 @@ class Reply extends Model implements HasPresenter
         return $query->where('status', -1)->orWhere('status', -5);//回收站
     }
 
-    public function scopeSearch($query, $search)
-    {
-        if (!$search) {
-            return;
-        }
-        return $query->where('body', 'LIKE', "%$search%");
-    }
-
     /**
      * Get the presenter class.
      *
@@ -99,5 +97,10 @@ class Reply extends Model implements HasPresenter
     public function getPresenterClass()
     {
         return ReplyPresenter::class;
+    }
+
+    public function getPinAttribute()
+    {
+        return $this->order > 0 ? 'fa fa-thumb-tack text-danger' : 'fa fa-thumb-tack';
     }
 }

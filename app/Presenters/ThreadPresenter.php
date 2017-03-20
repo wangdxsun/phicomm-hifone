@@ -40,12 +40,17 @@ class ThreadPresenter extends AbstractPresenter
 
     public function pin()
     {
-        return $this->wrappedObject->order ? 'fa fa-thumb-tack text-danger' : 'fa fa-thumb-tack';
+        return $this->wrappedObject->order > 0 ? 'fa fa-thumb-tack text-danger' : 'fa fa-thumb-tack';
     }
 
     public function excellent()
     {
         return $this->wrappedObject->is_excellent ? 'fa fa-diamond text-danger' : 'fa fa-diamond';
+    }
+
+    public function sink()
+    {
+        return $this->wrappedObject->order < 0 ? 'fa fa-anchor text-danger' : 'fa fa-anchor';
     }
 
     /**
