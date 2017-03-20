@@ -122,7 +122,7 @@ class ThreadController extends Controller
     {
         ($thread->is_excellent > 0) ? $thread->decrement('is_excellent', 1) : $thread->increment('is_excellent', 1);
 
-        return Redirect::route('dashboard.thread.index')
+        return Redirect::back()
             ->withSuccess(trans('dashboard.threads.edit.success'));
     }
 
@@ -178,6 +178,7 @@ class ThreadController extends Controller
     public function postTrash(Thread $thread)
     {
         $thread->status = -1;
+        $thread->last_op_reason = Input::get('reason');
         $thread->save();
         return Redirect::back()->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
     }

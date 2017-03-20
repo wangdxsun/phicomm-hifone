@@ -32,9 +32,9 @@
                 <td><a data-name="{{ $reply->user->username }}" href="{{ $reply->author_url }}">{{ $reply->user->username }}</a></td>
                 <td>{{ $reply->created_at }}</td>
                 <td>
-                    <a data-url="/dashboard/reply/{{$reply->id}}/audit" data-method="post" class="confirm-action"><i class="fa fa-check"></i></a>
+                    <a data-url="/dashboard/reply/{{$reply->id}}/audit" data-method="post"><i class="fa fa-check"></i></a>
                     <a href="/dashboard/reply/{{ $reply->id }}/edit"><i class="fa fa-pencil"></i></a>
-                    <a data-url="/dashboard/reply/{{ $reply->id }}/trash" data-method="post" class="confirm-action"><i class="fa fa-trash"></i></a>
+                    <a data-url="/dashboard/reply/{{ $reply->id }}/trash" data-method="post" class="need-reason"><i class="fa fa-trash"></i></a>
                 </td>
             </tr>
             @endforeach

@@ -109,19 +109,33 @@ window.Hifone =
       data_url = $(this).attr('data-url')
       '\n' + '<form action=\'' + data_url + '\' method=\'POST\' style=\'display:none\'>\n' + '   <input type=\'hidden\' name=\'_method\' value=\'' + $(this).attr('data-method') + '\'>\n' + '   <input type=\'hidden\' name=\'_token\' value=\'' + Hifone.Config.token + '\'>\n' + '</form>\n'
     ).attr('style', 'cursor:pointer;').removeAttr('href').click ->
-      button = $(this)
-      if button.hasClass('confirm-action')
+      form = $(this).find('form')
+      if $(this).hasClass('need-reason')
+        swal {
+          title: "Confirm your action"
+          text: "请输入操作原因："
+          type: "input"
+          showCancelButton: true
+          closeOnConfirm: false
+          confirmButtonColor: '#FF6F6F'
+        }, (inputValue)->
+          if inputValue == false
+            return false
+          else if inputValue == ""
+            return false
+          form.attr('action', form.attr('action') + '?reason=' + inputValue)
+          form.submit()
+      else if $(this).hasClass('confirm-action')
         swal {
           type: 'warning'
           title: 'Confirm your action'
           text: 'Are you sure you want to do this?'
-          confirmButtonText: 'Yes'
           confirmButtonColor: '#FF6F6F'
           showCancelButton: true
         }, ->
-          button.find('form').submit()
+          form.submit()
       else
-        button.find('form').submit()
+        form.submit()
 
   initSelect2 : ->
     $('.selectpicker').select2

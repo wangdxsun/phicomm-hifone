@@ -13,7 +13,6 @@
     @endif
     <div class="row">
         <div class="col-sm-12">
-            @include('partials.errors')
             <div class="toolbar">
                 <form class="form-inline">
                     <select class="form-control selectpicker" name="thread[id]" style="max-width: 300px">
@@ -64,18 +63,18 @@
                     <td>{{ $thread->id }}</td>
                     <td><a target="_blank" href="{{ $thread->url }}">{{ $thread->title }}</a></td>
                     <td><a href="{{ $thread->node->url }}" target="_blank">{{ $thread->node->name }}</a></td>
-                    <td><a data-name="{{ $thread->user->username }}" href="{{ $thread->author_url }}">{{ $thread->user->username }}</a></td>
+                    <td><a href="{{ $thread->author_url }}" target="_blank">{{ $thread->user->username }}</a></td>
                     <td>{{ $thread->reply_count }}</td>
                     <td>{{ $thread->view_count }}</td>
                     <td>{{ $thread->created_at }}</td>
                     <td>{{ $thread->lastOpUser->username }}</td>
                     <td>{{ $thread->last_op_time }}</td>
                     <td>
-                        <a data-url="/dashboard/thread/{{$thread->id}}/excellent" data-method="post" class="confirm-action"><i class="{{ $thread->excellent }}"></i></a>
+                        <a data-url="/dashboard/thread/{{$thread->id}}/excellent" data-method="post"><i class="{{ $thread->excellent }}"></i></a>
                         <a data-url="/dashboard/thread/{{$thread->id}}/pin" data-method="post"><i class="{{ $thread->pin }}"></i></a>
                         <a data-url="/dashboard/thread/{{$thread->id}}/sink" data-method="post"><i class="{{ $thread->sink }}"></i></a>
                         <a href="/dashboard/thread/{{ $thread->id }}/edit"><i class="fa fa-pencil"></i></a>
-                        <a data-url="/dashboard/thread/{{ $thread->id }}/trash" data-method="post" class="confirm-action"><i class="fa fa-trash"></i></a>
+                        <a data-url="/dashboard/thread/{{ $thread->id }}/trash" data-method="post" class="need-reason"><i class="fa fa-trash"></i></a>
                     </td>
                 </tr>
                 @endforeach

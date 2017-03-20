@@ -47,6 +47,7 @@ class DashboardRoutes
             $router->post('thread/{thread}/pin', 'ThreadController@pin');
             $router->post('thread/{thread}/sink', 'ThreadController@sink');
             $router->post('thread/{thread}/excellent', 'ThreadController@excellent');
+            $router->get('test', 'DashboardController@test');
 
             // Settings
             $router->group(['as' => 'settings.', 'prefix' => 'settings'], function (Registrar $router) {
