@@ -13,6 +13,7 @@
     @endif
     <div class="row">
         <div class="col-sm-12">
+            @include('partials.errors')
             <div class="toolbar">
                 <form class="form-inline">
                     <select class="form-control selectpicker" name="thread[id]" style="max-width: 300px">

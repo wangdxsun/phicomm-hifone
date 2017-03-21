@@ -13,6 +13,7 @@ window.DashboardView = Backbone.View.extend
     Hifone.initTextareaAutoResize()
     Hifone.initDeleteForm()
     Hifone.initSelect2()
+    Hifone.initMessage()
 
     self.initSortable()
     self.initSidebarToggle()

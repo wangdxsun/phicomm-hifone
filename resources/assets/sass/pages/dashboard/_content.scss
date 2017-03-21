@@ -8,6 +8,10 @@ body.dashboard {
             &.header-fixed {
                 margin-top: 60px;
             }
+            img {
+                max-width: 650px;
+                max-height: 700px;
+            }
         }
         .header {
             position: relative;

@@ -16,6 +16,9 @@ elixir(function (mix) {
             'vendor/bower_components/select2/dist/css/select2.css',
             'vendor/bower_components/ekko-lightbox/dist/ekko-lightbox.css',
             //'bootstrap-datetimepicker.min.css',
+            'messenger.css',
+            'messenger-theme.air.css',
+            'messenger-theme-ice.css',
             'public/dist/css/hifone.css'
         ], 'public/dist/css/all.css', './')
         .coffee([
@@ -25,6 +28,7 @@ elixir(function (mix) {
             'vendor/bower_components/jquery/dist/jquery.js',
             'vendor/bower_components/bootstrap-sass/assets/javascripts/bootstrap.js',
             //'bootstrap-datetimepicker.min.js',
+            'messenger.min.js',
             'vendor/bower_components/underscore/underscore-min.js',
             'vendor/bower_components/backbone/backbone-min.js',
             'vendor/bower_components/sweetalert/dist/sweetalert.min.js',

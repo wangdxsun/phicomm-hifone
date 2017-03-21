@@ -22,7 +22,7 @@
                         <td >帖子内容</td>
                         <td style="width: 70px;">节点</td>
                         <td style="width: 50px;">发帖人</td>
-                        <td style="width: 150px;">时间</td>
+                        <td style="width: 90px;">时间</td>
                         <td style="width: 70px;">操作</td>
                     </tr>
                     @foreach($threads as $thread)
@@ -30,8 +30,11 @@
                             <td>{{ $thread->id }}</td>
                             <td><a target="_blank" href="{{ $thread->url }}"><i class="{{ $thread->icon }}"></i> {{ Str::substr($thread->title, 0, 20) }}</a></td>
                             <td>
-                                <a data-toggle="collapse" href="#thread{{ $thread->id }}" aria-expanded="false">{{ Str::substr($thread->body, 0, 100) }}</a>
-                                <div class="collapse well" id="thread{{ $thread->id }}">{!! $thread->body !!}</div>
+                                {{ Str::substr($thread->body, 0, 100) }}
+                                @if(Str::length($thread->body) > 100)
+                                    <a data-toggle="collapse" href="#thread{{ $thread->id }}" aria-expanded="false">查看更多</a>
+                                    <div class="collapse well" id="thread{{ $thread->id }}">{!! $thread->body !!}</div>
+                                @endif
                             </td>
                             <td><a href="{{ $thread->node->url }}" target="_blank">{{ $thread->node->name }}</a></td>
                             <td><a data-name="{{ $thread->user->username }}" href="{{ $thread->author_url }}">{{ $thread->user->username }}</a></td>

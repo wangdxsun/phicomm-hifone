@@ -118,10 +118,14 @@ window.Hifone =
           showCancelButton: true
           closeOnConfirm: false
           confirmButtonColor: '#FF6F6F'
+          inputPlaceholder: "请输入6~200个字符"
         }, (inputValue)->
           if inputValue == false
             return false
           else if inputValue == ""
+            return false
+          else if inputValue.length < 6 || inputValue.length > 200
+            swal.showInputError("请输入6~200个字符！");
             return false
           form.attr('action', form.attr('action') + '?reason=' + inputValue)
           form.submit()
@@ -147,6 +151,12 @@ window.Hifone =
         ','
         ' '
       ]
+
+  initMessage : ->
+    Messenger.options = {
+      extraClasses: 'messenger-fixed messenger-on-top messenger-on-right',
+      theme: 'ice'
+    }
 
 $ ->
   window._hifoneView = new HifoneView()

@@ -3,7 +3,12 @@
 @endif
 
 @if ($message = Session::get('success'))
-@include('partials._error', ['level' => 'success', 'title' => Session::get('title'), 'message' => $message])
+{{--@include('partials._error', ['level' => 'success', 'title' => Session::get('title'), 'message' => $message])--}}
+<script>
+    $().ready(function() {
+        Messenger().post("{{ $message }}");
+    });
+</script>
 @endif
 
 @if ($message = Session::get('warning'))
