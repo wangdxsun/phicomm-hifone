@@ -44,14 +44,17 @@ class UserController extends Controller
      */
     public function index()
     {
-        $q = Input::query('q');
-        $users = User::orderBy('created_at', 'desc')->search($q)->paginate(20);
+        $search = array_filter(Input::get('user', []), function($value) {
+            return !empty($value);
+        });
+        $users = User::search($search)->orderBy('created_at', 'desc')->paginate(20);
         $roles = Role::all();
 
         return View::make('dashboard.users.index')
-        ->withPageTitle(trans('dashboard.users.users').' - '.trans('dashboard.dashboard'))
-        ->withUsers($users)
-        ->withRoles($roles);
+            ->withPageTitle(trans('dashboard.users.users').' - '.trans('dashboard.dashboard'))
+            ->withUsers($users)
+            ->withRoles($roles)
+            ->withAllUsers(User::all());
     }
 
     /**

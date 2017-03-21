@@ -13,6 +13,7 @@ namespace Hifone\Models;
 
 use AltThree\Validator\ValidatingTrait;
 use Cmgmyr\Messenger\Traits\Messagable;
+use Hifone\Models\Traits\SearchTrait;
 use Hifone\Presenters\UserPresenter;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -20,11 +21,12 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Model;
 use McCool\LaravelAutoPresenter\HasPresenter;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract, HasPresenter
 {
-    use Authenticatable, CanResetPassword, EntrustUserTrait, ValidatingTrait, Messagable;
+    use Authenticatable, CanResetPassword, EntrustUserTrait, ValidatingTrait, Messagable, SearchTrait;
 
     // Enable hasRole( $name ), can( $permission ),
     //   and ability($roles, $permissions, $options)
@@ -79,7 +81,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
             return $user;
         }
 
-        throw new ModelNotFoundException();
+        throw new NotFoundHttpException;
     }
 
     public static function findUserByPhicommId($phicommId)
@@ -140,14 +142,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function location()
     {
         return $this->belongsTo(Location::class);
-    }
-
-    public function scopeSearch($query, $search)
-    {
-        if (!$search) {
-            return;
-        }
-        return $query->where('title', 'LIKE', "%$search%");
     }
 
     /**

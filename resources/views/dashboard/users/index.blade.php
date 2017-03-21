@@ -18,9 +18,12 @@
             <div class="col-sm-12">
                 <div class="toolbar">
                     <form class="form-inline">
-                        <div class="form-group">
-                            <input type="text" name="q" class="form-control" value="" placeholder="用户名">
-                        </div>
+                        <select class="form-control selectpicker" name="user[id]">
+                            <option value="" selected>全部发帖人</option>
+                            @foreach ($all_users as $user)
+                                <option value="{{ $user->id }}">{{ $user->username }}</option>
+                            @endforeach
+                        </select>
                         <button class="btn btn-default">搜索</button>
                     </form>
                 </div>

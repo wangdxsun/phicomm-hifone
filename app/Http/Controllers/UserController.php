@@ -145,10 +145,9 @@ class UserController extends Controller
 
     public function blocking(User $user)
     {
-        $user->is_banned = (!$user->is_banned);
-        $user->save();
+        $user->is_banned > 0 ? $user->decrement('is_banned') : $user->increment('is_banned');
 
-        return Redirect::route('users.show', $user->id);
+        return Redirect::route('user.home', $user->username);
     }
 
     public function unbind(User $user)
