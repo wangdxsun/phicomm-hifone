@@ -33,6 +33,7 @@
                     <tbody>
                     <tr class="head">
                         <td class="first">#</td>
+                        <td>头像</td>
                         <td>用户名</td>
                         <td>昵称</td>
                         <td>邮箱</td>
@@ -40,11 +41,13 @@
                         <td>发帖数</td>
                         <td>积分</td>
                         <td>注册时间</td>
-                        <td style="width:10%">操作</td>
+                        <td>注册IP</td>
+                        <td>操作</td>
                     </tr>
                     @foreach($users as $user)
                         <tr>
                             <td>{{ $user->id }}</td>
+                            <td><img src="{{ $user->avatar_small }}" style="width: 20px; height: 20px;"></td>
                             <td><a href="{{ route('user.show',['id'=>$user->id]) }}" target="_blank">{{ $user->username }}</a></td>
                             <td>{{ $user->nickname }}</td>
                             <td>{{ $user->email }}</td>
@@ -52,9 +55,10 @@
                             <td>{{ $user->thread_count }}</td>
                             <td>{{ $user->score }}</td>
                             <td>{{ $user->created_at }}</td>
+                            <td>{{ $user->regip }}</td>
                             <td>
                                 <a href="/dashboard/user/{{ $user->id }}/edit"><i class="fa fa-pencil"></i></a>
-                                <a data-url="/dashboard/user/{{ $user->id }}" data-method="delete" class="confirm-action"><i class="fa fa-trash"></i></a>
+                                {{--<a data-url="/dashboard/user/{{ $user->id }}" data-method="delete" class="confirm-action"><i class="fa fa-trash"></i></a>--}}
                             </td>
                         </tr>
                     @endforeach
