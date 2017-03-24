@@ -64,18 +64,18 @@
                     <td>{{ $thread->id }}</td>
                     <td><a target="_blank" href="{{ $thread->url }}">{{ $thread->title }}</a></td>
                     <td><a href="{{ $thread->node->url }}" target="_blank">{{ $thread->node->name }}</a></td>
-                    <td><a href="{{ $thread->author_url }}" target="_blank">{{ $thread->user->username }}</a></td>
+                    <td><a href="{{ $thread->user->url }}" target="_blank">{{ $thread->user->username }}</a></td>
                     <td>{{ $thread->reply_count }}</td>
                     <td>{{ $thread->view_count }}</td>
                     <td>{{ $thread->created_at }}</td>
                     <td>{{ $thread->lastOpUser->username }}</td>
                     <td>{{ $thread->last_op_time }}</td>
                     <td>
-                        <a data-url="/dashboard/thread/{{$thread->id}}/excellent" data-method="post"><i class="{{ $thread->excellent }}"></i></a>
-                        <a data-url="/dashboard/thread/{{$thread->id}}/pin" data-method="post"><i class="{{ $thread->pin }}"></i></a>
-                        <a data-url="/dashboard/thread/{{$thread->id}}/sink" data-method="post"><i class="{{ $thread->sink }}"></i></a>
-                        <a href="/dashboard/thread/{{ $thread->id }}/edit"><i class="fa fa-pencil"></i></a>
-                        <a data-url="/dashboard/thread/{{ $thread->id }}/trash" data-method="post" class="need-reason"><i class="fa fa-trash"></i></a>
+                        <a data-url="/dashboard/thread/{{$thread->id}}/excellent" data-method="post" title="精华"><i class="{{ $thread->excellent }}"></i></a>
+                        <a data-url="/dashboard/thread/{{$thread->id}}/pin" data-method="post" title="置顶"><i class="{{ $thread->pin }}"></i></a>
+                        <a data-url="/dashboard/thread/{{$thread->id}}/sink" data-method="post" title="下沉"><i class="{{ $thread->sink }}"></i></a>
+                        <a href="/dashboard/thread/{{ $thread->id }}/edit"><i class="fa fa-pencil" title="编辑"></i></a>
+                        <a data-url="/dashboard/thread/{{ $thread->id }}/trash" data-method="post" class="need-reason" title="删除"><i class="fa fa-trash"></i></a>
                     </td>
                 </tr>
                 @endforeach

@@ -10,7 +10,7 @@
         </a>
 
         <div class="avatar pull-left">
-            <a href="{{ $thread->author_url }}">
+            <a href="{{ $thread->user->url }}">
                 <img class="media-object img-thumbnail avatar-48" alt="{{ $thread->user->username }}" src="{{ $thread->user->avatar_small}}"/>
             </a>
         </div>
@@ -49,10 +49,10 @@
             @endif
             @if ($thread->reply_count == 0)
                 @if($thread->user->nickname)
-                    <a href="{{ $thread->author_url }}" title="{{ $thread->user->nickname }}">{{ $thread->user->nickname }}
+                    <a href="{{ $thread->user->url }}" title="{{ $thread->user->nickname }}">{{ $thread->user->nickname }}
                     </a>
                 @else
-                    <a href="{{ $thread->author_url }}" title="{{ $thread->user->username }}">{{ $thread->user->username }}
+                    <a href="{{ $thread->user->url }}" title="{{ $thread->user->username }}">{{ $thread->user->username }}
                     </a>
                 @endif
                 <span> • </span>

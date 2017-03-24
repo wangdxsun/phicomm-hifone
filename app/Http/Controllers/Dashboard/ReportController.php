@@ -12,24 +12,29 @@
 namespace Hifone\Http\Controllers\Dashboard;
 
 use AltThree\Validator\ValidationException;
+use Hifone\Hashing\PasswordHasher;
 use Hifone\Http\Controllers\Controller;
+use Hifone\Models\Report;
 use Hifone\Models\Role;
+use Hifone\Models\Thread;
 use Hifone\Models\User;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
 use Input;
 
-class UserController extends Controller
+class ReportController extends Controller
 {
     /**
      * Creates a new node controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(PasswordHasher $hasher)
     {
+        $this->hasher = $hasher;
+
         View::share([
-            'current_menu'  => 'users',
+            'page_title'    => '举报管理',
         ]);
     }
 
@@ -40,17 +45,23 @@ class UserController extends Controller
      */
     public function index()
     {
-        $search = array_filter(Input::get('user', []), function($value) {
+        $search = array_filter(Input::get('report', []), function($value) {
             return !empty($value);
         });
-        $users = User::search($search)->orderBy('created_at', 'desc')->paginate(20);
-        $roles = Role::all();
+        $reports = Report::audited()->search($search)->orderBy('created_at', 'desc')->paginate(20);
 
-        return View::make('dashboard.users.index')
-            ->withPageTitle(trans('dashboard.users.users').' - '.trans('dashboard.dashboard'))
-            ->withUsers($users)
-            ->withRoles($roles)
-            ->withAllUsers(User::all());
+        return View::make('dashboard.reports.index')
+            ->withReports($reports)
+            ->withCurrentMenu('index');
+    }
+
+    public function audit()
+    {
+        $reports = Report::audit()->orderBy('created_at', 'desc')->paginate(20);
+
+        return View::make('dashboard.reports.audit')
+            ->withReports($reports)
+            ->withCurrentMenu('audit');
     }
 
     /**
@@ -127,5 +138,37 @@ class UserController extends Controller
         }
         return Redirect::route('dashboard.user.edit', ['id' => $user->id])
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.users.edit.success')));
+    }
+
+    public function trash(Report $report)
+    {
+        $thread = $report->reportable;
+        $thread->status = Thread::TRASH;
+        $thread->last_op_user_id = \Auth::user()->id;
+        $thread->last_op_reason = Input::get('reason');
+        $thread->last_op_time = time();
+        $thread->save();
+
+        $report->status = 1;
+        $report->last_op_user_id = \Auth::user()->id;
+        $report->save();
+
+        return \Redirect::back()->withSuccess('删除成功');
+    }
+
+    public function ignore(Report $report)
+    {
+        $report->status = 2;
+        $report->last_op_user_id = \Auth::user()->id;
+        $report->save();
+
+        return \Redirect::back()->withSuccess('忽略成功');
+    }
+
+    public function destroy(Report $report)
+    {
+        $report->delete();
+
+        return Redirect::back();
     }
 }

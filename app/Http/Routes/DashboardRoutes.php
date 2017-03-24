@@ -39,6 +39,7 @@ class DashboardRoutes
             $router->get('thread/trash', 'ThreadController@trash')->name('thread.trash');
             $router->get('reply/audit', 'ReplyController@audit')->name('reply.audit');
             $router->get('reply/trash', 'ReplyController@trash')->name('reply.trash');
+            $router->get('report/audit', 'ReportController@audit')->name('report.audit');
             $router->post('thread/{thread}/audit', 'ThreadController@postAudit');
             $router->post('thread/{thread}/trash', 'ThreadController@postTrash');
             $router->post('reply/{reply}/audit', 'ReplyController@postAudit');
@@ -47,6 +48,8 @@ class DashboardRoutes
             $router->post('thread/{thread}/pin', 'ThreadController@pin');
             $router->post('thread/{thread}/sink', 'ThreadController@sink');
             $router->post('thread/{thread}/excellent', 'ThreadController@excellent');
+            $router->post('report/{report}/trash', 'ReportController@trash');
+            $router->post('report/{report}/ignore', 'ReportController@ignore');
             $router->get('test', 'DashboardController@test');
 
             // Settings
@@ -75,31 +78,25 @@ class DashboardRoutes
             'prefix' => 'dashboard',
             'namespace' => 'Dashboard'], function (Registrar $router) {
 
-            // Advertisements
             $router->resource('adblock', 'AdblockController');
             $router->resource('adspace', 'AdspaceController');
             $router->resource('advertisement', 'AdvertisementController');
-             // Photos
             $router->resource('photo', 'PhotoController');
-            // Pages
             $router->resource('page', 'PageController');
-            // Sections
             $router->resource('section', 'SectionController');
-            // Nodes
             $router->resource('node', 'NodeController');
-            // Threads
             $router->resource('thread', 'ThreadController');
             $router->resource('reply', 'ReplyController');
             $router->resource('tip', 'TipController');
             $router->resource('location', 'LocationController');
             $router->resource('link', 'LinkController');
-            // Users
             $router->resource('user', 'UserController');
             $router->resource('role', 'RoleController');
             $router->resource('word', 'WordController');
             $router->resource('creditRule', 'CreditController');
             $router->resource('notice', 'NoticeController');
             $router->resource('carousel', 'CarouselController');
+            $router->resource('report', 'ReportController');
         });
     }
 }

@@ -18,26 +18,6 @@ class ReplyPresenter extends AbstractPresenter
 {
     use TimestampsTrait;
 
-    public function url()
-    {
-        return route('thread.show', $this->wrappedObject->thread_id);
-    }
-
-    public function author_url()
-    {
-        return AutoPresenter::decorate($this->wrappedObject->user)->url;
-    }
-
-    public function thread_url()
-    {
-        return AutoPresenter::decorate($this->wrappedObject->thread)->url;
-    }
-
-    public function title()
-    {
-        return $this->wrappedObject->thread->title;
-    }
-
     public function highlight()
     {
         return $this->wrappedObject->like_count > 0 ? 'highlight' : null;
