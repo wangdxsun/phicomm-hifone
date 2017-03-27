@@ -96,31 +96,36 @@ return [
         ],
     ],
     'words' => [
-        'word'        => '敏感词管理',
-        'content'     => '内容',
-        'substitute'  => '替换词',
+        'word'        => '敏感词过滤',
+        'content'     => '敏感词汇',
+        'substitute'  => '替换为',
         'type'=> [
-            'title'   => '类别',
+            'title'   => '词语分类',
+            'type_0'  => '默认',
             'type_1'  => '政治',
-            'type_2'  => '煽动'
+            'type_2'  => '广告',
+            'type_3'  => '涉枪涉爆',
+            'type_4'  => '网络招嫖',
+            'type_5'  => '淫秽信息'
         ],
         'action'=> [
-            'title'   => '过滤方式',
-            'type_1'  => '禁止发表',
-            'type_2'  => '需要审核',
-            'type_3'  => '内容替换'
+            'title'   => '过滤状态',
+            'type_1'  => '审核关键词',
+            'type_2'  => '禁止关键词',
+            'type_3'  => '替换关键词'
         ],
         'add'         => [
             'head_title'   => '添加',
-            'title'   => '词语添加',
+            'title'   => '添加词语',
             'batch_in'=> '批量导入',
             'success' => '添加成功.',
             'failure' => '添加失败',
         ],
         'edit'         => [
-            'head_title'   => '编辑',
-            'title'   => '敏感词编辑',
+            'head_title'   => '添加',
+            'title'   => '添加词语',
             'batch_out'=> '批量导出',
+            'batch_del'=> '批量删除',
             'success' => '编辑成功.',
             'failure' => '编辑失败',
         ],

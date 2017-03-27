@@ -48,6 +48,8 @@ class DashboardRoutes
             $router->post('thread/{thread}/sink', 'ThreadController@sink');
             $router->post('thread/{thread}/excellent', 'ThreadController@excellent');
             $router->get('test', 'DashboardController@test');
+            $router->get('wordsExcel/export','WordsExcelController@export')->name('wordsExcel.export');
+            $router->post('wordsExcel/import','WordsExcelController@import');
 
             // Settings
             $router->group(['as' => 'settings.', 'prefix' => 'settings'], function (Registrar $router) {
@@ -101,5 +103,6 @@ class DashboardRoutes
             $router->resource('notice', 'NoticeController');
             $router->resource('carousel', 'CarouselController');
         });
+
     }
 }

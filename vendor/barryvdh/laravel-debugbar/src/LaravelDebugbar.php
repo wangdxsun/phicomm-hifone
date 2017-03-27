@@ -22,6 +22,7 @@ use DebugBar\DataCollector\MessagesCollector;
 use DebugBar\DataCollector\PhpInfoCollector;
 use DebugBar\DataCollector\RequestDataCollector;
 use DebugBar\DataCollector\TimeDataCollector;
+use Barryvdh\Debugbar\DataFormatter\QueryFormatter;
 use Barryvdh\Debugbar\Support\Clockwork\ClockworkCollector;
 use DebugBar\DebugBar;
 use DebugBar\Storage\PdoStorage;
@@ -198,7 +199,10 @@ class LaravelDebugbar extends DebugBar
                 $this->addCollector(new ViewCollector($collectData));
                 $this->app['events']->listen(
                     'composing:*',
-                    function ($view) use ($debugbar) {
+                    function ($view, $data = []) use ($debugbar) {
+                        if ($data) {
+                            $view = $data[0]; // For Laravel >= 5.4
+                        }
                         $debugbar['views']->addView($view);
                     }
                 );
@@ -283,12 +287,15 @@ class LaravelDebugbar extends DebugBar
             }
             $queryCollector = new QueryCollector($timeCollector);
 
+            $queryCollector->setDataFormatter(new QueryFormatter());
+
             if ($this->app['config']->get('debugbar.options.db.with_params')) {
                 $queryCollector->setRenderSqlWithParams(true);
             }
 
             if ($this->app['config']->get('debugbar.options.db.backtrace')) {
-                $queryCollector->setFindSource(true);
+                $middleware = ! $this->is_lumen ? $this->app['router']->getMiddleware() : [];
+                $queryCollector->setFindSource(true, $middleware);
             }
 
             if ($this->app['config']->get('debugbar.options.db.explain.enabled')) {
@@ -325,6 +332,37 @@ class LaravelDebugbar extends DebugBar
                 $this->addThrowable(
                     new Exception(
                         'Cannot add listen to Queries for Laravel Debugbar: ' . $e->getMessage(),
+                        $e->getCode(),
+                        $e
+                    )
+                );
+            }
+
+            try {
+                $db->getEventDispatcher()->listen([
+                    \Illuminate\Database\Events\TransactionBeginning::class,
+                    'connection.*.beganTransaction',
+                ], function ($transaction) use ($queryCollector) {
+                    $queryCollector->collectTransactionEvent('Begin Transaction', $transaction->connection);
+                });
+
+                $db->getEventDispatcher()->listen([
+                    \Illuminate\Database\Events\TransactionCommitted::class,
+                    'connection.*.committed',
+                ], function ($transaction) use ($queryCollector) {
+                    $queryCollector->collectTransactionEvent('Commit Transaction', $transaction->connection);
+                });
+
+                $db->getEventDispatcher()->listen([
+                    \Illuminate\Database\Events\TransactionRolledBack::class,
+                    'connection.*.rollingBack',
+                ], function ($transaction) use ($queryCollector) {
+                    $queryCollector->collectTransactionEvent('Rollback Transaction', $transaction->connection);
+                });
+            } catch (\Exception $e) {
+                $this->addThrowable(
+                    new Exception(
+                        'Cannot add listen transactions to Queries for Laravel Debugbar: ' . $e->getMessage(),
                         $e->getCode(),
                         $e
                     )
@@ -608,6 +646,8 @@ class LaravelDebugbar extends DebugBar
             }
         }
 
+        $this->addServerTimingHeaders($response);
+
         return $response;
     }
 
@@ -875,7 +915,11 @@ class LaravelDebugbar extends DebugBar
                     break;
                 case 'redis':
                     $connection = $config->get('debugbar.storage.connection');
-                    $storage = new RedisStorage($this->app['redis']->connection($connection));
+                    $client = $this->app['redis']->connection($connection);
+                    if (is_a($client, 'Illuminate\Redis\Connections\PredisConnection', false)) {
+                        $client = $client->client();
+                    }
+                    $storage = new RedisStorage($client);
                     break;
                 case 'custom':
                     $class = $config->get('debugbar.storage.provider');
@@ -898,5 +942,24 @@ class LaravelDebugbar extends DebugBar
         $response->headers->set('X-Clockwork-Id', $this->getCurrentRequestId(), true);
         $response->headers->set('X-Clockwork-Version', 1, true);
         $response->headers->set('X-Clockwork-Path', $prefix .'/clockwork/', true);
+    }
+
+    /**
+     * Add Server-Timing headers for the TimeData collector
+     *
+     * @see https://www.w3.org/TR/server-timing/
+     * @param Response $response
+     */
+    protected function addServerTimingHeaders(Response $response)
+    {
+        if ($this->hasCollector('time')) {
+            $collector = $this->getCollector('time');
+
+            foreach ($collector->collect()['measures'] as $k => $m) {
+                $headers[] = sprintf('%d=%F; "%s"', $k, $m['duration'], str_replace('"', "'", $m['label']));
+            }
+
+            $response->headers->set('Server-Timing', $headers, false);
+        }
     }
 }

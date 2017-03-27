@@ -36,7 +36,8 @@
         "cmgmyr/messenger": "2.11",
         "barryvdh/laravel-debugbar": "dev-master",
         "watson/sitemap": "^2.0",
-        "barryvdh/laravel-ide-helper": "^2.2"
+        "barryvdh/laravel-ide-helper": "^2.2",
+        "maatwebsite/excel": "~2.1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.5",
@@ -76,13 +77,25 @@
             "Illuminate\\Foundation\\ComposerScripts::postUpdate"
         ]
     },
+
     "config": {
         "platform": {
             "php": "5.6.4"
         },
-        "preferred-install": "dist"
+        "preferred-install": "dist",
+        "github-protocols": [
+            "https"
+        ]
     },
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.phpcomposer.com"
+        }
+    },
+
     "minimum-stability": "dev",
     "prefer-stable": true
+
 
 }

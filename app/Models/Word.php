@@ -21,12 +21,14 @@ class Word extends Model
      * @var string[]
      */
     protected $fillable = [
-        'word',
+        'admin',
         'type',
-        'action',
+        'find',
+        'replacement',
         'substitute',
+        'extra',
         'created_at',
-        'updated_at'
+        /*'updated_at'*/
     ];
 
     /**
@@ -35,8 +37,8 @@ class Word extends Model
      * @var string[]
      */
     public $rules = [
-        'word'        => 'required|min:2',
-        'action'      => 'required|min:2'
+       /* 'word'        => 'required|min:2',
+        'action'      => 'required|min:2'*/
     ];
 
     public function scopeSearch($query, $search)
@@ -46,7 +48,7 @@ class Word extends Model
         }
 
         return  $query->where(function ($query) use ($search) {
-            $query->where('word', 'LIKE', "%$search%");
+            $query->where('type', 'LIKE', "%$search%");
         });
     }
 

@@ -106,7 +106,7 @@ class NoticeController extends Controller
     }
     public function destroy(Notice $notice)
     {
-        $notice->delete();;
+        $notice->delete();
 
         return Redirect::route('dashboard.notice.index')
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));

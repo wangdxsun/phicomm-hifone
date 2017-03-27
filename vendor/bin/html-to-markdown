@@ -1,108 +1,17 @@
-#!/usr/bin/env php
-<?php
+#!/usr/bin/env sh
 
-requireAutoloader();
+dir=$(d=${0%[/\\]*}; cd "$d"; cd "../league/html-to-markdown/bin" && pwd)
 
-ini_set('display_errors', 'stderr');
+# See if we are running in Cygwin by checking for cygpath program
+if command -v 'cygpath' >/dev/null 2>&1; then
+	# Cygwin paths start with /cygdrive/ which will break windows PHP,
+	# so we need to translate the dir path to windows format. However
+	# we could be using cygwin PHP which does not require this, so we
+	# test if the path to PHP starts with /cygdrive/ rather than /usr/bin
+	if [[ $(which php) == /cygdrive/* ]]; then
+		dir=$(cygpath -m "$dir");
+	fi
+fi
 
-foreach ($argv as $i => $arg) {
-    if ($i === 0) {
-        continue;
-    }
-
-    if (substr($arg, 0, 1) === '-') {
-        switch ($arg) {
-            case '-h':
-            case '--help':
-                echo getHelpText();
-                exit(0);
-            default:
-                fail('Unknown option: ' . $arg);
-        }
-    } else {
-        $src = $argv[1];
-    }
-}
-
-if (isset($src)) {
-    if (!file_exists($src)) {
-        fail('File not found: ' . $src);
-    }
-
-    $html = file_get_contents($src);
-} else {
-    $stdin = fopen('php://stdin', 'r');
-    stream_set_blocking($stdin, false);
-    $html = stream_get_contents($stdin);
-    fclose($stdin);
-
-    if (empty($html)) {
-        fail(getHelpText());
-    }
-}
-
-
-$converter = new League\HTMLToMarkdown\HtmlConverter();
-echo $converter->convert($html);
-
-/**
- * Get help and usage info
- *
- * @return string
- */
-function getHelpText()
-{
-    return <<<HELP
-HTML To Markdown
-
-Usage: html-to-markdown [OPTIONS] [FILE]
-
-    -h, --help  Shows help and usage information
-
-    If no file is given, input will be read from STDIN
-
-Examples:
-
-    Converting a file named document.html:
-
-        html-to-markdown document.html
-
-    Converting a file and saving its output:
-
-        html-to-markdown document.html > output.md
-
-    Converting from STDIN:
-
-        echo -e '<h1>Hello World!</h1>' | html-to-markdown
-
-    Converting from STDIN and saving the output:
-
-        echo -e '<h1>Hello World!</h1>' | html-to-markdown > output.md
-
-HELP;
-}
-
-/**
- * @param string $message Error message
- */
-function fail($message)
-{
-    fwrite(STDERR, $message . "\n");
-    exit(1);
-}
-
-function requireAutoloader()
-{
-    $autoloadPaths = array(
-        // Local package usage
-        __DIR__ . '/../vendor/autoload.php',
-        // Package was included as a library
-        __DIR__ . '/../../../autoload.php',
-    );
-    foreach ($autoloadPaths as $path) {
-        if (file_exists($path)) {
-            require_once $path;
-            break;
-        }
-    }
-}
+dir=$(echo $dir | sed 's/ /\ /g')
+"${dir}/html-to-markdown" "$@"

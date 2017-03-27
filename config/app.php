@@ -171,6 +171,7 @@ return [
         Cmgmyr\Messenger\MessengerServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
         Watson\Sitemap\SitemapServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -246,6 +247,7 @@ return [
         'Widget'       => Arrilot\Widgets\Facade::class,
         'AsyncWidget'  => Arrilot\Widgets\AsyncFacade::class,
         'StringBlade'  => Hifone\StringBlade\Facades\StringBlade::class,
+        'Excel'        => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
 ];

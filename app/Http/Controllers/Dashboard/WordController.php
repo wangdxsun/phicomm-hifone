@@ -25,7 +25,6 @@ class WordController extends Controller
     /**
      * Creates a new node controller instance.
      *
-     * @return void
      */
     public function __construct()
     {
@@ -68,7 +67,8 @@ class WordController extends Controller
     public function store()
     {
         $wordData = Request::get('word');
-        //dd(var_dump($wordData));
+        $wordData['admin'] = '管理员';
+        $wordData['created_at'] = date('Y-m-d H:i:s');
         try {
             Word::create($wordData);
         } catch (ValidationException $e) {
@@ -113,5 +113,11 @@ class WordController extends Controller
 
         return Redirect::route('dashboard.user.edit', ['id' => $user->id])
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.users.edit.success')));
+    }
+    public function destroy(Word $word)
+    {
+        $word->delete();
+        return Redirect::route('dashboard.word.index')
+            ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
     }
 }
