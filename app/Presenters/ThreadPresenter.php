@@ -20,11 +20,6 @@ class ThreadPresenter extends AbstractPresenter
 {
     use TimestampsTrait;
 
-    public function url()
-    {
-        return route('thread.show', $this->wrappedObject->id);
-    }
-
     public function author_url()
     {
         return AutoPresenter::decorate($this->wrappedObject->user)->url;

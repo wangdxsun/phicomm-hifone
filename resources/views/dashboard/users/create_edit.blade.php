@@ -33,7 +33,7 @@
                             <select class="form-control small change-role" name="only-role" id="user-role">
                                 <option>选择角色</option>
                                 @foreach ($roles as $role)
-                                    <option value="{{$role->id}}" {{ $user->hasRole($role->name) ? 'selected' : false }}>{{$role->display_name}}</option>
+                                    <option value="{{$role->id}}" {{ isset($user) ? ($user->hasRole($role->name) ? 'selected' : false) : false }}>{{$role->display_name}}</option>
                                 @endforeach
                             </select>
                         </div>

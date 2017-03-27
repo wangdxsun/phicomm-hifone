@@ -25,11 +25,9 @@ use Hifone\Repositories\Criteria\Thread\BelongsToNode;
 use Hifone\Repositories\Criteria\Thread\Filter;
 use Hifone\Repositories\Criteria\Thread\Search;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\View;
 use Input;
 use Redirect;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class ThreadController extends Controller
 {

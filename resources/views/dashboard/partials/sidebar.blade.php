@@ -65,7 +65,7 @@
                     {{--<span>其他管理</span>--}}
                 {{--</a>--}}
             {{--</li>--}}
-            <li {!! set_active('dashboard/carousel*') !!} {!! set_active('dashboard/carousel*') !!}>
+            <li {!! set_active('dashboard/carousel*') !!}>
                 <a href="{{ route('dashboard.carousel.index') }}">
                     <i class="fa fa-image"></i>
                     <span>轮播管理</span>
@@ -75,6 +75,12 @@
                 <a href="{{ route('dashboard.node.index') }}">
                     <i class="fa fa-sitemap"></i>
                     <span>板块管理</span>
+                </a>
+            </li>
+            <li {!! set_active('dashboard/report*') !!}>
+                <a href="{{ route('dashboard.report.index') }}">
+                    <i class="fa fa-hand-stop-o"></i>
+                    <span>举报管理</span>
                 </a>
             </li>
             <li {!! set_active('dashboard/adspace*') !!} {!! set_active('dashboard/advertisement*') !!} {!! set_active('dashboard/adblock*') !!}>

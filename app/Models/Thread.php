@@ -16,7 +16,6 @@ use Carbon\Carbon;
 use Config;
 use Hifone\Models\Scopes\ForUser;
 use Hifone\Models\Scopes\Recent;
-use Hifone\Models\Traits\SearchTrait;
 use Hifone\Models\Traits\Taggable;
 use Hifone\Presenters\ThreadPresenter;
 use Hifone\Services\Tag\TaggableInterface;
@@ -28,13 +27,16 @@ use Venturecraft\Revisionable\RevisionableTrait;
 
 class Thread extends Model implements HasPresenter, TaggableInterface
 {
-    use ValidatingTrait, Taggable, ForUser, Recent, RevisionableTrait, SoftDeletes, SearchTrait;
+    use ValidatingTrait, Taggable, ForUser, Recent, RevisionableTrait, SoftDeletes;
+
+    const TRASH = -1;//回收站
+    const Audit = -1;//待审核
 
     // manually maintain
     public $timestamps = false;
 
     //use SoftDeletingTrait;
-    protected $dates = ['deleted_at'];
+    protected $dates = ['deleted_at', 'last_op_time'];
 
     /**
      * The fillable properties.
@@ -59,10 +61,10 @@ class Thread extends Model implements HasPresenter, TaggableInterface
      * @var string[]
      */
     public $rules = [
-        'title'        => 'required|min:2',
-        'body'         => 'required|min:2',
-        'node_id'      => 'required|int',
-        'user_id'      => 'required|int',
+        'title'   => 'required|min:2',
+        'body'    => 'required|min:2',
+        'node_id' => 'required|int',
+        'user_id' => 'required|int',
     ];
 
     public function likes()
@@ -115,6 +117,11 @@ class Thread extends Model implements HasPresenter, TaggableInterface
         return $this->hasMany(Append::class);
     }
 
+    public function reports()
+    {
+        return $this->morphMany(Report::class, 'reportable');
+    }
+
     public function generateLastReplyUserInfo()
     {
         $lastReply = $this->replies()->recent()->first();
@@ -126,7 +133,7 @@ class Thread extends Model implements HasPresenter, TaggableInterface
 
     public function inVisible()
     {
-        return $this->order < 0 && (!\Auth::check() || !\Auth::user()->can('view_thread'));
+        return $this->status < 0 && (!\Auth::check() || !\Auth::user()->can('view_thread'));
     }
 
     public function scopeVisible($query)
@@ -149,6 +156,7 @@ class Thread extends Model implements HasPresenter, TaggableInterface
         if (!$search) {
             return null;
         }
+
         return $query->where('title', 'LIKE', "%$search%");
     }
 
@@ -158,14 +166,14 @@ class Thread extends Model implements HasPresenter, TaggableInterface
     public function getSameNodeThreads($limit = 8)
     {
         return $this->where('node_id', '=', $this->node_id)
-                        ->recent()
-                        ->take($limit)
-                        ->get();
+            ->recent()
+            ->take($limit)
+            ->get();
     }
 
     public function scopePinAndRecentReply($query)
     {
-        return $query->whereRaw("(`created_at` > '".Carbon::today()->subMonths(6)->toDateString()."' or (`order` > 0) )")
+        return $query->whereRaw("(`created_at` > '" . Carbon::today()->subMonths(6)->toDateString() . "' or (`order` > 0) )")
             ->visible()
             ->orderBy('order', 'desc')
             ->orderBy('updated_at', 'desc');
@@ -207,5 +215,15 @@ class Thread extends Model implements HasPresenter, TaggableInterface
     public function getPresenterClass()
     {
         return ThreadPresenter::class;
+    }
+
+    public function getReportAttribute()
+    {
+        return $this->title;
+    }
+
+    public function getUrlAttribute()
+    {
+        return route('thread.show', $this->id);
     }
 }

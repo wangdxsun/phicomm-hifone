@@ -38,7 +38,7 @@
                     <td>{{ $thread->id }}</td>
                     <td><a target="_blank" href="{{ $thread->url }}">{{ Str::substr($thread->title, 0, 20) }}</a></td>
                     <td>{{ $thread->node->name }}</td>
-                    <td><a data-name="{{ $thread->user->username }}" href="{{ $thread->author_url }}">{{ $thread->user->username }}</a></td>
+                    <td><a data-name="{{ $thread->user->username }}" href="{{ $thread->user->url }}">{{ $thread->user->username }}</a></td>
                     <td>{{ $thread->reply_count }}</td>
                     <td>{{ $thread->created_at }}</td>
                     <td>

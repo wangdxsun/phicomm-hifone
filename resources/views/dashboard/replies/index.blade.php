@@ -53,16 +53,16 @@
                         <tr>
                             <td>{{ $reply->id }}</td>
                             <td>{!! $reply->body !!}</td>
-                            <td><a href="{{ $reply->url }}" target="_blank" >{{ $reply->title }}</a></td>
+                            <td><a href="{{ $reply->thread->url }}" target="_blank" >{{ $reply->thread->title }}</a></td>
                             <td><a href="{{ $reply->thread->node->url }}" target="_blank" >{{ $reply->thread->node->name }}</a></td>
-                            <td><a href="{{ $reply->author_url }}" target="_blank">{{ $reply->user->username }}</a></td>
+                            <td><a href="{{ $reply->user->url }}" target="_blank">{{ $reply->user->username }}</a></td>
                             <td>{{ $reply->created_at }}</td>
                             <td>{{ $reply->lastOpUser->username }}</td>
                             <td>{{ $reply->last_op_time }}</td>
                             <td>
-                                <a href="/dashboard/reply/{{ $reply->id }}/edit"><i class="fa fa-pencil"></i></a>
-                                <a data-url="/dashboard/reply/{{$reply->id}}/pin" data-method="post"><i class="{{ $reply->pin }}"></i></a>
-                                <a data-url="/dashboard/reply/{{ $reply->id }}/trash" data-method="post" class="need-reason"><i class="fa fa-trash"></i></a>
+                                <a href="/dashboard/reply/{{ $reply->id }}/edit" title="编辑"><i class="fa fa-pencil"></i></a>
+                                <a data-url="/dashboard/reply/{{$reply->id}}/pin" data-method="post" title="精华"><i class="{{ $reply->pin }}"></i></a>
+                                <a data-url="/dashboard/reply/{{ $reply->id }}/trash" data-method="post" class="need-reason" title="删除"><i class="fa fa-trash"></i></a>
                             </td>
                         </tr>
                     @endforeach

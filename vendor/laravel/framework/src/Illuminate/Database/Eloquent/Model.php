@@ -7,6 +7,7 @@ use DateTime;
 use Exception;
 use ArrayAccess;
 use Carbon\Carbon;
+use Hifone\Models\Traits\SearchTrait;
 use LogicException;
 use JsonSerializable;
 use DateTimeInterface;
@@ -35,6 +36,7 @@ use Illuminate\Database\ConnectionResolverInterface as Resolver;
 
 abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializable, QueueableEntity, UrlRoutable
 {
+    use SearchTrait;
     /**
      * The connection name for the model.
      *
@@ -145,7 +147,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      *
      * @var array
      */
-    protected $dates = [];
+    protected $dates = ['deleted_at'];
 
     /**
      * The storage format of the model's date columns.

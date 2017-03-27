@@ -40,6 +40,7 @@ return array(
     'CreateSectionsTable' => $baseDir . '/database/migrations/2016_06_08_131239_create_sections_table.php',
     'CreateSettingsTable' => $baseDir . '/database/migrations/2016_05_10_085536_create_settings_table.php',
     'CreateStatsTable' => $baseDir . '/database/migrations/2016_05_29_012617_create_stats_table.php',
+    'CreateTableReports' => $baseDir . '/database/migrations/2017_03_23_090434_create_table_reports.php',
     'CreateTaggablesTable' => $baseDir . '/database/migrations/2016_06_22_211501_create_taggables_table.php',
     'CreateTagsTable' => $baseDir . '/database/migrations/2016_06_22_211408_create_tags_table.php',
     'CreateThreadsTable' => $baseDir . '/database/migrations/2016_05_29_013243_create_threads_table.php',

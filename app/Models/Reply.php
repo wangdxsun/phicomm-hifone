@@ -14,15 +14,15 @@ namespace Hifone\Models;
 use AltThree\Validator\ValidatingTrait;
 use Hifone\Models\Scopes\ForUser;
 use Hifone\Models\Scopes\Recent;
-use Hifone\Models\Traits\SearchTrait;
 use Hifone\Presenters\ReplyPresenter;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use McCool\LaravelAutoPresenter\HasPresenter;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 class Reply extends Model implements HasPresenter
 {
-    use ValidatingTrait, ForUser, Recent, RevisionableTrait, SearchTrait;
+    use ValidatingTrait, ForUser, Recent, RevisionableTrait, SoftDeletes;
 
     /**
      * The fillable properties.
@@ -74,6 +74,11 @@ class Reply extends Model implements HasPresenter
         return $this->belongsTo(Thread::class);
     }
 
+    public function reports()
+    {
+        return $this->morphMany(Report::class, 'reportable');
+    }
+
     public function scopeVisible($query)
     {
         return $query->where('status', '>=', 0);
@@ -102,5 +107,15 @@ class Reply extends Model implements HasPresenter
     public function getPinAttribute()
     {
         return $this->order > 0 ? 'fa fa-thumb-tack text-danger' : 'fa fa-thumb-tack';
+    }
+
+    public function getReportAttribute()
+    {
+        return $this->body;
+    }
+
+    public function getUrlAttribute()
+    {
+        return $this->thread->url . '#reply' . $this->id;
     }
 }

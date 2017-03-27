@@ -17,6 +17,7 @@ use Hifone\Composers\Dashboard\AdvertisementMenuComposer;
 use Hifone\Composers\Dashboard\ContentMenuComposer;
 use Hifone\Composers\Dashboard\NodeMenuComposer;
 use Hifone\Composers\Dashboard\ReplyMenuComposer;
+use Hifone\Composers\Dashboard\ReportMenuComposer;
 use Hifone\Composers\Dashboard\SettingMenuComposer;
 use Hifone\Composers\Dashboard\ThreadMenuComposer;
 use Hifone\Composers\Dashboard\UserMenuComposer;
@@ -53,24 +54,12 @@ class ComposerServiceProvider extends ServiceProvider
             'dashboard.adblocks.*',
             'dashboard.advertisements.*',
             'dashboard.adspaces.*', ], AdvertisementMenuComposer::class);
-
-        //帖子
         $factory->composer(['dashboard.threads.*',], ThreadMenuComposer::class);
-
-        //回复
         $factory->composer(['dashboard.replies.*',], ReplyMenuComposer::class);
-
-        //其他
         $factory->composer(['dashboard.photos.*', 'dashboard.pages.*', ], ContentMenuComposer::class);
-
-        // 节点
         $factory->composer(['dashboard.nodes.*', 'dashboard.sections.*'], NodeMenuComposer::class);
-        $factory->composer(['dashboard.users.*'], UserMenuComposer::class);
-        $factory->composer([
-            'dashboard.tips.*',
-            'dashboard.links.*',
-            'dashboard.locations.*',
-            'dashboard.settings.*', ], SettingMenuComposer::class);
+        $factory->composer(['dashboard.reports.*'], ReportMenuComposer::class);
+        $factory->composer(['dashboard.tips.*', 'dashboard.links.*', 'dashboard.locations.*', 'dashboard.settings.*', ], SettingMenuComposer::class);
     }
 
     /**

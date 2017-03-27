@@ -592,6 +592,7 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
         'CreateSectionsTable' => __DIR__ . '/../..' . '/database/migrations/2016_06_08_131239_create_sections_table.php',
         'CreateSettingsTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_10_085536_create_settings_table.php',
         'CreateStatsTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_29_012617_create_stats_table.php',
+        'CreateTableReports' => __DIR__ . '/../..' . '/database/migrations/2017_03_23_090434_create_table_reports.php',
         'CreateTaggablesTable' => __DIR__ . '/../..' . '/database/migrations/2016_06_22_211501_create_taggables_table.php',
         'CreateTagsTable' => __DIR__ . '/../..' . '/database/migrations/2016_06_22_211408_create_tags_table.php',
         'CreateThreadsTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_29_013243_create_threads_table.php',

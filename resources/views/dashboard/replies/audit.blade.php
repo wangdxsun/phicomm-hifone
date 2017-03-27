@@ -28,8 +28,8 @@
             <tr>
                 <td>{{ $reply->id }}</td>
                 <td>{!! $reply->body !!}</td>
-                <td><a href="{{ $reply->thread_url }}" target="_blank" >{{ $reply->title }}</a></td>
-                <td><a data-name="{{ $reply->user->username }}" href="{{ $reply->author_url }}">{{ $reply->user->username }}</a></td>
+                <td><a href="{{ $reply->thread->url }}" target="_blank" >{{ $reply->title }}</a></td>
+                <td><a data-name="{{ $reply->user->username }}" href="{{ $reply->user->url }}">{{ $reply->user->username }}</a></td>
                 <td>{{ $reply->created_at }}</td>
                 <td>
                     <a data-url="/dashboard/reply/{{$reply->id}}/audit" data-method="post"><i class="fa fa-check"></i></a>

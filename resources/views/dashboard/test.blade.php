@@ -16,7 +16,7 @@
                     <td>{{ $thread->id }}</td>
                     <td><a target="_blank" href="{{ $thread->url }}">{{ $thread->title }}</a></td>
                     <td><a href="{{ $thread->node->url }}" target="_blank">{{ $thread->node->name }}</a></td>
-                    <td><a href="{{ $thread->author_url }}">{{ $thread->user->username }}</a></td>
+                    <td><a href="{{ $thread->user->url }}">{{ $thread->user->username }}</a></td>
                     <td>
                         <a data-url="/dashboard/thread/{{$thread->id}}/excellent" data-method="post" class="confirm-action"><i class="{{ $thread->excellent }}"></i></a>
                         <a data-url="/dashboard/thread/{{$thread->id}}/pin" data-method="post"><i class="{{ $thread->pin }}"></i></a>
