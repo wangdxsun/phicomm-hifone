@@ -17,4 +17,17 @@ use Zizaco\Entrust\EntrustPermission;
 class Permission extends EntrustPermission
 {
     use RevisionableTrait;
+
+    const USER = 0;//用户组
+    const ADMIN = 1;//管理组
+
+    public function scopeUserGroup($query)
+    {
+        return $query->where('type', static::USER);
+    }
+
+    public function scopeAdminGroup($query)
+    {
+        return $query->where('type', static::ADMIN);
+    }
 }

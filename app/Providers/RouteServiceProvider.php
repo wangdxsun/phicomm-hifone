@@ -16,6 +16,7 @@ use Hifone\Models\Carousel;
 use Hifone\Models\CreditRule;
 use Hifone\Models\Node;
 use Hifone\Models\Reply;
+use Hifone\Models\Role;
 use Hifone\Models\Section;
 use Hifone\Models\Tag;
 use Hifone\Models\Thread;
@@ -67,6 +68,8 @@ class RouteServiceProvider extends ServiceProvider
         $this->app->router->model('reply', Reply::class);
         $this->app->router->model('creditRule', CreditRule::class);
         $this->app->router->model('carousel', Carousel::class);
+        $this->app->router->model('users', Role::class);
+        $this->app->router->model('admin', Role::class);
 
         $this->app->router->model('tag', Tag::class, function ($name) {
             return Tag::where('name', urldecode($name))->firstOrFail();

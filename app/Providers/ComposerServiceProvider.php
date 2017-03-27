@@ -18,6 +18,7 @@ use Hifone\Composers\Dashboard\ContentMenuComposer;
 use Hifone\Composers\Dashboard\NodeMenuComposer;
 use Hifone\Composers\Dashboard\ReplyMenuComposer;
 use Hifone\Composers\Dashboard\ReportMenuComposer;
+use Hifone\Composers\Dashboard\RoleMenuComposer;
 use Hifone\Composers\Dashboard\SettingMenuComposer;
 use Hifone\Composers\Dashboard\ThreadMenuComposer;
 use Hifone\Composers\Dashboard\UserMenuComposer;
@@ -42,23 +43,15 @@ class ComposerServiceProvider extends ServiceProvider
         $factory->composer('*', AppComposer::class);
         $factory->composer('*', CurrentUserComposer::class);
         $factory->composer('partials.sidebar', SidebarComposer::class);
-
-        // Locale
         $factory->composer(['dashboard.settings.*', 'users.edit'], LocaleComposer::class);
-
-        //Timezone
         $factory->composer(['install.*', ], TimezoneComposer::class);
-
-        // 广告
-        $factory->composer([
-            'dashboard.adblocks.*',
-            'dashboard.advertisements.*',
-            'dashboard.adspaces.*', ], AdvertisementMenuComposer::class);
+        $factory->composer(['dashboard.adblocks.*', 'dashboard.advertisements.*', 'dashboard.adspaces.*', ], AdvertisementMenuComposer::class);
         $factory->composer(['dashboard.threads.*',], ThreadMenuComposer::class);
         $factory->composer(['dashboard.replies.*',], ReplyMenuComposer::class);
         $factory->composer(['dashboard.photos.*', 'dashboard.pages.*', ], ContentMenuComposer::class);
         $factory->composer(['dashboard.nodes.*', 'dashboard.sections.*'], NodeMenuComposer::class);
         $factory->composer(['dashboard.reports.*'], ReportMenuComposer::class);
+        $factory->composer(['dashboard.groups.*'], RoleMenuComposer::class);
         $factory->composer(['dashboard.tips.*', 'dashboard.links.*', 'dashboard.locations.*', 'dashboard.settings.*', ], SettingMenuComposer::class);
     }
 

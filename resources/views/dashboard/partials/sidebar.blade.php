@@ -32,13 +32,13 @@
             <li {!! set_active('dashboard/user*') !!}>
                 <a href="{{ route('dashboard.user.index') }}">
                     <i class="fa fa-user"></i>
-                    <span>{{ trans('dashboard.users.users') }}</span>
+                    <span>用户管理</span>
                 </a>
             </li>
-            <li {!! set_active('dashboard/role*') !!}>
-                <a href="{{ route('dashboard.role.index') }}">
-                    <i class="fa fa-lock"></i>
-                    <span>角色管理</span>
+            <li {!! set_active('dashboard/group*') !!} >
+                <a href="{{ route('dashboard.group.users.index') }}">
+                    <i class="fa fa-users"></i>
+                    <span>用户组管理</span>
                 </a>
             </li>
             <li {!! set_active('dashboard/word*') !!}>

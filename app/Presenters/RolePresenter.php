@@ -24,6 +24,7 @@ class RolePresenter extends AbstractPresenter
                 return true;
             }
         }
+        return false;
     }
 
     public function permissions()

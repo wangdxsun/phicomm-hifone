@@ -22,7 +22,10 @@ class Role extends EntrustRole implements HasPresenter
 {
     use RevisionableTrait;
 
-    protected $fillable = ['name', 'display_name', 'description'];
+    const USER = 0;//用户组
+    const ADMIN = 1;//管理组
+
+    protected $fillable = ['name', 'display_name', 'description', 'type', 'credit_low', 'credit_high', 'user_id'];
 
     public static function relationArrayWithCache()
     {
@@ -43,6 +46,16 @@ class Role extends EntrustRole implements HasPresenter
         return $this::belongsToMany(Permission::class);
     }
 
+    public function Users()
+    {
+        return $this->belongsToMany(User::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     /**
      * Get the presenter class.
      *
@@ -51,5 +64,15 @@ class Role extends EntrustRole implements HasPresenter
     public function getPresenterClass()
     {
         return RolePresenter::class;
+    }
+
+    public function scopeUserGroup($query)
+    {
+        return $query->where('type', static::USER);
+    }
+
+    public function scopeAdminGroup($query)
+    {
+        return $query->where('type', static::ADMIN);
     }
 }
