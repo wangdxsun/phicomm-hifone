@@ -41,17 +41,4 @@ class Notice extends Model
         'content'      => 'required|min:2'
     ];
 
-    public function scopeSearch($query, $search)
-    {
-        if (!$search) {
-            return;
-        }
-
-        return  $query->where(function ($query) use ($search) {
-            $query->where('title', 'LIKE', "%$search%");
-        });
-    }
-
-
-
 }

@@ -41,7 +41,7 @@
                     </a>
                     <form class="form-inline pull-right">
                         <div class="form-group">
-                            <input type="text" name="q" class="form-control" value="" placeholder="类型">
+                            <input type="text" name="query[type]" class="form-control" value="" placeholder="类型">
                         </div>
                         <button class="btn btn-default">搜索</button>
                     </form>

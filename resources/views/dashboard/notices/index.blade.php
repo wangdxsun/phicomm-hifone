@@ -19,7 +19,7 @@
                 <div class="toolbar">
                     <form class="form-inline">
                         <div class="form-group">
-                            <input type="text" name="q" class="form-control" value="" placeholder="标题">
+                            <input type="text" name="query[title]" class="form-control" value="" placeholder="标题">
                         </div>
                         <button class="btn btn-default">搜索</button>
                     </form>

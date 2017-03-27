@@ -39,8 +39,10 @@ class NoticeController extends Controller
      */
     public function index()
     {
-        $q = Input::query('q');
-        $notices  = Notice::orderBy('created_at', 'desc')->search($q)->paginate(5);
+        $search = array_filter(Input::get('query', []), function($value) {
+            return !empty($value);
+        });
+        $notices  = Notice::orderBy('created_at', 'desc')->search($search)->paginate(5);
         return View::make('dashboard.notices.index')
             ->withPageTitle(trans('dashboard.notices.notice'))
             ->withNotices($notices);

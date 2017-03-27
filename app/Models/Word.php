@@ -37,21 +37,9 @@ class Word extends Model
      * @var string[]
      */
     public $rules = [
-       /* 'word'        => 'required|min:2',
-        'action'      => 'required|min:2'*/
+        'type'       => 'required',
+        'find'       => 'required|min:2',
+        'replacement'=> 'required|min:2'
     ];
-
-    public function scopeSearch($query, $search)
-    {
-        if (!$search) {
-            return;
-        }
-
-        return  $query->where(function ($query) use ($search) {
-            $query->where('type', 'LIKE', "%$search%");
-        });
-    }
-
-
 
 }
