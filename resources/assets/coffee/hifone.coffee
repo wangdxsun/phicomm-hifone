@@ -106,13 +106,16 @@ window.Hifone =
 
   initDeleteForm: ->
     $('[data-method]').append(->
-      data_url = $(this).attr('data-url')
-      '\n' + '<form action=\'' + data_url + '\' method=\'POST\' style=\'display:none\'>\n' + '   <input type=\'hidden\' name=\'_method\' value=\'' + $(this).attr('data-method') + '\'>\n' + '   <input type=\'hidden\' name=\'_token\' value=\'' + Hifone.Config.token + '\'>\n' + '</form>\n'
+      $url = $(this).attr('data-url')
+      $method = $(this).attr('data-method')
+      '\n' + '<form action=\'' + $url + '\' method=\'POST\' style=\'display:none\'>\n' + '   <input type=\'hidden\' name=\'_method\' value=\'' + $method + '\'>\n' + '   <input type=\'hidden\' name=\'_token\' value=\'' + Hifone.Config.token + '\'>\n' + '</form>\n'
     ).attr('style', 'cursor:pointer;').removeAttr('href').click ->
-      form = $(this).find('form')
+      $form = $(this).find('form')
+      $title = if $(this).attr('data-title') then $(this).attr('data-title') else 'Confirm your action'
+      $text = if $(this).attr('data-text') then $(this).attr('data-text') else 'Are you sure you want to do this?'
       if $(this).hasClass('need-reason')
         swal {
-          title: "Confirm your action"
+          title: $title
           text: "请输入操作原因："
           type: "input"
           showCancelButton: true
@@ -127,19 +130,19 @@ window.Hifone =
           else if inputValue.length < 6 || inputValue.length > 200
             swal.showInputError("请输入6~200个字符！");
             return false
-          form.attr('action', form.attr('action') + '?reason=' + inputValue)
-          form.submit()
+          $form.attr('action', $form.attr('action') + '?reason=' + inputValue)
+          $form.submit()
       else if $(this).hasClass('confirm-action')
         swal {
           type: 'warning'
-          title: 'Confirm your action'
-          text: 'Are you sure you want to do this?'
+          title: $title
+          text: $text
           confirmButtonColor: '#FF6F6F'
           showCancelButton: true
         }, ->
-          form.submit()
+          $form.submit()
       else
-        form.submit()
+        $form.submit()
 
   initSelect2 : ->
     $('.selectpicker').select2
