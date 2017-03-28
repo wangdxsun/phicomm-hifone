@@ -188,6 +188,7 @@ return [
         Hifone\Providers\RepositoryServiceProvider::class,
         Hifone\Providers\RouteServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+        Barryvdh\Cors\ServiceProvider::class,
     ],
 
     /*

@@ -145,6 +145,7 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
         array (
             'Barryvdh\\LaravelIdeHelper\\' => 26,
             'Barryvdh\\Debugbar\\' => 18,
+            'Barryvdh\\Cors\\' => 14,
             'BackupManager\\Laravel\\' => 22,
             'BackupManager\\' => 14,
         ),
@@ -430,6 +431,10 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
         array (
             0 => __DIR__ . '/..' . '/barryvdh/laravel-debugbar/src',
         ),
+        'Barryvdh\\Cors\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/barryvdh/laravel-cors/src',
+        ),
         'BackupManager\\Laravel\\' => 
         array (
             0 => __DIR__ . '/..' . '/backup-manager/laravel/src',
@@ -558,11 +563,15 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
     );
 
     public static $classMap = array (
+        'AddNullableToLastReadInParticipantsTable' => __DIR__ . '/../..' . '/database/migrations/2014_11_10_083449_add_nullable_to_last_read_in_participants_table.php',
         'AddPhicommIdToUsersTable' => __DIR__ . '/../..' . '/database/migrations/2017_01_19_142026_add_phicomm_id_to_users_table.php',
         'AddSoftDeletesToParticipantsTable' => __DIR__ . '/../..' . '/database/migrations/2014_11_03_154831_add_soft_deletes_to_participants_table.php',
         'AddSoftdeletesToThreadsTable' => __DIR__ . '/../..' . '/database/migrations/2014_12_04_124531_add_softdeletes_to_threads_table.php',
+        'AlterLastReadInParticipantsTable' => __DIR__ . '/../..' . '/database/migrations/2014_11_20_131739_alter_last_read_in_participants_table.php',
         'AlterTableTagsAddCountColumn' => __DIR__ . '/../..' . '/database/migrations/2016_06_29_120100_alter_table_tags_add_count_column.php',
         'AlterTableUsersAddLocaleColumn' => __DIR__ . '/../..' . '/database/migrations/2016_06_29_185009_alter_table_users_add_locale_column.php',
+        'CorsKernel' => __DIR__ . '/..' . '/barryvdh/laravel-cors/tests/CorsKernel.php',
+        'CorsServiceTest' => __DIR__ . '/..' . '/barryvdh/laravel-cors/tests/CorsServiceTest.php',
         'CreateAdblocksTable' => __DIR__ . '/../..' . '/database/migrations/2016_06_02_162707_create_adblocks_table.php',
         'CreateAdspacesTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_19_155950_create_adspaces_table.php',
         'CreateAdvertisementsTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_19_161651_create_advertisements_table.php',
@@ -595,13 +604,15 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
         'CreateTableReports' => __DIR__ . '/../..' . '/database/migrations/2017_03_23_090434_create_table_reports.php',
         'CreateTaggablesTable' => __DIR__ . '/../..' . '/database/migrations/2016_06_22_211501_create_taggables_table.php',
         'CreateTagsTable' => __DIR__ . '/../..' . '/database/migrations/2016_06_22_211408_create_tags_table.php',
-        'CreateThreadsTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_29_013243_create_threads_table.php',
+        'CreateThreadsTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_28_175635_create_threads_table.php',
         'CreateTipsTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_29_013448_create_tips_table.php',
         'CreateUsersTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_29_013222_create_users_table.php',
         'DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeds/DatabaseSeeder.php',
         'File_Iterator' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Iterator.php',
         'File_Iterator_Facade' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Facade.php',
         'File_Iterator_Factory' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Factory.php',
+        'GlobalMiddlewareTest' => __DIR__ . '/..' . '/barryvdh/laravel-cors/tests/GlobalMiddlewareTest.php',
+        'GroupMiddlewareTest' => __DIR__ . '/..' . '/barryvdh/laravel-cors/tests/GroupMiddlewareTest.php',
         'Hamcrest\\Arrays\\IsArray' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Arrays/IsArray.php',
         'Hamcrest\\Arrays\\IsArrayContaining' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Arrays/IsArrayContaining.php',
         'Hamcrest\\Arrays\\IsArrayContainingInAnyOrder' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Arrays/IsArrayContainingInAnyOrder.php',
@@ -699,6 +710,8 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
         'Maatwebsite\\Excel\\Readers\\LaravelExcelReader' => __DIR__ . '/..' . '/maatwebsite/excel/src/Maatwebsite/Excel/Readers/LaravelExcelReader.php',
         'Maatwebsite\\Excel\\Writers\\CellWriter' => __DIR__ . '/..' . '/maatwebsite/excel/src/Maatwebsite/Excel/Writers/CellWriter.php',
         'Maatwebsite\\Excel\\Writers\\LaravelExcelWriter' => __DIR__ . '/..' . '/maatwebsite/excel/src/Maatwebsite/Excel/Writers/LaravelExcelWriter.php',
+        'MockApp' => __DIR__ . '/..' . '/barryvdh/laravel-cors/tests/CorsServiceTest.php',
+        'OriginMatcherTest' => __DIR__ . '/..' . '/barryvdh/laravel-cors/tests/OriginMatcherTest.php',
         'PHPUnit\\Framework\\TestCase' => __DIR__ . '/..' . '/phpunit/phpunit/src/ForwardCompatibility/TestCase.php',
         'PHPUnit_Exception' => __DIR__ . '/..' . '/phpunit/phpunit/src/Exception.php',
         'PHPUnit_Extensions_GroupTestSuite' => __DIR__ . '/..' . '/phpunit/phpunit/src/Extensions/GroupTestSuite.php',
@@ -1075,6 +1088,7 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
         'PHP_Token_XOR_EQUAL' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
         'PHP_Token_YIELD' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
         'PHP_Token_YIELD_FROM' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
+        'PreflightTest' => __DIR__ . '/..' . '/barryvdh/laravel-cors/tests/PreflightTest.php',
         'SebastianBergmann\\CodeCoverage\\CodeCoverage' => __DIR__ . '/..' . '/phpunit/php-code-coverage/src/CodeCoverage.php',
         'SebastianBergmann\\CodeCoverage\\CoveredCodeNotExecutedException' => __DIR__ . '/..' . '/phpunit/php-code-coverage/src/Exception/CoveredCodeNotExecutedException.php',
         'SebastianBergmann\\CodeCoverage\\Driver\\Driver' => __DIR__ . '/..' . '/phpunit/php-code-coverage/src/Driver/Driver.php',
@@ -1154,6 +1168,7 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
         'SebastianBergmann\\RecursionContext\\InvalidArgumentException' => __DIR__ . '/..' . '/sebastian/recursion-context/src/InvalidArgumentException.php',
         'SebastianBergmann\\ResourceOperations\\ResourceOperations' => __DIR__ . '/..' . '/sebastian/resource-operations/src/ResourceOperations.php',
         'SebastianBergmann\\Version' => __DIR__ . '/..' . '/sebastian/version/src/Version.php',
+        'TestCase' => __DIR__ . '/..' . '/barryvdh/laravel-cors/tests/TestCase.php',
         'Text_Template' => __DIR__ . '/..' . '/phpunit/php-text-template/src/Template.php',
         'Whoops\\Module' => __DIR__ . '/..' . '/filp/whoops/src/deprecated/Zend/Module.php',
         'Whoops\\Provider\\Zend\\ExceptionStrategy' => __DIR__ . '/..' . '/filp/whoops/src/deprecated/Zend/ExceptionStrategy.php',
