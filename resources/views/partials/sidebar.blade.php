@@ -1,44 +1,46 @@
 <div class="col-md-3 side-bar">
     @if(Auth::check())
-        <div class="panel panel-default corner-radius">
-            <div class="panel-heading">
-                <h3 class="panel-title">{!! isset($node) ? $node->name : $site_name.' - '.$site_about !!}</h3>
-            </div>
-            <div class="panel-body text-center">
-                <div class="btn-group">
-                    <a href="{!! isset($node) ? URL::route('thread.create', ['node_id' => $node->id]) : URL::route('thread.create') !!}" class="btn btn-primary">
-                        <i class="fa fa-pencil"> </i> {!! trans('hifone.threads.add') !!}
-                    </a>
-                    @if($new_thread_dropdowns)
-                        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            {!! $new_thread_dropdowns !!}
-                        </ul>
-                    @endif
-                </div>
-            </div>
-        </div>
-        @if(Config::get('setting.module_active_pms'))
+        @if(!Auth::user()->hasRole('NoComment'))
             <div class="panel panel-default corner-radius">
                 <div class="panel-heading">
-                    <h3 class="panel-title">{{ trans('hifone.pms.pms') }}</h3>
+                    <h3 class="panel-title">{!! isset($node) ? $node->name : $site_name.' - '.$site_about !!}</h3>
                 </div>
                 <div class="panel-body text-center">
                     <div class="btn-group">
-                        <a href="{!! URL::route('messages.create') !!}" class="btn btn-primary">
-                            <i class="fa fa-pencil"> </i> {!! trans('hifone.pms.create') !!}
+                        <a href="{!! isset($node) ? URL::route('thread.create', ['node_id' => $node->id]) : URL::route('thread.create') !!}" class="btn btn-primary">
+                            <i class="fa fa-pencil"> </i> {!! trans('hifone.threads.add') !!}
                         </a>
-                    </div>
-                    <br><br>
-                    <div class="btn-group">
-                        <a href="{!! URL::route('messages.index') !!}" class="btn btn-primary">
-                            <i> </i> {!! trans('hifone.pms.nav_inbox') !!}
-                        </a>
+                        @if($new_thread_dropdowns)
+                            <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                {!! $new_thread_dropdowns !!}
+                            </ul>
+                        @endif
                     </div>
                 </div>
             </div>
+            @if(Config::get('setting.module_active_pms'))
+                <div class="panel panel-default corner-radius">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ trans('hifone.pms.pms') }}</h3>
+                    </div>
+                    <div class="panel-body text-center">
+                        <div class="btn-group">
+                            <a href="{!! URL::route('messages.create') !!}" class="btn btn-primary">
+                                <i class="fa fa-pencil"> </i> {!! trans('hifone.pms.create') !!}
+                            </a>
+                        </div>
+                        <br><br>
+                        <div class="btn-group">
+                            <a href="{!! URL::route('messages.index') !!}" class="btn btn-primary">
+                                <i> </i> {!! trans('hifone.pms.nav_inbox') !!}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            @endif
         @endif
     @else
         <div class="panel panel-default corner-radius">
