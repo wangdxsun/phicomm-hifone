@@ -36,8 +36,9 @@ class DashboardRoutes
 
             $router->get('/', 'DashboardController@index')->name('index');
             $router->get('markdown', 'DashboardController@markdown')->name('markdown');
-            $router->get('role/admin', 'RoleController@admin')->name('role.admin');
-            $router->get('role/user', 'RoleController@user')->name('role.user');
+            $router->post('user/{user}/avatar', 'UserController@avatar');
+            $router->post('user/{user}/comment', 'UserController@comment');
+            $router->post('user/{user}/login', 'UserController@login');
             $router->get('thread/audit', 'ThreadController@audit')->name('thread.audit');
             $router->get('thread/trash', 'ThreadController@trash')->name('thread.trash');
             $router->get('reply/audit', 'ReplyController@audit')->name('reply.audit');

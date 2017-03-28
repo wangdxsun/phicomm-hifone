@@ -56,8 +56,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @var string[]
      */
     public $rules = [
-        'username' => ['required', 'max:15', 'regex:/\A[A-Za-z0-9\-\_\.]+\z/'],
-        'email'    => 'required|max:255',
+        'username' => ['required', 'max:15', 'regex:/\A[\x{4e00}-\x{9fa5}A-Za-z0-9\-\_\.]+\z/u'],
         'password' => 'required',
     ];
 
@@ -237,5 +236,32 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function getUrlAttribute()
     {
         return route('user.home', $this->username);
+    }
+
+    public function getRoleIdAttribute()
+    {
+        return implode(',', array_column($this->roles->toArray(), 'id'));
+    }
+
+    public function setRoleIdAttribute($value)
+    {
+        $roles = $value ? explode(',', $value) : [];
+
+        return $this->roles()->sync($roles);
+    }
+
+    public function getCommentAttribute()
+    {
+        return $this->role_id == Role::NO_COMMENT ? 'fa fa-comment text-danger' : 'fa fa-comment';
+    }
+
+    public function getLoginAttribute()
+    {
+        return $this->role_id == Role::NO_LOGIN ? 'fa fa-sign-in text-danger' : 'fa fa-sign-in';
+    }
+
+    public function lastOpUser()
+    {
+        return $this->belongsTo(User::class, 'last_op_user_id');
     }
 }

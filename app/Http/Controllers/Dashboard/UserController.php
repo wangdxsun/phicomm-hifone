@@ -43,7 +43,7 @@ class UserController extends Controller
         $search = array_filter(Input::get('user', []), function($value) {
             return !empty($value);
         });
-        $users = User::search($search)->orderBy('created_at', 'desc')->paginate(20);
+        $users = User::search($search)->paginate(20);
         $roles = Role::all();
 
         return View::make('dashboard.users.index')
@@ -60,7 +60,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = Role::all();
+        $roles = Role::adminGroup()->get();
         return View::make('dashboard.users.create_edit')
             ->withRoles($roles)
             ->withPageTitle(trans('dashboard.users.add.title').' - '.trans('dashboard.dashboard'));
@@ -93,14 +93,12 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        $roles = Role::all();
-        $this->subMenu['users']['active'] = true;
+        $roles = Role::adminGroup()->get();
 
         return View::make('dashboard.users.create_edit')
             ->withPageTitle(trans('dashboard.users.add.title').' - '.trans('dashboard.dashboard'))
             ->withUser($user)
-            ->withRoles($roles)
-            ->withSubMenu($this->subMenu);
+            ->withRoles($roles);
     }
 
     public function update(User $user)
@@ -127,5 +125,28 @@ class UserController extends Controller
         }
         return Redirect::route('dashboard.user.edit', ['id' => $user->id])
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.users.edit.success')));
+    }
+
+    //恢复默认头像
+    public function avatar(User $user)
+    {
+        $user->avatar_url = '';
+        $user->save();
+
+        return Redirect::back()->withSuccess('头像删除成功');
+    }
+
+    public function comment(User $user)
+    {
+        $user->role_id = ($user->role_id == Role::NO_COMMENT) ? Role::REGISTER_USER : Role::NO_COMMENT;
+
+        return Redirect::back()->withSuccess('修改成功');
+    }
+
+    public function login(User $user)
+    {
+        $user->role_id = ($user->role_id == Role::NO_LOGIN) ? Role::REGISTER_USER : Role::NO_LOGIN;
+
+        return Redirect::back()->withSuccess('修改成功');
     }
 }

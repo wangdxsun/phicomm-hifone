@@ -155,7 +155,7 @@ window.Hifone =
   initMessage : ->
     Messenger.options = {
       extraClasses: 'messenger-fixed messenger-on-top messenger-on-right',
-      theme: 'ice'
+      theme: 'air'
     }
 
 $ ->

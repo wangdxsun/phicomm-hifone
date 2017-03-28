@@ -13,9 +13,15 @@
             <div class="toolbar">
                 <form class="form-inline">
                     <select class="form-control selectpicker" name="user[id]">
-                        <option value="" selected>全部发帖人</option>
+                        <option selected>全部用户</option>
                         @foreach ($all_users as $user)
                             <option value="{{ $user->id }}">{{ $user->username }}</option>
+                        @endforeach
+                    </select>
+                    <select class="form-control selectpicker" name="user[regip]">
+                        <option selected>全部IP</option>
+                        @foreach ($all_users as $user)
+                            <option value="{{ $user->regip }}">{{ $user->regip }}</option>
                         @endforeach
                     </select>
                     <button class="btn btn-default">搜索</button>
@@ -29,13 +35,13 @@
                     <td class="first">#</td>
                     <td>头像</td>
                     <td>用户名</td>
-                    <td>昵称</td>
-                    <td>邮箱</td>
-                    <td>角色</td>
+                    <td>用户组</td>
                     <td>发帖数</td>
                     <td>积分</td>
                     <td>注册时间</td>
                     <td>注册IP</td>
+                    <td>操作人</td>
+                    <td>操作时间</td>
                     <td>操作</td>
                 </tr>
                 @foreach($users as $user)
@@ -43,16 +49,17 @@
                         <td>{{ $user->id }}</td>
                         <td><img src="{{ $user->avatar_small }}" style="width: 20px; height: 20px;"></td>
                         <td><a href="{{ route('user.show',['id'=>$user->id]) }}" target="_blank">{{ $user->username }}</a></td>
-                        <td>{{ $user->nickname }}</td>
-                        <td>{{ $user->email }}</td>
                         <td>{{ $user->roles }}</td>
                         <td>{{ $user->thread_count }}</td>
                         <td>{{ $user->score }}</td>
                         <td>{{ $user->created_at }}</td>
                         <td>{{ $user->regip }}</td>
+                        <td>{{ $user->lastOpUser->username }}</td>
+                        <td>{{ $user->last_op_time }}</td>
                         <td>
-                            <a href="/dashboard/user/{{ $user->id }}/edit"><i class="fa fa-pencil"></i></a>
-                            <a data-url="/dashboard/user/{{ $user->id }}" data-method="post"><i class="fa fa-comment"></i></a>
+                            <a href="/dashboard/user/{{ $user->id }}/edit" title="编辑"><i class="fa fa-pencil"></i></a>
+                            <a data-url="/dashboard/user/{{ $user->id }}/comment" data-method="post" title="禁止发言"><i class="{{ $user->comment }}"></i></a>
+                            <a data-url="/dashboard/user/{{ $user->id }}/login" data-method="post" title="禁止登录"><i class="{{ $user->login }}"></i></a>
                             {{--<a data-url="/dashboard/user/{{ $user->id }}" data-method="delete" class="confirm-action"><i class="fa fa-trash"></i></a>--}}
                         </td>
                     </tr>

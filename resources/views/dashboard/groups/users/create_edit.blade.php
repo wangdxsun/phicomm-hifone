@@ -29,9 +29,9 @@
                     <label>积分范围</label>
                     <div class="form-inline">
                         <div class="input-group">
-                            <input type="number" name="role[credit_low]" class="form-control" placeholder="最小值" required>
+                            <input type="number" name="role[credit_low]" value="{{ isset($role) ? $role->credit_low : 0 }}" class="form-control" placeholder="最小值" required>
                             <div class="input-group-addon">至</div>
-                            <input type="number" name="role[credit_high]" class="form-control"  placeholder="最大值" required>
+                            <input type="number" name="role[credit_high]" value="{{ isset($role) ? $role->credit_high : 0 }}" class="form-control"  placeholder="最大值" required>
                         </div>
                     </div>
                 </div>

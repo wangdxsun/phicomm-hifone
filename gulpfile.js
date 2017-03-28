@@ -21,9 +21,7 @@ elixir(function (mix) {
             'messenger-theme-ice.css',
             'public/dist/css/hifone.css'
         ], 'public/dist/css/all.css', './')
-        .coffee([
-            'resources/assets/coffee/**/*.coffee'
-        ])
+        .coffee('resources/assets/coffee/**/*.coffee', 'public/dist/js/hifone.js')
         .scripts([
             'vendor/bower_components/jquery/dist/jquery.js',
             'vendor/bower_components/bootstrap-sass/assets/javascripts/bootstrap.js',
@@ -54,7 +52,7 @@ elixir(function (mix) {
             'vendor/bower_components/select2/dist/js/select2.min.js',
             'vendor/bower_components/inline-attachment/src/inline-attachment.js',
             'vendor/bower_components/inline-attachment/src/jquery.inline-attachment.js',
-            'public/js/app.js'
+            'public/dist/js/hifone.js'
         ], 'public/dist/js/all.js', './')
         .version(['public/dist/css/all.css', 'public/dist/js/all.js'])
         .copy('vendor/bower_components/font-awesome/fonts/', 'public/fonts/');

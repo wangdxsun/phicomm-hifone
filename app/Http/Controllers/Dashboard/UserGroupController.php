@@ -69,6 +69,7 @@ class UserGroupController extends Controller
     public function store()
     {
         $roleData = Input::get('role');
+        $roleData['user_id'] = \Auth::user()->id;
         $permissions = Input::get('permissions');
         try {
             \DB::transaction(function () use ($roleData, $permissions) {
@@ -107,7 +108,7 @@ class UserGroupController extends Controller
                 ->withTitle('角色修改失败')
                 ->withErrors($e->getMessageBag());
         }
-        return Redirect::back()->withSuccess('角色修改成功');
+        return Redirect::route('dashboard.group.users.index')->withSuccess('角色修改成功');
     }
 
     public function destroy(Role $role)

@@ -69,6 +69,7 @@ class AdminGroupController extends Controller
     public function store()
     {
         $roleData = Input::get('role');
+        $roleData['user_id'] = \Auth::user()->id;
         $permissions = Input::get('permissions');
         try {
             \DB::transaction(function () use ($roleData, $permissions) {
@@ -76,12 +77,12 @@ class AdminGroupController extends Controller
                 $role->permissions()->attach($permissions);
             });
         } catch (ValidationException $e) {
-            return Redirect::route('dashboard.role.create')
+            return Redirect::back()
                 ->withInput($roleData)
                 ->withTitle('角色添加失败')
                 ->withErrors($e->getMessageBag());
         }
-        return Redirect::route('dashboard.role.index')->withSuccess('角色添加成功');
+        return Redirect::route('dashboard.group.admin.index')->withSuccess('角色添加成功');
     }
 
     public function edit(Role $role)
@@ -102,12 +103,12 @@ class AdminGroupController extends Controller
                 $role->permissions()->sync($permissions);
             });
         } catch (ValidationException $e) {
-            return Redirect::route('dashboard.role.edit')
+            return Redirect::back()
                 ->withInput($roleData)
                 ->withTitle('角色修改失败')
                 ->withErrors($e->getMessageBag());
         }
-        return Redirect::route('dashboard.role.index')->withSuccess('角色修改成功');
+        return Redirect::route('dashboard.group.admin.index')->withSuccess('角色修改成功');
     }
 
     public function destroy(Role $role)
@@ -117,6 +118,6 @@ class AdminGroupController extends Controller
         }
         event(new RoleWasRemovedEvent($role));
         $role->delete();
-        \Redirect::back()->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
+        Redirect::back()->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
     }
 }

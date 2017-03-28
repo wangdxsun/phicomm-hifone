@@ -16,11 +16,11 @@
                 <tbody>
                 <tr class="head">
                     <td >#</td>
-                    <td>用户组名称</td>
+                    <td style="width: 100px">用户组名称</td>
                     <td>权限列表</td>
                     <td>创建人</td>
-                    <td>创建时间</td>
-                    <td style="width: 110px">操作</td>
+                    <td style="width: 150px">创建时间</td>
+                    <td style="width: 70px">操作</td>
                 </tr>
                 @foreach($roles as $role)
                     <tr>

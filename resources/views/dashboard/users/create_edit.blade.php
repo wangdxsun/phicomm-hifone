@@ -21,21 +21,27 @@
                     @endif
                     <fieldset>
                         <div class="form-group">
+                            <img src="{{ isset($user) ? $user->avatar : url('/images/discuz_big.gif')}}" class="ImagePreviewBox" style="max-height: 200px; max-width: 200px;">
+                        </div>
+                        <div class="form-group">
+                            <a data-url="/dashboard/user/{{ isset($user) ? $user->id : null }}/avatar" class="btn btn-sm btn-danger confirm-action {{ isset($user) ? ($user->avatar_url ? null : 'hide') : 'hide' }}" data-method="post">恢复默认头像</a>
+                        </div>
+                        <div class="form-group">
                             <label for="user-username">{{ trans('dashboard.users.username') }}</label>
                             {!! Form::text('user[username]', isset($user) ? $user->username : null, ['class' => 'form-control', 'id' => 'user-username']) !!}
                         </div>
                         <div class="form-group">
-                            <label for="user-email">{{ trans('dashboard.users.email') }}</label>
-                            {!! Form::text('user[email]', isset($user) ? $user->email : null, ['class' => 'form-control', 'id' => 'user-email']) !!}
-                        </div>
-                        <div class="form-group">
-                            <label for="user-role">所属角色</label>
-                            <select class="form-control small change-role" name="only-role" id="user-role">
-                                <option>选择角色</option>
+                            <label for="user-role">用户组</label>
+                            <select class="form-control small change-role" name="roles[]" id="user-role">
+                                <option>普通用户</option>
                                 @foreach ($roles as $role)
                                     <option value="{{$role->id}}" {{ isset($user) ? ($user->hasRole($role->name) ? 'selected' : false) : false }}>{{$role->display_name}}</option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="user-credit">用户积分</label>
+                            <input type="number" class="form-control" name="user[score]" value="{{ isset($user) ? $user->score : 0 }}">
                         </div>
                         <div class="form-group">
                             <label for="user-password">{{ trans('dashboard.users.password') }}</label>

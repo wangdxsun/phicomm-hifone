@@ -77,8 +77,15 @@ class UserPresenter extends AbstractPresenter
 
     public function roles()
     {
-        $roles = implode('，', array_column($this->wrappedObject->roles->toArray(), 'display_name'));
-        return $roles ?: '普通会员';
+        $adminGroup = implode('，', array_column($this->wrappedObject->roles->toArray(), 'display_name'));
+        $userGroup = '未知用户组';
+        $groups = Role::userGroup()->get();
+        foreach ($groups as $group) {
+            if ($this->wrappedObject->score >= $group->credit_low && $this->wrappedObject->score <= $group->credit_high) {
+                $userGroup = $group->display_name;
+            }
+        }
+        return $adminGroup ?: $userGroup;
     }
 
     /**
