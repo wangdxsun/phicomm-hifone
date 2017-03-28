@@ -14,11 +14,11 @@ namespace Hifone\Http\Controllers\Dashboard;
 use AltThree\Validator\ValidationException;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Word;
-use Hifone\Models\User;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Request;
 use Input;
+use DB;
 
 class WordController extends Controller
 {
@@ -44,10 +44,7 @@ class WordController extends Controller
         $search = array_filter(Input::get('query', []), function($value) {
             return !empty($value);
         });
-        $words = Word::orderBy('created_at', 'desc')->search($search)->paginate(20);
-
-       /* $q = Input::query('q');
-        $words  = Word::orderBy('created_at', 'desc')->search($q)->paginate(5);*/
+        $words = Word::orderBy('created_at', 'desc')->search($search)->paginate(5);
         return View::make('dashboard.words.index')
             ->withPageTitle(trans('dashboard.words.word'))
             ->withWords($words);
@@ -78,9 +75,6 @@ class WordController extends Controller
             Word::create($wordData);
         } catch (ValidationException $e) {
 
-            /*$errorMsg = json_decode( json_encode( $e->getMessageBag()),true);
-            $errorMsg['content'][0] = '内容不能为空';*/
-
             return Redirect::route('dashboard.word.create')
                 ->withInput(Request::all())
                 ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.words.add.failure')))
@@ -97,27 +91,26 @@ class WordController extends Controller
             ->withPageTitle(trans('dashboard.words.word').' - '.trans('dashboard.words.edit.head_title'))
             ->withWord($word);
     }
-
-    public function update(User $user)
+    public function editInfo(Request $request)
     {
-        $userData = Input::get('user');
-        if ($userData['password']) {
-            $userData['salt'] = str_random(6);
-            $userData['password'] = $this->hasher->make($userData['password'], ['salt' => $userData['salt']]);
-        } else {
-            unset($userData['password']);
-        }
-        try {
-            $user->update($userData);
-        } catch (ValidationException $e) {
-            return Redirect::route('dashboard.user.edit', ['id' => $user->id])
-                ->withInput(Input::except('password'))
-                ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.users.edit.failure')))
-                ->withErrors($e->getMessageBag());
-        }
+        $input = Request::all();
+        $word = $input['word'];
 
-        return Redirect::route('dashboard.user.edit', ['id' => $user->id])
-            ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.users.edit.success')));
+        if(!empty($word['find']) && !empty($word['type']) && !empty($word['replacement'])){
+             DB::update('update words set find=?,type=?,replacement=?,substitute=? where id=?', array($word['find'],
+                $word['type'],$word['replacement'],$word['substitute'],$word['id']));
+            return Redirect::back();
+        }else{
+            $errorMsg['content'][0] = '必填项不能为空';
+            return Redirect::back()
+                ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.words.edit.failure')))
+                ->withErrors($errorMsg);
+        }
+    }
+
+
+    public function update(Word $word)
+    {
     }
     public function destroy(Word $word)
     {

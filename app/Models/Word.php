@@ -38,8 +38,8 @@ class Word extends Model
      */
     public $rules = [
         'type'       => 'required',
-        'find'       => 'required|min:2',
-        'replacement'=> 'required|min:2'
+        'find'       => 'required|min:1',
+        'replacement'=> 'required|min:1'
     ];
 
 }

@@ -11,14 +11,14 @@
         <a class="btn btn-sm btn-success pull-right" style="margin-left: 15px;" href="{{ route('dashboard.word.create') }}">
             {{trans('dashboard.words.add.title') }}
         </a>
-
-        <form action="{{ URL('dashboard/wordsExcel/import')}}" method="POST" class="form-inline pull-right"
-           enctype="multipart/form-data">
-            <div class="form-group">
-                <input name="import_file" type="file">
+        <form action="{{ URL('dashboard/wordsExcel/import')}}"  id="importExcel" method="POST" class="form-inline pull-right"
+              enctype='multipart/form-data'>
+            <div class="">
+                <div class="btn btn-sm btn-success head_portrait">
+                    <span>批量导入</span>
+                </div>
+                <input type="file" name="import_file" id="import" onChange="commitForm()" class="hide"/>
             </div>
-           {{-- <input type="hidden" name="_token" value="{{ csrf_token() }}">--}}
-           <button type="submit" class="btn btn-primary">批量导入</button>
         </form>
 
         <div class="clearfix"></div>
@@ -72,13 +72,68 @@
                             <td>{{ $word->admin }}</td>
                             <td style="width:15%">{{ $word->created_at }}</td>
                             <td style="width:10%">
-                                <a href="{{ route('dashboard.word.edit',['id'=>$word->id]) }}"><i class="fa fa-pencil"></i></a>
+                                <span class="modify_info" data-name="{{$word->id}},{{$word->find}},{{$word->substitute}}"><i class="fa fa-pencil"></i></span>
                                 <a data-url="{{ route('dashboard.word.destroy',['id'=>$word->id]) }}" data-method="delete" class="confirm-action"><i class="fa fa-trash"></i></a>
                             </td>
+
                         </tr>
                     @endforeach
                     </tbody>
                 </table>
+                <!-- Modal -->
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="content-wrapper">
+                                <div class="header sub-header">
+                                            <span class="uppercase">
+                                                 {{ trans('dashboard.words.edit.title') }}
+                                             </span>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        {!! Form::open(['url'=>'dashboard/word/editInfo']) !!}
+                                        {!! Form::hidden('word[id]', $word->id, ['class' => 'form-control', 'id' => 'word-id', 'placeholder' => '']) !!}
+                                        <fieldset>
+                                        <div class="form-group">
+                                            <label>{{ trans('dashboard.words.type.title') }}</label><label style="margin-left: 10px;">(*为必填项)</label>
+                                            {!!  Form::select('word[type]', ['政治' => trans('dashboard.words.type.type_1'),'广告' => trans('dashboard.words.type.type_2'),
+                                            trans('dashboard.words.type.type_3') => trans('dashboard.words.type.type_3'),trans('dashboard.words.type.type_4') =>
+                                             trans('dashboard.words.type.type_4'),trans('dashboard.words.type.type_5') => trans('dashboard.words.type.type_5'),
+                                            '默认' => trans('dashboard.words.type.type_0')],null,
+                                            ['class' => 'form-control', 'id' => 'word-type', 'placeholder' =>'—选择类别—'])!!}
+                                        </div>
+                                        <div class="form-group">
+                                            <label>{{ trans('dashboard.words.content') }}*</label>
+                                            {!! Form::text('word[find]', $word->find, ['class' => 'form-control', 'id' => 'word-find', 'placeholder' => '']) !!}
+                                        </div>
+                                        <div class="form-group">
+                                            <label>{{ trans('dashboard.words.action.title') }}*</label>
+                                            {!!  Form::select('word[replacement]', ['审核关键词' => trans('dashboard.words.action.type_1'),'禁止关键词' => trans('dashboard.words.action.type_2'),
+                                                 '替换关键词' =>trans('dashboard.words.action.type_3')], null,
+                                                 ['class' => 'form-control', 'id' => 'word-replacement', 'placeholder' =>'—过滤状态—'])!!}
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label>{{ trans('dashboard.words.substitute') }}</label>
+                                            {!! Form::text('word[substitute]', $word->substitute, ['class' => 'form-control', 'id' => 'word-substitute', 'placeholder' => '']) !!}
+                                        </div>
+                                        </fieldset>
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="form-group">
+                                                    {!! Form::submit('保存',['class'=>'btn btn-success']) !!}
+                                                    {!! Form::button('取消',['class'=>'btn btn-default']) !!}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {!! Form::close() !!}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <!-- Modal -->
                 <div class="text-right">
                     <!-- Pager -->
@@ -87,4 +142,5 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript" src="{{ URL::asset('js/words.js') }}"></script>
 @stop

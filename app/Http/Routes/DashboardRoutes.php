@@ -27,6 +27,7 @@ class DashboardRoutes
      */
     public function map(Registrar $router)
     {
+        //$router->post('word/editInfo', 'Dashboard\WordController@editInfo');
         $router->group([
             'middleware' => ['web', 'auth', 'role:Admin|Founder'],
             'prefix' => 'dashboard',
@@ -53,6 +54,7 @@ class DashboardRoutes
             $router->get('test', 'DashboardController@test');
             $router->get('wordsExcel/export','WordsExcelController@export')->name('wordsExcel.export');
             $router->post('wordsExcel/import','WordsExcelController@import');
+            $router->post('word/editInfo', 'WordController@editInfo');
 
             // Settings
             $router->group(['as' => 'settings.', 'prefix' => 'settings'], function (Registrar $router) {

@@ -22,14 +22,14 @@
                     <div class="form-group">
                         <label>{{ trans('dashboard.words.type.title') }}</label>
                         {!!  Form::select('word[type]', ['政治' => trans('dashboard.words.type.type_1'),'广告' => trans('dashboard.words.type.type_2'),
-                        '涉枪涉爆' => trans('dashboard.words.type.type_3'),'网络招嫖' => trans('dashboard.words.type.type_4'),'淫秽信息' => trans('dashboard.words.type.type_5'),
+                        trans('dashboard.words.type.type_3') => trans('dashboard.words.type.type_3'),trans('dashboard.words.type.type_4') => trans('dashboard.words.type.type_4'),trans('dashboard.words.type.type_5') => trans('dashboard.words.type.type_5'),
                         '默认' => trans('dashboard.words.type.type_0'),],
                         null,
                         ['class' => 'form-control', 'id' => 'word-type', 'placeholder' => isset($word) ? $word-> type: '—选择类别—'])!!}
                     </div>
                     <div class="form-group">
                         <label>{{ trans('dashboard.words.content') }}</label>
-                        {!! Form::text('word[find]', isset($word) ? $word->word : null, ['class' => 'form-control', 'id' => 'word-find', 'placeholder' => '']) !!}
+                        {!! Form::text('word[find]', isset($word) ? $word->find : null, ['class' => 'form-control', 'id' => 'word-find', 'placeholder' => '']) !!}
                     </div>
                     <div class="form-group">
                         <label>{{ trans('dashboard.words.action.title') }}</label>
@@ -42,7 +42,6 @@
                         {!! Form::text('word[substitute]', isset($word) ? $word->substitute : null, ['class' => 'form-control', 'id' => 'word-substitute', 'placeholder' => '']) !!}
                     </div>
                 </fieldset>
-
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="form-group">
