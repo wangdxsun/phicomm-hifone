@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
 use Input;
 
-class RoleController extends Controller
+class AdminGroupController extends Controller
 {
     /**
      * Creates a new node controller instance.
@@ -30,7 +30,8 @@ class RoleController extends Controller
     public function __construct()
     {
         View::share([
-            'page_title'     => '角色管理',
+            'page_title'     => '管理组',
+            'current_menu'   => 'admin',
         ]);
     }
 
@@ -39,21 +40,11 @@ class RoleController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function user()
+    public function index()
     {
-        $roles = Role::user()->get();
+        $roles = Role::adminGroup()->get();
 
-        return View::make('dashboard.roles.index')
-            ->withCurrentMenu('user')
-            ->withRoles($roles);
-    }
-
-    public function admin()
-    {
-        $roles = Role::admin()->get();
-
-        return View::make('dashboard.roles.index')
-            ->withCurrentMenu('admin')
+        return View::make('dashboard.groups.admins.index')
             ->withRoles($roles);
     }
 
@@ -64,12 +55,10 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $permissions = Permission::all();
+        $permissions = Permission::adminGroup()->get();
 
-        return View::make('dashboard.roles.create_edit')
-            ->withPageTitle('修改角色 - '.trans('dashboard.dashboard'))
-            ->withPermissions($permissions)
-            ->withCurrentMenu('admin');
+        return View::make('dashboard.groups.admins.create_edit')
+            ->withPermissions($permissions);
     }
 
     /**
@@ -97,9 +86,8 @@ class RoleController extends Controller
 
     public function edit(Role $role)
     {
-        $permissions = Permission::all();
-        return View::make('dashboard.roles.create_edit')
-            ->withPageTitle('修改角色'.' - '.trans('dashboard.dashboard'))
+        $permissions = Permission::adminGroup()->get();
+        return View::make('dashboard.groups.admins.create_edit')
             ->withRole($role)
             ->withPermissions($permissions);
     }
@@ -124,8 +112,11 @@ class RoleController extends Controller
 
     public function destroy(Role $role)
     {
+        if ($role->users()->count() > 0) {
+            Redirect::back()->withErrors('无法删除该管理组');
+        }
         event(new RoleWasRemovedEvent($role));
         $role->delete();
-        redirect(route('dashboard.role.index'))->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
+        \Redirect::back()->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
     }
 }

@@ -35,7 +35,9 @@ class DashboardRoutes
             'as' => 'dashboard.'], function (Registrar $router) {
 
             $router->get('/', 'DashboardController@index')->name('index');
-            $router->get('markdown', 'DashboardController@markdown');
+            $router->get('markdown', 'DashboardController@markdown')->name('markdown');
+            $router->get('role/admin', 'RoleController@admin')->name('role.admin');
+            $router->get('role/user', 'RoleController@user')->name('role.user');
             $router->get('thread/audit', 'ThreadController@audit')->name('thread.audit');
             $router->get('thread/trash', 'ThreadController@trash')->name('thread.trash');
             $router->get('reply/audit', 'ReplyController@audit')->name('reply.audit');
@@ -96,6 +98,10 @@ class DashboardRoutes
             $router->resource('link', 'LinkController');
             $router->resource('user', 'UserController');
             $router->resource('role', 'RoleController');
+            $router->group(['prefix' => 'group'], function (Registrar $router) {
+                $router->resource('users', 'UserGroupController');
+                $router->resource('admin', 'AdminGroupController');
+            });
             $router->resource('word', 'WordController');
             $router->resource('creditRule', 'CreditController');
             $router->resource('notice', 'NoticeController');
