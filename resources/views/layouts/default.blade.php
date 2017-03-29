@@ -47,9 +47,9 @@
 		@endif
     </head>
     <body class="forum" data-page="forum">
-       @include('partials.nav')
+        @include('partials.errors')
+        @include('partials.nav')
 		<div id="main" class="main-container container">
-				@include('partials.errors')
                 {!! $breadcrumb or '' !!}
                 @include('partials.top')
 

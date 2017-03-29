@@ -3,10 +3,16 @@
 @endif
 
 @if ($message = Session::get('success'))
-{{--@include('partials._error', ['level' => 'success', 'title' => Session::get('title'), 'message' => $message])--}}
 <script>
     $().ready(function() {
-        Messenger().post("{{ $message }}");
+        {{--Messenger().post("{{ $message }}");--}}
+        swal({
+            title: "{{ $message }}",
+            {{--text: "{{ $message }}",--}}
+            timer: 1000,
+            type: "success",
+            showConfirmButton: false
+        });
     });
 </script>
 @endif

@@ -28,7 +28,7 @@ class DashboardRoutes
     public function map(Registrar $router)
     {
         $router->group([
-            'middleware' => ['web', 'auth', 'role:Admin|Founder'],
+            'middleware' => ['web', 'auth', 'role:Admin|Founder|NodeMaster'],
             'prefix' => 'dashboard',
             'namespace' => 'Dashboard',
             'as' => 'dashboard.'], function (Registrar $router) {
@@ -81,7 +81,7 @@ class DashboardRoutes
 
         //Resources
         $router->group([
-            'middleware' => ['web', 'auth', 'role:Admin|Founder'],
+            'middleware' => ['web', 'auth', 'role:Admin|Founder|NodeMaster'],
             'prefix' => 'dashboard',
             'namespace' => 'Dashboard'], function (Registrar $router) {
 

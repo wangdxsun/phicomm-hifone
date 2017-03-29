@@ -21,7 +21,7 @@ use Hifone\Models\Provider;
 use Hifone\Models\User;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
-use Illuminate\Support\Facades\Auth;
+use \Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
@@ -103,6 +103,13 @@ class AuthController extends Controller
             if (Session::has('connect_data')) {
                 $connect_data = Session::get('connect_data');
                 dispatch(new AddIdentityCommand(Auth::user()->id, $connect_data));
+            }
+
+            if (Auth::user()->hasRole('NoLogin')) {
+                \Auth::logout();
+                return Redirect::to('auth/login')
+                    ->withInput(Input::except('password'))
+                    ->withError('您已被系统管理员禁止登录');
             }
 
             return Redirect::intended('/')

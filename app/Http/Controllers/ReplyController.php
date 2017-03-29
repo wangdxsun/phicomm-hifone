@@ -33,6 +33,10 @@ class ReplyController extends Controller
      */
     public function store()
     {
+        if (Auth::user()->hasRole('NoComment')) {
+            return Redirect::back()->withErrors('您已被系统管理员禁言');
+        }
+
         $replyData = Input::get('reply');
 
         try {

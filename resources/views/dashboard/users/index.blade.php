@@ -10,16 +10,23 @@
             <a class="btn btn-sm btn-success pull-right" href="{{ route('dashboard.user.create') }}">新增用户</a>
         </div>
         <div class="row">
+            <div class="col-sm-12">
             <div class="toolbar">
                 <form class="form-inline">
                     <select class="form-control selectpicker" name="user[id]">
-                        <option selected>全部用户</option>
+                        <option value="" selected>用户ID</option>
                         @foreach ($all_users as $user)
-                            <option value="{{ $user->id }}">{{ $user->username }}</option>
+                            <option value="{{ $user->id }}">{{ $user->id }}</option>
+                        @endforeach
+                    </select>
+                    <select class="form-control selectpicker" name="user[username]">
+                        <option value="" selected>用户名</option>
+                        @foreach ($all_users as $user)
+                            <option value="{{ $user->username }}">{{ $user->username }}</option>
                         @endforeach
                     </select>
                     <select class="form-control selectpicker" name="user[regip]">
-                        <option selected>全部IP</option>
+                        <option value="" selected>注册IP</option>
                         @foreach ($all_users as $user)
                             <option value="{{ $user->regip }}">{{ $user->regip }}</option>
                         @endforeach
@@ -57,10 +64,14 @@
                         <td>{{ $user->lastOpUser->username }}</td>
                         <td>{{ $user->last_op_time }}</td>
                         <td>
-                            <a href="/dashboard/user/{{ $user->id }}/edit" title="编辑"><i class="fa fa-pencil"></i></a>
-                            <a data-url="/dashboard/user/{{ $user->id }}/comment" data-method="post" title="禁止发言"><i class="{{ $user->comment }}"></i></a>
-                            <a data-url="/dashboard/user/{{ $user->id }}/login" data-method="post" title="禁止登录"><i class="{{ $user->login }}"></i></a>
-                            {{--<a data-url="/dashboard/user/{{ $user->id }}" data-method="delete" class="confirm-action"><i class="fa fa-trash"></i></a>--}}
+                            @if(Auth::user()->id <> $user->id)
+                                @if(Auth::user()->can('edit_users'))
+                                    <a href="/dashboard/user/{{ $user->id }}/edit" title="编辑"><i class="fa fa-pencil"></i></a>
+                                    <a data-url="/dashboard/user/{{ $user->id }}/comment" data-method="post" title="禁止发言"><i class="{{ $user->comment }}"></i></a>
+                                    <a data-url="/dashboard/user/{{ $user->id }}/login" data-method="post" title="禁止登录"><i class="{{ $user->login }}"></i></a>
+                                    {{--<a data-url="/dashboard/user/{{ $user->id }}" data-method="delete" class="confirm-action"><i class="fa fa-trash"></i></a>--}}
+                                @endif
+                            @endif
                         </td>
                     </tr>
                 @endforeach
@@ -71,5 +82,6 @@
                 {!! $users->appends(Request::except('page', '_pjax'))->render() !!}
             </div>
         </div>
+        <div class="col-sm-12">
     </div>
 @stop

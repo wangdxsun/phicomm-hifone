@@ -36,7 +36,7 @@
                             <li><a href="{{ route('user.favorites',$current_user->id) }}"><i class="fa fa-bookmark"></i> {{ trans('hifone.users.favorites') }}</a></li>
                             <li><a href="{{ route('credit.index')}}"><i class="fa fa-money"></i> {{ trans('hifone.users.credits') }}</a></li>
                             <li class='divider'></li>
-                            <li><a href="{!! url('auth/logout') !!}" onclick=" return confirm('{!! trans('hifone.logout_confirm') !!}')"><i class="fa fa-sign-out"></i> {!! trans('hifone.logout') !!}</a></li>
+                            <li><a data-url="{!! url('auth/logout') !!}" data-method="get" class="confirm-action" data-text="确认要退出吗？"><i class="fa fa-sign-out"></i> {!! trans('hifone.logout') !!}</a></li>
                         </ul>
                     </li>
                 </ul>
