@@ -10,7 +10,6 @@ use Input;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Redirect;
 use Hifone\Models\Word;
-use DB;
 
 class WordsExcelController extends  Controller
 {

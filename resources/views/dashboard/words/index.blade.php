@@ -8,6 +8,10 @@
         <span class="uppercase">
              <i class="fa fa-filter"></i>  {{ trans('dashboard.words.word') }}
         </span>
+        <a class="btn btn-sm btn-success pull-right" style="margin-left: 15px;" href="{{ route('dashboard.check.check') }}">
+            敏感词检测
+        </a>
+
         <a class="btn btn-sm btn-success pull-right" style="margin-left: 15px;" href="{{ route('dashboard.word.create') }}">
             {{trans('dashboard.words.add.title') }}
         </a>
@@ -20,7 +24,6 @@
                 <input type="file" name="import_file" id="import" onChange="commitForm()" class="hide"/>
             </div>
         </form>
-
         <div class="clearfix"></div>
     </div>
     <div class="content-wrapper header-fixed">
@@ -142,5 +145,5 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="{{ URL::asset('js/words.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('/js/words.js') }}"></script>
 @stop
