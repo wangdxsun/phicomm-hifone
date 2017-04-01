@@ -11,6 +11,8 @@ class Carousel extends Model
         'url',
         'order',
         'description',
+        'user_id',
+        'visible',
         'created_at',
         'updated_at',
     ];
@@ -21,4 +23,9 @@ class Carousel extends Model
         'url' => 'string|required',
         'description' => 'string|required'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

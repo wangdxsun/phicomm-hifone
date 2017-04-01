@@ -14,10 +14,9 @@ namespace Hifone\Http\Controllers\Dashboard;
 use AltThree\Validator\ValidationException;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Carousel;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\View;
-use Input;
+use \Redirect;
+use \Request;
+use \View;
 
 class CarouselController extends Controller
 {
@@ -105,5 +104,15 @@ class CarouselController extends Controller
 
         return Redirect::route('dashboard.carousel.index')
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
+    }
+
+    public function close(Carousel $carousel)
+    {
+        $carousel->visible = ($carousel->visible > 0) ? $carousel->visible - 1 : $carousel->visible + 1;
+        $carousel->save();
+
+//        ($carousel->visible > 0) ? $carousel->decrement('visible', 1) : $carousel->increment('visible', 1);
+
+        return Redirect::back()->withSuccess('修改成功！');
     }
 }
