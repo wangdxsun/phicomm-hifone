@@ -15,6 +15,8 @@ elixir(function (mix) {
             'vendor/bower_components/messenger/build/css/messenger*.css',
             'vendor/bower_components/select2/dist/css/select2.css',
             'vendor/bower_components/ekko-lightbox/dist/ekko-lightbox.css',
+            'vendor/bower_components/photoswipe/dist/photoswipe.css',
+            'vendor/bower_components/photoswipe/dist/default-skin/default-skin.css',
             //'bootstrap-datetimepicker.min.css',
             'messenger.css',
             'messenger-theme.air.css',
@@ -25,6 +27,8 @@ elixir(function (mix) {
         .scripts([
             'vendor/bower_components/jquery/dist/jquery.js',
             'vendor/bower_components/bootstrap-sass/assets/javascripts/bootstrap.js',
+            'vendor/bower_components/photoswipe/dist/photoswipe.min.js',
+            'vendor/bower_components/photoswipe/dist/photoswipe-ui-default.min.js',
             //'bootstrap-datetimepicker.min.js',
             'messenger.min.js',
             'vendor/bower_components/underscore/underscore-min.js',

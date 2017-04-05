@@ -18,12 +18,20 @@
                     {!! Form::text('creditRule[name]', $credit_rule->name, ['class' => 'form-control', 'disabled']) !!}
                 </div>
                 <div class="form-group">
-                    <label>频率</label>
-                    {!! Form::text('creditRule[frequency]', $credit_rule->frequency, ['class' => 'form-control']) !!}
+                    <label>奖励周期</label>
+                    <select name="creditRule[type]" class="form-control">
+                        @foreach($credit_rule->types as $key => $type)
+                            <option value="{{ $key }}" {{ $credit_rule->type == $key ? "selected" : null }}>{{ $type }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>奖励次数</label>
+                    {!! Form::number('creditRule[times]', $credit_rule->times, ['class' => 'form-control', 'placeholder' => '奖励周期选择每日时才需要填']) !!}
                 </div>
                 <div class="form-group">
                     <label>奖励积分</label>
-                    {!! Form::text('creditRule[reward]', $credit_rule->reward, ['class' => 'form-control']) !!}
+                    {!! Form::number('creditRule[reward]', $credit_rule->reward, ['class' => 'form-control', 'max' => 99, 'min' => -99]) !!}
                 </div>
             </fieldset>
 

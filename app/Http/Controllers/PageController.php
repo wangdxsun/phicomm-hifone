@@ -28,4 +28,24 @@ class PageController extends Controller
         return $this->view('pages.show')
             ->withPage($page);
     }
+
+    public function about()
+    {
+        return view('other.about');
+    }
+
+    public function faq()
+    {
+        return view('other.faq');
+    }
+
+    public function contact()
+    {
+        return view('other.contact');
+    }
+
+    public function emoji()
+    {
+        return view('other.emoji');
+    }
 }

@@ -26,6 +26,7 @@
     "ekko-lightbox": "~4.0.2",
     "markdown": "~0.5.0",
     "sweetalert": "~1.1",
-    "select2": "~4.0.2"
+    "select2": "~4.0.2",
+    "photoswipe": "^4.1.1"
   }
 }

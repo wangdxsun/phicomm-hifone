@@ -24,6 +24,12 @@ class CreditRule extends Model
 
     const ONCE = 2;
 
+    public $types = [
+        self::NO_LIMIT => '无限制',
+        self::DAILY => '每天',
+        self::ONCE => '一次',
+    ];
+
     /**
      * The table associated with the model.
      *
@@ -36,7 +42,7 @@ class CreditRule extends Model
      *
      * @var string[]
      */
-    protected $fillable = ['name', 'slug', 'reward', 'frequency'];
+    protected $fillable = ['name', 'slug', 'reward', 'type', 'times'];
 
     /**
      * The validation rules.
@@ -47,5 +53,22 @@ class CreditRule extends Model
         'name'      => 'required|string',
         'slug'      => 'required|string',
         'reward'    => 'required|int',
+        'type'      => 'required|int',
+        'times'     => 'required|int',
     ];
+
+    public function getTypeStrAttribute()
+    {
+        return $this->types[$this->type];
+    }
+
+    public function getTimesAttribute($value)
+    {
+        return $this->type == static::DAILY ? $value : '';
+    }
+
+    public function setTimesAttribute($value)
+    {
+        $this->attributes['times'] = ($this->type == static::DAILY ? $value : 0);
+    }
 }

@@ -64,7 +64,7 @@ class CreditController extends Controller
                 ->withTitle('积分规则修改失败')
                 ->withErrors($e->getMessageBag());
         }
-        return Redirect::route('dashboard.creditRule.edit', ['id' => $creditRule->id])
+        return Redirect::route('dashboard.creditRule.index')
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.users.edit.success')));
     }
 }

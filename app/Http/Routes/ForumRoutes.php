@@ -46,22 +46,17 @@ class ForumRoutes
                 $router->put('/messages/{id}', 'MessagesController@update')->name('messages.update');
             });
 
-
             //Sitemap Stuff
             $router->get('/sitemap/threads', 'SitemapController@showThreads')->name('sitemap.threads');
             $router->get('/sitemap/pages', 'SitemapController@showPages')->name('sitemap.pages');
             $router->get('/sitemap/users', 'SitemapController@showUsers')->name('sitemap.users');
             $router->get('/sitemap/nodes', 'SitemapController@showNodes')->name('sitemap.nodes');
             $router->get('/sitemap', 'SitemapController@show')->name('sitemap.show');
-            $router->get('/about', function () {
-                return view('other.about');
-            });
-            $router->get('/contact', function () {
-                return view('other.contact');
-            });
-            $router->get('/faq', function () {
-                return view('other.faq');
-            });
+
+            $router->get('/about', 'PageController@about')->name('about');
+            $router->get('/contact', 'PageController@contact')->name('contact');
+            $router->get('/faq', 'PageController@faq')->name('faq');
+            $router->get('/emoji', 'PageController@emoji')->name('emoji');
 
             $router->resource('node', 'NodeController');
             $router->resource('thread', 'ThreadController');

@@ -6,7 +6,7 @@
     @endif
     <div class="content-wrapper">
         <div class="header sub-header">
-            <i class="ion ion-ios-browsers-outline"></i> 积分管理
+            <i class="fa fa-star"></i> 积分管理
             <div class="clearfix"></div>
         </div>
         @include('partials.errors')
@@ -18,7 +18,8 @@
                     <tr class="head">
                         <td class="first">#</td>
                         <td >积分规则</td>
-                        <td >频率</td>
+                        <td >周期</td>
+                        <td>奖励次数</td>
                         <td>奖励积分</td>
                         <td style="width:10%">操作</td>
                     </tr>
@@ -26,7 +27,8 @@
                         <tr>
                             <td>{{ $credit_rule->id }}</td>
                             <td>{{ $credit_rule->name }}</td>
-                            <td>{{ $credit_rule->frequency }}</td>
+                            <td>{{ $credit_rule->type_str }}</td>
+                            <td>{{ $credit_rule->times }}</td>
                             <td>{{ $credit_rule->reward }}</td>
                             <td>
                                 <a href="/dashboard/creditRule/{{ $credit_rule->id }}/edit"><i class="fa fa-pencil"></i></a>

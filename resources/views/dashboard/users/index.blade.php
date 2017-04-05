@@ -7,7 +7,9 @@
     <div class="content-wrapper">
         <div class="header sub-header">
             <i class="fa fa-user"></i> 用户管理
-            <a class="btn btn-sm btn-success pull-right" href="{{ route('dashboard.user.create') }}">新增用户</a>
+            @if(Auth::user()->can('new_user'))
+                <a class="btn btn-sm btn-success pull-right" href="{{ route('dashboard.user.create') }}">新增用户</a>
+            @endif
         </div>
         <div class="row">
             <div class="col-sm-12">

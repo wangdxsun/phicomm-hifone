@@ -68,6 +68,9 @@ class UserGroupController extends Controller
      */
     public function store()
     {
+        if (!\Auth::user()->can('new_user')) {
+            return \Redirect::back()->withErrors('您没有添加用户的权限');
+        }
         $roleData = Input::get('role');
         $roleData['user_id'] = \Auth::user()->id;
         $permissions = Input::get('permissions');
