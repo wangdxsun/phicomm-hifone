@@ -48,7 +48,7 @@ class AddCreditCommandHandler
         $credit_rule = CreditRule::whereSlug($command->action)->first();
 
         if (!$credit_rule || !$this->checkFrequency($credit_rule, $command->user)) {
-            return;
+            return false;
         }
 
         $data = [
@@ -69,18 +69,19 @@ class AddCreditCommandHandler
 
     protected function checkFrequency(CreditRule $credit_rule, \Hifone\Models\User $user)
     {
-        if (!in_array($credit_rule->frequency, [CreditRule::DAILY, CreditRule::ONCE])) {
+        if ($credit_rule->type == CreditRule::NO_LIMIT) {
             return true;
         }
 
         $count = Credit::where('user_id', $user->id)->where('rule_id', $credit_rule->id)->where(function ($query) use ($credit_rule) {
-            if ($credit_rule->frequency == CreditRule::DAILY) {
+            if ($credit_rule->type == CreditRule::DAILY) {
                 $frequency_tag = Credit::generateFrequencyTag();
 
                 return $query->where('frequency_tag', $frequency_tag);
             }
+            return $query;
         })->count();
 
-        return !$count;
+        return $count < $credit_rule->times;
     }
 }
