@@ -54,6 +54,7 @@ class DashboardRoutes
             $router->post('thread/{thread}/excellent', 'ThreadController@excellent');
             $router->post('report/{report}/trash', 'ReportController@trash');
             $router->post('report/{report}/ignore', 'ReportController@ignore');
+            $router->post('carousel/{carousel}/close', 'CarouselController@close')->name('carousel.close');
             $router->get('test', 'DashboardController@test');
             $router->get('wordsExcel/export','WordsExcelController@export')->name('wordsExcel.export');
             $router->post('wordsExcel/import','WordsExcelController@import');
