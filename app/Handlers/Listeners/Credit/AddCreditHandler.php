@@ -21,6 +21,8 @@ use Hifone\Events\Reply\ReplyWasRemovedEvent;
 use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Events\User\UserWasAddedEvent;
 use Hifone\Events\User\UserWasLoggedinEvent;
+use Hifone\Events\Favorite\FavoriteWasAddedEvent;
+use Hifone\Events\Favorite\FavoriteWasRemovedEvent;
 
 class AddCreditHandler
 {
@@ -44,6 +46,12 @@ class AddCreditHandler
             $user = $event->user;
         } elseif ($event instanceof UserWasLoggedinEvent) {
             $action = 'login';
+            $user = $event->user;
+        } elseif ($event instanceof FavoriteWasAddedEvent) {
+            $action = 'favorited';
+            $user = $event->user;
+        } elseif ($event instanceof FavoriteWasRemovedEvent) {
+            $action = 'favorited_removed';
             $user = $event->user;
         }
 

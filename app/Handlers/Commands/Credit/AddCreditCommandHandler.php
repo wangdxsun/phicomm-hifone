@@ -46,11 +46,9 @@ class AddCreditCommandHandler
     public function handle(AddCreditCommand $command)
     {
         $credit_rule = CreditRule::whereSlug($command->action)->first();
-
         if (!$credit_rule || !$this->checkFrequency($credit_rule, $command->user)) {
             return false;
         }
-
         $data = [
             'user_id'           => $command->user->id,
             'rule_id'           => $credit_rule->id,
@@ -58,7 +56,6 @@ class AddCreditCommandHandler
             'body'              => $credit_rule->reward,
             'created_at'        => Carbon::now()->toDateTimeString(),
         ];
-
         // Create the credit
         $credit = Credit::create($data);
 
@@ -67,7 +64,7 @@ class AddCreditCommandHandler
         return $credit;
     }
 
-    protected function checkFrequency(CreditRule $credit_rule, \Hifone\Models\User $user)
+    protected function checkFrequency(CreditRule $credit_rule, $user)
     {
         if ($credit_rule->type == CreditRule::NO_LIMIT) {
             return true;
@@ -81,7 +78,6 @@ class AddCreditCommandHandler
             }
             return $query;
         })->count();
-
         return $count < $credit_rule->times;
     }
 }

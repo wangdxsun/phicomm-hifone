@@ -38,9 +38,11 @@ class EventServiceProvider extends ServiceProvider
 
         // Favorite
         \Hifone\Events\Favorite\FavoriteWasAddedEvent::class => [
-            \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
-
+        \Hifone\Events\Favorite\FavoriteWasRemovedEvent::class => [
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+        ],
          //
         \Hifone\Events\Follow\FollowWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,

@@ -14,8 +14,11 @@ namespace Hifone\Handlers\Commands\Favorite;
 use Auth;
 use Hifone\Commands\Favorite\AddFavoriteCommand;
 use Hifone\Events\Favorite\FavoriteWasAddedEvent;
+use Hifone\Events\Favorite\FavoriteWasRemovedEvent;
 use Hifone\Models\Favorite;
+use Hifone\Models\User;
 use Hifone\Services\Dates\DateFactory;
+use DB;
 
 class AddFavoriteCommandHandler
 {
@@ -50,12 +53,17 @@ class AddFavoriteCommandHandler
 
     protected function favoriteAction($target)
     {
+        $user_id = DB::table('threads')->where('id',$target->id)->select('user_id')->first();
+        $user = User::where('id', $user_id->user_id)->first();
+
         if (Favorite::isUserFavoritedThread(Auth::user(), $target->id)) {
             Auth::user()->favoriteThreads()->detach($target->id);
+
+            event(new FavoriteWasRemovedEvent($user));
         } else {
             Auth::user()->favoriteThreads()->attach($target->id);
 
-            event(new FavoriteWasAddedEvent($target));
+            event(new FavoriteWasAddedEvent($user));
         }
     }
 }

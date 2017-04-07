@@ -11,7 +11,7 @@
 
 namespace Hifone\Events\Favorite;
 
-use Hifone\Models\Favorite;
+use Hifone\Models\User;
 
 final class FavoriteWasRemovedEvent implements FavoriteEventInterface
 {
@@ -20,13 +20,13 @@ final class FavoriteWasRemovedEvent implements FavoriteEventInterface
      *
      * @var \Hifone\Models\Favorite
      */
-    public $target;
+    public $user;
 
     /**
      * Create a new favorite has reported event instance.
      */
-    public function __construct($target)
+    public function __construct(User $user)
     {
-        $this->target = $target;
+        $this->user = $user;
     }
 }

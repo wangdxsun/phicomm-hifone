@@ -29,7 +29,7 @@ window.ForumView = Backbone.View.extend
     self.forceImageDataType()
     self.initLightBox()
     self.initEmoji()
-    
+
     self.initExternalLink()
     self.initToolTips()
     self.initHighLight()

@@ -11,9 +11,11 @@
 
 namespace Hifone\Http\Controllers;
 
+use Auth;
 use Hifone\Commands\Favorite\AddFavoriteCommand;
 use Hifone\Models\Thread;
 use Illuminate\Support\Facades\Response;
+use Hifone\Events\Favorite\FavoriteWasAddedEvent;
 
 class FavoriteController extends Controller
 {

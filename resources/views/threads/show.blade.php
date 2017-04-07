@@ -50,7 +50,7 @@
                     @endif
                     <!-- Pager -->
                     <div class="pull-right" style="padding-right:20px">
-                        {!! $replies->appends(Request::except('page'))->render(); !!}
+                        {!! $replies->appends(Request::except('page'))->render() !!}
                     </div>
             </div>
         </div>
