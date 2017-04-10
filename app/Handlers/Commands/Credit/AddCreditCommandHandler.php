@@ -46,6 +46,7 @@ class AddCreditCommandHandler
     public function handle(AddCreditCommand $command)
     {
         $creditRule = CreditRule::whereSlug($command->action)->first();
+
         if (!$creditRule || !$this->checkFrequency($creditRule, $command->user)) {
             return false;
         }

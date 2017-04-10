@@ -11,7 +11,7 @@
 
 namespace Hifone\Events\Follow;
 
-final class FollowWasRemovedEvent implements FollowEventInterface
+final class FollowedWasAddedEvent implements FollowEventInterface
 {
     /**
      * The thread that has been reported.

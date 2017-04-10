@@ -43,11 +43,20 @@ class EventServiceProvider extends ServiceProvider
         \Hifone\Events\Favorite\FavoriteWasRemovedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
-         //
+         //关注
         \Hifone\Events\Follow\FollowWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
-
+        //被关注
+        \Hifone\Events\Follow\FollowedWasAddedEvent::class => [
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+            \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
+        ],
+        //取消关注
+        \Hifone\Events\Follow\FollowedWasRemovedEvent::class => [
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+        ],
         // Image
 
         \Hifone\Events\Image\ImageWasUploadedEvent::class => [

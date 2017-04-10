@@ -24,6 +24,9 @@ use Hifone\Events\User\UserWasLoggedinEvent;
 use Hifone\Events\Favorite\FavoriteWasAddedEvent;
 use Hifone\Events\Favorite\FavoriteWasRemovedEvent;
 use Hifone\Events\Thread\ThreadWasPinnedEvent;
+use Hifone\Events\Follow\FollowWasAddedEvent;
+use Hifone\Events\Follow\FollowedWasAddedEvent;
+use Hifone\Events\Follow\FollowedWasRemovedEvent;
 
 class AddCreditHandler
 {
@@ -57,6 +60,15 @@ class AddCreditHandler
         } elseif ($event instanceof ThreadWasPinnedEvent) {
             $action = 'thread_pin';
             $user = $event->user;
+        }elseif ($event instanceof FollowWasAddedEvent) {
+            $action = 'follow';
+            $user = $event->target;
+        }elseif ($event instanceof FollowedWasAddedEvent) {
+            $action = 'followed';
+            $user = $event->target;
+        }elseif ($event instanceof FollowedWasRemovedEvent) {
+            $action = 'followed_removed';
+            $user = $event->target;
         }
 
         $this->apply($event, $action, $user);

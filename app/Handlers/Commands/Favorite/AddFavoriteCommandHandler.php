@@ -19,7 +19,6 @@ use Hifone\Models\Favorite;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
 use Hifone\Services\Dates\DateFactory;
-use DB;
 
 class AddFavoriteCommandHandler
 {
