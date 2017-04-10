@@ -148,14 +148,14 @@ class ReplyController extends Controller
 
     public function postAudit(Reply $reply)
     {
-        $reply->order = 0;
+        $reply->status = 0;
         $reply->save();
         return Redirect::back()->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
     }
 
     public function postTrash(Reply $reply)
     {
-        $reply->order = -1;
+        $reply->status = -1;
         $reply->save();
         return Redirect::back()->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
     }
