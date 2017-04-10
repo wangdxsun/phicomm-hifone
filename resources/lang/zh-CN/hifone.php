@@ -80,7 +80,7 @@ return [
 
         // Create or Edit
         'pick_node'      => '选择板块',
-        'mark_excellent' => '设为推荐主题',
+        'mark_excellent' => '设为精华贴',
         'mark_stick'     => '置顶此主题',
         'mark_sink'      => '下沉此主题',
         // Posting Tips
