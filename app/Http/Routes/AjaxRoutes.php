@@ -31,7 +31,7 @@ class AjaxRoutes
 
             $router->group(['middleware' => 'permission:manage_threads'], function (Registrar $router) {
                 $router->post('thread/{thread}/sink', 'ThreadController@sink')->name('thread.sink');
-                $router->post('thread/{thread}/recommend', 'ThreadController@recommend')->name('thread.recommend');
+                $router->post('thread/{thread}/excellent', 'ThreadController@excellent')->name('thread.excellent');
                 $router->post('thread/{thread}/pin', 'ThreadController@pin')->name('thread.pin');
                 $router->delete('thread/{thread}/delete', 'ThreadController@destroy')->name('thread.destroy');
             });

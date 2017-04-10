@@ -27,6 +27,7 @@ use Hifone\Events\Thread\ThreadWasPinnedEvent;
 use Hifone\Events\Follow\FollowWasAddedEvent;
 use Hifone\Events\Follow\FollowedWasAddedEvent;
 use Hifone\Events\Follow\FollowedWasRemovedEvent;
+use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 
 class AddCreditHandler
 {
@@ -68,6 +69,9 @@ class AddCreditHandler
             $user = $event->target;
         }elseif ($event instanceof FollowedWasRemovedEvent) {
             $action = 'followed_removed';
+            $user = $event->target;
+        }elseif ($event instanceof ExcellentWasAddedEvent) {
+            $action = 'thread_excellent';
             $user = $event->target;
         }
 

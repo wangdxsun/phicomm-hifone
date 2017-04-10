@@ -46,7 +46,6 @@ class EventServiceProvider extends ServiceProvider
          //关注
         \Hifone\Events\Follow\FollowWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
-            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
         //被关注
         \Hifone\Events\Follow\FollowedWasAddedEvent::class => [
@@ -55,6 +54,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         //取消关注
         \Hifone\Events\Follow\FollowedWasRemovedEvent::class => [
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+        ],
+        //精华
+        \Hifone\Events\Excellent\ExcellentWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
         // Image

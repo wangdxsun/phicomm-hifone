@@ -19,6 +19,7 @@ use Hifone\Commands\Thread\RemoveThreadCommand;
 use Hifone\Commands\Thread\UpdateThreadCommand;
 use Hifone\Events\Thread\ThreadWasViewedEvent;
 use Hifone\Events\Thread\ThreadWasPinnedEvent;
+use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Models\Node;
 use Hifone\Models\Section;
 use Hifone\Models\Thread;
@@ -224,7 +225,7 @@ class ThreadController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function recommend(Thread $thread)
+    public function excellent(Thread $thread)
     {
         $this->needAuthorOrAdminPermission($thread->user_id);
 
@@ -233,6 +234,10 @@ class ThreadController extends Controller
         ];
 
         $thread = dispatch(new UpdateThreadCommand($thread, $updateData));
+        if($thread->is_excellent == 1){
+            $user = User::find($thread->user_id);
+            event(new ExcellentWasAddedEvent($user));
+        }
 
         return Redirect::route('thread.show', $thread->id)
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
