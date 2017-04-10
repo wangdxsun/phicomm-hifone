@@ -23,6 +23,7 @@ use Hifone\Events\User\UserWasAddedEvent;
 use Hifone\Events\User\UserWasLoggedinEvent;
 use Hifone\Events\Favorite\FavoriteWasAddedEvent;
 use Hifone\Events\Favorite\FavoriteWasRemovedEvent;
+use Hifone\Events\Thread\ThreadWasPinnedEvent;
 
 class AddCreditHandler
 {
@@ -52,6 +53,9 @@ class AddCreditHandler
             $user = $event->user;
         } elseif ($event instanceof FavoriteWasRemovedEvent) {
             $action = 'favorited_removed';
+            $user = $event->user;
+        } elseif ($event instanceof ThreadWasPinnedEvent) {
+            $action = 'thread_pin';
             $user = $event->user;
         }
 

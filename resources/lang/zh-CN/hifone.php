@@ -219,6 +219,7 @@ return [
         'reply_mention'               => '在回复中提及你:',
         'credit_register'             => '注册获得积分',
         'credit_login'                => '每日登录获得积分',
+        'credit_favorite'             => '帖子被收藏获得积分',
     ],
 
 //Pm

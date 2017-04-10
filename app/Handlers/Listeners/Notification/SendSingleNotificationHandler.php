@@ -21,8 +21,8 @@ use Hifone\Events\Thread\ThreadWasMarkedExcellentEvent;
 use Hifone\Events\Thread\ThreadWasMovedEvent;
 use Hifone\Events\User\UserWasAddedEvent;
 use Hifone\Events\User\UserWasLoggedinEvent;
+use Hifone\Events\Favorite\FavoriteWasAddedEvent;
 use Hifone\Models\Thread;
-use Hifone\Models\User;
 
 class SendSingleNotificationHandler
 {
@@ -47,6 +47,8 @@ class SendSingleNotificationHandler
                 $this->notifyCredit('credit_register', $event->upstream_event->user, $event->credit);
             } elseif ($event->upstream_event instanceof UserWasLoggedinEvent) {
                 $this->notifyCredit('credit_login', $event->upstream_event->user, $event->credit);
+            }elseif ($event->upstream_event instanceof FavoriteWasAddedEvent) {
+                $this->notifyCredit('credit_favorite', $event->upstream_event->user, $event->credit);
             } else {
                 return;
             }

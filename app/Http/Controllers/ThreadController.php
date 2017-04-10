@@ -18,9 +18,11 @@ use Hifone\Commands\Thread\AddThreadCommand;
 use Hifone\Commands\Thread\RemoveThreadCommand;
 use Hifone\Commands\Thread\UpdateThreadCommand;
 use Hifone\Events\Thread\ThreadWasViewedEvent;
+use Hifone\Events\Thread\ThreadWasPinnedEvent;
 use Hifone\Models\Node;
 use Hifone\Models\Section;
 use Hifone\Models\Thread;
+use Hifone\Models\User;
 use Hifone\Repositories\Criteria\Thread\BelongsToNode;
 use Hifone\Repositories\Criteria\Thread\Filter;
 use Hifone\Repositories\Criteria\Thread\Search;
@@ -246,8 +248,13 @@ class ThreadController extends Controller
     public function pin(Thread $thread)
     {
         $this->needAuthorOrAdminPermission($thread->user_id);
-        ($thread->order > 0) ? $thread->decrement('order', 1) : $thread->increment('order', 1);
-
+        if($thread->order > 0){
+            $thread->decrement('order', 1);
+        }else{
+            $thread->increment('order', 1);
+            $user = User::find($thread->user_id);
+            event(new ThreadWasPinnedEvent($user));
+        }
         return Redirect::route('thread.show', $thread->id);
     }
 

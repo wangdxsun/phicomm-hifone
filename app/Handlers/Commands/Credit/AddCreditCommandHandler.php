@@ -45,15 +45,15 @@ class AddCreditCommandHandler
      */
     public function handle(AddCreditCommand $command)
     {
-        $credit_rule = CreditRule::whereSlug($command->action)->first();
-        if (!$credit_rule || !$this->checkFrequency($credit_rule, $command->user)) {
+        $creditRule = CreditRule::whereSlug($command->action)->first();
+        if (!$creditRule || !$this->checkFrequency($creditRule, $command->user)) {
             return false;
         }
         $data = [
             'user_id'           => $command->user->id,
-            'rule_id'           => $credit_rule->id,
-            'balance'           => $command->user->score + $credit_rule->reward,
-            'body'              => $credit_rule->reward,
+            'rule_id'           => $creditRule->id,
+            'balance'           => $command->user->score + $creditRule->reward,
+            'body'              => $creditRule->reward,
             'created_at'        => Carbon::now()->toDateTimeString(),
         ];
         // Create the credit
@@ -64,20 +64,20 @@ class AddCreditCommandHandler
         return $credit;
     }
 
-    protected function checkFrequency(CreditRule $credit_rule, $user)
+    protected function checkFrequency(CreditRule $creditRule, $user)
     {
-        if ($credit_rule->type == CreditRule::NO_LIMIT) {
+        if ($creditRule->type == CreditRule::NO_LIMIT) {
             return true;
         }
 
-        $count = Credit::where('user_id', $user->id)->where('rule_id', $credit_rule->id)->where(function ($query) use ($credit_rule) {
-            if ($credit_rule->type == CreditRule::DAILY) {
+        $count = Credit::where('user_id', $user->id)->where('rule_id', $creditRule->id)->where(function ($query) use ($creditRule) {
+            if ($creditRule->type == CreditRule::DAILY) {
                 $frequency_tag = Credit::generateFrequencyTag();
 
                 return $query->where('frequency_tag', $frequency_tag);
             }
             return $query;
         })->count();
-        return $count < $credit_rule->times;
+        return $count < $creditRule->times;
     }
 }
