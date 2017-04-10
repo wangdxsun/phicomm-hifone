@@ -42,7 +42,7 @@ class ReplyController extends Controller
         $search = array_filter(Input::get('reply', []), function($value) {
             return !empty($value);
         });
-        $replies = Reply::visible()->search($search)->orderBy('created_at', 'desc')->paginate(20);
+        $replies = Reply::visible()->search($search)->with('thread', 'user', 'lastOpUser', 'thread.node')->orderBy('created_at', 'desc')->paginate(20);
         $replyAll = Reply::visible()->get()->toArray();
         $threadIds = array_unique(array_column($replyAll, 'thread_id'));
         $userIds = array_unique(array_column($replyAll, 'user_id'));
@@ -120,7 +120,7 @@ class ReplyController extends Controller
 
     public function audit()
     {
-        $replies = Reply::audit()->orderBy('created_at', 'desc')->paginate(20);
+        $replies = Reply::audit()->with('thread', 'user')->orderBy('created_at', 'desc')->paginate(20);
 
         return View::make('dashboard.replies.audit')
             ->withPageTitle(trans('dashboard.replies.replies').' - '.trans('dashboard.dashboard'))
@@ -132,7 +132,7 @@ class ReplyController extends Controller
         $search = array_filter(Input::get('reply', []), function($value) {
             return !empty($value);
         });
-        $replies = Reply::trash()->search($search)->orderBy('created_at', 'desc')->paginate(20);
+        $replies = Reply::trash()->search($search)->with('thread', 'user', 'lastOpUser')->orderBy('created_at', 'desc')->paginate(20);
         $replyAll = Reply::trash()->get()->toArray();
         $threadIds = array_unique(array_column($replyAll, 'thread_id'));
         $userIds = array_unique(array_column($replyAll, 'user_id'));

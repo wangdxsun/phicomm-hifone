@@ -28,7 +28,7 @@
             <tr>
                 <td>{{ $reply->id }}</td>
                 <td>{!! $reply->body !!}</td>
-                <td><a href="{{ $reply->thread->url }}" target="_blank" >{{ $reply->title }}</a></td>
+                <td><a href="{{ $reply->thread->url }}" target="_blank" >{{ $reply->thread->title }}</a></td>
                 <td><a data-name="{{ $reply->user->username }}" href="{{ $reply->user->url }}">{{ $reply->user->username }}</a></td>
                 <td>{{ $reply->created_at }}</td>
                 <td>

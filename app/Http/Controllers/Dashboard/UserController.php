@@ -43,7 +43,7 @@ class UserController extends Controller
         $search = array_filter(Input::get('user', []), function($value) {
             return !empty($value);
         });
-        $users = User::search($search)->paginate(20);
+        $users = User::search($search)->with('roles', 'lastOpUser')->paginate(20);
         $roles = Role::all();
 
         return View::make('dashboard.users.index')

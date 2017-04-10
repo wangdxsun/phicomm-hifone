@@ -43,7 +43,7 @@ class ThreadController extends Controller
         $search = array_filter(Input::get('thread', []), function($value) {
             return !empty($value);
         });
-        $threads = Thread::visible()->search($search)->orderBy('created_at', 'desc')->paginate(20);
+        $threads = Thread::visible()->search($search)->with('node', 'user', 'lastOpUser')->orderBy('created_at', 'desc')->paginate(20);
         $threadAll = Thread::visible()->get()->toArray();
         $threadIds = array_unique(array_column($threadAll, 'user_id'));
         $sections = Section::orderBy('order')->get();
@@ -140,7 +140,7 @@ class ThreadController extends Controller
      */
     public function audit()
     {
-        $threads = Thread::audit()->orderBy('created_at', 'desc')->paginate(20);
+        $threads = Thread::audit()->with('node', 'user', 'lastOpUser')->orderBy('created_at', 'desc')->paginate(20);
 
         return view('dashboard.threads.audit')
             ->withPageTitle(trans('dashboard.threads.threads').' - '.trans('dashboard.dashboard'))
@@ -160,7 +160,7 @@ class ThreadController extends Controller
         $search = array_filter(Input::get('thread', []), function($value) {
             return !empty($value);
         });
-        $threads = Thread::trash()->search($search)->orderBy('created_at', 'desc')->paginate(20);
+        $threads = Thread::trash()->search($search)->with('node', 'user', 'lastOpUser')->orderBy('created_at', 'desc')->paginate(20);
         $threadAll = Thread::trash()->get()->toArray();
         $userIds = array_unique(array_column($threadAll, 'user_id'));
         $operators = array_unique(array_column($threadAll, 'last_op_user_id'));
