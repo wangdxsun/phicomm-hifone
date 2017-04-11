@@ -20,7 +20,7 @@ use Hifone\Models\Provider;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
-use Illuminate\Support\Facades\View;
+use Hifone\Events\Image\AvatarWasUploadedEvent;
 use Input;
 use Intervention\Image\ImageManagerStatic as Image;
 use Redirect;
@@ -184,6 +184,8 @@ class UserController extends Controller
         $user = Auth::user();
         $user->avatar_url = '/uploads/avatar/'.$path.$user_id.'.jpg';
         $user->save();
+
+        event(new AvatarWasUploadedEvent(Auth::user()));
 
         return Redirect::back()
             ->withSuccess(trans('hifone.users.avatar_upload_success'));

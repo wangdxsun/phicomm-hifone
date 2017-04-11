@@ -107,7 +107,10 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Stats\UpdateStatsHandler::class,
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
-
+        //上传头像
+        \Hifone\Events\Image\AvatarWasUploadedEvent::class => [
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+        ],
         //
         \Hifone\Events\Thread\ThreadWasMarkedExcellentEvent::class => [
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,

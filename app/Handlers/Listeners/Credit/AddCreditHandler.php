@@ -32,6 +32,7 @@ use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Events\Like\LikeWasAddedEvent;
 use Hifone\Events\Like\LikedWasAddedEvent;
 use Hifone\Events\Like\LikedWasRemovedEvent;
+use Hifone\Events\Image\AvatarWasUploadedEvent;
 
 class AddCreditHandler
 {
@@ -92,6 +93,9 @@ class AddCreditHandler
             $user = $event->target;
         } elseif ($event instanceof LikedWasRemovedEvent) {
             $action = 'liked_removed';
+            $user = $event->target;
+        } elseif ($event instanceof AvatarWasUploadedEvent) {
+            $action = 'upload_avatar';
             $user = $event->target;
         }
 

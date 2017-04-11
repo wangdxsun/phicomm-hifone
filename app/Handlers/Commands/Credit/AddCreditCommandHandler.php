@@ -70,7 +70,10 @@ class AddCreditCommandHandler
         if ($creditRule->type == CreditRule::NO_LIMIT) {
             return true;
         }
-
+        if ($creditRule->type == CreditRule::ONCE) {
+            $count = Credit::where('user_id', $user->id)->where('rule_id', $creditRule->id)->count();
+            return !$count;
+        }
         $count = Credit::where('user_id', $user->id)->where('rule_id', $creditRule->id)->where(function ($query) use ($creditRule) {
             if ($creditRule->type == CreditRule::DAILY) {
                 $frequency_tag = Credit::generateFrequencyTag();

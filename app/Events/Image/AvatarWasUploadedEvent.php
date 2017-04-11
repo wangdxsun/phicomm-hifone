@@ -13,10 +13,10 @@ namespace Hifone\Events\Image;
 
 final class AvatarWasUploadedEvent implements ImageEventInterface
 {
-    public $file;
+    public $target;
 
-    public function __construct($file)
+    public function __construct($target)
     {
-        $this->file = $file;
+        $this->target = $target;
     }
 }
