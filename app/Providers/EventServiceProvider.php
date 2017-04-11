@@ -47,12 +47,10 @@ class EventServiceProvider extends ServiceProvider
         \Hifone\Events\Follow\FollowWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
-        //被关注
         \Hifone\Events\Follow\FollowedWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
-        //取消关注
         \Hifone\Events\Follow\FollowedWasRemovedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
@@ -69,10 +67,18 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         // 按赞
-        \Hifone\Events\Like\LikeWasAddedEvent::class => [
+        \Hifone\Events\Thread\ThreadWasLikedEvent::class => [
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
-
+        \Hifone\Events\Like\LikeWasAddedEvent::class => [
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+        ],
+        \Hifone\Events\Like\LikedWasAddedEvent::class => [
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+        ],
+        \Hifone\Events\Like\LikedWasRemovedEvent::class => [
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+        ],
         // Links
         \Hifone\Events\Link\LinkWasUpdatedEvent::class => [
             \Hifone\Handlers\Listeners\Link\RemoveLinkCacheHandler::class,

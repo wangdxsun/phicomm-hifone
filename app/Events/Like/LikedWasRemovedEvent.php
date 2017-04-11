@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Hifone\Events\Thread;
+namespace Hifone\Events\Like;
 
-final class ThreadWasLikedEvent implements ThreadEventInterface
+final class LikedWasRemovedEvent implements LikeEventInterface
 {
     /**
      * The thread that has been reported.
      *
-     * @var \Hifone\Models\Thread
+     * @var \Hifone\Models\Like
      */
     public $target;
 

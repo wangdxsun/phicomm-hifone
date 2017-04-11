@@ -11,7 +11,7 @@
 
 namespace Hifone\Events\Like;
 
-final class LikeWasRemovedEvent implements LikeEventInterface
+final class LikedWasAddedEvent implements LikeEventInterface
 {
     /**
      * The thread that has been reported.

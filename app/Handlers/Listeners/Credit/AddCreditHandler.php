@@ -28,6 +28,9 @@ use Hifone\Events\Follow\FollowWasAddedEvent;
 use Hifone\Events\Follow\FollowedWasAddedEvent;
 use Hifone\Events\Follow\FollowedWasRemovedEvent;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
+use Hifone\Events\Like\LikeWasAddedEvent;
+use Hifone\Events\Like\LikedWasAddedEvent;
+use Hifone\Events\Like\LikedWasRemovedEvent;
 
 class AddCreditHandler
 {
@@ -72,6 +75,16 @@ class AddCreditHandler
             $user = $event->target;
         }elseif ($event instanceof ExcellentWasAddedEvent) {
             $action = 'thread_excellent';
+            $user = $event->target;
+        }
+        elseif ($event instanceof LikeWasAddedEvent) {
+            $action = 'like';
+            $user = $event->target;
+        }elseif ($event instanceof LikedWasAddedEvent) {
+            $action = 'liked';
+            $user = $event->target;
+        }elseif ($event instanceof LikedWasRemovedEvent) {
+            $action = 'liked_removed';
             $user = $event->target;
         }
 
