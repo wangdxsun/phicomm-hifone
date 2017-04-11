@@ -93,9 +93,12 @@ class EventServiceProvider extends ServiceProvider
         \Hifone\Events\Reply\RepliedWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
-        //帖子置顶
-        \Hifone\Events\Thread\ThreadWasPinnedEvent::class => [
-           /* \Hifone\Handlers\Listeners\Notification\SendThreadNotificationHandler::class,*/
+        //置顶
+        \Hifone\Events\Pin\PinWasAddedEvent::class => [
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+        ],
+        //下沉
+        \Hifone\Events\Pin\SinkWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
         //发表帖子

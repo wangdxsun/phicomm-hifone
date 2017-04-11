@@ -15,7 +15,8 @@ use AltThree\Validator\ValidationException;
 use Hifone\Commands\Thread\RemoveThreadCommand;
 use Hifone\Commands\Thread\UpdateThreadCommand;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
-use Hifone\Events\Thread\ThreadWasPinnedEvent;
+use Hifone\Events\Pin\PinWasAddedEvent;
+use Hifone\Events\Pin\SinkWasAddedEvent;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Section;
 use Hifone\Models\Thread;
@@ -106,22 +107,35 @@ class ThreadController extends Controller
 
     public function pin(Thread $thread)
     {
-        if($thread->order >0){
+        $user = User::find($thread->user_id);
+
+        if($thread->order > 0){
             $thread->decrement('order', 1);
-        }else{
+        } elseif($thread->order == 0){
             $thread->increment('order', 1);
-            $user = User::find($thread->user_id);
-            event(new ThreadWasPinnedEvent($user));
+            event(new PinWasAddedEvent($user, 'Thread'));
+        } elseif($thread->order < 0){
+            $thread->increment('order', 2);
+            event(new PinWasAddedEvent($user, 'Thread'));
         }
+
         return Redirect::back()
             ->withSuccess(trans('dashboard.threads.edit.success'));
     }
 
     public function sink(Thread $thread)
     {
-        ($thread->order >= 0) ? $thread->decrement('order', 1) : $thread->increment('order', 1);
-
-        return Redirect::route('dashboard.thread.index')
+        $user = User::find($thread->user_id);
+        if($thread->order > 0){
+            $thread->decrement('order', 2);
+            event(new SinkWasAddedEvent($user));
+        } elseif($thread->order == 0){
+            $thread->decrement('order', 1);
+            event(new SinkWasAddedEvent($user));
+        } elseif($thread->order < 0){
+            $thread->increment('order', 1);
+        }
+        return Redirect::back()
             ->withSuccess(trans('dashboard.threads.edit.success'));
     }
 

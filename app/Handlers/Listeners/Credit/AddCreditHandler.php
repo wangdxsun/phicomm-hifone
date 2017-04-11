@@ -23,7 +23,8 @@ use Hifone\Events\User\UserWasAddedEvent;
 use Hifone\Events\User\UserWasLoggedinEvent;
 use Hifone\Events\Favorite\FavoriteWasAddedEvent;
 use Hifone\Events\Favorite\FavoriteWasRemovedEvent;
-use Hifone\Events\Thread\ThreadWasPinnedEvent;
+use Hifone\Events\Pin\PinWasAddedEvent;
+use Hifone\Events\Pin\SinkWasAddedEvent;
 use Hifone\Events\Follow\FollowWasAddedEvent;
 use Hifone\Events\Follow\FollowedWasAddedEvent;
 use Hifone\Events\Follow\FollowedWasRemovedEvent;
@@ -61,29 +62,35 @@ class AddCreditHandler
         } elseif ($event instanceof FavoriteWasRemovedEvent) {
             $action = 'favorited_removed';
             $user = $event->user;
-        } elseif ($event instanceof ThreadWasPinnedEvent) {
-            $action = 'thread_pin';
+        } elseif ($event instanceof PinWasAddedEvent) {
+            if($event->action == 'Thread'){
+                $action = 'thread_pin';
+            }elseif($event->action == 'Reply'){
+                $action = 'replied_pin';
+            }
             $user = $event->user;
-        }elseif ($event instanceof FollowWasAddedEvent) {
+        }elseif ($event instanceof SinkWasAddedEvent) {
+            $action = 'thread_down';
+            $user = $event->user;
+        } elseif ($event instanceof FollowWasAddedEvent) {
             $action = 'follow';
             $user = $event->target;
-        }elseif ($event instanceof FollowedWasAddedEvent) {
+        } elseif ($event instanceof FollowedWasAddedEvent) {
             $action = 'followed';
             $user = $event->target;
-        }elseif ($event instanceof FollowedWasRemovedEvent) {
+        } elseif ($event instanceof FollowedWasRemovedEvent) {
             $action = 'followed_removed';
             $user = $event->target;
-        }elseif ($event instanceof ExcellentWasAddedEvent) {
+        } elseif ($event instanceof ExcellentWasAddedEvent) {
             $action = 'thread_excellent';
             $user = $event->target;
-        }
-        elseif ($event instanceof LikeWasAddedEvent) {
+        } elseif ($event instanceof LikeWasAddedEvent) {
             $action = 'like';
             $user = $event->target;
-        }elseif ($event instanceof LikedWasAddedEvent) {
+        } elseif ($event instanceof LikedWasAddedEvent) {
             $action = 'liked';
             $user = $event->target;
-        }elseif ($event instanceof LikedWasRemovedEvent) {
+        } elseif ($event instanceof LikedWasRemovedEvent) {
             $action = 'liked_removed';
             $user = $event->target;
         }

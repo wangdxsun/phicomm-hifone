@@ -61,7 +61,7 @@
                             <td>{{ $reply->last_op_time }}</td>
                             <td>
                                 <a href="/dashboard/reply/{{ $reply->id }}/edit" title="编辑"><i class="fa fa-pencil"></i></a>
-                                <a data-url="/dashboard/reply/{{$reply->id}}/pin" data-method="post" title="精华"><i class="{{ $reply->pin }}"></i></a>
+                                <a data-url="/dashboard/reply/{{$reply->id}}/pin" data-method="post" title="置顶"><i class="{{ $reply->pin }}"></i></a>
                                 <a data-url="/dashboard/reply/{{ $reply->id }}/trash" data-method="post" class="need-reason" title="删除"><i class="fa fa-trash"></i></a>
                             </td>
                         </tr>

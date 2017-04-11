@@ -13,6 +13,7 @@ namespace Hifone\Http\Controllers\Dashboard;
 
 use Hifone\Commands\Reply\RemoveReplyCommand;
 use Hifone\Commands\Reply\UpdateReplyCommand;
+use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
@@ -112,7 +113,13 @@ class ReplyController extends Controller
 
     public function pin(Reply $reply)
     {
-        ($reply->order > 0) ? $reply->decrement('order', 1) : $reply->increment('order', 1);
+        if($reply->order > 0){
+            $reply->decrement('order', 1);
+        }else{
+            $reply->increment('order', 1);
+            $user = User::find($reply->user_id);
+            event(new PinWasAddedEvent($user, 'Reply'));
+        }
 
         return Redirect::route('dashboard.reply.index')
             ->withSuccess(trans('dashboard.reply.edit.success'));

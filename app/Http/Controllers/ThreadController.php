@@ -18,7 +18,8 @@ use Hifone\Commands\Thread\AddThreadCommand;
 use Hifone\Commands\Thread\RemoveThreadCommand;
 use Hifone\Commands\Thread\UpdateThreadCommand;
 use Hifone\Events\Thread\ThreadWasViewedEvent;
-use Hifone\Events\Thread\ThreadWasPinnedEvent;
+use Hifone\Events\Pin\PinWasAddedEvent;
+use Hifone\Events\Pin\SinkWasAddedEvent;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Models\Node;
 use Hifone\Models\Section;
@@ -258,7 +259,7 @@ class ThreadController extends Controller
         }else{
             $thread->increment('order', 1);
             $user = User::find($thread->user_id);
-            event(new ThreadWasPinnedEvent($user));
+            event(new PinWasAddedEvent($user, 'Thread'));
         }
         return Redirect::route('thread.show', $thread->id);
     }
@@ -273,7 +274,14 @@ class ThreadController extends Controller
     public function sink(Thread $thread)
     {
         $this->needAuthorOrAdminPermission($thread->user_id);
-        ($thread->order >= 0) ? $thread->decrement('order', 1) : $thread->increment('order', 1);
+
+        if($thread->order < 0){
+            $thread->increment('order', 1);
+        }else{
+            $thread->decrement('order', 1);
+            $user = User::find($thread->user_id);
+            event(new SinkWasAddedEvent($user));
+        }
 
         return Redirect::route('thread.show', $thread->id);
     }
