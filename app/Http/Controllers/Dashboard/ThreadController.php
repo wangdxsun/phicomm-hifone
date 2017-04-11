@@ -14,6 +14,8 @@ namespace Hifone\Http\Controllers\Dashboard;
 use AltThree\Validator\ValidationException;
 use Hifone\Commands\Thread\RemoveThreadCommand;
 use Hifone\Commands\Thread\UpdateThreadCommand;
+use Hifone\Events\Excellent\ExcellentWasAddedEvent;
+use Hifone\Events\Thread\ThreadWasPinnedEvent;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Section;
 use Hifone\Models\Thread;
@@ -104,9 +106,14 @@ class ThreadController extends Controller
 
     public function pin(Thread $thread)
     {
-        ($thread->order > 0) ? $thread->decrement('order', 1) : $thread->increment('order', 1);
-
-        return Redirect::route('dashboard.thread.index')
+        if($thread->order >0){
+            $thread->decrement('order', 1);
+        }else{
+            $thread->increment('order', 1);
+            $user = User::find($thread->user_id);
+            event(new ThreadWasPinnedEvent($user));
+        }
+        return Redirect::back()
             ->withSuccess(trans('dashboard.threads.edit.success'));
     }
 
@@ -120,7 +127,13 @@ class ThreadController extends Controller
 
     public function excellent(Thread $thread)
     {
-        ($thread->is_excellent > 0) ? $thread->decrement('is_excellent', 1) : $thread->increment('is_excellent', 1);
+        if($thread->is_excellent >0){
+            $thread->decrement('is_excellent', 1);
+        }else{
+            $thread->increment('is_excellent', 1);
+            $user = User::find($thread->user_id);
+            event(new ExcellentWasAddedEvent($user));
+        }
 
         return Redirect::back()
             ->withSuccess(trans('dashboard.threads.edit.success'));
