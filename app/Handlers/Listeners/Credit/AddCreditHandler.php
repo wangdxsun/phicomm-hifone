@@ -17,7 +17,7 @@ use Hifone\Events\Credit\CreditWasAddedEvent;
 use Hifone\Events\EventInterface;
 use Hifone\Events\Image\ImageWasUploadedEvent;
 use Hifone\Events\Reply\ReplyWasAddedEvent;
-use Hifone\Events\Reply\ReplyWasRemovedEvent;
+use Hifone\Events\Reply\RepliedWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Events\User\UserWasAddedEvent;
 use Hifone\Events\User\UserWasLoggedinEvent;
@@ -43,9 +43,9 @@ class AddCreditHandler
         } elseif ($event instanceof ReplyWasAddedEvent) {
             $action = 'reply_new';
             $user = $event->reply->user;
-        } elseif ($event instanceof ReplyWasRemovedEvent) {
-            $action = 'reply_remove';
-            $user = $event->reply->user;
+        } elseif ($event instanceof RepliedWasAddedEvent) {
+            $action = 'replied';
+            $user = $event->user;
         } elseif ($event instanceof ImageWasUploadedEvent) {
             $action = 'photo_upload';
             $user = Auth::user();

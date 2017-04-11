@@ -90,8 +90,7 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Stats\UpdateStatsHandler::class,
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
-        \Hifone\Events\Reply\ReplyWasRemovedEvent::class => [
-            \Hifone\Handlers\Listeners\Reply\UpdateReplyThreadHandler::class,
+        \Hifone\Events\Reply\RepliedWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
         //帖子置顶
@@ -99,7 +98,7 @@ class EventServiceProvider extends ServiceProvider
            /* \Hifone\Handlers\Listeners\Notification\SendThreadNotificationHandler::class,*/
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
-        //
+        //发表帖子
         \Hifone\Events\Thread\ThreadWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Notification\SendThreadNotificationHandler::class,
             \Hifone\Handlers\Listeners\Stats\UpdateStatsHandler::class,

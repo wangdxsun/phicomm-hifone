@@ -14,8 +14,11 @@ namespace Hifone\Handlers\Commands\Reply;
 use Carbon\Carbon;
 use Hifone\Commands\Reply\AddReplyCommand;
 use Hifone\Events\Reply\ReplyWasAddedEvent;
+use Hifone\Events\Reply\RepliedWasAddedEvent;
 use Hifone\Models\Reply;
 use Hifone\Services\Dates\DateFactory;
+use Hifone\Models\Thread;
+use Hifone\Models\User;
 
 class AddReplyCommandHandler
 {
@@ -67,6 +70,11 @@ class AddReplyCommandHandler
         $reply->user->increment('reply_count', 1);
 
         event(new ReplyWasAddedEvent($reply));
+
+        $thread = Thread::find($command->thread_id);
+        $user = User::find($thread->user_id);
+
+        event(new RepliedWasAddedEvent($user));
 
         return $reply;
     }

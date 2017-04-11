@@ -32,7 +32,6 @@ class DashboardRoutes
             'prefix' => 'dashboard',
             'namespace' => 'Dashboard',
             'as' => 'dashboard.'], function (Registrar $router) {
-
             $router->get('/', 'DashboardController@index')->name('index');
             $router->get('markdown', 'DashboardController@markdown')->name('markdown');
             $router->post('user/{user}/avatar', 'UserController@avatar');
