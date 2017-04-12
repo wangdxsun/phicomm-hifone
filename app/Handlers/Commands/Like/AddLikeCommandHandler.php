@@ -16,6 +16,7 @@ use Hifone\Commands\Like\AddLikeCommand;
 use Hifone\Events\Like\LikeWasAddedEvent;
 use Hifone\Events\Like\LikedWasAddedEvent;
 use Hifone\Events\Like\LikedWasRemovedEvent;
+use Hifone\Events\Like\LikeWasRemovedEvent;
 use Hifone\Events\Thread\ThreadWasLikedEvent;
 use Hifone\Models\Like;
 use Hifone\Models\User;
@@ -65,6 +66,7 @@ class AddLikeCommandHandler
             $target->decrement('like_count', 1);
 
             event(new LikedWasRemovedEvent($user));
+            event(new LikeWasRemovedEvent($user));
         } elseif ($target->likes()->forUser(Auth::id())->WithDown()->count()) {
             // user already clicked unlike once
             $target->likes()->forUser(Auth::id())->WithDown()->delete();
