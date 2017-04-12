@@ -20,10 +20,19 @@
                 <div class="col-xs-1">
                     <span class="drag-handle"><i class="fa fa-navicon"></i></span>
                 </div>
-                <div class="col-xs-6 drag-handle">
-                    {{ $node->name }}
+                <div class="col-xs-2 drag-handle">
+                    <img src="{{ $node->icon }}" alt="" style="max-width: 200px; max-height: 50px;">
                 </div>
-                <div class="col-xs-5 text-right">
+                <div class="col-xs-2 drag-handle">
+                    {!! $node->name.'<br>'.$node->slug !!}
+                </div>
+                <div class="col-xs-2 drag-handle">
+                    {{ $node->section->name }}
+                </div>
+                <div class="col-xs-3 drag-handle">
+                    {{ $node->description }}
+                </div>
+                <div class="col-xs-2 text-right">
                     <a href="{{ route('dashboard.node.edit',['id'=>$node->id]) }}" class="btn btn-default btn-sm">{{ trans('forms.edit') }}</a>
                     <a data-url="{{ route('dashboard.node.destroy',['id'=>$node->id]) }}" class="btn btn-danger btn-sm confirm-action" data-method="delete">{{ trans('forms.delete') }}</a>
                 </div>
