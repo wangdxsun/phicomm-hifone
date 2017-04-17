@@ -13,6 +13,7 @@ namespace Hifone\Http\Controllers;
 
 use Auth;
 use Hifone\Services\Breadcrumb\Breadcrumb;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
@@ -64,5 +65,21 @@ abstract class Controller extends BaseController
         if (!Entrust::hasRole(['Founder', 'Admin']) && $author_id != Auth::id()) {
             throw new HttpException(401);
         }
+    }
+
+    public function filterEmptyValue($input)
+    {
+        $input = $input ?: [];
+        return array_filter($input, function($value) {
+            return !empty($value);
+        });
+    }
+
+    public function updateOpLog(Model $model, $reason)
+    {
+        $model->last_op_user_id = \Auth::id();
+        $model->last_op_time = time();
+        $model->last_op_reason = $reason;
+        $model->save();
     }
 }

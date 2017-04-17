@@ -30,7 +30,7 @@
             <a onclick="phicommLogin()">登录</a>
         </div>
         <div class="loginX">
-            <a href="/phicomm/register">注册</a>
+            <a href="/auth/register">注册</a>
         </div>
     </div>
     <script>

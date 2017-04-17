@@ -40,9 +40,7 @@ class ReplyController extends Controller
 
     public function index()
     {
-        $search = array_filter(Input::get('reply', []), function($value) {
-            return !empty($value);
-        });
+        $search = $this->filterEmptyValue(Input::get('reply'));
         $replies = Reply::visible()->search($search)->with('thread', 'user', 'lastOpUser', 'thread.node')->orderBy('created_at', 'desc')->paginate(20);
         $replyAll = Reply::visible()->get()->toArray();
         $threadIds = array_unique(array_column($replyAll, 'thread_id'));
@@ -136,9 +134,7 @@ class ReplyController extends Controller
 
     public function trash()
     {
-        $search = array_filter(Input::get('reply', []), function($value) {
-            return !empty($value);
-        });
+        $search = $this->filterEmptyValue(Input::get('reply'));
         $replies = Reply::trash()->search($search)->with('thread', 'user', 'lastOpUser')->orderBy('created_at', 'desc')->paginate(20);
         $replyAll = Reply::trash()->get()->toArray();
         $threadIds = array_unique(array_column($replyAll, 'thread_id'));
@@ -156,14 +152,14 @@ class ReplyController extends Controller
     public function postAudit(Reply $reply)
     {
         $reply->status = 0;
-        $reply->save();
+        $this->updateOpLog($reply, '审核通过');
         return Redirect::back()->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
     }
 
     public function postTrash(Reply $reply)
     {
         $reply->status = -1;
-        $reply->save();
+        $this->updateOpLog($reply, request('reason'));
         return Redirect::back()->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
     }
 }

@@ -22,7 +22,7 @@ use Hifone\Models\Section;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
 use Hifone\Services\Parsers\Markdown;
-use Illuminate\Support\Facades\Redirect;
+use \Redirect;
 use Illuminate\Support\Facades\View;
 use Input;
 
@@ -101,8 +101,7 @@ class ThreadController extends Controller
                 ->withErrors($e->getMessageBag());
         }
 
-        return Redirect::route('dashboard.thread.edit', ['id' => $thread->id])
-            ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.threads.edit.success')));
+        return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
     public function pin(Thread $thread)
@@ -111,11 +110,14 @@ class ThreadController extends Controller
 
         if($thread->order > 0){
             $thread->decrement('order', 1);
+            $this->updateOpLog($thread, '取消置顶');
         } elseif($thread->order == 0){
             $thread->increment('order', 1);
+            $this->updateOpLog($thread, '置顶');
             event(new PinWasAddedEvent($user, 'Thread'));
         } elseif($thread->order < 0){
             $thread->increment('order', 2);
+            $this->updateOpLog($thread, '置顶');
             event(new PinWasAddedEvent($user, 'Thread'));
         }
 
@@ -128,12 +130,15 @@ class ThreadController extends Controller
         $user = User::find($thread->user_id);
         if($thread->order > 0){
             $thread->decrement('order', 2);
+            $this->updateOpLog($thread, '下沉');
             event(new SinkWasAddedEvent($user));
         } elseif($thread->order == 0){
             $thread->decrement('order', 1);
+            $this->updateOpLog($thread, '下沉');
             event(new SinkWasAddedEvent($user));
         } elseif($thread->order < 0){
             $thread->increment('order', 1);
+            $this->updateOpLog($thread, '取消下沉');
         }
         return Redirect::back()
             ->withSuccess(trans('dashboard.threads.edit.success'));
@@ -143,10 +148,11 @@ class ThreadController extends Controller
     {
         if($thread->is_excellent >0){
             $thread->decrement('is_excellent', 1);
+            $this->updateOpLog($thread, '取消精华');
         }else{
             $thread->increment('is_excellent', 1);
-            $user = User::find($thread->user_id);
-            event(new ExcellentWasAddedEvent($user));
+            $this->updateOpLog($thread, '精华');
+            event(new ExcellentWasAddedEvent($thread->user()));
         }
 
         return Redirect::back()
@@ -158,7 +164,7 @@ class ThreadController extends Controller
         dispatch(new RemoveThreadCommand($thread));
 
         return Redirect::route('dashboard.thread.trash')
-            ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
+            ->withSuccess('恭喜，操作成功！');
     }
 
     /**
@@ -178,15 +184,13 @@ class ThreadController extends Controller
     public function postAudit(Thread $thread)
     {
         $thread->status = 0;
-        $thread->save();
-        return Redirect::back()->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
+        $this->updateOpLog($thread, '审核通过');
+        return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
     public function trash()
     {
-        $search = array_filter(Input::get('thread', []), function($value) {
-            return !empty($value);
-        });
+        $search = $this->filterEmptyValue(Input::get('thread'));
         $threads = Thread::trash()->search($search)->with('node', 'user', 'lastOpUser')->orderBy('created_at', 'desc')->paginate(20);
         $threadAll = Thread::trash()->get()->toArray();
         $userIds = array_unique(array_column($threadAll, 'user_id'));
@@ -205,8 +209,7 @@ class ThreadController extends Controller
     public function postTrash(Thread $thread)
     {
         $thread->status = -1;
-        $thread->last_op_reason = Input::get('reason');
-        $thread->save();
-        return Redirect::back()->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
+        $this->updateOpLog($thread, request('reason'));
+        return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 }
