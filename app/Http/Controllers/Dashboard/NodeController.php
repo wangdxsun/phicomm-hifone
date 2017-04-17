@@ -30,7 +30,7 @@ class NodeController extends Controller
     {
         View::share([
             'current_menu'  => 'nodes',
-            'sub_title'     => '������',
+            'sub_title'     => '板块管理',
         ]);
     }
 
@@ -44,7 +44,7 @@ class NodeController extends Controller
         $nodes = Node::orderBy('order')->get();
 
         return View::make('dashboard.nodes.index')
-        ->withPageTitle('������')
+        ->withPageTitle('板块管理')
         ->withNodes($nodes);
     }
 
@@ -57,7 +57,7 @@ class NodeController extends Controller
     {
         return View::make('dashboard.nodes.create_edit')
             ->withSections(Section::orderBy('order')->get())
-            ->withPageTitle('���Ӱ��');
+            ->withPageTitle('添加板块');
     }
 
     /**
@@ -130,9 +130,11 @@ class NodeController extends Controller
      */
     public function destroy(Node $node)
     {
+        if ($node->threads()->count() > 0) {
+            return back()->withErrors('该板块下存在帖子，无法删除');
+        }
         $node->delete();
 
-        return Redirect::route('dashboard.node.index')
-            ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.nodes.delete.success')));
+        return back()->withSuccess('板块删除成功');
     }
 }

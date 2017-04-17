@@ -128,20 +128,14 @@ class SectionController extends Controller
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.sections.edit.success')));
     }
 
-    /**
-     * Deletes a given section.
-     *
-     * @param int $id
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function delete($id)
+    public function destroy(Section $section)
     {
-        $section = Node::findOrFail($id);
-        $section->remove();
+        if ($section->nodes()->count() > 0) {
+            return back()->withErrors('该分类下存在子板块，无法删除');
+        }
 
         return Redirect::route('dashboard.section.index')
-            ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.sections.delete.success')));
+            ->withSuccess('分类删除成功');
     }
 
     //Groups

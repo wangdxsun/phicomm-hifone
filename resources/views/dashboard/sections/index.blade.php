@@ -24,12 +24,13 @@
                     <span class="drag-handle"><i class="fa fa-navicon"></i></span>
                     @endif
                 </div>
-                <div class="col-xs-6">
+                <div class="col-xs-3">
                     <a href="/dashboard/section/{{ $section->id }}">{{ $section->name }}</a>
                 </div>
-                <div class="col-xs-5 text-right">
+                <div class="col-xs-4">{{ $section->description }}</div>
+                <div class="col-xs-4 text-right">
                     <a href="/dashboard/section/{{ $section->id }}/edit" class="btn btn-default btn-sm">{{ trans('forms.edit') }}</a>
-                    <a data-url="/dashboard/section/{{ $section->id }}/delete" class="btn btn-danger btn-sm confirm-action" data-method="delete">{{ trans('forms.delete') }}</a>
+                    <a data-url="/dashboard/section/{{ $section->id }}" class="btn btn-danger btn-sm confirm-action" data-method="delete">{{ trans('forms.delete') }}</a>
                 </div>
             </div>
             @empty

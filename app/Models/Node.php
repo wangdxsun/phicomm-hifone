@@ -73,9 +73,9 @@ class Node extends Model implements HasPresenter
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function threads($filter)
+    public function threads()
     {
-        return $this->hasMany(Thread::class)->getThreadsWithFilter($filter);
+        return $this->hasMany(Thread::class);
     }
 
     /**

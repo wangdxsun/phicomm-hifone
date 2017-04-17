@@ -49,11 +49,7 @@
                 @endif
                 <div class="form-group">
                 <label>{{ trans('dashboard.nodes.description') }}</label>
-                {!! Form::textarea('node[description]', isset($node) ? $node->description : null , ['class' => 'form-control',
-                                    'rows' => 5,
-                                    'style' => "overflow:hidden",
-                                    'id' => 'node-descritpion',
-                                    'placeholder' => '']) !!}
+                {!! Form::textarea('node[description]', isset($node) ? $node->description : null , ['class' => 'form-control', 'rows' => 5]) !!}
                 </div>
                 </fieldset>
 

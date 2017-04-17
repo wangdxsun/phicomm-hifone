@@ -16,6 +16,7 @@ use Hifone\Commands\Credit\AddCreditCommand;
 use Hifone\Events\Credit\CreditWasAddedEvent;
 use Hifone\Events\EventInterface;
 use Hifone\Events\Image\ImageWasUploadedEvent;
+use Hifone\Events\Like\LikeWasRemovedEvent;
 use Hifone\Events\Reply\ReplyWasAddedEvent;
 use Hifone\Events\Reply\RepliedWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasAddedEvent;
@@ -87,6 +88,9 @@ class AddCreditHandler
             $user = $event->target;
         } elseif ($event instanceof LikeWasAddedEvent) {
             $action = 'like';
+            $user = $event->target;
+        } elseif ($event instanceof LikeWasRemovedEvent) {
+            $action = 'like_removed';
             $user = $event->target;
         } elseif ($event instanceof LikedWasAddedEvent) {
             $action = 'liked';

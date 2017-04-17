@@ -21,11 +21,11 @@
             <fieldset>
             <div class="form-group">
                 <label>{{ trans('dashboard.sections.name') }}</label>
-                 {!! Form::text('section[name]', isset($section) ? $section->name : null, ['class' => 'form-control', 'id' => 'section-name', 'placeholder' => '']) !!}
+                 {!! Form::text('section[name]', isset($section) ? $section->name : null, ['class' => 'form-control']) !!}
             </div>
             <div class="form-group">
-                <label>{{ trans('dashboard.sections.order') }}</label>
-                {!! Form::text('section[order]', isset($section) ? $section->order : null, ['class' => 'form-control', 'id' => 'section-order', 'placeholder' => '']) !!}
+                <label>描述</label>
+                {!! Form::textarea('section[description]', isset($section) ? $section->description : null , ['class' => 'form-control', 'rows' => 5]) !!}
             </div>
             </fieldset>
 

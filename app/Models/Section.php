@@ -27,6 +27,7 @@ class Section extends Model
     protected $fillable = [
         'name',
         'order',
+        'description',
         'created_at',
         'updated_at',
     ];
