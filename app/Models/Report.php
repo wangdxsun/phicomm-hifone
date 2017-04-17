@@ -9,7 +9,10 @@ class Report extends Model
 {
     use SoftDeletes;
 
-    protected $dates = ['deleted_at'];
+    const DELETE = 1;//已删除
+    const IGNORE = 2;//已忽略
+
+    protected $dates = ['deleted_at', 'last_op_time'];
 
     public function user()
     {

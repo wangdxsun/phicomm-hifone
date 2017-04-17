@@ -12,15 +12,16 @@
 namespace Hifone\Http\Controllers\Dashboard;
 
 use AltThree\Validator\ValidationException;
-use Hifone\Hashing\PasswordHasher;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Report;
 use Hifone\Models\Role;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\View;
+use Redirect;
+use View;
 use Input;
+use Auth;
+use DB;
 
 class ReportController extends Controller
 {
@@ -29,10 +30,8 @@ class ReportController extends Controller
      *
      * @return void
      */
-    public function __construct(PasswordHasher $hasher)
+    public function __construct()
     {
-        $this->hasher = $hasher;
-
         View::share([
             'page_title'    => '举报管理',
         ]);
@@ -45,10 +44,8 @@ class ReportController extends Controller
      */
     public function index()
     {
-        $search = array_filter(Input::get('report', []), function($value) {
-            return !empty($value);
-        });
-        $reports = Report::audited()->search($search)->orderBy('created_at', 'desc')->paginate(20);
+        $search = $this->filterEmptyValue(Input::get('report'));
+        $reports = Report::audited()->search($search)->with('user', 'lastOpUser', 'reportable')->orderBy('created_at', 'desc')->paginate(20);
 
         return View::make('dashboard.reports.index')
             ->withReports($reports)
@@ -88,7 +85,7 @@ class ReportController extends Controller
         $roles = Input::get('roles');
 
         try {
-            \DB::transaction(function () use ($userData, $roles) {
+            DB::transaction(function () use ($userData, $roles) {
                 $user = User::create($userData);
                 $user->roles()->attach($roles);
             });
@@ -126,7 +123,7 @@ class ReportController extends Controller
         }
 
         try {
-            \DB::transaction(function () use ($user, $userData, $roles) {
+            DB::transaction(function () use ($user, $userData, $roles) {
                 $user->update($userData);
                 $user->roles()->sync($roles);
             });
@@ -144,31 +141,28 @@ class ReportController extends Controller
     {
         $thread = $report->reportable;
         $thread->status = Thread::TRASH;
-        $thread->last_op_user_id = \Auth::user()->id;
-        $thread->last_op_reason = Input::get('reason');
-        $thread->last_op_time = time();
-        $thread->save();
+        $this->updateOpLog($thread, request('reason'));
 
-        $report->status = 1;
-        $report->last_op_user_id = \Auth::user()->id;
+        $report->status = Report::DELETE;
+        $report->last_op_user_id = Auth::id();
         $report->save();
 
-        return \Redirect::back()->withSuccess('删除成功');
+        return Redirect::back()->withSuccess('删除成功');
     }
 
     public function ignore(Report $report)
     {
-        $report->status = 2;
-        $report->last_op_user_id = \Auth::user()->id;
+        $report->status = Report::IGNORE;
+        $report->last_op_user_id = Auth::id();
         $report->save();
 
-        return \Redirect::back()->withSuccess('忽略成功');
+        return Redirect::back()->withSuccess('忽略成功');
     }
 
     public function destroy(Report $report)
     {
         $report->delete();
 
-        return Redirect::back();
+        return Redirect::back()->withSuccess('删除成功');
     }
 }
