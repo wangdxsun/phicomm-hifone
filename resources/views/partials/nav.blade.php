@@ -62,11 +62,11 @@
                         <a href="{!! route('notification.index') !!}" class="notification-count {{ $current_user->notification_count ? 'new' : null }}"><i class="fa fa-bell"></i><span class="count">{{ $current_user->notification_count ?: null }}</span></a>
                     </li>
                 @else
-                    <li {!! set_active('phicomm/register') !!}>
-                        <a href="{!! url('phicomm/register') !!}" id="signup-btn">{!! trans('hifone.signup') !!}</a>
+                    <li {!! set_active('auth/register') !!}>
+                        <a href="{!! url('auth/register') !!}" id="signup-btn">{!! trans('hifone.signup') !!}</a>
                     </li>
-                    <li {!! set_active('phicomm/login') !!}>
-                        <a href="{!! url('phicomm/login') !!}" id="login-btn">{!! trans('hifone.login.login') !!}</a>
+                    <li {!! set_active('auth/login') !!}>
+                        <a href="{!! url('auth/login') !!}" id="login-btn">{!! trans('hifone.login.login') !!}</a>
                     </li>
                 @endif
             </ul>

@@ -144,8 +144,8 @@ class ThreadController extends Controller
                 ->withErrors($e->getMessageBag());
         }
 
-        return Redirect::route('thread.show', [$thread->id])
-            ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
+        return Redirect::route('thread.index')
+            ->withSuccess('帖子发表成功，请耐心等待审核通过');
     }
 
     /**
