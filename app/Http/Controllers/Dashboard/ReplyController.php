@@ -18,8 +18,8 @@ use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
-use Hifone\Parsers\Markdown;
-use Illuminate\Support\Facades\View;
+use Hifone\Services\Parsers\Markdown;
+use View;
 use Input;
 use Redirect;
 
@@ -115,8 +115,7 @@ class ReplyController extends Controller
             $reply->decrement('order', 1);
         }else{
             $reply->increment('order', 1);
-            $user = User::find($reply->user_id);
-            event(new PinWasAddedEvent($user, 'Reply'));
+            event(new PinWasAddedEvent($reply->user, 'Reply'));
         }
 
         return Redirect::route('dashboard.reply.index')

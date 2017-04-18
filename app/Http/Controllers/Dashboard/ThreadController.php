@@ -43,9 +43,7 @@ class ThreadController extends Controller
 
     public function index()
     {
-        $search = array_filter(Input::get('thread', []), function($value) {
-            return !empty($value);
-        });
+        $search = $this->filterEmptyValue(Input::get('thread'));
         $threads = Thread::visible()->search($search)->with('node', 'user', 'lastOpUser')->orderBy('created_at', 'desc')->paginate(20);
         $threadAll = Thread::visible()->get()->toArray();
         $threadIds = array_unique(array_column($threadAll, 'user_id'));
@@ -94,7 +92,7 @@ class ThreadController extends Controller
         $threadData['excerpt'] = Thread::makeExcerpt($threadData['body']);
 
         try {
-            $thread = dispatch(new UpdateThreadCommand($thread, $threadData));
+            dispatch(new UpdateThreadCommand($thread, $threadData));
         } catch (ValidationException $e) {
             return Redirect::route('dashboard.thread.edit', $thread->id)
                 ->withInput($threadData)
@@ -106,19 +104,17 @@ class ThreadController extends Controller
 
     public function pin(Thread $thread)
     {
-        $user = User::find($thread->user_id);
-
         if($thread->order > 0){
             $thread->decrement('order', 1);
             $this->updateOpLog($thread, '取消置顶');
         } elseif($thread->order == 0){
             $thread->increment('order', 1);
             $this->updateOpLog($thread, '置顶');
-            event(new PinWasAddedEvent($user, 'Thread'));
+            event(new PinWasAddedEvent($thread->user, 'Thread'));
         } elseif($thread->order < 0){
             $thread->increment('order', 2);
             $this->updateOpLog($thread, '置顶');
-            event(new PinWasAddedEvent($user, 'Thread'));
+            event(new PinWasAddedEvent($thread->user, 'Thread'));
         }
 
         return Redirect::back()
@@ -127,15 +123,14 @@ class ThreadController extends Controller
 
     public function sink(Thread $thread)
     {
-        $user = User::find($thread->user_id);
         if($thread->order > 0){
             $thread->decrement('order', 2);
             $this->updateOpLog($thread, '下沉');
-            event(new SinkWasAddedEvent($user));
+            event(new SinkWasAddedEvent($thread->user));
         } elseif($thread->order == 0){
             $thread->decrement('order', 1);
             $this->updateOpLog($thread, '下沉');
-            event(new SinkWasAddedEvent($user));
+            event(new SinkWasAddedEvent($thread->user));
         } elseif($thread->order < 0){
             $thread->increment('order', 1);
             $this->updateOpLog($thread, '取消下沉');
@@ -152,7 +147,7 @@ class ThreadController extends Controller
         }else{
             $thread->increment('is_excellent', 1);
             $this->updateOpLog($thread, '精华');
-            event(new ExcellentWasAddedEvent($thread->user()));
+            event(new ExcellentWasAddedEvent($thread->user));
         }
 
         return Redirect::back()

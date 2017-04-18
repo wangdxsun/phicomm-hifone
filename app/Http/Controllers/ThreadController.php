@@ -24,11 +24,10 @@ use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Models\Node;
 use Hifone\Models\Section;
 use Hifone\Models\Thread;
-use Hifone\Models\User;
 use Hifone\Repositories\Criteria\Thread\BelongsToNode;
 use Hifone\Repositories\Criteria\Thread\Filter;
 use Hifone\Repositories\Criteria\Thread\Search;
-use Illuminate\Support\Facades\Config;
+use Config;
 use Input;
 use Redirect;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -131,7 +130,7 @@ class ThreadController extends Controller
         $tags = isset($threadData['tags']) ? $threadData['tags'] : '';
 
         try {
-            $thread = dispatch(new AddThreadCommand(
+            dispatch(new AddThreadCommand(
                 $threadData['title'],
                 $threadData['body'],
                 Auth::user()->id,
@@ -180,7 +179,7 @@ class ThreadController extends Controller
         $content = Input::get('content') ?: '';
 
         try {
-            $append = dispatch(new AddAppendCommand(
+            dispatch(new AddAppendCommand(
                 $thread->id,
                 $content
             ));
@@ -208,7 +207,7 @@ class ThreadController extends Controller
         $this->needAuthorOrAdminPermission($thread->user_id);
 
         try {
-            $thread = dispatch(new UpdateThreadCommand($thread, $threadData));
+            dispatch(new UpdateThreadCommand($thread, $threadData));
         } catch (ValidationException $e) {
             return Redirect::route('thread.edit', $thread->id)
                 ->withInput(Input::all())
@@ -236,8 +235,7 @@ class ThreadController extends Controller
 
         $thread = dispatch(new UpdateThreadCommand($thread, $updateData));
         if($thread->is_excellent == 1){
-            $user = User::find($thread->user_id);
-            event(new ExcellentWasAddedEvent($user));
+            event(new ExcellentWasAddedEvent($thread->user));
         }
 
         return Redirect::route('thread.show', $thread->id)
@@ -258,8 +256,7 @@ class ThreadController extends Controller
             $thread->decrement('order', 1);
         }else{
             $thread->increment('order', 1);
-            $user = User::find($thread->user_id);
-            event(new PinWasAddedEvent($user, 'Thread'));
+            event(new PinWasAddedEvent($thread->user, 'Thread'));
         }
         return Redirect::route('thread.show', $thread->id);
     }
@@ -275,12 +272,11 @@ class ThreadController extends Controller
     {
         $this->needAuthorOrAdminPermission($thread->user_id);
 
-        if($thread->order < 0){
+        if ($thread->order < 0) {
             $thread->increment('order', 1);
         }else{
             $thread->decrement('order', 1);
-            $user = User::find($thread->user_id);
-            event(new SinkWasAddedEvent($user));
+            event(new SinkWasAddedEvent($thread->user));
         }
 
         return Redirect::route('thread.show', $thread->id);

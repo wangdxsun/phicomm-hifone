@@ -40,19 +40,19 @@ class ReplyController extends Controller
         $replyData = Input::get('reply');
 
         try {
-            $reply = dispatch(new AddReplyCommand(
+            dispatch(new AddReplyCommand(
                 $replyData['body'],
-                Auth::user()->id,
+                Auth::id(),
                 $replyData['thread_id']
             ));
         } catch (ValidationException $e) {
-            return Redirect::route('thread.show', $replyData['thread_id'])
+            return Redirect::back()
                 ->withInput(Input::all())
                 ->withErrors($e->getMessageBag());
         }
 
-        return Redirect::route('thread.show', [$reply->thread_id])
-            ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
+        return Redirect::back()
+            ->withSuccess('回复发表成功，请耐心等待审核通过');
     }
 
     public function destroy(Reply $reply)
