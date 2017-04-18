@@ -7,7 +7,9 @@
 <div class="content-wrapper">
     <div class="header sub-header">
         <i class="fa fa-user"></i> {{ $page_title }}
-        <a class="btn btn-sm btn-success pull-right" href="{{ route('dashboard.group.users.create') }}">新增用户组</a>
+        @if (Auth::user()->can('user_group'))
+            <a class="btn btn-sm btn-success pull-right" href="{{ route('dashboard.group.users.create') }}">新增用户组</a>
+        @endif
     </div>
     @include('partials.errors')
     <div class="row">
@@ -32,8 +34,10 @@
                         <td>{{ $role->user->username }}</td>
                         <td>{{ $role->created_at }}</td>
                         <td>
+                            @if (Auth::user()->can('user_group'))
                             <a href="/dashboard/group/users/{{ $role->id }}/edit"><i class="fa fa-pencil" title="编辑"></i></a>
                             <a data-url="/dashboard/group/users/{{ $role->id }}" data-method="delete" class="confirm-action" title="删除"><i class="fa fa-trash"></i></a>
+                            @endif
                         </td>
                     </tr>
                 @endforeach

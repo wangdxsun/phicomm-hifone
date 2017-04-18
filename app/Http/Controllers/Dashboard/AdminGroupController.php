@@ -68,6 +68,9 @@ class AdminGroupController extends Controller
      */
     public function store()
     {
+        if (!\Auth::user()->can('user_group')) {
+            return Redirect::back()->withErrors('您没有添加管理组的权限');
+        }
         $roleData = Input::get('role');
         $roleData['user_id'] = \Auth::user()->id;
         $permissions = Input::get('permissions');
@@ -96,6 +99,9 @@ class AdminGroupController extends Controller
 
     public function update(Role $role)
     {
+        if (!\Auth::user()->can('user_group')) {
+            return \Redirect::back()->withErrors('您没有修改管理组的权限');
+        }
         $roleData = Input::get('role');
         $permissions = Input::get('permissions');
         try {

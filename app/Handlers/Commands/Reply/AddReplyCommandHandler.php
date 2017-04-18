@@ -72,10 +72,6 @@ class AddReplyCommandHandler
         event(new ReplyWasAddedEvent($reply));
 
         $thread = Thread::find($command->thread_id);
-        $user = User::find($thread->user_id);
-
-        event(new RepliedWasAddedEvent($user));
-
-        return $reply;
+        event(new RepliedWasAddedEvent($thread->user));
     }
 }
