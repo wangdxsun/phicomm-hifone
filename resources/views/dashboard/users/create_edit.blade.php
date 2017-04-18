@@ -43,10 +43,12 @@
                             <label for="user-credit">用户积分</label>
                             <input type="number" class="form-control" name="user[score]" value="{{ isset($user) ? $user->score : 0 }}">
                         </div>
+                        @if (!isset($user))
                         <div class="form-group">
                             <label for="user-password">{{ trans('dashboard.users.password') }}</label>
                             {!! Form::text('user[password]', null, ['class' => 'form-control', 'id' => 'user-password', 'placeholder' => '']) !!}
                         </div>
+                        @endif
                     </fieldset>
                     <div class='form-group'>
                         <div class='btn-group'>

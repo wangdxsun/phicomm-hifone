@@ -1,4 +1,4 @@
-<footer class="footer">
+<footer class="footer" style="position: fixed; bottom: 0; width: 100%;">
     <div class="container">
         <div class="copyright">
             <blockquote class="pull-left">

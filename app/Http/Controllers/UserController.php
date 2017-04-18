@@ -99,7 +99,7 @@ class UserController extends Controller
 
     public function replies(User $user)
     {
-        $replies = Reply::forUser($user->id)->recent()->paginate(15);
+        $replies = Reply::forUser($user->id)->visible()->recent()->paginate(15);
 
         return $this->view('users.replies')
             ->withUser($user)
@@ -108,7 +108,7 @@ class UserController extends Controller
 
     public function threads(User $user)
     {
-        $threads = Thread::forUser($user->id)->recent()->paginate(15);
+        $threads = Thread::forUser($user->id)->visible()->recent()->paginate(15);
 
         return $this->view('users.threads')
             ->withUser($user)

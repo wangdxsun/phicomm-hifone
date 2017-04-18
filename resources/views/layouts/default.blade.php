@@ -57,7 +57,7 @@
 
                 @include('partials.bottom')
 		</div>
-
+        <div style="width: 100%; height: 86px;"></div>
         @include('partials.footer')
 
 	</body>
