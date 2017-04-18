@@ -84,7 +84,8 @@ class ReplyController extends Controller
         $replyData['body'] = (new Markdown())->convertMarkdownToHtml($replyData['body']);
 
         try {
-            $reply = dispatch(new UpdateReplyCommand($reply, $replyData));
+            dispatch(new UpdateReplyCommand($reply, $replyData));
+            $this->updateOpLog($reply, '修改回复');
         } catch (ValidationException $e) {
             return Redirect::route('dashboard.reply.edit', $reply->id)
                 ->withInput($replyData)

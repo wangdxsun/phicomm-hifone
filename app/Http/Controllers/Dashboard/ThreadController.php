@@ -93,6 +93,7 @@ class ThreadController extends Controller
 
         try {
             dispatch(new UpdateThreadCommand($thread, $threadData));
+            $this->updateOpLog($thread, '修改帖子');
         } catch (ValidationException $e) {
             return Redirect::route('dashboard.thread.edit', $thread->id)
                 ->withInput($threadData)
