@@ -18,11 +18,11 @@
             @include('partials.errors')
             <fieldset>
                 <div class="form-group">
-                    <label>角色名称</label>
+                    <label>用户组名称</label>
                      {!! Form::text('role[display_name]', isset($role) ? $role->display_name : null, ['class' => 'form-control', 'required']) !!}
                 </div>
                 <div class="form-group">
-                    <label>角色描述</label>
+                    <label>用户组描述</label>
                     {!! Form::text('role[description]', isset($role) ? $role->description : null, ['class' => 'form-control']) !!}
                 </div>
                 <div class="form-group">

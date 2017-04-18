@@ -12,7 +12,6 @@
 namespace Hifone\Http\Controllers\Dashboard;
 
 use AltThree\Validator\ValidationException;
-use Hifone\Events\Role\RoleWasRemovedEvent;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Permission;
 use Hifone\Models\Role;
@@ -124,8 +123,7 @@ class RoleController extends Controller
 
     public function destroy(Role $role)
     {
-        event(new RoleWasRemovedEvent($role));
         $role->delete();
-        redirect(route('dashboard.role.index'))->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
+        redirect(route('dashboard.role.index'))->withSuccess('角色删除成功');
     }
 }

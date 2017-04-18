@@ -12,12 +12,11 @@
 namespace Hifone\Http\Controllers\Dashboard;
 
 use AltThree\Validator\ValidationException;
-use Hifone\Events\Role\RoleWasRemovedEvent;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Permission;
 use Hifone\Models\Role;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\View;
+use Redirect;
+use View;
 use Input;
 
 class UserGroupController extends Controller
@@ -58,7 +57,8 @@ class UserGroupController extends Controller
         $permissions = Permission::userGroup()->get();
 
         return View::make('dashboard.groups.users.create_edit')
-            ->withPermissions($permissions);
+            ->withPermissions($permissions)
+            ->withSubHeader('新增用户组');
     }
 
     /**
@@ -82,10 +82,10 @@ class UserGroupController extends Controller
         } catch (ValidationException $e) {
             return Redirect::back()
                 ->withInput($roleData)
-                ->withTitle('角色添加失败')
+                ->withTitle('用户组添加失败')
                 ->withErrors($e->getMessageBag());
         }
-        return Redirect::route('dashboard.group.users.index')->withSuccess('角色添加成功');
+        return Redirect::route('dashboard.group.users.index')->withSuccess('用户组添加成功');
     }
 
     public function edit(Role $role)
@@ -93,7 +93,8 @@ class UserGroupController extends Controller
         $permissions = Permission::userGroup()->get();
         return View::make('dashboard.groups.users.create_edit')
             ->withRole($role)
-            ->withPermissions($permissions);
+            ->withPermissions($permissions)
+            ->withSubHeader('修改用户组');
     }
 
     public function update(Role $role)
@@ -108,19 +109,18 @@ class UserGroupController extends Controller
         } catch (ValidationException $e) {
             return Redirect::back()
                 ->withInput($roleData)
-                ->withTitle('角色修改失败')
+                ->withTitle('用户组修改失败')
                 ->withErrors($e->getMessageBag());
         }
-        return Redirect::route('dashboard.group.users.index')->withSuccess('角色修改成功');
+        return Redirect::route('dashboard.group.users.index')->withSuccess('用户组修改成功');
     }
 
     public function destroy(Role $role)
     {
         if ($role->users()->count() > 0) {
-            Redirect::back()->withErrors('无法删除该用户组');
+            return Redirect::back()->withErrors('无法删除该用户组');
         }
-        event(new RoleWasRemovedEvent($role));
         $role->delete();
-        Redirect::back()->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
+        return Redirect::back()->withSuccess('删除成功');
     }
 }

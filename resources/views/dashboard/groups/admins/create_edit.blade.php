@@ -5,9 +5,7 @@
 @include('dashboard.partials.sub-sidebar')
 @endif
 <div class="content-wrapper">
-    <div class="header sub-header">
-        <span class="uppercase">修改角色</span>
-    </div>
+    <div class="header sub-header">{{ $sub_header }}</div>
     <div class="row">
         <div class="col-sm-12">
             @if(isset($role))
@@ -18,11 +16,11 @@
             @include('partials.errors')
             <fieldset>
                 <div class="form-group">
-                    <label>角色名称</label>
+                    <label>管理组名称</label>
                      {!! Form::text('role[display_name]', isset($role) ? $role->display_name : null, ['class' => 'form-control', 'required']) !!}
                 </div>
                 <div class="form-group">
-                    <label>角色描述</label>
+                    <label>管理组描述</label>
                     {!! Form::text('role[description]', isset($role) ? $role->description : null, ['class' => 'form-control']) !!}
                 </div>
                 <div class="form-group">
