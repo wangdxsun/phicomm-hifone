@@ -11,6 +11,7 @@
 
 namespace Hifone\Http\Controllers\Dashboard;
 
+use AltThree\Validator\ValidationException;
 use Hifone\Commands\Reply\RemoveReplyCommand;
 use Hifone\Commands\Reply\UpdateReplyCommand;
 use Hifone\Events\Pin\PinWasAddedEvent;
@@ -149,15 +150,23 @@ class ReplyController extends Controller
 
     public function postAudit(Reply $reply)
     {
-        $reply->status = 0;
-        $this->updateOpLog($reply, '审核通过');
+        try {
+            $reply->status = 0;
+            $this->updateOpLog($reply, '审核通过');
+        } catch (ValidationException $e) {
+            return Redirect::back()->withErrors($e->getMessageBag());
+        }
         return Redirect::back()->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
     }
 
     public function postTrash(Reply $reply)
     {
-        $reply->status = -1;
-        $this->updateOpLog($reply, request('reason'));
+        try {
+            $reply->status = -1;
+            $this->updateOpLog($reply, trim(request('reason')));
+        } catch (ValidationException $e) {
+            return Redirect::back()->withErrors($e->getMessageBag());
+        }
         return Redirect::back()->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
     }
 }

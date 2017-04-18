@@ -125,9 +125,9 @@ window.Hifone =
         }, (inputValue)->
           if inputValue == false
             return false
-          else if inputValue == ""
+          else if inputValue.trim() == ""
             return false
-          else if inputValue.length < 6 || inputValue.length > 200
+          else if inputValue.trim().length < 6 || inputValue.trim().length > 200
             swal.showInputError("请输入6~200个字符！");
             return false
           $form.attr('action', $form.attr('action') + '?reason=' + inputValue)

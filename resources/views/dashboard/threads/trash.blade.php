@@ -74,7 +74,7 @@
                             <td>{{ $thread->last_op_reason }}</td>
                             <td>
                                 <a data-url="/dashboard/thread/{{$thread->id}}/audit" data-method="post" class="confirm-action"><i class="fa fa-check"></i></a>
-                                <a data-url="/dashboard/thread/{{ $thread->id }}" data-method="delete" class="need-reason"><i class="fa fa-trash"></i></a>
+                                <a data-url="/dashboard/thread/{{ $thread->id }}" data-method="delete" class="confirm-action"><i class="fa fa-trash"></i></a>
                             </td>
                         </tr>
                     @endforeach

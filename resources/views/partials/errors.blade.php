@@ -2,7 +2,7 @@
     <script>
         $().ready(function() {
             swal({
-                title: "{{ implode(',', $errors->all(':message')) }}",
+                title: "{{ $errors->all(':message')[0] }}",
                 timer: 2000,
                 type: "error",
                 showConfirmButton: false

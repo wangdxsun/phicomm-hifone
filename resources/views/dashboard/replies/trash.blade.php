@@ -65,7 +65,7 @@
                             <td>{{ $reply->last_op_time }}</td>
                             <td>
                                 <a href="/dashboard/reply/{{ $reply->id }}/edit"><i class="fa fa-pencil"></i></a>
-                                <a data-url="/dashboard/reply/{{ $reply->id }}" data-method="delete" class="need-reason"><i class="fa fa-trash"></i></a>
+                                <a data-url="/dashboard/reply/{{ $reply->id }}" data-method="delete" class="confirm-action"><i class="fa fa-trash"></i></a>
                             </td>
                         </tr>
                     @endforeach

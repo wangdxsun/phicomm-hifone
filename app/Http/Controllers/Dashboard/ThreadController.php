@@ -22,8 +22,8 @@ use Hifone\Models\Section;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
 use Hifone\Services\Parsers\Markdown;
-use \Redirect;
-use Illuminate\Support\Facades\View;
+use Redirect;
+use View;
 use Input;
 
 class ThreadController extends Controller
@@ -178,8 +178,13 @@ class ThreadController extends Controller
 
     public function postAudit(Thread $thread)
     {
-        $thread->status = 0;
-        $this->updateOpLog($thread, '审核通过');
+        try {
+            $thread->status = 0;
+            $this->updateOpLog($thread, '审核通过');
+        } catch (ValidationException $e) {
+            return Redirect::back()->withErrors($e->getMessageBag());
+        }
+
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
@@ -203,8 +208,13 @@ class ThreadController extends Controller
 
     public function postTrash(Thread $thread)
     {
-        $thread->status = -1;
-        $this->updateOpLog($thread, request('reason'));
+        try {
+            $thread->status = -1;
+            $this->updateOpLog($thread, trim(request('reason')));
+        } catch (ValidationException $e) {
+            return Redirect::back()->withErrors($e->getMessageBag());
+        }
+
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 }

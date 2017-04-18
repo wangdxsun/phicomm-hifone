@@ -27,7 +27,6 @@
             @foreach($replies as $reply)
             <tr>
                 <td>{{ $reply->id }}</td>
-                {{--<td>{!! $reply->body !!}</td>--}}
                 <td>
                     {{ Str::substr($reply->body, 0, 100) }}
                     @if(Str::length($reply->body) > 100)
