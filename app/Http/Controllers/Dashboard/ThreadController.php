@@ -44,7 +44,7 @@ class ThreadController extends Controller
     public function index()
     {
         $search = $this->filterEmptyValue(Input::get('thread'));
-        $threads = Thread::visible()->search($search)->with('node', 'user', 'lastOpUser')->orderBy('created_at', 'desc')->paginate(20);
+        $threads = Thread::visible()->search($search)->with('node', 'user', 'lastOpUser')->orderBy('last_op_time', 'desc')->paginate(20);
         $threadAll = Thread::visible()->get()->toArray();
         $threadIds = array_unique(array_column($threadAll, 'user_id'));
         $sections = Section::orderBy('order')->get();
@@ -186,7 +186,7 @@ class ThreadController extends Controller
     public function trash()
     {
         $search = $this->filterEmptyValue(Input::get('thread'));
-        $threads = Thread::trash()->search($search)->with('node', 'user', 'lastOpUser')->orderBy('created_at', 'desc')->paginate(20);
+        $threads = Thread::trash()->search($search)->with('node', 'user', 'lastOpUser')->orderBy('last_op_time', 'desc')->paginate(20);
         $threadAll = Thread::trash()->get()->toArray();
         $userIds = array_unique(array_column($threadAll, 'user_id'));
         $operators = array_unique(array_column($threadAll, 'last_op_user_id'));

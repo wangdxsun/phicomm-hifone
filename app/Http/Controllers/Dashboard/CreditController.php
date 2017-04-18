@@ -14,8 +14,8 @@ namespace Hifone\Http\Controllers\Dashboard;
 use AltThree\Validator\ValidationException;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\CreditRule;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\View;
+use Redirect;
+use View;
 use Input;
 
 class CreditController extends Controller
@@ -60,11 +60,11 @@ class CreditController extends Controller
         try {
             $creditRule->update($creditRuleData);
         } catch (ValidationException $e) {
-            return Redirect::route('dashboard.crditRule.edit', ['id' => $creditRule->id])
+            return Redirect::route('dashboard.creditRule.edit', ['id' => $creditRule->id])
                 ->withTitle('积分规则修改失败')
                 ->withErrors($e->getMessageBag());
         }
-        return Redirect::route('dashboard.creditRule.index')
-            ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.users.edit.success')));
+        return Redirect::back()
+            ->withSuccess('积分规则修改成功');
     }
 }

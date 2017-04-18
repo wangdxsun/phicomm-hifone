@@ -21,11 +21,6 @@ class CleanupThreadRepliesHandler
     {
         $thread = $event->thread;
 
-        // Cleanup the replies.
-        foreach ($thread->replies as $reply) {
-            $reply->delete();
-        }
-
         $notification = Notification::forObject($thread->id);
 
         // Cleanup the notifications;

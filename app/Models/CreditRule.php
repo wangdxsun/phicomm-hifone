@@ -69,6 +69,6 @@ class CreditRule extends Model
 
     public function setTimesAttribute($value)
     {
-        $this->attributes['times'] = ($this->type == static::DAILY ? $value : 0);
+        $this->attributes['times'] = ($this->type == static::DAILY ? ($value ?: 1) : 0);
     }
 }

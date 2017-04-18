@@ -35,7 +35,7 @@
                             @endforeach
                         </select>
                         <div class="form-group">
-                            <input type="text" name="q" class="form-control" value="" placeholder="回帖内容">
+                            <input type="text" name="reply[body]" class="form-control" placeholder="回帖内容">
                         </div>
                         <button class="btn btn-default">搜索</button>
                     </form>

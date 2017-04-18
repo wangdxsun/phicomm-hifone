@@ -65,7 +65,7 @@
                     @foreach($threads as $thread)
                         <tr>
                             <td>{{ $thread->id }}</td>
-                            <td><a href="{{ $thread->url }}" target="_blank" ><i class="{{ $thread->icon }}"></i> {{ Str::substr($thread->title, 0, 20) }}</a></td>
+                            <td><a href="{{ $thread->url }}" target="_blank" ><i class="{{ $thread->icon }}"></i> {{ $thread->title }}</a></td>
                             <td><a href="{{ $thread->node->url }}" target="_blank">{{ $thread->node->name }}</a></td>
                             <td><a href="{{ $thread->user->url }}" target="_blank">{{ $thread->user->username }}</a></td>
                             <td>{{ $thread->created_at }}</td>

@@ -41,7 +41,7 @@ class ReplyController extends Controller
     public function index()
     {
         $search = $this->filterEmptyValue(Input::get('reply'));
-        $replies = Reply::visible()->search($search)->with('thread', 'user', 'lastOpUser', 'thread.node')->orderBy('created_at', 'desc')->paginate(20);
+        $replies = Reply::visible()->search($search)->with('thread', 'user', 'lastOpUser', 'thread.node')->orderBy('last_op_time', 'desc')->paginate(20);
         $replyAll = Reply::visible()->get()->toArray();
         $threadIds = array_unique(array_column($replyAll, 'thread_id'));
         $userIds = array_unique(array_column($replyAll, 'user_id'));
@@ -103,10 +103,9 @@ class ReplyController extends Controller
      */
     public function destroy(Reply $reply)
     {
-        dispatch(new RemoveReplyCommand($reply));
+        $reply->delete();
 
-        return Redirect::route('dashboard.reply.index')
-            ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
+        return Redirect::back()->withSuccess('回帖删除成功');
     }
 
     public function pin(Reply $reply)
@@ -134,7 +133,7 @@ class ReplyController extends Controller
     public function trash()
     {
         $search = $this->filterEmptyValue(Input::get('reply'));
-        $replies = Reply::trash()->search($search)->with('thread', 'user', 'lastOpUser')->orderBy('created_at', 'desc')->paginate(20);
+        $replies = Reply::trash()->search($search)->with('thread', 'user', 'lastOpUser')->orderBy('last_op_time', 'desc')->paginate(20);
         $replyAll = Reply::trash()->get()->toArray();
         $threadIds = array_unique(array_column($replyAll, 'thread_id'));
         $userIds = array_unique(array_column($replyAll, 'user_id'));
