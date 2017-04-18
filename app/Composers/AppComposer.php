@@ -31,7 +31,7 @@ class AppComposer
         $view->withSiteDomain(Config::get('setting.site_domain'));
         $view->withSiteCdn(Config::get('setting.site_cdn'));
         $view->withSiteLogo(Config::get('setting.site_logo'));
-        $view->withSiteTitle(Config::get('setting.site_name').' | Hifone');
+        $view->withSiteTitle(Config::get('setting.site_name'));
         $view->withSiteLocale(Config::get('setting.site_locale'));
         $view->withSiteTimezone(Config::get('setting.site_timezone'));
         $view->withStylesheet(Config::get('setting.stylesheet'));

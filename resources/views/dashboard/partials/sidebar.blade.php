@@ -20,7 +20,7 @@
             <li {!! set_active('dashboard/thread*') !!}>
                 <a href="{{ route('dashboard.thread.audit') }}">
                     <i class="fa fa-file-o"></i>
-                    <span>话题管理</span>
+                    <span>帖子管理</span>
                 </a>
             </li>
             <li {!! set_active('dashboard/reply*') !!}>

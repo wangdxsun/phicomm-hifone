@@ -36,7 +36,6 @@ class ThreadController extends Controller
     public function __construct()
     {
         View::share([
-            'sub_title'    => trans_choice('dashboard.threads.threads', 2),
             'sub_header'   => '帖子管理'
         ]);
     }
@@ -50,7 +49,6 @@ class ThreadController extends Controller
         $sections = Section::orderBy('order')->get();
 
         return View::make('dashboard.threads.index')
-            ->withPageTitle(trans('dashboard.threads.threads').' - '.trans('dashboard.dashboard'))
             ->withThreads($threads)
             ->withCurrentMenu('index')
             ->withSections($sections)
@@ -69,7 +67,6 @@ class ThreadController extends Controller
         $sections = Section::orderBy('order')->get();
 
         return View::make('dashboard.threads.create_edit')
-            ->withPageTitle(trans('dashboard.threads.edit.title').' - '.trans('dashboard.dashboard'))
             ->withNode($thread->node)
             ->withSections($sections)
             ->withThread($thread)
