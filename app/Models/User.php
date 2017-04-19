@@ -33,7 +33,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     // Enable soft delete
 
-    protected $dates = ['deleted_at'];
+    protected $dates = ['deleted_at', 'last_op_time'];
 
     /**
      * The properties that cannot be mass assigned.

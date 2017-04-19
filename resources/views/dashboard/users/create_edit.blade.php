@@ -28,7 +28,7 @@
                         </div>
                         <div class="form-group">
                             <label for="user-username">{{ trans('dashboard.users.username') }}</label>
-                            {!! Form::text('user[username]', isset($user) ? $user->username : null, ['class' => 'form-control', 'id' => 'user-username']) !!}
+                            {!! Form::text('user[username]', isset($user) ? $user->username : null, ['class' => 'form-control', 'id' => 'user-username', isset($user) ? 'readonly' : null]) !!}
                         </div>
                         <div class="form-group">
                             <label for="user-role">用户组</label>
@@ -41,7 +41,7 @@
                         </div>
                         <div class="form-group">
                             <label for="user-credit">用户积分</label>
-                            <input type="number" class="form-control" name="user[score]" value="{{ isset($user) ? $user->score : 0 }}">
+                            <input type="number" class="form-control" name="user[score]" value="{{ isset($user) ? $user->score : 0 }}" min=0>
                         </div>
                         @if (!isset($user))
                         <div class="form-group">
