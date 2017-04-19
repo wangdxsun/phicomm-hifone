@@ -15,8 +15,8 @@ use AltThree\Validator\ValidationException;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Role;
 use Hifone\Models\User;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\View;
+use Redirect;
+use View;
 use Input;
 
 class UserController extends Controller
@@ -116,14 +116,15 @@ class UserController extends Controller
             \DB::transaction(function () use ($user, $userData, $roles) {
                 $user->update($userData);
                 $user->roles()->sync($roles);
+                $this->updateOpLog($user, '修改用户信息');
             });
         } catch (ValidationException $e) {
-            return Redirect::route('dashboard.user.edit', ['id' => $user->id])
+            return Redirect::back()
                 ->withInput(Input::except('password'))
                 ->withTitle(sprintf('%s %s', trans('hifone.whoops'), '用户修改失败'))
                 ->withErrors($e->getMessageBag());
         }
-        return Redirect::route('dashboard.user.edit', ['id' => $user->id])
+        return Redirect::back()
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.users.edit.success')));
     }
 
@@ -131,18 +132,20 @@ class UserController extends Controller
     public function avatar(User $user)
     {
         $user->avatar_url = '';
-        $user->save();
+        $this->updateOpLog($user, '恢复默认头像');
 
         return Redirect::back()->withSuccess('头像删除成功');
     }
 
+    //禁言或取消禁言
     public function comment(User $user)
     {
         $user->role_id = ($user->role_id == Role::NO_COMMENT) ? Role::REGISTER_USER : Role::NO_COMMENT;
-
+        $this->updateOpLog($user, '');
         return Redirect::back()->withSuccess('修改成功');
     }
 
+    //禁止登录或者取消登录
     public function login(User $user)
     {
         $user->role_id = ($user->role_id == Role::NO_LOGIN) ? Role::REGISTER_USER : Role::NO_LOGIN;

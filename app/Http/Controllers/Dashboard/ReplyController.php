@@ -114,13 +114,14 @@ class ReplyController extends Controller
     {
         if($reply->order > 0){
             $reply->decrement('order', 1);
+            $this->updateOpLog($reply, '置顶');
         }else{
             $reply->increment('order', 1);
+            $this->updateOpLog($reply, '取消置顶');
             event(new PinWasAddedEvent($reply->user, 'Reply'));
         }
 
-        return Redirect::route('dashboard.reply.index')
-            ->withSuccess(trans('dashboard.reply.edit.success'));
+        return Redirect::back()->withSuccess('恭喜，操作成功');
     }
 
     public function audit()

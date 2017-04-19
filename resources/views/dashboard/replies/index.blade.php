@@ -52,7 +52,13 @@
                     @foreach($replies as $reply)
                         <tr>
                             <td>{{ $reply->id }}</td>
-                            <td>{!! $reply->body !!}</td>
+                            <td>
+                                {{ Str::substr($reply->body, 0, 100) }}
+                                @if(Str::length($reply->body) > 100)
+                                    <a data-toggle="collapse" href="#thread{{ $reply->id }}" aria-expanded="false">查看更多</a>
+                                    <div class="collapse well" id="thread{{ $reply->id }}">{!! $reply->body !!}</div>
+                                @endif
+                            </td>
                             <td><a href="{{ $reply->thread->url }}" target="_blank" >{{ $reply->thread->title }}</a></td>
                             <td><a href="{{ $reply->thread->node->url }}" target="_blank" >{{ $reply->thread->node->name }}</a></td>
                             <td><a href="{{ $reply->user->url }}" target="_blank">{{ $reply->user->username }}</a></td>

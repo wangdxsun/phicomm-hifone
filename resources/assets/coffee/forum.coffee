@@ -18,13 +18,6 @@ window.ForumView = Backbone.View.extend
 
   initComponents : ->
     self = this
-
-    Hifone.initAjax()
-    Hifone.initTextareaAutoResize()
-    Hifone.initDeleteForm()
-    Hifone.initSelect2()
-    Hifone.initMessage()
-
     self.initScrollToTop()
     self.forceImageDataType()
     self.initLightBox()
@@ -44,20 +37,20 @@ window.ForumView = Backbone.View.extend
     self.uploadAvatar()
 
   initPjax : ->
-      self = this
-      $(document).pjax 'a:not(a[target="_blank"],a[data-pjax="no"])', '.forum'
-      $(document).on 'pjax:start', ->
-        NProgress.start()
-        return
-      $(document).on 'pjax:end', ->
-        NProgress.done()
-        self.initComponents()
-        console.log('in pjax')
-        return
-      $(document).on 'pjax:complete', ->
-        NProgress.done()
-        return
+    self = this
+    $(document).pjax 'a:not(a[target="_blank"],a[data-pjax="no"])', '.forum'
+    $(document).on 'pjax:start', ->
+      NProgress.start()
       return
+    $(document).on 'pjax:end', ->
+      NProgress.done()
+      self.initComponents()
+      console.log('in pjax')
+      return
+    $(document).on 'pjax:complete', ->
+      NProgress.done()
+      return
+    return
 
   initScrollToTop : ->
     $.scrollUp.init()

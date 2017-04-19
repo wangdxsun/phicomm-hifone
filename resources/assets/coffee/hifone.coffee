@@ -30,6 +30,10 @@ HifoneView = Backbone.View.extend
 
     $(window).off "blur.inactive focus.inactive"
     $(window).on "blur.inactive focus.inactive", @updateWindowActiveState
+    Hifone.initSelect2()
+    Hifone.initDeleteForm()
+    Hifone.initAjax()
+    Hifone.initTextareaAutoResize()
 
   updateWindowActiveState: (e) ->
     prevType = $(this).data("prevType")
@@ -154,12 +158,6 @@ window.Hifone =
         ','
         ' '
       ]
-
-  initMessage : ->
-    Messenger.options = {
-      extraClasses: 'messenger-fixed messenger-on-top messenger-on-right',
-      theme: 'air'
-    }
 
 $ ->
   window._hifoneView = new HifoneView()

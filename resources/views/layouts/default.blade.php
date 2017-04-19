@@ -10,11 +10,9 @@
         <meta name="generator" content="Hifone">
         <meta name="env" content="{{ app('env') }}">
         <meta name="token" content="{{ csrf_token() }}">
-        <link rel="stylesheet" href="{{ elixir('dist/css/all.css') }}">
         <link rel="shortcut icon" href="/images/favicon.ico">
         <link rel="alternate" type="application/atom+xml" href="/feed" />
-        @yield('css')
-        @yield('script')
+        <link rel="stylesheet" href="{{ elixir('dist/css/all.css') }}">
         <script src="{{ elixir('dist/js/all.js') }}"></script>
         <script type="text/javascript">
             Hifone.Config = {
@@ -25,8 +23,6 @@
                 'uploader_url' : '{{ route('upload_image') }}',
                 'notification_url' : '{{ route('notification.count') }}'
             };
-        </script>
-        <script type="text/javascript">
             Hifone.jsLang = {
                 'delete_form_title' : '{{ trans('hifone.action_title') }}',
                 'delete_form_text' : '{{ trans('hifone.action_text') }}',

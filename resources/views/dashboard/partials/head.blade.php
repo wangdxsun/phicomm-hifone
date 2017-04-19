@@ -5,7 +5,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
 
     <meta name="env" content="{{ app('env') }}">
-    <meta name="token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link rel="icon" type="image/png" href="/images/favicon.ico">
     <link rel="shortcut icon" href="/images/favicon.png" type="image/x-icon">
@@ -21,11 +21,11 @@
     <title>{{ $sub_header or $site_title }}</title>
 
     <link rel="stylesheet" href="{{ elixir('dist/css/all.css') }}">
-
+    <script src="{{ elixir('dist/js/all.js') }}"></script>
     <script type="text/javascript">
         var Global = {};
         Global.locale = 'zh-CN';
-        var Config = {
+        Hifone.Config = {
             'cdnDomain': '{{ cdn() }}',
             'user_id': '{{ Auth::user() ? Auth::user()->id : 0 }}',
             'routes': {
@@ -33,6 +33,17 @@
             },
             'token': '{{ csrf_token() }}'
         };
+        Hifone.jsLang = {
+            'delete_form_title' : '{{ trans('hifone.action_title') }}',
+            'delete_form_text' : '{{ trans('hifone.action_text') }}',
+            'uploading_file' : '{{ trans('hifone.uploading_file') }}',
+            'loading' : '{{ trans('hifone.loading') }}',
+            'content_is_empty' : '{{ trans('hifone.content_empty') }}',
+            'operation_success' : '{{ trans('hifone.success') }}',
+            'error_occurred' : '{{ trans('hifone.error_occurred') }}',
+            'button_yes' : '{{ trans('hifone.yes') }}',
+            'like' : '{{ trans('hifone.like') }}',
+            'dislike' : '{{ trans('hifone.unlike') }}'
+        };
     </script>
-    <script src="{{ elixir('dist/js/all.js') }}"></script>
 </head>
