@@ -32,8 +32,8 @@
                         </div>
                         <div class="form-group">
                             <label for="user-role">用户组</label>
-                            <select class="form-control small change-role" name="roles[]" id="user-role">
-                                <option>普通用户</option>
+                            <select class="form-control small change-role" name="roleId" id="user-role">
+                                <option value="0">普通用户</option>
                                 @foreach ($roles as $role)
                                     <option value="{{$role->id}}" {{ isset($user) ? ($user->hasRole($role->name) ? 'selected' : false) : false }}>{{$role->display_name}}</option>
                                 @endforeach

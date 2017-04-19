@@ -39,7 +39,7 @@ class CarouselController extends Controller
         $carousels  = Carousel::orderBy('order')->get();
 
         return View::make('dashboard.carousel.index')
-            ->withPageTitle('轮播管理')
+            ->withPageTitle('banner管理')
             ->withCarousels($carousels);
     }
 
@@ -51,7 +51,7 @@ class CarouselController extends Controller
     public function create()
     {
         return View::make('dashboard.carousel.create_edit')
-            ->withPageTitle('添加轮播图');
+            ->withPageTitle('添加banner');
     }
 
     /**
@@ -78,7 +78,7 @@ class CarouselController extends Controller
     public function edit(Carousel $carousel)
     {
         return View::make('dashboard.carousel.create_edit')
-            ->withPageTitle('编辑轮播图')
+            ->withPageTitle('编辑banner')
             ->withCarousel($carousel);
     }
 

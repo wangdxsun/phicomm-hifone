@@ -47,12 +47,12 @@
                     <span>敏感词过滤</span>
                 </a>
             </li>
-            <li {!! set_active('dashboard/notice*') !!}>
-                <a href="{{ route('dashboard.notice.index') }}">
-                    <i class="fa fa-bullhorn"></i>
-                    <span>公告管理</span>
-                </a>
-            </li>
+            {{--<li {!! set_active('dashboard/notice*') !!}>--}}
+                {{--<a href="{{ route('dashboard.notice.index') }}">--}}
+                    {{--<i class="fa fa-bullhorn"></i>--}}
+                    {{--<span>公告管理</span>--}}
+                {{--</a>--}}
+            {{--</li>--}}
             <li {!! set_active('dashboard/creditRule*') !!}>
                 <a href="{{ route('dashboard.creditRule.index') }}">
                     <i class="fa fa-star"></i>
@@ -68,7 +68,7 @@
             <li {!! set_active('dashboard/carousel*') !!}>
                 <a href="{{ route('dashboard.carousel.index') }}">
                     <i class="fa fa-image"></i>
-                    <span>轮播管理</span>
+                    <span>banner管理</span>
                 </a>
             </li>
             <li {!! set_active('dashboard/node*') !!} {!! set_active('dashboard/section*') !!}>

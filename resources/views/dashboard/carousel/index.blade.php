@@ -6,8 +6,8 @@
 @endif
 <div class="content-wrapper">
     <div class="header sub-header">
-        <span class="uppercase"><i class="ion ion-ios-browsers-outline"></i> 轮播图管理</span>
-        <a class="btn btn-sm btn-success pull-right" href="{{ route('dashboard.carousel.create') }}">添加轮播图</a>
+        <i class="ion ion-ios-browsers-outline"></i> banner管理
+        <a class="btn btn-sm btn-success pull-right" href="{{ route('dashboard.carousel.create') }}">添加banner</a>
         <div class="clearfix"></div>
     </div>
     <div class="row">
@@ -32,7 +32,7 @@
                 </div>
             </div>
             @empty
-                <div class="list-group-item text-danger">当前没有轮播图</div>
+                <div class="list-group-item text-danger">当前没有banner</div>
             @endforelse
             <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                 <div class="modal-dialog" role="document">

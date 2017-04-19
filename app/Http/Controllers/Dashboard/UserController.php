@@ -74,12 +74,13 @@ class UserController extends Controller
     public function store()
     {
         $userData = Input::get('user');
-        $roles = Input::get('roles');
+        $roleId = Input::get('roleId');
 
         try {
-            \DB::transaction(function () use ($userData, $roles) {
+            \DB::transaction(function () use ($userData, $roleId) {
                 $user = User::create($userData);
-                $user->roles()->attach($roles);
+                $user->role_id = $roleId;
+                $this->updateOpLog($user, '创建用户');
             });
         } catch (ValidationException $e) {
             return Redirect::route('dashboard.user.create_edit')
@@ -104,18 +105,15 @@ class UserController extends Controller
     public function update(User $user)
     {
         $userData = Input::get('user');
-        $roles = Input::get('roles');
-        if ($userData['password']) {
+        $roleId = Input::get('roleId');
+        if (array_get($userData, 'password')) {
             $userData['salt'] = str_random(6);
             $userData['password'] = $this->hasher->make($userData['password'], ['salt' => $userData['salt']]);
-        } else {
-            unset($userData['password']);
         }
-
         try {
-            \DB::transaction(function () use ($user, $userData, $roles) {
+            \DB::transaction(function () use ($user, $userData, $roleId) {
                 $user->update($userData);
-                $user->roles()->sync($roles);
+                $user->role_id = $roleId;
                 $this->updateOpLog($user, '修改用户信息');
             });
         } catch (ValidationException $e) {

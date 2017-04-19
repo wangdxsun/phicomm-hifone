@@ -243,11 +243,13 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return implode(',', array_column($this->roles->toArray(), 'id'));
     }
 
-    public function setRoleIdAttribute($value)
+    public function setRoleIdAttribute($roleId)
     {
-        $roles = $value ? explode(',', $value) : [];
-
-        return $this->roles()->sync($roles);
+        if ($roleId == 0) {
+            $this->roles()->detach();
+        } else {
+            $this->roles()->sync([$roleId]);
+        }
     }
 
     public function getCommentAttribute()
