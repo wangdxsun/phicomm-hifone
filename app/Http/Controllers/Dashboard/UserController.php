@@ -75,7 +75,9 @@ class UserController extends Controller
     {
         $userData = Input::get('user');
         $roleId = Input::get('roleId');
-
+        if (User::where('username', $userData['username'])->count() > 0) {
+            return back()->withErrors('用户名已存在');
+        }
         try {
             \DB::transaction(function () use ($userData, $roleId) {
                 $user = User::create($userData);
@@ -83,13 +85,13 @@ class UserController extends Controller
                 $this->updateOpLog($user, '创建用户');
             });
         } catch (ValidationException $e) {
-            return Redirect::route('dashboard.user.create_edit')
+            return Redirect::back()
                 ->withInput($userData)
                 ->withTitle('用户添加失败')
                 ->withErrors($e->getMessageBag());
         }
         return Redirect::route('dashboard.user.index')
-            ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.users.add.success')));
+            ->withSuccess('用户添加成功');
     }
 
     public function edit(User $user)
