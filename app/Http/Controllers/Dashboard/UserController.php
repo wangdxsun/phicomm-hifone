@@ -141,7 +141,7 @@ class UserController extends Controller
     public function comment(User $user)
     {
         $user->role_id = ($user->role_id == Role::NO_COMMENT) ? Role::REGISTER_USER : Role::NO_COMMENT;
-        $this->updateOpLog($user, '');
+        $this->updateOpLog($user, $user->role_id ? '取消禁言' : '禁言');
         return Redirect::back()->withSuccess('修改成功');
     }
 
@@ -149,7 +149,7 @@ class UserController extends Controller
     public function login(User $user)
     {
         $user->role_id = ($user->role_id == Role::NO_LOGIN) ? Role::REGISTER_USER : Role::NO_LOGIN;
-
+        $this->updateOpLog($user, $user->role_id ? '取消禁止登录' : '禁止登录');
         return Redirect::back()->withSuccess('修改成功');
     }
 }

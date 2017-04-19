@@ -5,7 +5,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
 
     <meta name="env" content="{{ app('env') }}">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="token" content="{{ csrf_token() }}">
 
     <link rel="icon" type="image/png" href="/images/favicon.ico">
     <link rel="shortcut icon" href="/images/favicon.png" type="image/x-icon">

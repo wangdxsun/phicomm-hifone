@@ -45,7 +45,7 @@
     <body class="forum" data-page="forum">
         @include('partials.errors')
         @include('partials.nav')
-		<div id="main" class="main-container container">
+		<div id="main" class="main-container container" style="min-height: 620px;">
                 {!! $breadcrumb or '' !!}
                 @include('partials.top')
 
@@ -53,7 +53,6 @@
 
                 @include('partials.bottom')
 		</div>
-        <div style="width: 100%; height: 86px;"></div>
         @include('partials.footer')
 
 	</body>
