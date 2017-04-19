@@ -395,17 +395,24 @@ window.ForumView = Backbone.View.extend
           type : followable_type
           id : followable_id
         success: (result) ->
-
           if $target.hasClass("active")
             $target.removeClass('active')
           else
             $target.addClass('active')
-
-          $.notifier.notify Hifone.jsLang.operation_success, 'success'
-          return
+          swal {
+            title: Hifone.jsLang.operation_success,
+            timer: 1000,
+            type: "success",
+            showConfirmButton: false
+          }
         error: (err) ->
-          console.log('error')
-          $.notifier.notify Hifone.jsLang.error_occurred, 'error'
+          console.log(err)
+          swal {
+            title: Hifone.jsLang.error_occurred,
+            timer: 1000,
+            type: "error",
+            showConfirmButton: false
+          }
     }, 'json'
     false
 

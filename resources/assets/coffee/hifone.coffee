@@ -46,7 +46,7 @@ HifoneView = Backbone.View.extend
 window.Hifone =
   Config:
     locale: 'zh-CN'
-    current_user_id: null
+    current_user_id: '0'
     token: ''
     emoj_cdn : ''
     notification_url: ''
@@ -55,7 +55,7 @@ window.Hifone =
     root_url : ''
 
   isLogined : ->
-    Hifone.Config.current_user_id != null
+    Hifone.Config.current_user_id != '0'
 
   needLogined : ->
     if !Hifone.isLogined()
