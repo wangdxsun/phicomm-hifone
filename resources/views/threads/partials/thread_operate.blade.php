@@ -34,7 +34,7 @@
       </a>
     @endif
 
-    @if (Auth::user() && \Hifone\Models\Favorite::isUserFavoritedThread(Auth::user(), $thread->id))
+    @if (Auth::user() && \Hifone\Models\Favorite::isUserFavoritedThread(Auth::user(), $thread))
       <a class="favoriteable active" data-type="Thread" data-id="{{ $thread->id }}" href="javascript:void(0);" data-url="{{ route('favorite.createOrDelete', $thread->id) }}">
         <i class="fa fa-bookmark"></i> <span>{{ trans('hifone.favorite') }}</span>
       </a>

@@ -11,22 +11,15 @@
 
 namespace Hifone\Events\Favorite;
 
+use Hifone\Models\Thread;
 use Hifone\Models\User;
 
 final class FavoriteWasAddedEvent implements FavoriteEventInterface
 {
-    /**
-     * The favorite that has been reported.
-     *
-     * @var \Hifone\Models\Favorite
-     */
-    public $user;
+    public $thread;
 
-    /**
-     * Create a new favorite has reported event instance.
-     */
-    public function __construct(User $user)
+    public function __construct(Thread $thread)
     {
-        $this->user = $user;
+        $this->thread = $thread;
     }
 }

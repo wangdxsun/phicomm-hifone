@@ -21,10 +21,10 @@
 		<ul class="list-group row">
 			@foreach ($notifications as $day => $item)
 				<div class="notification-group">
-				<div class="group-title"><i class="fa fa-clock-o"></i> {{ $day }}</div>
-				@foreach($item as $notification)
-					@include('notifications.partials.'.$notification->template)
-				@endforeach
+					<div class="group-title"><i class="fa fa-clock-o"></i> {{ $day }}</div>
+					@foreach($item as $notification)
+						@include('notifications.partials.'.$notification->template)
+					@endforeach
 				</div>
 			@endforeach
 		</ul>

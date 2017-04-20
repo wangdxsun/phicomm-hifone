@@ -21,6 +21,10 @@ class FollowController extends Controller
 {
     public function createOrDelete(Thread $thread)
     {
+        if ($thread->user->id == Auth::id()) {
+            return ['status' => -1, 'msg' => '自己的帖子无需关注'];
+        }
+
         dispatch(new AddFollowCommand($thread));
 
         return Response::json(['status' => 1]);
@@ -29,7 +33,7 @@ class FollowController extends Controller
     public function createOrDeleteUser(User $user)
     {
         if ($user->id == Auth::user()->id) {
-            return Response::json(['status' => -1]);
+            return ['status' => -1, 'msg' => '不能关注自己'];
         }
 
         dispatch(new AddFollowCommand($user));

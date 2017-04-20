@@ -51,19 +51,16 @@ class AddFavoriteCommandHandler
         $this->favoriteAction($command->target);
     }
 
-    protected function favoriteAction($target)
+    protected function favoriteAction($thread)
     {
-        $thread = Thread::find($target->id);
-        $user = User::find($thread->user_id);
+        if (Favorite::isUserFavoritedThread(Auth::user(), $thread)) {
+            Auth::user()->favoriteThreads()->detach($thread->id);
 
-        if (Favorite::isUserFavoritedThread(Auth::user(), $target->id)) {
-            Auth::user()->favoriteThreads()->detach($target->id);
-
-            event(new FavoriteWasRemovedEvent($user));
+            event(new FavoriteWasRemovedEvent($thread->user));
         } else {
-            Auth::user()->favoriteThreads()->attach($target->id);
+            Auth::user()->favoriteThreads()->attach($thread->id);
 
-            event(new FavoriteWasAddedEvent($user));
+            event(new FavoriteWasAddedEvent($thread));
         }
     }
 }

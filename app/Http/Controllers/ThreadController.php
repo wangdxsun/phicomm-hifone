@@ -83,7 +83,7 @@ class ThreadController extends Controller
         ]);
 
         $replies = $thread->replies()->visible()
-            ->orderBy('id', 'asc')
+            ->orderBy('order', 'desc')->orderBy('id', 'asc')
             ->paginate(Config::get('setting.replies_per_page', 30));
 
         $repository = app('repository');

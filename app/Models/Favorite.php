@@ -36,10 +36,8 @@ class Favorite extends Model
         return $this->belongsTo(User::class);
     }
 
-    public static function isUserFavoritedThread(User $user, $thread_id)
+    public static function isUserFavoritedThread(User $user, $thread)
     {
-        return self::forUser($user->id)
-                        ->where('thread_id', $thread_id)
-                        ->first();
+        return self::forUser($user->id)->where('thread_id', $thread->id)->first();
     }
 }

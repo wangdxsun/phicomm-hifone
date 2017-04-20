@@ -11,11 +11,10 @@
 
 namespace Hifone\Http\Controllers;
 
-use Auth;
+use AltThree\Validator\ValidationException;
 use Hifone\Commands\Favorite\AddFavoriteCommand;
 use Hifone\Models\Thread;
 use Illuminate\Support\Facades\Response;
-use Hifone\Events\Favorite\FavoriteWasAddedEvent;
 
 class FavoriteController extends Controller
 {
@@ -24,9 +23,9 @@ class FavoriteController extends Controller
         try {
             dispatch(new AddFavoriteCommand($thread));
         } catch (ValidationException $e) {
-            //
+            return $e->getMessageBag();
         }
 
-        return Response::json(['status' => 1]);
+        return ['status' => 1];
     }
 }

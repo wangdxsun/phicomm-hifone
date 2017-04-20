@@ -15,6 +15,7 @@ use Auth;
 use Hifone\Events\Credit\CreditWasAddedEvent;
 use Hifone\Events\EventInterface;
 use Hifone\Events\Favorite\FavoriteEventInterface;
+use Hifone\Events\Follow\FollowedWasAddedEvent;
 use Hifone\Events\Follow\FollowEventInterface;
 use Hifone\Events\Like\LikeEventInterface;
 use Hifone\Events\Thread\ThreadWasMarkedExcellentEvent;
@@ -26,32 +27,29 @@ use Hifone\Models\Thread;
 
 class SendSingleNotificationHandler
 {
-    /**
-     * Handle the favorite.
-     */
     public function handle(EventInterface $event)
     {
         // follow
-        if ($event instanceof FollowEventInterface) {
+        if ($event instanceof FollowedWasAddedEvent) {
             $this->follow($event->target);
         } elseif ($event instanceof LikeEventInterface) {
             $this->like($event->target);
-        } elseif ($event instanceof FavoriteEventInterface) {
-            $this->favorite($event->target);
+        } elseif ($event instanceof FavoriteWasAddedEvent) {
+            $this->favorite($event->thread);
         } elseif ($event instanceof ThreadWasMarkedExcellentEvent) {
             $this->markedExcellent($event->target);
         } elseif ($event instanceof ThreadWasMovedEvent) {
             $this->movedThread($event->target);
         } elseif ($event instanceof CreditWasAddedEvent) {
-            if ($event->upstream_event instanceof UserWasAddedEvent) {
-                $this->notifyCredit('credit_register', $event->upstream_event->user, $event->credit);
-            } elseif ($event->upstream_event instanceof UserWasLoggedinEvent) {
-                $this->notifyCredit('credit_login', $event->upstream_event->user, $event->credit);
-            }elseif ($event->upstream_event instanceof FavoriteWasAddedEvent) {
-                $this->notifyCredit('credit_favorite', $event->upstream_event->user, $event->credit);
-            } else {
-                return;
-            }
+//            if ($event->upstream_event instanceof UserWasAddedEvent) {
+//                $this->notifyCredit('credit_register', $event->upstream_event->user, $event->credit);
+//            } elseif ($event->upstream_event instanceof UserWasLoggedinEvent) {
+//                $this->notifyCredit('credit_login', $event->upstream_event->user, $event->credit);
+//            }elseif ($event->upstream_event instanceof FavoriteWasAddedEvent) {
+//                $this->notifyCredit('credit_favorite', $event->upstream_event->user, $event->credit);
+//            } else {
+//                return;
+//            }
         }
     }
 
@@ -72,9 +70,9 @@ class SendSingleNotificationHandler
         app('notifier')->notify($type, Auth::user(), $target->user, $target);
     }
 
-    protected function favorite($target)
+    protected function favorite($thread)
     {
-        app('notifier')->notify('thread_favorite', Auth::user(), $target->user, $target);
+        app('notifier')->notify('thread_favorite', Auth::user(), $thread->user, $thread);
     }
 
     protected function markedExcellent($target)

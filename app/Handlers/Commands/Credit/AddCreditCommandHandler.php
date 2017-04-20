@@ -71,17 +71,14 @@ class AddCreditCommandHandler
             return true;
         }
         if ($creditRule->type == CreditRule::ONCE) {
-            $count = Credit::where('user_id', $user->id)->where('rule_id', $creditRule->id)->count();
-            return !$count;
+            $count = Credit::forUser($user->id)->where('rule_id', $creditRule->id)->count();
+            return $count < 1;
         }
-        $count = Credit::where('user_id', $user->id)->where('rule_id', $creditRule->id)->where(function ($query) use ($creditRule) {
-            if ($creditRule->type == CreditRule::DAILY) {
-                $frequency_tag = Credit::generateFrequencyTag();
-
-                return $query->where('frequency_tag', $frequency_tag);
-            }
-            return $query;
-        })->count();
-        return $count < $creditRule->times;
+        if ($creditRule->type == CreditRule::DAILY) {
+            $frequencyTag = Credit::generateFrequencyTag();
+            $count = Credit::forUser($user->id)->where('rule_id', $creditRule->id)->where('frequency_tag', $frequencyTag)->count();
+            return $count < $creditRule->times;
+        }
+        return false;
     }
 }

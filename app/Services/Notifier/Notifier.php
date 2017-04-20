@@ -20,7 +20,7 @@ class Notifier
 {
     protected $notifiedUsers = [];
 
-    public function notify($type, User $author, User $toUser, $object = null)
+    public function notify($type, User $author, User $toUser, $object)
     {
         if ($this->isNotified($author->id, $toUser->id, $object, $type)) {
             return;
@@ -31,7 +31,7 @@ class Notifier
         $data = [
             'author_id'     => $author->id,
             'user_id'       => $toUser->id,
-            'body'          => isset($object) && isset($object->body) ? $object->body : '',
+            'body'          => isset($object->body) ? $object->body : '',
             'type'          => $type,
             'created_at'    => $nowTimestamp,
             'updated_at'    => $nowTimestamp,
@@ -87,7 +87,7 @@ class Notifier
         return $object->notifications()
                     ->forAuthor($author_id)
                     ->forUser($user_id)
-                    ->ofType($type)->get()->count();
+                    ->ofType($type)->count();
     }
 
     // in case of a user get a lot of the same notification

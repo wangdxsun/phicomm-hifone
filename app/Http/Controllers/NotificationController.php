@@ -39,7 +39,7 @@ class NotificationController extends Controller
 
     public function clean()
     {
-        Notification::forUser(Auth::user()->id)->delete();
+        Notification::forUser(Auth::id())->delete();
 
         return Redirect::route('notification.index')
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));

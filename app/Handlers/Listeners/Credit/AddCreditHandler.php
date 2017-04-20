@@ -15,6 +15,7 @@ use Auth;
 use Hifone\Commands\Credit\AddCreditCommand;
 use Hifone\Events\Credit\CreditWasAddedEvent;
 use Hifone\Events\EventInterface;
+use Hifone\Events\Follow\FollowWasRemovedEvent;
 use Hifone\Events\Image\ImageWasUploadedEvent;
 use Hifone\Events\Like\LikeWasRemovedEvent;
 use Hifone\Events\Reply\ReplyWasAddedEvent;
@@ -34,6 +35,7 @@ use Hifone\Events\Like\LikeWasAddedEvent;
 use Hifone\Events\Like\LikedWasAddedEvent;
 use Hifone\Events\Like\LikedWasRemovedEvent;
 use Hifone\Events\Image\AvatarWasUploadedEvent;
+use Hifone\Models\Thread;
 
 class AddCreditHandler
 {
@@ -60,7 +62,7 @@ class AddCreditHandler
             $user = $event->user;
         } elseif ($event instanceof FavoriteWasAddedEvent) {
             $action = 'favorited';
-            $user = $event->user;
+            $user = $event->thread->user;
         } elseif ($event instanceof FavoriteWasRemovedEvent) {
             $action = 'favorited_removed';
             $user = $event->user;
@@ -75,14 +77,35 @@ class AddCreditHandler
             $action = 'thread_down';
             $user = $event->user;
         } elseif ($event instanceof FollowWasAddedEvent) {
-            $action = 'follow';
-            $user = $event->target;
+            if ($event->target instanceof Thread) {
+                $action = 'follow_thread';
+            } else {
+                $action = 'follow_user';
+            }
+            $user = Auth::user();
+        } elseif ($event instanceof FollowWasRemovedEvent) {
+            if ($event->target instanceof Thread) {
+                $action = 'follow_thread_removed';
+            } else {
+                $action = 'follow_user_removed';
+            }
+            $user = Auth::user();
         } elseif ($event instanceof FollowedWasAddedEvent) {
-            $action = 'followed';
-            $user = $event->target;
+            if ($event->target instanceof Thread) {
+                $action = 'followed_thread';
+                $user = $event->target->user;
+            } else {
+                $action = 'followed_user';
+                $user = $event->target;
+            }
         } elseif ($event instanceof FollowedWasRemovedEvent) {
-            $action = 'followed_removed';
-            $user = $event->target;
+            if ($event->target instanceof Thread) {
+                $action = 'followed_thread_removed';
+                $user = $event->target->user;
+            } else {
+                $action = 'followed_user_removed';
+                $user = $event->target;
+            }
         } elseif ($event instanceof ExcellentWasAddedEvent) {
             $action = 'thread_excellent';
             $user = $event->target;
@@ -119,6 +142,6 @@ class AddCreditHandler
         }
 
         // event trigger
-        event(new CreditWasAddedEvent($credit, $event));
+//        event(new CreditWasAddedEvent($credit, $event));
     }
 }

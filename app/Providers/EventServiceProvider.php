@@ -31,7 +31,7 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Notification\SendAppendNotificationHandler::class,
         ],
 
-        // Credit
+        // 增加积分后通知用户
         \Hifone\Events\Credit\CreditWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
@@ -39,14 +39,19 @@ class EventServiceProvider extends ServiceProvider
         // Favorite
         \Hifone\Events\Favorite\FavoriteWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+            \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
         \Hifone\Events\Favorite\FavoriteWasRemovedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
-         //关注
+         //关注，只需要添加积分
         \Hifone\Events\Follow\FollowWasAddedEvent::class => [
-            \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
+        \Hifone\Events\Follow\FollowWasRemovedEvent::class => [
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+        ],
+        //被关注，添加积分并发送通知
         \Hifone\Events\Follow\FollowedWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
