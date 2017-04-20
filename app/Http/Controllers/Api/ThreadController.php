@@ -18,18 +18,25 @@ use Input;
 
 class ThreadController extends AbstractApiController
 {
+    public function __construct()
+    {
+        $this->middleware('auth', ['except' => ['index', 'show']]);
+    }
+
     /**
      * Get all Threads.
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getThreads()
+    public function index()
     {
-        $threadVisibility = app(Guard::class)->check() ? 0 : 1;
-        $threads = Thread::where('is_blocked', '!=', $threadVisibility)->orderBy('id', 'desc');
+        $threads = Thread::visible()->orderBy('id', 'desc')->paginate(Input::get('per_page', 20));
 
-        $threads = $threads->paginate(Input::get('per_page', 20));
+        return $threads;
+    }
 
-        return $this->paginator($threads, Request::instance());
+    public function show(Thread $thread)
+    {
+        return $thread;
     }
 }

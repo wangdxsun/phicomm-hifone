@@ -30,7 +30,7 @@ class ApiRoutes
             $router->group(['middleware' => 'auth.api'], function ($router) {
                 // General
                 $router->get('ping', 'GeneralController@ping');
-                $router->get('threads', 'ThreadController@getThreads');
+                $router->resource('thread', 'ThreadController');
             });
 
             // Authorization Required
