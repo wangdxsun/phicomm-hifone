@@ -48,13 +48,13 @@ class AddCreditHandler
         } elseif ($event instanceof ReplyWasAddedEvent) {
             $action = 'reply_new';
             $user = $event->reply->user;
-            if (Auth::user() == $user) {
+            if (Auth::id() == $user->id) {
                 return false;
             }
         } elseif ($event instanceof RepliedWasAddedEvent) {
             $action = 'replied';
             $user = $event->user;
-            if (Auth::user() == $user) {
+            if (Auth::id() == $user->id) {
                 return false;
             }
         } elseif ($event instanceof ImageWasUploadedEvent) {
@@ -69,13 +69,13 @@ class AddCreditHandler
         } elseif ($event instanceof FavoriteWasAddedEvent) {
             $action = 'favorited';
             $user = $event->thread->user;
-            if (Auth::user() == $user) {//收藏自己的帖子
+            if (Auth::id() == $user->id) {//收藏自己的帖子
                 return false;
             }
         } elseif ($event instanceof FavoriteWasRemovedEvent) {
             $action = 'favorited_removed';
             $user = $event->user;
-            if (Auth::user() == $user) {//取消收藏自己的帖子
+            if (Auth::id() == $user->id) {//取消收藏自己的帖子
                 return false;
             }
         } elseif ($event instanceof PinWasAddedEvent) {
@@ -91,12 +91,12 @@ class AddCreditHandler
         } elseif ($event instanceof FollowWasAddedEvent) {
             if ($event->target instanceof Thread) {
                 $action = 'follow_thread';
-                if (Auth::user() == $event->target->user) {//关注自己的帖子
+                if (Auth::id() == $event->target->user->id) {//关注自己的帖子
                     return false;
                 }
             } else {
                 $action = 'follow_user';
-                if (Auth::user() == $event->target) {//关注自己
+                if (Auth::id() == $event->target->id) {//关注自己
                     return false;
                 }
             }
@@ -104,12 +104,12 @@ class AddCreditHandler
         } elseif ($event instanceof FollowWasRemovedEvent) {
             if ($event->target instanceof Thread) {
                 $action = 'follow_thread_removed';
-                if (Auth::user() == $event->target->user) {
+                if (Auth::id() == $event->target->user->id) {
                     return false;
                 }
             } else {
                 $action = 'follow_user_removed';
-                if (Auth::user() == $event->target) {
+                if (Auth::id() == $event->target->id) {
                     return false;
                 }
             }
@@ -118,13 +118,13 @@ class AddCreditHandler
             if ($event->target instanceof Thread) {
                 $action = 'followed_thread';
                 $user = $event->target->user;
-                if (Auth::user() == $user) {
+                if (Auth::id() == $user->id) {
                     return false;
                 }
             } else {
                 $action = 'followed_user';
                 $user = $event->target;
-                if (Auth::user() == $user) {
+                if (Auth::id() == $user->id) {
                     return false;
                 }
             }
@@ -132,13 +132,13 @@ class AddCreditHandler
             if ($event->target instanceof Thread) {
                 $action = 'followed_thread_removed';
                 $user = $event->target->user;
-                if (Auth::user() == $user) {
+                if (Auth::id() == $user->id) {
                     return false;
                 }
             } else {
                 $action = 'followed_user_removed';
                 $user = $event->target;
-                if (Auth::user() == $user) {
+                if (Auth::id() == $user->id) {
                     return false;
                 }
             }
@@ -148,25 +148,25 @@ class AddCreditHandler
         } elseif ($event instanceof LikeWasAddedEvent) {
             $action = 'like';
             $user = $event->target;
-            if (Auth::user() == $user) {
+            if (Auth::id() == $user->id) {
                 return false;
             }
         } elseif ($event instanceof LikeWasRemovedEvent) {
             $action = 'like_removed';
             $user = $event->target;
-            if (Auth::user() == $user) {
+            if (Auth::id() == $user->id) {
                 return false;
             }
         } elseif ($event instanceof LikedWasAddedEvent) {
             $action = 'liked';
             $user = $event->target;
-            if (Auth::user() == $user) {
+            if (Auth::id() == $user->id) {
                 return false;
             }
         } elseif ($event instanceof LikedWasRemovedEvent) {
             $action = 'liked_removed';
             $user = $event->target;
-            if (Auth::user() == $user) {
+            if (Auth::id() == $user->id) {
                 return false;
             }
         } elseif ($event instanceof AvatarWasUploadedEvent) {
