@@ -30,13 +30,13 @@ class ThreadController extends AbstractApiController
      */
     public function index()
     {
-        $threads = Thread::visible()->orderBy('id', 'desc')->paginate(Input::get('per_page', 20));
+        $threads = Thread::visible()->with('user')->orderBy('id', 'desc')->paginate(Input::get('per_page', 20));
 
         return $threads;
     }
 
     public function show(Thread $thread)
     {
-        return $thread;
+        return Thread::with('user', 'replies', 'replies.user')->find($thread->id);
     }
 }
