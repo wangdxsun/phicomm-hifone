@@ -18,7 +18,6 @@ use Hifone\Events\Reply\RepliedWasAddedEvent;
 use Hifone\Models\Reply;
 use Hifone\Services\Dates\DateFactory;
 use Hifone\Models\Thread;
-use Hifone\Models\User;
 
 class AddReplyCommandHandler
 {
@@ -42,7 +41,7 @@ class AddReplyCommandHandler
     /**
      * Handle the report thread command.
      *
-     * @param \Hifone\Services\Commands\Reply\AddReplyCommand $command
+     * @param \Hifone\Commands\Reply\AddReplyCommand $command
      *
      * @return \Hifone\Models\Reply
      */

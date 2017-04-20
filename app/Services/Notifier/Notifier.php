@@ -42,21 +42,9 @@ class Notifier
         $object->notifications()->create($data);
     }
 
-    /**
-     * Create a notification.
-     *
-     * @param [type] $type   currently have 'at', 'new_reply', 'follow', 'append'
-     * @param User   $author come from who
-     * @param array  $users  to who, array of users
-     * @param Mix    $object cuurent context
-     * @param Reply  $reply  the content
-     *
-     * @return [type] none
-     */
     public function batchNotify($type, User $author, $users, $object, $content = null)
     {
         $nowTimestamp = Carbon::now()->toDateTimeString();
-        $data = [];
 
         foreach ($users as $follower) {
             $toUser = (!$follower instanceof User) ? $follower->user : $follower;
