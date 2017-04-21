@@ -70,8 +70,6 @@ class AddThreadCommandHandler
         // The thread was added successfully, so now let's deal with the tags.
         app(AddTag::class)->attach($thread, $command->tags);
 
-        event(new ThreadWasAddedEvent($thread));
-
         return $thread;
     }
 }

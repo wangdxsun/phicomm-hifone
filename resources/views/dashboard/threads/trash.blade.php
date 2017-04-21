@@ -73,7 +73,7 @@
                             <td>{{ $thread->last_op_time }}</td>
                             <td>{{ $thread->last_op_reason }}</td>
                             <td>
-                                <a data-url="/dashboard/thread/{{$thread->id}}/audit" data-method="post" class="confirm-action"><i class="fa fa-check"></i></a>
+                                <a data-url="/dashboard/thread/{{$thread->id}}/recycle" data-method="post" class="confirm-action"><i class="fa fa-check"></i></a>
                                 <a data-url="/dashboard/thread/{{ $thread->id }}" data-method="delete" class="confirm-action"><i class="fa fa-trash"></i></a>
                             </td>
                         </tr>

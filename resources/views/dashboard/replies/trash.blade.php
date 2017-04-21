@@ -70,7 +70,7 @@
                             <td>{{ $reply->last_op_reason }}</td>
                             <td>{{ $reply->last_op_time }}</td>
                             <td>
-                                <a data-url="/dashboard/reply/{{ $reply->id }}/audit" data-method="post" class="confirm-action"><i class="fa fa-check"></i></a>
+                                <a data-url="/dashboard/reply/{{ $reply->id }}/recycle" data-method="post" class="confirm-action"><i class="fa fa-check"></i></a>
                                 <a data-url="/dashboard/reply/{{ $reply->id }}" data-method="delete" class="confirm-action"><i class="fa fa-trash"></i></a>
                             </td>
                         </tr>

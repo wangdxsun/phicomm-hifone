@@ -33,6 +33,7 @@ class DashboardRoutes
             'namespace' => 'Dashboard',
             'as' => 'dashboard.'], function (Registrar $router) {
             $router->get('/', 'DashboardController@index')->name('index');
+            $router->get('test', 'DashboardController@test');
             $router->get('markdown', 'DashboardController@markdown')->name('markdown');
             $router->post('user/{user}/avatar', 'UserController@avatar');
             $router->post('user/{user}/comment', 'UserController@comment');
@@ -47,13 +48,14 @@ class DashboardRoutes
             $router->post('reply/{reply}/audit', 'ReplyController@postAudit');
             $router->post('reply/{reply}/trash', 'ReplyController@postTrash');
             $router->post('reply/{reply}/pin', 'ReplyController@pin');
+            $router->post('reply/{reply}/recycle', 'ReplyController@recycle');
             $router->post('thread/{thread}/pin', 'ThreadController@pin');
             $router->post('thread/{thread}/sink', 'ThreadController@sink');
             $router->post('thread/{thread}/excellent', 'ThreadController@excellent');
+            $router->post('thread/{thread}/recycle', 'ThreadController@recycle');
             $router->post('report/{report}/trash', 'ReportController@trash');
             $router->post('report/{report}/ignore', 'ReportController@ignore');
             $router->post('carousel/{carousel}/close', 'CarouselController@close')->name('carousel.close');
-            $router->get('test', 'DashboardController@test');
             $router->get('wordsExcel/export','WordsExcelController@export')->name('wordsExcel.export');
             $router->post('wordsExcel/import','WordsExcelController@import');
             $router->post('word/editInfo', 'WordController@editInfo');

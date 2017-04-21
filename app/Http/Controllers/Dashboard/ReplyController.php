@@ -15,6 +15,8 @@ use AltThree\Validator\ValidationException;
 use Hifone\Commands\Reply\RemoveReplyCommand;
 use Hifone\Commands\Reply\UpdateReplyCommand;
 use Hifone\Events\Pin\PinWasAddedEvent;
+use Hifone\Events\Reply\RepliedWasAddedEvent;
+use Hifone\Events\Reply\ReplyWasAddedEvent;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
@@ -34,7 +36,6 @@ class ReplyController extends Controller
     public function __construct()
     {
         View::share([
-            'sub_title'    => trans_choice('dashboard.replies.replies', 2),
             'sub_header'   => '回帖管理',
         ]);
     }
@@ -152,13 +153,26 @@ class ReplyController extends Controller
 
     public function postAudit(Reply $reply)
     {
+        event(new ReplyWasAddedEvent($reply));
+        event(new RepliedWasAddedEvent($reply->thread->user));
+
+        return $this->passAudit($reply);
+    }
+
+    public function recycle($reply)
+    {
+        return $this->passAudit($reply);
+    }
+
+    public function passAudit($reply)
+    {
         try {
             $reply->status = 0;
             $this->updateOpLog($reply, '审核通过');
         } catch (ValidationException $e) {
             return Redirect::back()->withErrors($e->getMessageBag());
         }
-        return Redirect::back()->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
+        return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
     public function postTrash(Reply $reply)

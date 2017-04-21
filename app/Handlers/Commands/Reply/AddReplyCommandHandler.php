@@ -68,8 +68,6 @@ class AddReplyCommandHandler
 
         $reply->user->increment('reply_count', 1);
 
-        event(new ReplyWasAddedEvent($reply));
-
         $thread = Thread::find($command->thread_id);
         event(new RepliedWasAddedEvent($thread->user));
     }

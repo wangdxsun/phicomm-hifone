@@ -17,6 +17,7 @@ use Hifone\Commands\Thread\UpdateThreadCommand;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Pin\SinkWasAddedEvent;
+use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasMarkedExcellentEvent;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Section;
@@ -173,7 +174,21 @@ class ThreadController extends Controller
             ->withCurrentMenu('audit');
     }
 
+    //从待审核列表审核通过帖子
     public function postAudit(Thread $thread)
+    {
+        event(new ThreadWasAddedEvent($thread));
+        return $this->passAudit($thread);
+    }
+
+    //从回收站恢复帖子
+    public function recycle(Thread $thread)
+    {
+        return $this->passAudit($thread);
+    }
+
+    //将帖子状态修改为审核通过
+    public function passAudit($thread)
     {
         try {
             $thread->status = 0;
