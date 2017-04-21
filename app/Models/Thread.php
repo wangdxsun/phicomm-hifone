@@ -82,7 +82,7 @@ class Thread extends Model implements HasPresenter, TaggableInterface
         return $this->morphMany(Notification::class, 'object');
     }
 
-    public function favoritedBy()
+    public function favorites()
     {
         return $this->belongsToMany(User::class, 'favorites');
     }
@@ -225,5 +225,15 @@ class Thread extends Model implements HasPresenter, TaggableInterface
     public function getUrlAttribute()
     {
         return route('thread.show', $this->id);
+    }
+
+    public function isFollowedBy($user)
+    {
+        return $this->follows()->forUser($user->id)->count() > 0;
+    }
+
+    public function isFavoritedBy($user)
+    {
+        return $this->favorites()->forUser($user->id)->count() > 0;
     }
 }

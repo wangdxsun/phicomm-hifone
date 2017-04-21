@@ -24,7 +24,9 @@
       @endforeach
       </span>
     @endif
-    @if (Auth::check() && $thread->follows()->forUser(Auth::id())->count())
+
+    @if (Auth::check() && ($thread->user_id == Auth::id()))
+    @elseif (Auth::check() && $thread->isFollowedBy(Auth::user()))
       <a class="followable active" data-action="unfollow" data-id="{{ $thread->id }}" data-type="Thread" href="javascript:void(0);" data-url="{{ route('follow.createOrDelete', $thread->id) }}">
         <i class="fa fa-eye"></i> <span>{{ trans('hifone.follow') }}</span>
       </a>
@@ -34,7 +36,8 @@
       </a>
     @endif
 
-    @if (Auth::user() && \Hifone\Models\Favorite::isUserFavoritedThread(Auth::user(), $thread))
+    @if (Auth::check() && ($thread->user_id == Auth::id()))
+    @elseif (Auth::user() && $thread->isFavoritedBy(Auth::user()))
       <a class="favoriteable active" data-type="Thread" data-id="{{ $thread->id }}" href="javascript:void(0);" data-url="{{ route('favorite.createOrDelete', $thread->id) }}">
         <i class="fa fa-bookmark"></i> <span>{{ trans('hifone.favorite') }}</span>
       </a>
@@ -45,23 +48,23 @@
     @endif
 
     @if (Auth::user() && Auth::user()->can("manage_threads") )
-        <a data-method="post" id="thread-recommend-button" href="javascript:void(0);" data-url="{{ route('thread.excellent', [$thread->id]) }}" class="admin {!! $thread->is_excellent ? 'active' :''!!}" title="{{ trans('hifone.threads.mark_excellent') }}">
+        <a data-method="post" id="thread-recommend-button" data-url="{{ route('thread.excellent', [$thread->id]) }}" class="admin {!! $thread->is_excellent ? 'active' :''!!}" title="{{ trans('hifone.threads.mark_excellent') }}">
         <i class="fa fa-trophy"></i>
         </a>
 
         @if ($thread->order >= 0)
-          <a data-method="post" id="thread-pin-button" href="javascript:void(0);" data-url="{{ route('thread.pin', [$thread->id]) }}" class="admin {!! $thread->order > 0 ? 'active' : '' !!}" title="{{ trans('hifone.threads.mark_stick') }}">
+          <a data-method="post" id="thread-pin-button" data-url="{{ route('thread.pin', [$thread->id]) }}" class="admin {!! $thread->order > 0 ? 'active' : '' !!}" title="{{ trans('hifone.threads.mark_stick') }}">
             <i class="fa fa-thumb-tack"></i>
           </a>
         @endif
 
         @if ($thread->order <= 0)
-            <a data-method="post" id="thread-sink-button" href="javascript:void(0);" data-url="{{ route('thread.sink', [$thread->id]) }}" class="admin {!! $thread->order < 0 ? 'active' : '' !!}" title="{{ trans('hifone.threads.mark_sink') }}">
+            <a data-method="post" id="thread-sink-button" data-url="{{ route('thread.sink', [$thread->id]) }}" class="admin {!! $thread->order < 0 ? 'active' : '' !!}" title="{{ trans('hifone.threads.mark_sink') }}">
                 <i class="fa fa-anchor"></i>
             </a>
         @endif
 
-        <a data-method="delete" id="thread-delete-button" href="javascript:void(0);" data-url="{{ route('thread.destroy', [$thread->id]) }}" title="{{ trans('forms.delete') }}" class="admin confirm-action">
+        <a data-method="delete" id="thread-delete-button" data-url="{{ route('thread.destroy', [$thread->id]) }}" title="{{ trans('forms.delete') }}" class="admin confirm-action">
             <i class="fa fa-trash-o"></i>
         </a>
     @endif

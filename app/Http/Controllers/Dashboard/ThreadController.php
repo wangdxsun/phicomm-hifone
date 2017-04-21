@@ -17,6 +17,7 @@ use Hifone\Commands\Thread\UpdateThreadCommand;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Pin\SinkWasAddedEvent;
+use Hifone\Events\Thread\ThreadWasMarkedExcellentEvent;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Section;
 use Hifone\Models\Thread;
@@ -115,8 +116,7 @@ class ThreadController extends Controller
             event(new PinWasAddedEvent($thread->user, 'Thread'));
         }
 
-        return Redirect::back()
-            ->withSuccess(trans('dashboard.threads.edit.success'));
+        return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
     public function sink(Thread $thread)
@@ -133,8 +133,7 @@ class ThreadController extends Controller
             $thread->increment('order', 1);
             $this->updateOpLog($thread, '取消下沉');
         }
-        return Redirect::back()
-            ->withSuccess(trans('dashboard.threads.edit.success'));
+        return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
     public function excellent(Thread $thread)
@@ -146,10 +145,10 @@ class ThreadController extends Controller
             $thread->increment('is_excellent', 1);
             $this->updateOpLog($thread, '精华');
             event(new ExcellentWasAddedEvent($thread->user));
+            event(new ThreadWasMarkedExcellentEvent($thread));
         }
 
-        return Redirect::back()
-            ->withSuccess(trans('dashboard.threads.edit.success'));
+        return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
     public function destroy(Thread $thread)

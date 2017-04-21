@@ -234,7 +234,7 @@ class ThreadController extends Controller
         ];
 
         $thread = dispatch(new UpdateThreadCommand($thread, $updateData));
-        if($thread->is_excellent == 1){
+        if ($thread->is_excellent == 1) {
             event(new ExcellentWasAddedEvent($thread->user));
         }
 
@@ -254,8 +254,10 @@ class ThreadController extends Controller
         $this->needAuthorOrAdminPermission($thread->user_id);
         if($thread->order > 0){
             $thread->decrement('order', 1);
+            $this->updateOpLog($thread, '取消置顶');
         }else{
             $thread->increment('order', 1);
+            $this->updateOpLog($thread, '置顶');
             event(new PinWasAddedEvent($thread->user, 'Thread'));
         }
         return Redirect::route('thread.show', $thread->id);
@@ -274,8 +276,10 @@ class ThreadController extends Controller
 
         if ($thread->order < 0) {
             $thread->increment('order', 1);
+            $this->updateOpLog($thread, '取消下沉');
         }else{
             $thread->decrement('order', 1);
+            $this->updateOpLog($thread, '下沉');
             event(new SinkWasAddedEvent($thread->user));
         }
 

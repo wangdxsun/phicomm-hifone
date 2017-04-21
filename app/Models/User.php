@@ -13,6 +13,7 @@ namespace Hifone\Models;
 
 use AltThree\Validator\ValidatingTrait;
 use Cmgmyr\Messenger\Traits\Messagable;
+use Hifone\Models\Scopes\ForUser;
 use Hifone\Models\Traits\SearchTrait;
 use Hifone\Presenters\UserPresenter;
 use Illuminate\Auth\Authenticatable;
@@ -26,7 +27,7 @@ use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract, HasPresenter
 {
-    use Authenticatable, CanResetPassword, EntrustUserTrait, ValidatingTrait, Messagable, SearchTrait;
+    use Authenticatable, CanResetPassword, EntrustUserTrait, ValidatingTrait, Messagable, SearchTrait, ForUser;
 
     // Enable hasRole( $name ), can( $permission ),
     //   and ability($roles, $permissions, $options)
@@ -265,5 +266,16 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function lastOpUser()
     {
         return $this->belongsTo(User::class, 'last_op_user_id');
+    }
+
+    public function isFollowThread($thread)
+    {
+//        return $thread->follows()->forUser($this->id)->count() > 0;
+//        return $this->follows->find($thread->id)->count() > 0;
+    }
+
+    public function isFavoriteThread($thread)
+    {
+        return $thread->favorites()->forUser($this->id)->count() > 0;
     }
 }
