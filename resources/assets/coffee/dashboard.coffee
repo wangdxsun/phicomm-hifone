@@ -8,6 +8,12 @@ window.DashboardView = Backbone.View.extend
 
   initComponents : ->
     self = this
+
+    Hifone.initAjax()
+    Hifone.initTextareaAutoResize()
+    Hifone.initDeleteForm()
+    Hifone.initSelect2()
+
     self.initSortable()
     self.initSidebarToggle()
     self.initUploadImage()

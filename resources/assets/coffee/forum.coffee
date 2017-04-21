@@ -18,6 +18,12 @@ window.ForumView = Backbone.View.extend
 
   initComponents : ->
     self = this
+
+    Hifone.initAjax()
+    Hifone.initTextareaAutoResize()
+    Hifone.initDeleteForm()
+    Hifone.initSelect2()
+
     self.initScrollToTop()
     self.forceImageDataType()
     self.initLightBox()

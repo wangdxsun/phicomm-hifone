@@ -30,10 +30,6 @@ HifoneView = Backbone.View.extend
 
     $(window).off "blur.inactive focus.inactive"
     $(window).on "blur.inactive focus.inactive", @updateWindowActiveState
-    Hifone.initSelect2()
-    Hifone.initDeleteForm()
-    Hifone.initAjax()
-    Hifone.initTextareaAutoResize()
 
   updateWindowActiveState: (e) ->
     prevType = $(this).data("prevType")

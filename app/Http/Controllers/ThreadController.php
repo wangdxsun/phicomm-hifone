@@ -302,4 +302,18 @@ class ThreadController extends Controller
         return Redirect::route('thread.index')
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
     }
+
+    public function postTrash(Thread $thread)
+    {
+        $this->needAuthorOrAdminPermission($thread->user_id);
+
+        try {
+            $thread->status = -1;
+            $this->updateOpLog($thread, trim(request('reason')));
+        } catch (ValidationException $e) {
+            return Redirect::back()->withErrors($e->getMessageBag());
+        }
+
+        return Redirect::back()->withSuccess('恭喜，操作成功！');
+    }
 }

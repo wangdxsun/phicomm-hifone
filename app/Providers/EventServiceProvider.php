@@ -133,16 +133,6 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         //
-        \Hifone\Events\Thread\ThreadWasRemovedEvent::class => [
-            \Hifone\Handlers\Listeners\Thread\CleanupThreadRepliesHandler::class,
-        ],
-
-        //
-        \Hifone\Events\Thread\ThreadWasUpdatedEvent::class => [
-            //
-        ],
-
-        //
         \Hifone\Events\Thread\ThreadWasViewedEvent::class => [
             \Hifone\Handlers\Listeners\Thread\UpdateThreadViewCountHandler::class,
         ],

@@ -44,6 +44,7 @@ class ForumRoutes
                 $router->post('/messages', 'MessagesController@store')->name('messages.store');
                 $router->get('/messages/{id}', 'MessagesController@show')->name('messages.show');
                 $router->put('/messages/{id}', 'MessagesController@update')->name('messages.update');
+                $router->post('/thread/{thread}/trash', 'ThreadController@postTrash')->name('thread.trash');
             });
 
             //Sitemap Stuff
