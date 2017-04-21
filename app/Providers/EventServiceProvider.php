@@ -26,7 +26,7 @@ class EventServiceProvider extends ServiceProvider
         \Hifone\Events\Advertisement\AdvertisementWasUpdatedEvent::class => [
             \Hifone\Handlers\Listeners\Advertisement\RemoveAdvertisementCacheHandler::class,
         ],
-         // Append
+         // 增加备注
         \Hifone\Events\Append\AppendWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Notification\SendAppendNotificationHandler::class,
         ],
@@ -44,6 +44,7 @@ class EventServiceProvider extends ServiceProvider
         \Hifone\Events\Favorite\FavoriteWasRemovedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
+
          //关注，只需要添加积分
         \Hifone\Events\Follow\FollowWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
@@ -59,6 +60,7 @@ class EventServiceProvider extends ServiceProvider
         \Hifone\Events\Follow\FollowedWasRemovedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
+
         //精华
         \Hifone\Events\Excellent\ExcellentWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,

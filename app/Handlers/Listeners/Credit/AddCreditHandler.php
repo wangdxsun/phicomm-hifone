@@ -48,9 +48,6 @@ class AddCreditHandler
         } elseif ($event instanceof ReplyWasAddedEvent) {
             $action = 'reply_new';
             $user = $event->reply->user;
-            if (Auth::id() == $user->id) {
-                return false;
-            }
         } elseif ($event instanceof RepliedWasAddedEvent) {
             $action = 'replied';
             $user = $event->user;
@@ -67,17 +64,14 @@ class AddCreditHandler
             $action = 'login';
             $user = $event->user;
         } elseif ($event instanceof FavoriteWasAddedEvent) {
-            $action = 'favorited';
+            $action = 'favorite';
             $user = $event->thread->user;
             if (Auth::id() == $user->id) {//收藏自己的帖子
                 return false;
             }
         } elseif ($event instanceof FavoriteWasRemovedEvent) {
-            $action = 'favorited_removed';
+            $action = 'favorite_removed';
             $user = $event->user;
-            if (Auth::id() == $user->id) {//取消收藏自己的帖子
-                return false;
-            }
         } elseif ($event instanceof PinWasAddedEvent) {
             if($event->action == 'Thread'){
                 $action = 'thread_pin';
