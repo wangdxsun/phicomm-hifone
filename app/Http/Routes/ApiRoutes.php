@@ -31,6 +31,7 @@ class ApiRoutes
                 // General
                 $router->get('ping', 'GeneralController@ping');
                 $router->resource('thread', 'ThreadController');
+                $router->get('node', 'NodeController@index');
             });
 
             // Authorization Required
