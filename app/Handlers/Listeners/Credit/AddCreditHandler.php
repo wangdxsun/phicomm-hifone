@@ -50,8 +50,8 @@ class AddCreditHandler
             $user = $event->reply->user;
         } elseif ($event instanceof RepliedWasAddedEvent) {
             $action = 'replied';
-            $user = $event->user;
-            if (Auth::id() == $user->id) {
+            $user = $event->threadUser;
+            if ($event->threadUser->id == $event->replyUser->id) {
                 return false;
             }
         } elseif ($event instanceof ImageWasUploadedEvent) {

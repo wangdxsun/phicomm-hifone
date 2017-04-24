@@ -13,22 +13,14 @@ namespace Hifone\Events\Reply;
 
 final class RepliedWasAddedEvent implements ReplyEventInterface
 {
-    /**
-     * The reply that was removed.
-     *
-     * @var \Hifone\Models\Reply
-     */
-    public $user;
 
-    /**
-     * Create a new reply was removed event instance.
-     *
-     * @param \Hifone\Models\Reply $reply
-     *
-     * @return void
-     */
-    public function __construct($user)
+    public $threadUser;
+
+    public $replyUser;
+
+    public function __construct($replyUser, $threadUser)
     {
-        $this->user = $user;
+        $this->replyUser = $replyUser;
+        $this->threadUser = $threadUser;
     }
 }

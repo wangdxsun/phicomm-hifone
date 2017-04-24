@@ -177,6 +177,10 @@ class ThreadController extends Controller
     //从待审核列表审核通过帖子
     public function postAudit(Thread $thread)
     {
+        if ($thread->node) {
+            $thread->node->increment('thread_count', 1);
+        }
+        $thread->user->increment('thread_count', 1);
         event(new ThreadWasAddedEvent($thread));
         return $this->passAudit($thread);
     }

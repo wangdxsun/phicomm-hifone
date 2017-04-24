@@ -12,7 +12,7 @@
 namespace Hifone\Http\Controllers\Dashboard;
 
 use AltThree\Validator\ValidationException;
-use Hifone\Commands\Reply\RemoveReplyCommand;
+use Carbon\Carbon;
 use Hifone\Commands\Reply\UpdateReplyCommand;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Reply\RepliedWasAddedEvent;
@@ -153,8 +153,14 @@ class ReplyController extends Controller
 
     public function postAudit(Reply $reply)
     {
+        $thread = $reply->thread;
+        $thread->last_reply_user_id = $reply->user_id;
+        $thread->reply_count++;
+        $thread->updated_at = Carbon::now()->toDateTimeString();
+        $thread->save();
+        $reply->user->increment('reply_count', 1);
         event(new ReplyWasAddedEvent($reply));
-        event(new RepliedWasAddedEvent($reply->thread->user));
+        event(new RepliedWasAddedEvent($reply->user, $thread->user));
 
         return $this->passAudit($reply);
     }

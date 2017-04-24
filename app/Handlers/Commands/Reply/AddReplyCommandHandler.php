@@ -56,19 +56,6 @@ class AddReplyCommandHandler
             'updated_at'    => Carbon::now()->toDateTimeString(),
         ];
         // Create the reply
-        $reply = Reply::create($data);
-
-         // Add the reply user
-        if ($reply->thread) {
-            $reply->thread->last_reply_user_id = $reply->user_id;
-            $reply->thread->reply_count++;
-            $reply->thread->updated_at = Carbon::now()->toDateTimeString();
-            $reply->thread->save();
-        }
-
-        $reply->user->increment('reply_count', 1);
-
-        $thread = Thread::find($command->thread_id);
-        event(new RepliedWasAddedEvent($thread->user));
+        Reply::create($data);
     }
 }

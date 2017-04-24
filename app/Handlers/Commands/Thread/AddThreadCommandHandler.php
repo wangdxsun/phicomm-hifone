@@ -60,13 +60,6 @@ class AddThreadCommandHandler
         // Create the thread
         $thread = Thread::create($data);
 
-        // Update the node.
-        if ($thread->node) {
-            $thread->node->increment('thread_count', 1);
-        }
-
-        Auth::user()->increment('thread_count', 1);
-
         // The thread was added successfully, so now let's deal with the tags.
         app(AddTag::class)->attach($thread, $command->tags);
 
