@@ -28,15 +28,15 @@ class ApiRoutes
         $router->group(['namespace' => 'Api', 'prefix' => 'api/v1', 'middleware' => 'api'], function ($router) {
             // Authorization Optional
             $router->group(['middleware' => 'auth.api'], function ($router) {
-                // General
                 $router->get('ping', 'GeneralController@ping');
                 $router->resource('thread', 'ThreadController');
                 $router->get('node', 'NodeController@index');
+                $router->get('banner', 'BannerController@index');
             });
 
             // Authorization Required
             $router->group(['middleware' => 'auth.api:true'], function ($router) {
-                // Do someting
+                $router->get('follow/user/{user}', 'FollowController@user');
             });
         });
     }

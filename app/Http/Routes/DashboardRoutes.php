@@ -31,7 +31,8 @@ class DashboardRoutes
             'middleware' => ['web', 'auth', 'role:Admin|Founder|NodeMaster'],
             'prefix' => 'dashboard',
             'namespace' => 'Dashboard',
-            'as' => 'dashboard.'], function (Registrar $router) {
+            'as' => 'dashboard.'
+        ], function (Registrar $router) {
             $router->get('/', 'DashboardController@index')->name('index');
             $router->get('test', 'DashboardController@test');
             $router->get('markdown', 'DashboardController@markdown')->name('markdown');
@@ -85,7 +86,8 @@ class DashboardRoutes
         $router->group([
             'middleware' => ['web', 'auth', 'role:Admin|Founder|NodeMaster'],
             'prefix' => 'dashboard',
-            'namespace' => 'Dashboard'], function (Registrar $router) {
+            'namespace' => 'Dashboard'
+        ], function (Registrar $router) {
 
             $router->resource('adblock', 'AdblockController');
             $router->resource('adspace', 'AdspaceController');

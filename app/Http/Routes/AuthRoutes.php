@@ -27,44 +27,21 @@ class AuthRoutes
      */
     public function map(Registrar $router)
     {
-        $router->group(['as' => 'auth.', 'middleware' => ['web', 'localize'], 'prefix' => 'auth', 'namespace' => 'Auth'], function (Registrar $router) {
-            $router->get('login', [
-                'middleware' => 'guest',
-                'as'         => 'login',
-                'uses'       => 'AuthController@getLogin',
-            ]);
-
-            $router->post('login', [
-                'middleware' => ['guest'],
-                'uses'       => 'AuthController@postLogin',
-            ]);
-
-            $router->get('logout', [
-                'as'         => 'logout',
-                'uses'       => 'AuthController@getLogout',
-                'middleware' => 'auth',
-            ]);
-
-            $router->get('register', [
-                'middleware' => 'guest',
-                'as'         => 'register',
-                'uses'       => 'AuthController@getRegister',
-            ]);
-            $router->post('register', [
-                'middleware' => ['guest'],
-                'uses'       => 'AuthController@postRegister',
-            ]);
-
+        $router->group([
+            'as' => 'auth.',
+            'middleware' => ['web', 'localize'],
+            'prefix' => 'auth',
+            'namespace' => 'Auth'
+        ], function (Registrar $router) {
+            $router->get('login', 'AuthController@getLogin')->name('login')->middleware('guest');
+            $router->post('login', 'AuthController@postLogin')->middleware('guest');
+            $router->get('logout', 'AuthController@getLogout')->name('logout')->middleware('auth');
+            $router->get('register', 'AuthController@getRegister')->name('register')->middleware('guest');
+            $router->post('register', 'AuthController@postRegister')->middleware('guest');
             $router->get('user-banned', 'AuthController@userBanned');
-
-            $router->get('landing', [
-                'middleware' => 'guest',
-                'as'         => 'landing',
-                'uses'       => 'AuthController@landing',
-            ]);
+            $router->get('landing', 'AuthController@landing')->name('landing')->middleware('guest');
             $router->get('{provider}', 'AuthController@provider');
             $router->get('{provider}/callback', 'AuthController@callback');
-
             $router->get('password/reset/{token?}', 'PasswordController@showResetForm');
             $router->post('password/reset', 'PasswordController@reset');
             $router->post('password/email', 'PasswordController@sendResetLinkEmail');

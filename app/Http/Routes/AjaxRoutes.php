@@ -46,12 +46,7 @@ class AjaxRoutes
             //获取通知数
             $router->get('/notification/count', 'NotificationController@count')->name('notification.count');
             $router->any('upload_image', 'UploadController@uploadImage')->name('upload_image');
-
-            $router->post('user/{user}/blocking', [
-                'as'         => 'user.blocking',
-                'middleware' => ['permission:manage_users'],
-                'uses'       => 'UserController@blocking',
-            ]);
+            $router->post('user/{user}/blocking', 'UserController@blocking')->name('user.blocking')->middleware(['permission:manage_users']);
         });
     }
 }
