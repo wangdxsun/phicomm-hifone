@@ -28,9 +28,7 @@
         Hifone.Config = {
             'cdnDomain': '{{ cdn() }}',
             'user_id': '{{ Auth::user() ? Auth::user()->id : 0 }}',
-            'routes': {
-                'upload_image' : '{{ route('upload_image') }}'
-            },
+            'upload_image' : '{{ route('upload_image') }}',
             'token': '{{ csrf_token() }}'
         };
         Hifone.jsLang = {

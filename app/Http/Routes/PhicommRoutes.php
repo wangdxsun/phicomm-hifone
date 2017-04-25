@@ -21,6 +21,9 @@ class PhicommRoutes
             $router->post('register', 'PhicommController@postRegister');
             $router->post('verifyCode', 'PhicommController@sendVerifyCode');
             $router->get('create', 'PhicommController@getCreate');
+            $router->post('bind', 'PhicommController@postBind');
+            $router->get('forget', 'PhicommController@forget');
+            $router->post('reset', 'PhicommController@reset');
         });
     }
 }

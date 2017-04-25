@@ -7,9 +7,9 @@
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <div class="panel panel-default">
-                    <div class="panel-heading">注册斐讯云账户</div>
+                    <div class="panel-heading">重置密码</div>
                     <div class="panel-body">
-                        <form role="form" method="POST" action="/phicomm/register">
+                        <form role="form" method="POST" action="/phicomm/reset">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                             <div class="form-group">
                                 <input id="phone" name="phone" type="text" class="form-control" value="{{ old('phone') }}" placeholder="手机号" required autofocus>
@@ -21,13 +21,13 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <input id="password" name="password" type="password" class="form-control" placeholder="{{ trans('hifone.users.password') }}" required>
+                                <input id="password" name="password" type="password" class="form-control" placeholder="新密码" required>
                             </div>
                             <div class="form-group">
                                 <input id="password_comfirm" type="password" class="form-control" placeholder="{{ trans('hifone.users.password_confirmation') }}" required>
                             </div>
                             <div class="form-group">
-                                <button type="submit" class="btn btn-primary">{{ trans('forms.register') }}</button>
+                                <button type="submit" class="btn btn-primary">提交</button>
                                 <a href="/" class="btn btn-default">{{ trans('forms.cancel') }}</a>
                             </div>
                         </form>

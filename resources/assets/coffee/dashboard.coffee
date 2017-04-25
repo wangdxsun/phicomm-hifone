@@ -55,7 +55,7 @@ window.DashboardView = Backbone.View.extend
       imageUrl = $('#imageUrl')
       imagePreviewBox = $('.ImagePreviewBox')
       $.ajax {
-        url: Hifone.Config.uploader_url
+        url: '/upload_image'
         type: 'POST'
         data: formData
         cache: false
