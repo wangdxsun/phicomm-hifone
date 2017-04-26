@@ -18,6 +18,7 @@ use Hifone\Models\Scopes\ForUser;
 use Hifone\Models\Scopes\Recent;
 use Hifone\Models\Traits\Taggable;
 use Hifone\Presenters\ThreadPresenter;
+use Hifone\Services\Dates\DateFactory;
 use Hifone\Services\Tag\TaggableInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -25,7 +26,7 @@ use Input;
 use McCool\LaravelAutoPresenter\HasPresenter;
 use Venturecraft\Revisionable\RevisionableTrait;
 
-class Thread extends Model implements HasPresenter, TaggableInterface
+class Thread extends Model implements TaggableInterface
 {
     use ValidatingTrait, Taggable, ForUser, Recent, RevisionableTrait, SoftDeletes;
 
@@ -212,10 +213,10 @@ class Thread extends Model implements HasPresenter, TaggableInterface
      *
      * @return string
      */
-    public function getPresenterClass()
-    {
-        return ThreadPresenter::class;
-    }
+//    public function getPresenterClass()
+//    {
+//        return ThreadPresenter::class;
+//    }
 
     public function getReportAttribute()
     {
@@ -235,5 +236,53 @@ class Thread extends Model implements HasPresenter, TaggableInterface
     public function isFavoritedBy($user)
     {
         return $this->favorites()->forUser($user->id)->count() > 0;
+    }
+
+    public function getCreatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->diffForHumans();
+    }
+
+    public function getUpdatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->diffForHumans();
+    }
+
+    public function getCreatedTimeAttribute()
+    {
+        return $this->attributes['created_at'];
+    }
+
+    public function getUpdatedTimeAttribute()
+    {
+        return $this->attributes['updated_at'];
+    }
+
+    public function getPinAttribute()
+    {
+        return $this->order > 0 ? 'fa fa-thumb-tack text-danger' : 'fa fa-thumb-tack';
+    }
+
+    public function getExcellentAttribute()
+    {
+        return $this->is_excellent ? 'fa fa-diamond text-danger' : 'fa fa-diamond';
+    }
+
+    public function getSinkAttribute()
+    {
+        return $this->order < 0 ? 'fa fa-anchor text-danger' : 'fa fa-anchor';
+    }
+
+    public function getHighlightAttribute()
+    {
+        return (Carbon::now()->format('Ymd') == app(DateFactory::class)->make($this->updated_time)->format('Ymd')) ? 'text-danger' : null;
+    }
+
+    public function getIconsAttribute()
+    {
+        $icons = [];
+        $this->is_excellent && $icons[] = 'fa fa-diamond text-danger';
+        $this->order > 0 && $icons[] = 'fa fa-thumb-tack text-danger';
+        return $icons;
     }
 }

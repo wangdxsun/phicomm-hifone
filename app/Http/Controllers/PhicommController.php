@@ -199,7 +199,7 @@ class PhicommController extends Controller
             'newpassword' => $password,
             'verificationcode' => $verifyCode
         ];
-        $output = json_decode(curlPost($url, $data), true);dd($output);
+        $output = json_decode(curlPost($url, $data), true);
         if ($output){
             switch($output['error']){
                 case 0:
@@ -240,7 +240,7 @@ class PhicommController extends Controller
                 'verificationtype' => 0,
             ];
             $url = env('PHICLOUND_DOMAIN') . 'verificationCode?' . http_build_query($data);
-            $res = json_decode(curlGet($url), true);dd($res);
+            $res = json_decode(curlGet($url), true);
             if ($res && $res['error'] > 0) {
                 throw new \Exception('验证码发送失败！');
             }

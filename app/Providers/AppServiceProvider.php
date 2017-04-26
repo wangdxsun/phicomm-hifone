@@ -11,6 +11,7 @@
 
 namespace Hifone\Providers;
 
+use Carbon\Carbon;
 use Collective\Bus\Dispatcher;
 use Hifone\Pipes\UseDatabaseTransactions;
 use Hifone\Services\Dates\DateFactory;
@@ -43,6 +44,8 @@ class AppServiceProvider extends ServiceProvider
             }
             return false;
         });
+
+        Carbon::setLocale('zh');
     }
 
     /**

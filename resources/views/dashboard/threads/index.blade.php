@@ -67,7 +67,7 @@
                     <td><a href="{{ $thread->user->url }}" target="_blank">{{ $thread->user->username }}</a></td>
                     <td>{{ $thread->reply_count }}</td>
                     <td>{{ $thread->view_count }}</td>
-                    <td>{{ $thread->created_at }}</td>
+                    <td>{{ $thread->created_time }}</td>
                     <td>{{ $thread->lastOpUser->username }}</td>
                     <td>{{ $thread->last_op_time }}</td>
                     <td>

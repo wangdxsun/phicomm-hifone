@@ -28,4 +28,9 @@ class Carousel extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function scopeVisible($query)
+    {
+        return $query->where('visible', 1);
+    }
 }

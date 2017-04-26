@@ -38,7 +38,7 @@
                             </td>
                             <td><a href="{{ $thread->node->url }}" target="_blank">{{ $thread->node->name }}</a></td>
                             <td><a href="{{ $thread->user->url }}" target="_blank">{{ $thread->user->username }}</a></td>
-                            <td>{{ $thread->created_at }}</td>
+                            <td>{{ $thread->created_time }}</td>
                             <td>
                                 <a data-url="/dashboard/thread/{{$thread->id}}/audit" data-method="post"><i class="fa fa-check"></i></a>
                                 <a href="/dashboard/thread/{{$thread->id}}/edit"><i class="fa fa-pencil"></i></a>

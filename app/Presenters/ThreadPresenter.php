@@ -25,39 +25,6 @@ class ThreadPresenter extends AbstractPresenter
         return AutoPresenter::decorate($this->wrappedObject->user)->url;
     }
 
-    public function icons()
-    {
-        $icons = [];
-        $this->wrappedObject->is_excellent && $icons[] = 'fa fa-diamond text-danger';
-        $this->wrappedObject->order > 0 && $icons[] = 'fa fa-thumb-tack text-danger';
-        return $icons;
-    }
-
-    public function pin()
-    {
-        return $this->wrappedObject->order > 0 ? 'fa fa-thumb-tack text-danger' : 'fa fa-thumb-tack';
-    }
-
-    public function excellent()
-    {
-        return $this->wrappedObject->is_excellent ? 'fa fa-diamond text-danger' : 'fa fa-diamond';
-    }
-
-    public function sink()
-    {
-        return $this->wrappedObject->order < 0 ? 'fa fa-anchor text-danger' : 'fa fa-anchor';
-    }
-
-    /**
-     * Highlight for threads of today.
-     *
-     * @return string|null
-     */
-    public function highlight()
-    {
-        return (Carbon::now()->format('Ymd') == app(DateFactory::class)->make($this->wrappedObject->updated_at)->format('Ymd')) ? 'text-danger' : null;
-    }
-
     /**
      * Convert the presenter instance to an array.
      *

@@ -16,7 +16,7 @@
     <span class="label label-warning" style="position: relative;">{{ $thread->user->badgeName }}</span>
   @endif
   •
-  {{ trans('hifone.at') }} <abbr title="{{ $thread->created_at }}" class="timeago">{{ $thread->created_at }}</abbr>
+  {{ trans('hifone.at') }} <abbr title="{{ $thread->created_time }}">{{ $thread->created_at }}</abbr>
   •
 
   @if (count($thread->lastReplyUser))
@@ -28,7 +28,7 @@
           {{ $thread->lastReplyUser->username }}
         @endif
       </a>
-     {{ trans('hifone.at') }} <abbr title="{{ $thread->updated_at }}" class="timeago">{{ $thread->updated_at }}</abbr>
+     {{ trans('hifone.at') }} <abbr title="{{ $thread->updated_time }}">{{ $thread->updated_at }}</abbr>
     •
   @endif
 
