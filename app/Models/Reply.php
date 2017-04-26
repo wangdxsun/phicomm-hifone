@@ -106,8 +106,8 @@ class Reply extends BaseModel
         return $this->thread->url . '#reply' . $this->id;
     }
 
-    public function highlight()
+    public function getHighlightAttribute()
     {
-        return $this->wrappedObject->like_count > 0 ? 'highlight' : null;
+        return $this->like_count > 0 ? 'highlight' : null;
     }
 }
