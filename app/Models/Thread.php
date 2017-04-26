@@ -17,16 +17,13 @@ use Config;
 use Hifone\Models\Scopes\ForUser;
 use Hifone\Models\Scopes\Recent;
 use Hifone\Models\Traits\Taggable;
-use Hifone\Presenters\ThreadPresenter;
 use Hifone\Services\Dates\DateFactory;
 use Hifone\Services\Tag\TaggableInterface;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Input;
-use McCool\LaravelAutoPresenter\HasPresenter;
 use Venturecraft\Revisionable\RevisionableTrait;
 
-class Thread extends Model implements TaggableInterface
+class Thread extends BaseModel implements TaggableInterface
 {
     use ValidatingTrait, Taggable, ForUser, Recent, RevisionableTrait, SoftDeletes;
 
@@ -236,26 +233,6 @@ class Thread extends Model implements TaggableInterface
     public function isFavoritedBy($user)
     {
         return $this->favorites()->forUser($user->id)->count() > 0;
-    }
-
-    public function getCreatedAtAttribute($value)
-    {
-        return Carbon::parse($value)->diffForHumans();
-    }
-
-    public function getUpdatedAtAttribute($value)
-    {
-        return Carbon::parse($value)->diffForHumans();
-    }
-
-    public function getCreatedTimeAttribute()
-    {
-        return $this->attributes['created_at'];
-    }
-
-    public function getUpdatedTimeAttribute()
-    {
-        return $this->attributes['updated_at'];
     }
 
     public function getPinAttribute()

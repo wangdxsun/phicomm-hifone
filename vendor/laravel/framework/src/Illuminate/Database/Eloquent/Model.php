@@ -36,7 +36,6 @@ use Illuminate\Database\ConnectionResolverInterface as Resolver;
 
 abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializable, QueueableEntity, UrlRoutable
 {
-    use SearchTrait;
     /**
      * The connection name for the model.
      *

@@ -14,13 +14,10 @@ namespace Hifone\Models;
 use AltThree\Validator\ValidatingTrait;
 use Hifone\Models\Scopes\ForUser;
 use Hifone\Models\Scopes\Recent;
-use Hifone\Presenters\ReplyPresenter;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use McCool\LaravelAutoPresenter\HasPresenter;
 use Venturecraft\Revisionable\RevisionableTrait;
 
-class Reply extends Model implements HasPresenter
+class Reply extends BaseModel
 {
     use ValidatingTrait, ForUser, Recent, RevisionableTrait, SoftDeletes;
 
@@ -94,16 +91,6 @@ class Reply extends Model implements HasPresenter
         return $query->where('status', -1)->orWhere('status', -5);//回收站
     }
 
-    /**
-     * Get the presenter class.
-     *
-     * @return string
-     */
-    public function getPresenterClass()
-    {
-        return ReplyPresenter::class;
-    }
-
     public function getPinAttribute()
     {
         return $this->order > 0 ? 'fa fa-thumb-tack text-danger' : 'fa fa-thumb-tack';
@@ -117,5 +104,10 @@ class Reply extends Model implements HasPresenter
     public function getUrlAttribute()
     {
         return $this->thread->url . '#reply' . $this->id;
+    }
+
+    public function highlight()
+    {
+        return $this->wrappedObject->like_count > 0 ? 'highlight' : null;
     }
 }
