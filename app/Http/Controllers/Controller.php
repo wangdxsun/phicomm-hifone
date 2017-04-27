@@ -52,11 +52,6 @@ abstract class Controller extends BaseController
             $data['breadcrumb'] = $this->breadcrumb->render();
         }
 
-        $h5View = 'h5.' . $view;
-        if (isH5() && view()->exists($h5View)) {
-            return View::make($h5View, $data);
-        }
-
         return View::make($view, $data);
     }
 
