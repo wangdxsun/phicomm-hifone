@@ -184,9 +184,9 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return 'remember_token';
     }
 
-    public function getAvatarAttribute()
+    public function getAvatarAttribute($value)
     {
-        return $this->avatar_url ? $this->avatar_url : '/images/discuz_big.gif';
+        return $value ? $value : '/images/discuz_big.gif';
     }
 
     public function getAvatarSmallAttribute()
