@@ -21,14 +21,10 @@ class JsonResponse extends BaseJsonResponse
      * @param  array  $headers
      * @param  int    $options
      */
-    public function __construct($data = [], $status = 200, $msg = 'success', $headers = [], $options = 0)
+    public function __construct($data = [], $status = 200, $headers = [], $options = 0)
     {
         $this->encodingOptions = $options;
-        $data = [
-            'code' => $status,
-            'msg' => $msg,
-            'data' => $data,
-        ];
+
         parent::__construct($data, $status, $headers);
     }
 

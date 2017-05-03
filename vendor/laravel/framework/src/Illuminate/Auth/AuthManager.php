@@ -3,6 +3,7 @@
 namespace Illuminate\Auth;
 
 use Closure;
+use Hifone\Auth\HifoneGuard;
 use InvalidArgumentException;
 use Illuminate\Contracts\Auth\Factory as FactoryContract;
 
@@ -135,6 +136,25 @@ class AuthManager implements FactoryContract
             $guard->setDispatcher($this->app['events']);
         }
 
+        if (method_exists($guard, 'setRequest')) {
+            $guard->setRequest($this->app->refresh('request', $guard, 'setRequest'));
+        }
+
+        return $guard;
+    }
+
+    public function createHifoneDriver($name, $config)
+    {
+        $provider = $this->createUserProvider($config['provider']);
+
+        $guard = new HifoneGuard($provider, $this->app['session.store']);
+
+        if (method_exists($guard, 'setCookieJar')) {
+            $guard->setCookieJar($this->app['cookie']);
+        }
+        if (method_exists($guard, 'setDispatcher')) {
+            $guard->setDispatcher($this->app['events']);
+        }
         if (method_exists($guard, 'setRequest')) {
             $guard->setRequest($this->app->refresh('request', $guard, 'setRequest'));
         }

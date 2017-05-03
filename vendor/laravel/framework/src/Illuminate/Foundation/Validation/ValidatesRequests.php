@@ -86,7 +86,7 @@ trait ValidatesRequests
     protected function throwValidationException(Request $request, $validator)
     {
         throw new ValidationException($validator, $this->buildFailedValidationResponse(
-            $request, $this->formatValidationErrors($validator), $this->getTheFirstError($validator)
+            $request, $this->formatValidationErrors($validator)
         ));
     }
 
@@ -95,13 +95,12 @@ trait ValidatesRequests
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  array $errors
-     * @param  string $errorMsg
      * @return \Illuminate\Http\Response
      */
-    protected function buildFailedValidationResponse(Request $request, $errors, $errorMsg)
+    protected function buildFailedValidationResponse(Request $request, $errors)
     {
-        if (($request->ajax() && ! $request->pjax()) || $request->wantsJson()) {
-            return new JsonResponse($errors, 422, $errorMsg);
+        if (($request->ajax() && ! $request->pjax()) || $request->wantsJson() || $request->isApi()) {
+            return new JsonResponse($errors, 422);
         }
 
         return redirect()->to($this->getRedirectUrl())

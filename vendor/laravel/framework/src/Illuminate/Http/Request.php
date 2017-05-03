@@ -708,6 +708,11 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
         return isset($acceptable[0]) && Str::contains($acceptable[0], ['/json', '+json']);
     }
 
+    public function isApi()
+    {
+        return Str::contains($this->requestUri, 'api');
+    }
+
     /**
      * Determines whether the current requests accepts a given content type.
      *

@@ -9,18 +9,18 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * @method ResponseInterface get(string|UriInterface $uri, array $options = [])
- * @method ResponseInterface head(string|UriInterface $uri, array $options = [])
- * @method ResponseInterface put(string|UriInterface $uri, array $options = [])
- * @method ResponseInterface post(string|UriInterface $uri, array $options = [])
- * @method ResponseInterface patch(string|UriInterface $uri, array $options = [])
- * @method ResponseInterface delete(string|UriInterface $uri, array $options = [])
- * @method Promise\PromiseInterface getAsync(string|UriInterface $uri, array $options = [])
- * @method Promise\PromiseInterface headAsync(string|UriInterface $uri, array $options = [])
- * @method Promise\PromiseInterface putAsync(string|UriInterface $uri, array $options = [])
- * @method Promise\PromiseInterface postAsync(string|UriInterface $uri, array $options = [])
- * @method Promise\PromiseInterface patchAsync(string|UriInterface $uri, array $options = [])
- * @method Promise\PromiseInterface deleteAsync(string|UriInterface $uri, array $options = [])
+ * @method ResponseInterface get(string $uri, array $options = [])
+ * @method ResponseInterface head(string $uri, array $options = [])
+ * @method ResponseInterface put(string $uri, array $options = [])
+ * @method ResponseInterface post(string $uri, array $options = [])
+ * @method ResponseInterface patch(string $uri, array $options = [])
+ * @method ResponseInterface delete(string $uri, array $options = [])
+ * @method Promise\PromiseInterface getAsync(string $uri, array $options = [])
+ * @method Promise\PromiseInterface headAsync(string $uri, array $options = [])
+ * @method Promise\PromiseInterface putAsync(string $uri, array $options = [])
+ * @method Promise\PromiseInterface postAsync(string $uri, array $options = [])
+ * @method Promise\PromiseInterface patchAsync(string $uri, array $options = [])
+ * @method Promise\PromiseInterface deleteAsync(string $uri, array $options = [])
  */
 class Client implements ClientInterface
 {

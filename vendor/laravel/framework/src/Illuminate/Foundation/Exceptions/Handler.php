@@ -110,15 +110,12 @@ class Handler implements ExceptionHandlerContract
             return $e->getResponse();
         }
 
-        if ($this->isHttpException($e)) {
+        if ($request->ajax() || $request->wantsJson() || $request->isApi()) {
+            return new JsonResponse($e->getMessage(), $e->getCode() ?: 500);
+        } elseif ($this->isHttpException($e)) {
             return $this->toIlluminateResponse($this->renderHttpException($e), $e);
         } else {
             return $this->toIlluminateResponse($this->convertExceptionToResponse($e), $e);
-            //return new JsonResponse($e->getMessage(), $e->getCode() ?: 200, [
-            //    'file' => $e->getFile(),
-            //    'line' => $e->getLine(),
-            //    'trace' => $e->getTrace(),
-            //]);
         }
     }
 
@@ -191,7 +188,7 @@ class Handler implements ExceptionHandlerContract
      */
     protected function unauthenticated($request, AuthenticationException $e)
     {
-        if ($request->ajax() || $request->wantsJson()) {
+        if ($request->ajax() || $request->wantsJson() || $request->isApi()) {
             return response('Unauthorized.', 401);
         } else {
             return redirect()->guest('login');

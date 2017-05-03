@@ -26,17 +26,25 @@ class ApiRoutes
     public function map(Registrar $router)
     {
         $router->group(['namespace' => 'Api', 'prefix' => 'api/v1', 'middleware' => 'api'], function ($router) {
-            // Authorization Optional
-            $router->group(['middleware' => 'auth.api'], function ($router) {
-                $router->get('ping', 'GeneralController@ping');
-                $router->resource('thread', 'ThreadController');
-                $router->get('node', 'NodeController@index');
-                $router->get('banner', 'BannerController@index');
-            });
+
+            $router->get('ping', 'GeneralController@ping');
+            $router->get('thread', 'ThreadController@index');
+            $router->get('thread/{thread}', 'ThreadController@show');
+            $router->get('node', 'NodeController@index');
+            $router->get('banner', 'BannerController@index');
+
+            //phicomm
+            $router->post('register', 'PhicommController@register');
+            $router->post('login', 'PhicommController@login');
+            $router->post('reset', 'PhicommController@reset');
+            $router->get('verify', 'PhicommController@verify');
+            $router->post('bind', 'PhicommController@bind');
+            $router->get('test', 'PhicommController@test');
 
             // Authorization Required
-            $router->group(['middleware' => 'auth.api:true'], function ($router) {
+            $router->group(['middleware' => 'auth:hifone'], function ($router) {
                 $router->get('follow/user/{user}', 'FollowController@user');
+
             });
         });
     }

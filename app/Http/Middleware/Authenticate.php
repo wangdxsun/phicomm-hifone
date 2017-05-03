@@ -43,10 +43,10 @@ class Authenticate
      *
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $guard = null)
     {
         if ($this->auth->guest()) {
-            if ($request->ajax() || $request->wantsJson()) {
+            if ($request->ajax() || $request->wantsJson()  || $request->isApi()) {
                 return response('Unauthorized.', 401);
             } else {
                 $method = 'guest';

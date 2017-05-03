@@ -50,8 +50,13 @@ return [
             'provider' => 'users',
         ],
 
-        'api' => [
+        'token' => [
             'driver'   => 'token',
+            'provider' => 'users',
+        ],
+
+        'hifone' => [
+            'driver'   => 'hifone',
             'provider' => 'users',
         ],
     ],

@@ -31,8 +31,6 @@ abstract class AbstractApiController extends Controller
      */
     protected $headers = [];
 
-    protected $msg = 'success';
-
     /**
      * The HTTP response meta data.
      *
@@ -205,6 +203,6 @@ abstract class AbstractApiController extends Controller
             $response = $this->data->toArray();
         }
 
-        return Response::json($response, $this->statusCode, $this->msg, $this->headers);
+        return Response::json($response, $this->statusCode, $this->headers);
     }
 }

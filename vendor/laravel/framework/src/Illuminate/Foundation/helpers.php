@@ -590,7 +590,7 @@ if (! function_exists('response')) {
      * @param  array   $headers
      * @return \Symfony\Component\HttpFoundation\Response|\Illuminate\Contracts\Routing\ResponseFactory
      */
-    function response($content = '', $status = 200, array $headers = [])
+    function response($content = 'success', $status = 200, array $headers = [])
     {
         $factory = app(ResponseFactory::class);
 
