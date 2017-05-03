@@ -45,6 +45,7 @@ class ApiRoutes
             $router->group(['middleware' => 'auth:hifone'], function ($router) {
                 $router->get('follow/user/{user}', 'FollowController@user');
                 $router->post('thread', 'ThreadController@store')->middleware('permission:new_thread');
+                $router->post('reply', 'ReplyController@store')->middleware('permission:new_thread');
             });
         });
     }

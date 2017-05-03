@@ -9,7 +9,7 @@
 namespace Hifone\Http\Controllers;
 
 use Hifone\Events\User\UserWasAddedEvent;
-use Hifone\Http\Bll\Phicomm;
+use Hifone\Http\Bll\PhicommBll;
 use Hifone\Models\Provider;
 use Hifone\Models\User;
 use Illuminate\Http\Request;
@@ -23,7 +23,7 @@ class PhicommController extends Controller
 {
     private $phicomm;
 
-    public function __construct(Phicomm $phicomm)
+    public function __construct(PhicommBll $phicomm)
     {
         $this->middleware('guest', ['except' => ['logout', 'getLogout']]);
         $this->phicomm = $phicomm;

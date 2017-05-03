@@ -9,7 +9,7 @@
 namespace Hifone\Http\Controllers\Api;
 
 use Hifone\Events\User\UserWasAddedEvent;
-use Hifone\Http\Bll\Phicomm;
+use Hifone\Http\Bll\PhicommBll;
 use Hifone\Models\User;
 use Illuminate\Http\Request;
 use Redirect;
@@ -18,11 +18,11 @@ use Input;
 
 class PhicommController extends AbstractApiController
 {
-    private $phicomm;
+    private $phicommBll;
 
-    public function __construct(Phicomm $phicomm)
+    public function __construct(PhicommBll $phicommBll)
     {
-        $this->phicomm = $phicomm;
+        $this->phicommBll = $phicommBll;
     }
 
     public function register(Request $request)
@@ -33,9 +33,9 @@ class PhicommController extends AbstractApiController
             'verifyCode' => 'required',
         ]);
         $password = strtoupper(md5($request->get('password')));
-        $this->phicomm->checkPhoneAvailable($request->phone);
-        $this->phicomm->register($request->phone, $password, $request->verifyCode);
-        $phicommId = $this->phicomm->login($request->phone, $password);
+        $this->phicommBll->checkPhoneAvailable($request->phone);
+        $this->phicommBll->register($request->phone, $password, $request->verifyCode);
+        $phicommId = $this->phicommBll->login($request->phone, $password);
 
         return $phicommId;
     }
@@ -50,7 +50,7 @@ class PhicommController extends AbstractApiController
         $phicommToken = $request->get('phicommToken');
         $phone = $request->get('phone');
         $password = strtoupper(md5($request->get('password')));
-        $phicommId = $phicommToken ? $this->phicomm->getIdFromToken($phicommToken) : $this->phicomm->login($phone, $password);
+        $phicommId = $phicommToken ? $this->phicommBll->getIdFromToken($phicommToken) : $this->phicommBll->login($phone, $password);
 
         $user = User::findUserByPhicommId($phicommId);
         if ($user) {
@@ -91,7 +91,7 @@ class PhicommController extends AbstractApiController
             'verifyCode' => 'required|size:6',
         ]);
         $password = strtoupper(md5(request('password')));
-        $this->phicomm->reset(request('phone'), $password, request('verifyCode'));
+        $this->phicommBll->reset(request('phone'), $password, request('verifyCode'));
         return response('密码重置成功');
     }
 
@@ -104,7 +104,7 @@ class PhicommController extends AbstractApiController
             'phone' => 'required|phone',
         ]);
         $phone = request('phone');
-        $this->phicomm->sendVerifyCode($phone);
+        $this->phicommBll->sendVerifyCode($phone);
 
         return response('验证码发送成功');
     }

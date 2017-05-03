@@ -15,6 +15,7 @@ use AltThree\Validator\ValidationException;
 use Auth;
 use Hifone\Commands\Reply\AddReplyCommand;
 use Hifone\Commands\Reply\RemoveReplyCommand;
+use Hifone\Http\Bll\ReplyBll;
 use Hifone\Models\Reply;
 use Input;
 use Redirect;
@@ -31,20 +32,13 @@ class ReplyController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store()
+    public function store(ReplyBll $replyBll)
     {
         if (Auth::user()->hasRole('NoComment')) {
             return Redirect::back()->withErrors('您已被系统管理员禁言');
         }
-
-        $replyData = Input::get('reply');
-
         try {
-            dispatch(new AddReplyCommand(
-                $replyData['body'],
-                Auth::id(),
-                $replyData['thread_id']
-            ));
+            $replyBll->createReply();
         } catch (ValidationException $e) {
             return Redirect::back()
                 ->withInput(Input::all())
