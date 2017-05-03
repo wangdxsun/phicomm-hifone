@@ -11,29 +11,34 @@
 
 namespace Hifone\Http\Controllers\Api;
 
+use Hifone\Http\Bll\ThreadBll;
+use Hifone\Models\Reply;
 use Hifone\Models\Thread;
-use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Support\Facades\Request;
-use Input;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ThreadController extends AbstractApiController
 {
-    /**
-     * Get all Threads.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index()
+    public function index(ThreadBll $threadBll)
     {
-        $threads = Thread::visible()->with('user')
-            ->orderBy('order', 'desc')->orderBy('id', 'desc')
-            ->paginate(\Config::get('threads_per_page', 15));
+        $threads = $threadBll->getThreads();
 
         return $threads;
     }
 
     public function show(Thread $thread)
     {
-        return Thread::with('user', 'replies', 'replies.user')->find($thread->id);
+        if ($thread->inVisible()) {
+            throw new NotFoundHttpException('帖子状态不可见');
+        }
+        return $thread->load(['user', 'replies' => function ($query) {
+            $query->where('status', Reply::VISIBLE);
+        }, 'replies.user']);
+    }
+
+    public function store(ThreadBll $threadBll)
+    {
+        $threadBll->createThread();
+
+        return response('帖子发表成功，请耐心等待审核通过');
     }
 }

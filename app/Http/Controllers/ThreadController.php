@@ -21,12 +21,11 @@ use Hifone\Events\Thread\ThreadWasViewedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Pin\SinkWasAddedEvent;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
+use Hifone\Http\Bll\ThreadBll;
 use Hifone\Models\Node;
 use Hifone\Models\Section;
 use Hifone\Models\Thread;
 use Hifone\Repositories\Criteria\Thread\BelongsToNode;
-use Hifone\Repositories\Criteria\Thread\Filter;
-use Hifone\Repositories\Criteria\Thread\Search;
 use Config;
 use Input;
 use Redirect;
@@ -34,11 +33,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ThreadController extends Controller
 {
-    /**
-     * Creates a new thread controller instance.
-     *
-     * @return void
-     */
+
     public function __construct()
     {
         parent::__construct();
@@ -46,18 +41,9 @@ class ThreadController extends Controller
         $this->middleware('auth', ['except' => ['index', 'show']]);
     }
 
-    /**
-     * Shows the threads view.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function index()
+    public function index(ThreadBll $threadBll)
     {
-        $repository = app('repository');
-        $repository->pushCriteria(new Filter(Input::query('filter')));
-        $repository->pushCriteria(new Search(Input::query('q')));
-
-        $threads = $repository->model(Thread::class)->getThreadList(Config::get('setting.threads_per_page', 15));
+        $threads = $threadBll->getThreads();
 
         return $this->view('threads.index')
             ->withThreads($threads)

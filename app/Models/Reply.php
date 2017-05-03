@@ -21,6 +21,10 @@ class Reply extends BaseModel
 {
     use ValidatingTrait, ForUser, Recent, RevisionableTrait, SoftDeletes;
 
+    const VISIBLE = 0;//正常帖子
+    const TRASH = -1;//回收站
+    const Audit = -2;//待审核
+
     /**
      * The fillable properties.
      *

@@ -10,7 +10,7 @@ namespace Hifone\Http\Bll;
 
 use GuzzleHttp\Client;
 
-class Phicomm extends BaseBll
+class PhicommBll extends BaseBll
 {
     /**
      * @var Client

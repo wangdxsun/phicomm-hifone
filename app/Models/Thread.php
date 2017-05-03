@@ -27,8 +27,9 @@ class Thread extends BaseModel implements TaggableInterface
 {
     use ValidatingTrait, Taggable, ForUser, Recent, RevisionableTrait, SoftDeletes;
 
+    const VISIBLE = 0;//正常帖子
     const TRASH = -1;//回收站
-    const Audit = -1;//待审核
+    const Audit = -2;//待审核
 
     // manually maintain
     public $timestamps = false;
