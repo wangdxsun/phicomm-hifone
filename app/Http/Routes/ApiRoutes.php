@@ -35,6 +35,7 @@ class ApiRoutes
             $router->get('thread/{thread}', 'ThreadController@show');
             $router->get('node', 'NodeController@index');
             $router->get('banner', 'BannerController@index');
+            $router->get('node/{node}', 'NodeController@show');
 
             //登录相关
             $router->post('register', 'PhicommController@register');
