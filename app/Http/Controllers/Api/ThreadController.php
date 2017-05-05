@@ -11,10 +11,12 @@
 
 namespace Hifone\Http\Controllers\Api;
 
+use Hifone\Commands\Image\UploadImageCommand;
 use Hifone\Http\Bll\ThreadBll;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Input;
 
 class ThreadController extends AbstractApiController
 {
@@ -39,6 +41,6 @@ class ThreadController extends AbstractApiController
     {
         $threadBll->createThread();
 
-        return response('帖子发表成功，请耐心等待审核通过');
+        return response()->json('帖子发表成功，请耐心等待审核通过');
     }
 }

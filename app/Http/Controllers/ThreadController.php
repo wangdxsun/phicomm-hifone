@@ -106,23 +106,13 @@ class ThreadController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store()
+    public function store(ThreadBll $threadBll)
     {
         if (Auth::user()->hasRole('NoComment')) {
             return Redirect::back()->withErrors('您已被系统管理员禁言');
         }
-        $threadData = Input::get('thread');
-        $node_id = isset($threadData['node_id']) ? $threadData['node_id'] : null;
-        $tags = isset($threadData['tags']) ? $threadData['tags'] : '';
-
         try {
-            dispatch(new AddThreadCommand(
-                $threadData['title'],
-                $threadData['body'],
-                Auth::user()->id,
-                $node_id,
-                $tags
-            ));
+            $threadBll->createThread();
         } catch (ValidationException $e) {
             return Redirect::route('thread.create')
                 ->withInput(Input::all())

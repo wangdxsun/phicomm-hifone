@@ -32,7 +32,7 @@ class ApiRoutes
 
             //内容相关
             $router->get('thread', 'ThreadController@index');
-//            $router->get('thread/{thread}', 'ThreadController@show');
+            $router->get('thread/{thread}', 'ThreadController@show');
             $router->get('node', 'NodeController@index');
             $router->get('banner', 'BannerController@index');
 
@@ -45,7 +45,6 @@ class ApiRoutes
 
             // Authorization Required
             $router->group(['middleware' => 'auth:hifone'], function ($router) {
-                $router->get('thread/{thread}', 'ThreadController@show');
                 $router->get('follow/user/{user}', 'FollowController@user');
                 $router->post('thread', 'ThreadController@store')->middleware('permission:new_thread');
                 $router->post('reply', 'ReplyController@store')->middleware('permission:new_thread');
