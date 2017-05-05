@@ -27,22 +27,25 @@ class ApiRoutes
     {
         $router->group(['namespace' => 'Api', 'prefix' => 'api/v1', 'middleware' => 'api'], function ($router) {
 
+            $router->get('/', 'HomeController@index');
             $router->get('ping', 'GeneralController@ping');
+
+            //内容相关
             $router->get('thread', 'ThreadController@index');
-            $router->get('thread/{thread}', 'ThreadController@show');
+//            $router->get('thread/{thread}', 'ThreadController@show');
             $router->get('node', 'NodeController@index');
             $router->get('banner', 'BannerController@index');
 
-            //phicomm
+            //登录相关
             $router->post('register', 'PhicommController@register');
             $router->post('login', 'PhicommController@login');
             $router->post('reset', 'PhicommController@reset');
-            $router->get('verify', 'PhicommController@verify');
+            $router->post('verify', 'PhicommController@verify');
             $router->post('bind', 'PhicommController@bind');
-            $router->get('test', 'PhicommController@test');
 
             // Authorization Required
             $router->group(['middleware' => 'auth:hifone'], function ($router) {
+                $router->get('thread/{thread}', 'ThreadController@show');
                 $router->get('follow/user/{user}', 'FollowController@user');
                 $router->post('thread', 'ThreadController@store')->middleware('permission:new_thread');
                 $router->post('reply', 'ReplyController@store')->middleware('permission:new_thread');

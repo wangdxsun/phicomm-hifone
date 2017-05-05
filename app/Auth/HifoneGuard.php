@@ -9,47 +9,14 @@
 namespace Hifone\Auth;
 
 use Illuminate\Auth\GuardHelpers;
-use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Auth\SessionGuard;
 use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Contracts\Auth\UserProvider;
+use Illuminate\Contracts\Auth\UserProvider as UserProviderContract;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-class HifoneGuard implements Guard
+class HifoneGuard extends SessionGuard implements Guard
 {
-    use GuardHelpers;
-
-    /**
-     * The request instance.
-     *
-     * @var \Illuminate\Http\Request
-     */
-    protected $request;
-
-    /**
-     * The session used by the guard.
-     *
-     * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
-     */
-    protected $session;
-
-    /**
-     * The Illuminate cookie creator service.
-     *
-     * @var \Illuminate\Contracts\Cookie\QueueingFactory
-     */
-    protected $cookie;
-
     protected $inputKey = 'token';
-
-    protected $name = 'session';
-
-    public function __construct(UserProvider $provider)
-    {
-        $this->provider = $provider;
-        $this->request = app('request');
-        $this->session = app('session.store');
-    }
 
     /**
      * Get the currently authenticated user.
@@ -80,6 +47,18 @@ class HifoneGuard implements Guard
         return $this->user = $user;
     }
 
+    public function phicommId()
+    {
+        $token = $this->getTokenForRequest();
+        if (!is_null($token)) {
+            $phicommId = $this->getIdFromToken($token);
+        } else {
+            $phicommId = $this->user()->phicomm_id;
+        }
+
+        return $phicommId;
+    }
+
     protected function getTokenForRequest()
     {
         $token = $this->request->input($this->inputKey);
@@ -92,25 +71,15 @@ class HifoneGuard implements Guard
     }
 
     private function getIdFromToken($token) {
-        //$tokens = explode('.', $token);
-        //$tokenInfo = json_decode(base64_decode($tokens[1]), true);
-        //return $tokenInfo['uid'];
-        return $token;
-    }
-
-    public function getName()
-    {
-        return 'login_'.$this->name.'_'.sha1(static::class);
-    }
-
-    /**
-     * Validate a user's credentials.
-     *
-     * @param  array $credentials
-     * @return bool
-     */
-    public function validate(array $credentials = [])
-    {
-        // TODO: Implement validate() method.
+        if (env('APP_ENV') == 'local') {
+            return $token;
+        } else {
+            $tokens = explode('.', $token);
+            if (! is_array($tokens) || count($tokens) <> 3) {
+                throw new \Exception('token格式不正确');
+            }
+            $tokenInfo = json_decode(base64_decode($tokens[1]), true);
+            return $tokenInfo['uid'];
+        }
     }
 }

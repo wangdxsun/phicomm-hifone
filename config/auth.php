@@ -23,7 +23,7 @@ return [
     */
 
     'defaults' => [
-        'guard'     => 'web',
+        'guard'     => 'hifone',
         'passwords' => 'users',
     ],
 

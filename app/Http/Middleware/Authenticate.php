@@ -11,8 +11,10 @@
 
 namespace Hifone\Http\Middleware;
 
+use Auth;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Authenticate
 {
@@ -45,9 +47,9 @@ class Authenticate
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        if ($this->auth->guest()) {
+        if (Auth::guard($guard)->guest()) {
             if ($request->ajax() || $request->wantsJson()  || $request->isApi()) {
-                return response('Unauthorized.', 401);
+                return new JsonResponse('Unauthorized.', 401);
             } else {
                 $method = 'guest';
                 if ($request->method() === 'POST') {

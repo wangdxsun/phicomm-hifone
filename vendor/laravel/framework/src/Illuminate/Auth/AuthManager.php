@@ -93,7 +93,7 @@ class AuthManager implements FactoryContract
             $driverMethod = 'create'.ucfirst($config['driver']).'Driver';
 
             if (method_exists($this, $driverMethod)) {
-                return $this->{$driverMethod}($name, $config);
+                return $this->{$driverMethod}($config);
             } else {
                 throw new InvalidArgumentException("Auth guard driver [{$name}] is not defined.");
             }
@@ -119,11 +119,11 @@ class AuthManager implements FactoryContract
      * @param  array  $config
      * @return \Illuminate\Auth\SessionGuard
      */
-    public function createSessionDriver($name, $config)
+    public function createSessionDriver($config)
     {
         $provider = $this->createUserProvider($config['provider']);
 
-        $guard = new SessionGuard($name, $provider, $this->app['session.store']);
+        $guard = new SessionGuard($provider, $this->app['session.store']);
 
         // When using the remember me functionality of the authentication services we
         // will need to be set the encryption instance of the guard, which allows
@@ -143,7 +143,7 @@ class AuthManager implements FactoryContract
         return $guard;
     }
 
-    public function createHifoneDriver($name, $config)
+    public function createHifoneDriver($config)
     {
         $provider = $this->createUserProvider($config['provider']);
 

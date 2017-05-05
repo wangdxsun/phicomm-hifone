@@ -25,7 +25,7 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
      *
      * @var string
      */
-    protected $name;
+    protected $name = 'web';
 
     /**
      * The user we last attempted to retrieve.
@@ -86,21 +86,16 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
     /**
      * Create a new authentication guard.
      *
-     * @param  string  $name
      * @param  \Illuminate\Contracts\Auth\UserProvider  $provider
      * @param  \Symfony\Component\HttpFoundation\Session\SessionInterface  $session
      * @param  \Symfony\Component\HttpFoundation\Request  $request
      * @return void
      */
-    public function __construct($name,
-                                UserProvider $provider,
-                                SessionInterface $session,
-                                Request $request = null)
+    public function __construct(UserProvider $provider, SessionInterface $session)
     {
-        $this->name = $name;
         $this->session = $session;
-        $this->request = $request;
         $this->provider = $provider;
+        $this->request = app('request');
     }
 
     /**
@@ -111,7 +106,7 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
     public function user()
     {
         if ($this->loggedOut) {
-            return;
+            return null;
         }
 
         // If we've already retrieved the user for the current request we can just
@@ -158,7 +153,7 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
     public function id()
     {
         if ($this->loggedOut) {
-            return;
+            return null;
         }
 
         $id = $this->session->get($this->getName());
@@ -168,6 +163,15 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
         }
 
         return $id;
+    }
+
+    public function phicommId()
+    {
+        if ($this->loggedOut || !$this->user()) {
+            return null;
+        }
+
+        return $this->user()->phicomm_id;
     }
 
     /**

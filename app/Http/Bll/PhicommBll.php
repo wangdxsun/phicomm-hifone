@@ -9,6 +9,9 @@
 namespace Hifone\Http\Bll;
 
 use GuzzleHttp\Client;
+use Hifone\Events\User\UserWasAddedEvent;
+use Hifone\Models\User;
+use Auth;
 
 class PhicommBll extends BaseBll
 {
@@ -156,5 +159,18 @@ class PhicommBll extends BaseBll
         if ($res && $res['error'] > 0) {
             throw new \Exception('验证码发送失败！');
         }
+    }
+
+    public function bind()
+    {
+        $userData = [
+            'phicomm_id' => Auth::phicommId(),
+            'username' => request('username'),
+            'password' => str_random(32),
+            'regip' => request()->server('REMOTE_ADDR'),
+        ];
+        $user = User::create($userData);
+        event(new UserWasAddedEvent($user));
+        Auth::login($user);
     }
 }

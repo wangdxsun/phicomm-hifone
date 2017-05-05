@@ -110,9 +110,14 @@ class Handler implements ExceptionHandlerContract
             return $e->getResponse();
         }
 
-        if ($request->ajax() || $request->wantsJson() || $request->isApi()) {
-            return new JsonResponse($e->getMessage(), $e->getCode() ?: 500);
-        } elseif ($this->isHttpException($e)) {
+//        if ($request->ajax() || $request->wantsJson() || $request->isApi()) {
+//            return new JsonResponse($e->getMessage(), $e->getCode() ?: 500);
+//        } elseif ($this->isHttpException($e)) {
+//            return $this->toIlluminateResponse($this->renderHttpException($e), $e);
+//        } else {
+//            return $this->toIlluminateResponse($this->convertExceptionToResponse($e), $e);
+//        }
+        if ($this->isHttpException($e)) {
             return $this->toIlluminateResponse($this->renderHttpException($e), $e);
         } else {
             return $this->toIlluminateResponse($this->convertExceptionToResponse($e), $e);
@@ -189,7 +194,7 @@ class Handler implements ExceptionHandlerContract
     protected function unauthenticated($request, AuthenticationException $e)
     {
         if ($request->ajax() || $request->wantsJson() || $request->isApi()) {
-            return response('Unauthorized.', 401);
+            return new JsonResponse('Unauthorized.', 403);
         } else {
             return redirect()->guest('login');
         }

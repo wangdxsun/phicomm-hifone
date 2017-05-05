@@ -106,21 +106,13 @@ class PhicommController extends Controller
         return view('phicomm.create');
     }
 
-    public function postBind()
+    public function postBind(PhicommBll $phicommBll)
     {
         $this->validate(request(), [
             'phicomm_id' => 'required|integer|min:1',
             'username' => 'required',
         ]);
-        $userData = [
-            'phicomm_id' => request('phicomm_id'),
-            'username' => request('username'),
-            'password' => str_random(32),
-            'regip' => request()->server('REMOTE_ADDR'),
-        ];
-        $user = User::create($userData);
-        event(new UserWasAddedEvent($user));
-        Auth::login($user);
+        $phicommBll->bind();
 
         return redirect('/');
     }

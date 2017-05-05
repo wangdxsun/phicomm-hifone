@@ -9,7 +9,6 @@
                     <div class="panel-body">
                         <form role="form" method="POST" action="{{ url('/phicomm/bind') }}">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                            <input type="hidden" name="phicomm_id" value="{{ $phicomm_id }}">
                             <div class="form-group">
                                 <input class="form-control" name="username" value="{{ Input::old('username') }}" placeholder="社区用户名" required>
                             </div>

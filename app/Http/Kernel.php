@@ -39,6 +39,8 @@ class Kernel extends HttpKernel
             \Hifone\Http\Middleware\Pjax::class,
         ],
         'api' => [
+            \Illuminate\Cookie\Middleware\EncryptCookies::class,
+            \Illuminate\Session\Middleware\StartSession::class,
             \Hifone\Http\Middleware\Acceptable::class,
             \Hifone\Http\Middleware\Timezone::class,
             \Barryvdh\Cors\HandleCors::class,

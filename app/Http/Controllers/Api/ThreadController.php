@@ -30,7 +30,7 @@ class ThreadController extends AbstractApiController
         if ($thread->inVisible()) {
             throw new NotFoundHttpException('帖子状态不可见');
         }
-        return $thread->load(['user', 'replies' => function ($query) {
+        return $thread->load(['user', 'node', 'replies' => function ($query) {
             $query->where('status', Reply::VISIBLE);
         }, 'replies.user']);
     }

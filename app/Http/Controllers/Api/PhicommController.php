@@ -12,9 +12,8 @@ use Hifone\Events\User\UserWasAddedEvent;
 use Hifone\Http\Bll\PhicommBll;
 use Hifone\Models\User;
 use Illuminate\Http\Request;
-use Redirect;
 use Auth;
-use Input;
+use Response;
 
 class PhicommController extends AbstractApiController
 {
@@ -37,7 +36,7 @@ class PhicommController extends AbstractApiController
         $this->phicommBll->register($request->phone, $password, $request->verifyCode);
         $phicommId = $this->phicommBll->login($request->phone, $password);
 
-        return $phicommId;
+        return compact($phicommId);
     }
 
     public function login(Request $request)
@@ -64,21 +63,12 @@ class PhicommController extends AbstractApiController
         }
     }
 
-    public function bind()
+    public function bind(PhicommBll $phicommBll)
     {
         $this->validate(request(), [
-            'phicomm_id' => 'required|integer|min:1',
             'username' => 'required',
         ]);
-        $userData = [
-            'phicomm_id' => request('phicomm_id'),
-            'username' => request('username'),
-            'password' => str_random(32),
-            'regip' => request()->server('REMOTE_ADDR'),
-        ];
-        $user = User::create($userData);
-        event(new UserWasAddedEvent($user));
-        Auth::login($user);
+        $phicommBll->bind();
 
         return response();
     }
@@ -92,7 +82,8 @@ class PhicommController extends AbstractApiController
         ]);
         $password = strtoupper(md5(request('password')));
         $this->phicommBll->reset(request('phone'), $password, request('verifyCode'));
-        return response('密码重置成功');
+
+        return Response::json('密码重置成功');
     }
 
     /**
@@ -106,11 +97,6 @@ class PhicommController extends AbstractApiController
         $phone = request('phone');
         $this->phicommBll->sendVerifyCode($phone);
 
-        return response('验证码发送成功');
-    }
-
-    public function test()
-    {
-        throw new \Exception('test');
+        return Response::json('验证码发送成功');
     }
 }
