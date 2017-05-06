@@ -10,7 +10,7 @@ namespace Hifone\Http\Controllers\Api;
 
 use Hifone\Models\Carousel;
 
-class BannerController extends AbstractApiController
+class BannerController extends ApiController
 {
     public function index()
     {

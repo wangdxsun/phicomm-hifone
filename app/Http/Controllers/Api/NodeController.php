@@ -11,7 +11,7 @@ namespace Hifone\Http\Controllers\Api;
 use Hifone\Http\Bll\NodeBll;
 use Hifone\Models\Node;
 
-class NodeController extends AbstractApiController
+class NodeController extends ApiController
 {
     public function index()
     {

@@ -8,18 +8,22 @@
 
 namespace Hifone\Http\Controllers\Api;
 
-use Hifone\Commands\Follow\AddFollowCommand;
+use Hifone\Http\Bll\FollowBll;
+use Hifone\Models\Thread;
 use Hifone\Models\User;
 
-class FollowController extends AbstractApiController
+class FollowController extends ApiController
 {
-    public function user(User $user)
+    public function user(User $user, FollowBll $followBll)
     {
-        if ($user->id == \Auth::id()) {
-            throw new \Exception('不能关注自己');
-        }
+        $followBll->followUser($user);
 
-        dispatch(new AddFollowCommand($user));
+        return ['status' => 1];
+    }
+
+    public function thread(Thread $thread, FollowBll $followBll)
+    {
+        $followBll->followThread($thread);
 
         return ['status' => 1];
     }

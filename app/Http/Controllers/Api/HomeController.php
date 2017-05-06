@@ -8,7 +8,7 @@
 
 namespace Hifone\Http\Controllers\Api;
 
-class HomeController extends AbstractApiController
+class HomeController extends ApiController
 {
     public function index()
     {

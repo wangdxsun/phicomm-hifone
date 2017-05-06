@@ -18,7 +18,7 @@ use Hifone\Models\Thread;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Input;
 
-class ThreadController extends AbstractApiController
+class ThreadController extends ApiController
 {
     public function index(ThreadBll $threadBll)
     {

@@ -21,7 +21,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Response;
 use McCool\LaravelAutoPresenter\Facades\AutoPresenter;
 
-abstract class AbstractApiController extends Controller
+abstract class ApiController extends Controller
 {
     use DispatchesJobs, ValidatesRequests;
     /**

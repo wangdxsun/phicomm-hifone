@@ -14,8 +14,7 @@ namespace Hifone\Http\Controllers;
 use Hifone\Commands\Like\AddLikeCommand;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\View;
+use Response;
 use Input;
 
 class LikeController extends Controller

@@ -11,7 +11,7 @@
 
 namespace Hifone\Http\Controllers\Api;
 
-class GeneralController extends AbstractApiController
+class GeneralController extends ApiController
 {
     /**
      * Ping endpoint allows API consumers to check the version.

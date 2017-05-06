@@ -10,7 +10,7 @@ namespace Hifone\Http\Controllers\Api;
 
 use Hifone\Http\Bll\ReplyBll;
 
-class ReplyController extends AbstractApiController
+class ReplyController extends ApiController
 {
     public function store(ReplyBll $replyBll)
     {

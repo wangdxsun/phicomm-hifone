@@ -18,28 +18,9 @@ use Hifone\Events\Follow\FollowedWasAddedEvent;
 use Hifone\Events\Follow\FollowedWasRemovedEvent;
 use Hifone\Events\Follow\FollowWasRemovedEvent;
 use Hifone\Services\Dates\DateFactory;
-use Hifone\Models\User;
-use Hifone\Models\Thread;
 
 class AddFollowCommandHandler
 {
-    /**
-     * The date factory instance.
-     *
-     * @var \Hifone\Services\Dates\DateFactory
-     */
-    protected $dates;
-
-    /**
-     * Create a new report issue command handler instance.
-     *
-     * @param \Hifone\Services\Dates\DateFactory $dates
-     */
-    public function __construct(DateFactory $dates)
-    {
-        $this->dates = $dates;
-    }
-
     /**
      * Handle the report avorite command.
      *

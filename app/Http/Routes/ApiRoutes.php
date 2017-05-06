@@ -46,9 +46,12 @@ class ApiRoutes
 
             // Authorization Required
             $router->group(['middleware' => 'auth:hifone'], function ($router) {
-                $router->get('follow/user/{user}', 'FollowController@user');
                 $router->post('thread', 'ThreadController@store')->middleware('permission:new_thread');
                 $router->post('reply', 'ReplyController@store')->middleware('permission:new_thread');
+                $router->post('follow/user/{user}', 'FollowController@user');
+                $router->post('follow/thread/{thread}', 'FollowController@thread');
+                $router->post('like/thread/{thread}', 'LikeController@thread');
+                $router->post('like/reply/{reply}', 'LikeController@reply');
             });
         });
     }

@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use Auth;
 use Response;
 
-class PhicommController extends AbstractApiController
+class PhicommController extends ApiController
 {
     private $phicommBll;
 

@@ -11,33 +11,23 @@
 
 namespace Hifone\Http\Controllers;
 
-use Auth;
-use Hifone\Commands\Follow\AddFollowCommand;
+use Hifone\Http\Bll\FollowBll;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
-use Illuminate\Support\Facades\Response;
 
 class FollowController extends Controller
 {
-    public function createOrDelete(Thread $thread)
+    public function createOrDelete(Thread $thread, FollowBll $followBll)
     {
-        if ($thread->user->id == Auth::id()) {
-            return ['status' => -1, 'msg' => '自己的帖子无需关注'];
-        }
+        $followBll->followThread($thread);
 
-        dispatch(new AddFollowCommand($thread));
-
-        return Response::json(['status' => 1]);
+        return ['status' => 1];
     }
 
-    public function createOrDeleteUser(User $user)
+    public function createOrDeleteUser(User $user, FollowBll $followBll)
     {
-        if ($user->id == Auth::user()->id) {
-            return ['status' => -1, 'msg' => '不能关注自己'];
-        }
+        $followBll->followUser($user);
 
-        dispatch(new AddFollowCommand($user));
-
-        return Response::json(['status' => 1]);
+        return ['status' => 1];
     }
 }
