@@ -17,12 +17,12 @@ use Input;
 
 class NodeBll extends BaseBll
 {
-    public function getThreads($node)
+    public function threads($node, $filter = null)
     {
         $repository = app('repository');
         $repository->pushCriteria(new Search(Input::query('q')));
         $repository->pushCriteria(new BelongsToNode($node->id));
-        $repository->pushCriteria(new Filter('node'));
+        $repository->pushCriteria(new Filter($filter));
 
         $threads = $repository->model(Thread::class)->getThreadList(Config::get('setting.threads_per_page'));
 

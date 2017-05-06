@@ -21,7 +21,7 @@ class Filter extends Criteria
      */
     protected $filter;
 
-    public function __construct($filter)
+    public function __construct($filter = null)
     {
         $this->filter = $filter;
     }
@@ -41,7 +41,7 @@ class Filter extends Criteria
             case 'recent':
                 return $model->recent();
                 break;
-            case 'node':
+            case 'recentReply':
                 return $model->recentReply();
                 break;
             default:

@@ -11,14 +11,14 @@
 
 namespace Hifone\Http\Controllers;
 
+use Hifone\Http\Bll\NodeBll;
 use Hifone\Models\Node;
 use Hifone\Models\Thread;
 use Hifone\Repositories\Criteria\Thread\BelongsToNode;
 use Hifone\Repositories\Criteria\Thread\Filter;
 use Hifone\Repositories\Criteria\Thread\Search;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\View;
+use Config;
+use Input;
 
 class NodeController extends Controller
 {
@@ -30,24 +30,20 @@ class NodeController extends Controller
             ->withSections($sections);
     }
 
-    public function show(Node $node)
+    public function show(Node $node, NodeBll $nodeBll)
     {
         $this->breadcrumb->push($node->name, $node->url);
 
-        $repository = app('repository');
-        $repository->pushCriteria(new Search(Input::query('q')));
-        $repository->pushCriteria(new BelongsToNode($node->id));
-        $repository->pushCriteria(new Filter('node'));
-
-        $threads = $repository->model(Thread::class)->getThreadList(Config::get('setting.per_page'));
+        $threads = $nodeBll->threads($node, Input::get('filter'));
 
         return $this->view('threads.index')
             ->withThreads($threads)
             ->withNode($node);
     }
 
-    public function showBySlug($slug)
+    public function showBySlug($slug, NodeBll $nodeBll)
     {
-        return $this->show(Node::where('slug', $slug)->firstOrFail());
+        $node = Node::where('slug', $slug)->firstOrFail();
+        return $this->show($node, $nodeBll);
     }
 }
