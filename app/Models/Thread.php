@@ -173,21 +173,18 @@ class Thread extends BaseModel implements TaggableInterface
     public function scopePinAndRecentReply($query)
     {
         return $query->whereRaw("(`created_at` > '" . Carbon::today()->subMonths(6)->toDateString() . "' or (`order` > 0) )")
-            ->visible()
             ->orderBy('order', 'desc')
             ->orderBy('updated_at', 'desc');
     }
 
     public function scopeRecentReply($query)
     {
-        return $query->visible()
-            ->orderBy('order', 'desc')
-            ->orderBy('updated_at', 'desc');
+        return $query->orderBy('order', 'desc')->orderBy('updated_at', 'desc');
     }
 
     public function scopeExcellent($query)
     {
-        return $query->where('is_excellent', '=', true)->visible();
+        return $query->where('is_excellent', '=', true);
     }
 
     public static function makeExcerpt($body)

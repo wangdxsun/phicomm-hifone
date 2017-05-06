@@ -12,7 +12,6 @@ use Hifone\Models\Thread;
 use Hifone\Repositories\Criteria\Thread\BelongsToNode;
 use Hifone\Repositories\Criteria\Thread\Filter;
 use Hifone\Repositories\Criteria\Thread\Search;
-use Config;
 use Input;
 
 class NodeBll extends BaseBll
@@ -24,7 +23,7 @@ class NodeBll extends BaseBll
         $repository->pushCriteria(new BelongsToNode($node->id));
         $repository->pushCriteria(new Filter($filter));
 
-        $threads = $repository->model(Thread::class)->getThreadList(Config::get('setting.threads_per_page'));
+        $threads = $repository->model(Thread::class)->getThreadList();
 
         return $threads;
     }

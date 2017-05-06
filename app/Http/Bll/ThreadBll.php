@@ -14,7 +14,6 @@ use Hifone\Models\Thread;
 use Hifone\Repositories\Criteria\Thread\Filter;
 use Hifone\Repositories\Criteria\Thread\Search;
 use Input;
-use Config;
 use Auth;
 
 class ThreadBll extends BaseBll
@@ -26,7 +25,7 @@ class ThreadBll extends BaseBll
         $repository = app('repository');
         $repository->pushCriteria(new Filter(Input::query('filter')));
         $repository->pushCriteria(new Search(Input::query('q')));
-        $threads = $repository->model(Thread::class)->getThreadList(Config::get('setting.threads_per_page', 15));
+        $threads = $repository->model(Thread::class)->getThreadList();
 
         return $threads;
     }

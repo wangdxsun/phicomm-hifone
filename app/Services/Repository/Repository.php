@@ -14,6 +14,7 @@ namespace Hifone\Services\Repository;
 use Hifone\Repositories\Eloquent\Repository as BaseRepository;
 use Illuminate\Container\Container as App;
 use Illuminate\Database\Eloquent\Model;
+use Config;
 
 class Repository extends BaseRepository
 {
@@ -43,10 +44,11 @@ class Repository extends BaseRepository
         return $this->model = $model;
     }
 
-    public function getThreadList($limit = 10)
+    public function getThreadList($limit = null)
     {
+        $limit = $limit ?: Config::get('setting.threads_per_page', 15);
         $this->applyCriteria();
 
-        return $this->model->with('user', 'node', 'lastReplyUser')->paginate($limit);
+        return $this->model->visible()->with('user', 'node', 'lastReplyUser')->paginate($limit);
     }
 }
