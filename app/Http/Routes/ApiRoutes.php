@@ -36,6 +36,7 @@ class ApiRoutes
             $router->get('node', 'NodeController@index');
             $router->get('banner', 'BannerController@index');
             $router->get('node/{node}', 'NodeController@show');
+            $router->get('report/reason', 'ReportController@reason');
 
             //登录相关
             $router->post('register', 'PhicommController@register');
@@ -52,6 +53,8 @@ class ApiRoutes
                 $router->post('follow/thread/{thread}', 'FollowController@thread');
                 $router->post('like/thread/{thread}', 'LikeController@thread');
                 $router->post('like/reply/{reply}', 'LikeController@reply');
+                $router->post('report/thread/{thread}', 'ReportController@thread');
+                $router->post('report/reply/{reply}', 'ReportController@reply');
             });
         });
     }

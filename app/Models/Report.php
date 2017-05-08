@@ -12,7 +12,25 @@ class Report extends Model
     const DELETE = 1;//已删除
     const IGNORE = 2;//已忽略
 
+    public static $reason = [
+        '恶意灌水',
+        '恶意攻击谩骂',
+        '营销广告',
+        '淫晦色情',
+        '政治反动',
+        '其他原因',
+    ];
+
     protected $dates = ['deleted_at', 'last_op_time'];
+
+    protected $fillable = ['user_id', 'reportable_id', 'reportable_type', 'reason'];
+
+    public $rules = [
+        'user_id' => 'required|int',
+        'reportable_id' => 'required|int',
+        'reportable_type' => 'required|in:Hifone\Models\Thread,Hifone\Models\Reply',
+        'reason' => 'required|string',
+    ];
 
     public function user()
     {
