@@ -30,6 +30,8 @@ class UserRoutes
         $router->group(['middleware' => ['web', 'localize']], function (Registrar $router) {
             $router->get('/user/{user}/replies', 'UserController@replies')->name('user.replies');
             $router->get('/user/{user}/threads', 'UserController@threads')->name('user.threads');
+            $router->get('/user/{user}/follows', 'UserController@follows')->name('user.follows');
+            $router->get('/user/{user}/followers', 'UserController@followers')->name('user.followers');
             $router->get('/user/{user}/favorites', 'UserController@favorites')->name('user.favorites');
             $router->get('/user/{user}/credits', 'UserController@credits')->name('user.credits');
             $router->get('/user/{user}/refresh_cache', 'UserController@refreshCache')->name('user.refresh_cache');

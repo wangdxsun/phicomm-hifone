@@ -129,9 +129,14 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $this->morphMany(Notification::class, 'object');
     }
 
-    public function follows()
+    public function followers()
     {
         return $this->morphMany(Follow::class, 'followable');
+    }
+
+    public function follows()
+    {
+        return $this->hasMany(Follow::class);
     }
 
     public function identities()
@@ -275,12 +280,26 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function isFollowThread($thread)
     {
-//        return $thread->follows()->forUser($this->id)->count() > 0;
-//        return $this->follows->find($thread->id)->count() > 0;
+        return $thread->follows()->forUser($this->id)->count() > 0;
     }
 
     public function isFavoriteThread($thread)
     {
         return $thread->favorites()->forUser($this->id)->count() > 0;
+    }
+
+    public function isFollowUser(User $user)
+    {
+        return $this->follows()->ofType(User::class)->ofId($user->id)->count() > 0;
+    }
+
+    public function isLikedThread(Thread $thread)
+    {
+        return $this->likes()->ofType(Thread::class)->ofId($thread->id)->count() > 0;
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
     }
 }

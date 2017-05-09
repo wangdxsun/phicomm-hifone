@@ -14,6 +14,8 @@ namespace Hifone\Http\Controllers;
 use AltThree\Validator\ValidationException;
 use Auth;
 use Hash;
+use Hifone\Http\Bll\FollowBll;
+use Hifone\Models\Follow;
 use Hifone\Models\Identity;
 use Hifone\Models\Location;
 use Hifone\Models\Provider;
@@ -40,20 +42,26 @@ class UserController extends Controller
             ->withUsers($users);
     }
 
-    public function show(User $user)
+    public function show(User $user, FollowBll $followBll)
     {
         $threads = Thread::forUser($user->id)->recent()->limit(10)->get();
         $replies = Reply::forUser($user->id)->recent()->limit(10)->get();
+        $followers = $followBll->followers($user);
+        $follows = $followBll->follows($user);
 
         return $this->view('users.show')
             ->withUser($user)
             ->withThreads($threads)
-            ->withReplies($replies);
+            ->withReplies($replies)
+            ->withFollowers($followers)
+            ->withFollows($follows);
     }
 
-    public function showByUsername($username)
+    public function showByUsername($username, FollowBll $followBll)
     {
-        return $this->show(User::findByUsernameOrFail($username));
+        $user = User::findByUsernameOrFail($username);
+
+        return $this->show($user, $followBll);
     }
 
     public function edit(User $user)
@@ -131,6 +139,20 @@ class UserController extends Controller
         return $this->view('users.credits')
             ->withUser($user)
             ->withCredits($credits);
+    }
+
+    public function follows(User $user)
+    {
+        $follows = $user->follows()->ofType(User::class)->with('follower')->get();
+
+        return $this->view('users.follows')->withUser($user)->withFollows($follows);
+    }
+
+    public function followers(User $user)
+    {
+        $followers = $user->followers()->with('follower')->get();
+
+        return $this->view('users.followers')->withUser($user)->withFollowers($followers);
     }
 
     public function city($name)

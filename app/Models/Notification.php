@@ -75,6 +75,16 @@ class Notification extends Model implements HasPresenter
         return $query->where('type', $type);
     }
 
+    public function scopeAt($query)
+    {
+        return $query->whereIn('type', ['reply_mention', 'thread_mention']);
+    }
+
+    public function scopeSystem($query)
+    {
+        return $query->whereIn('type', ['credit_login', 'reply_like', 'thread_like']);
+    }
+
     /**
      * Get the presenter class.
      *

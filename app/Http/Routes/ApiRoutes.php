@@ -55,6 +55,12 @@ class ApiRoutes
                 $router->post('like/reply/{reply}', 'LikeController@reply');
                 $router->post('report/thread/{thread}', 'ReportController@thread');
                 $router->post('report/reply/{reply}', 'ReportController@reply');
+                $router->get('notification', 'NotificationController@index');
+                $router->get('credit', 'CreditController@index');
+                $router->get('notification', 'NotificationController@index');
+
+                $router->get('user/follows', 'UserController@follows');
+                $router->get('user/followers', 'UserController@followers');
             });
         });
     }

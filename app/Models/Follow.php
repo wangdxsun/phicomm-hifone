@@ -54,4 +54,24 @@ class Follow extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function scopeOfType($query, $type)
+    {
+        return $query->where('followable_type', $type);
+    }
+
+    public function scopeOfId($query, $id)
+    {
+        return $query->where('followable_id', $id);
+    }
+
+    public function follower()
+    {
+        return $this->belongsTo(User::class, 'followable_id');
+    }
+
+    public function thread()
+    {
+        return $this->belongsTo(Thread::class, 'followable_id');
+    }
 }

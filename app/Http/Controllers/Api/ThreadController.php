@@ -11,12 +11,11 @@
 
 namespace Hifone\Http\Controllers\Api;
 
-use Hifone\Commands\Image\UploadImageCommand;
+use Auth;
 use Hifone\Http\Bll\ThreadBll;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Input;
 
 class ThreadController extends ApiController
 {
@@ -32,9 +31,14 @@ class ThreadController extends ApiController
         if ($thread->inVisible()) {
             throw new NotFoundHttpException('帖子状态不可见');
         }
-        return $thread->load(['user', 'node', 'replies' => function ($query) {
-            $query->where('status', Reply::VISIBLE);
-        }, 'replies.user']);
+        $thread = $thread->load(['user', 'node']);
+        $replies = $thread->replies()->visible()->with(['user', 'likes.user'])
+            ->orderBy('order', 'desc')->orderBy('created_at', 'desc')->paginate(15);
+        $thread['followed'] = Auth::check() ? Auth::user()->isFollowUser($thread->user) : false;
+        $thread['liked'] = Auth::check() ? Auth::user()->isLikedThread($thread) : false;
+        $thread['replies'] = $replies;
+
+        return $thread;
     }
 
     public function store(ThreadBll $threadBll)

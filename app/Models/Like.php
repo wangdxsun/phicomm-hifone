@@ -83,4 +83,19 @@ class Like extends Model
     {
         return $query->where('rating', self::UNLIKE);
     }
+
+    public function scopeOfType($query, $type)
+    {
+        return $query->where('likeable_type', $type);
+    }
+
+    public function scopeOfId($query, $id)
+    {
+        return $query->where('likeable_id', $id);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

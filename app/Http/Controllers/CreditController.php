@@ -13,13 +13,14 @@ namespace Hifone\Http\Controllers;
 
 use Auth;
 use Config;
+use Hifone\Http\Bll\CreditBll;
 use Illuminate\Support\Facades\View;
 
 class CreditController extends Controller
 {
-    public function index()
+    public function index(CreditBll $creditBll)
     {
-        $credits = Auth::user()->credits()->recent()->paginate(Config::get('setting.per_page'));
+        $credits = $creditBll->getCredits();
 
         return $this->view('credits.index')
             ->withCredits($credits);

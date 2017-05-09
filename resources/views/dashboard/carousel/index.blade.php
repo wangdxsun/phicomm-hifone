@@ -28,7 +28,7 @@
                 <div class="col-xs-2 text-right">
                     <a href="{{ route('dashboard.carousel.edit',['id'=>$carousel->id]) }}" class="btn btn-default btn-sm">{{ trans('forms.edit') }}</a>
                     <a data-url="{{ route('dashboard.carousel.close',['id'=>$carousel->id]) }}" class="btn btn-primary btn-sm" data-method="post">{{ $carousel->visible ? '关闭' : '打开' }}</a>
-                    <a data-url="{{ route('dashboard.carousel.destroy',['id'=>$carousel->id]) }}" class="btn btn-danger btn-sm confirm-action" data-method="delete">{{ trans('forms.delete') }}</a>
+                    {{--<a data-url="{{ route('dashboard.carousel.destroy',['id'=>$carousel->id]) }}" class="btn btn-danger btn-sm confirm-action" data-method="delete">{{ trans('forms.delete') }}</a>--}}
                 </div>
             </div>
             @empty
