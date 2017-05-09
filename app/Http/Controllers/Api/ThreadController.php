@@ -32,7 +32,7 @@ class ThreadController extends ApiController
             throw new NotFoundHttpException('帖子状态不可见');
         }
         $thread = $thread->load(['user', 'node']);
-        $replies = $thread->replies()->visible()->with(['user', 'likes.user'])
+        $replies = $thread->replies()->visible()->with(['user', 'likes'])
             ->orderBy('order', 'desc')->orderBy('created_at', 'desc')->paginate(15);
         $thread['followed'] = Auth::check() ? Auth::user()->isFollowUser($thread->user) : false;
         $thread['liked'] = Auth::check() ? Auth::user()->isLikedThread($thread) : false;
