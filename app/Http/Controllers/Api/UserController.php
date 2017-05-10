@@ -11,6 +11,7 @@ namespace Hifone\Http\Controllers\Api;
 use Auth;
 use Hifone\Http\Bll\FollowBll;
 use Hifone\Http\Bll\UserBll;
+use Hifone\Models\User;
 
 class UserController extends ApiController
 {
@@ -19,17 +20,31 @@ class UserController extends ApiController
 
     }
 
-    public function follows(FollowBll $followBll)
+    public function follows(User $user, FollowBll $followBll)
     {
-        $follows = $followBll->follows(Auth::user());
+        $follows = $followBll->follows($user);
 
         return $follows;
     }
 
-    public function followers(FollowBll $followBll)
+    public function followers(User $user, FollowBll $followBll)
     {
-        $followers = $followBll->followers(Auth::user());
+        $followers = $followBll->followers($user);
 
         return $followers;
+    }
+
+    public function threads(User $user, UserBll $userBll)
+    {
+        $threads = $userBll->getThreads($user);
+
+        return $threads;
+    }
+
+    public function credit(UserBll $userBll)
+    {
+        $credits = $userBll->getCredits();
+
+        return $credits;
     }
 }

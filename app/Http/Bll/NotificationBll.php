@@ -13,28 +13,28 @@ use Hifone\Models\Notification;
 
 class NotificationBll extends BaseBll
 {
-    public function thread()
+    public function watch()
     {
-        return Auth::user()->notifications()->ofType('followed_user_new_thread')->recent()->paginate(15);
+        return Notification::forUser(Auth::id())->watch()->recent()->paginate(15);
     }
 
     public function reply()
     {
-        return Auth::user()->notifications()->ofType('thread_new_reply')->recent()->paginate(15);
+        return Notification::forUser(Auth::id())->ofType('thread_new_reply')->recent()->paginate(15);
     }
 
     public function at()
     {
-        return Auth::user()->notifications()->at()->recent()->paginate(15);
+        return Notification::forUser(Auth::id())->at()->recent()->paginate(15);
     }
 
     public function message()
     {
-
+        return [];
     }
 
     public function system()
     {
-        return Auth::user()->notifications()->system()->recent()->paginate(15);
+        return Notification::forUser(Auth::id())->system()->recent()->paginate(15);
     }
 }

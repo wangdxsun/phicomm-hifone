@@ -56,11 +56,13 @@ class ApiRoutes
                 $router->post('report/thread/{thread}', 'ReportController@thread');
                 $router->post('report/reply/{reply}', 'ReportController@reply');
                 $router->get('notification', 'NotificationController@index');
-                $router->get('credit', 'CreditController@index');
-                $router->get('notification', 'NotificationController@index');
+                $router->get('watch', 'NotificationController@watch');
+                $router->get('credit', 'UserController@credit');
 
-                $router->get('user/follows', 'UserController@follows');
-                $router->get('user/followers', 'UserController@followers');
+                $router->get('user/{user}/follows', 'UserController@follows');
+                $router->get('user/{user}/followers', 'UserController@followers');
+                $router->get('user/{user}/threads', 'UserController@threads');
+                $router->get('');
             });
         });
     }

@@ -14,9 +14,24 @@ class NotificationController extends ApiController
 {
     public function index(NotificationBll $bll)
     {
-//        $bll->thread();
-        $notifications = $bll->thread();
+        $replies = $bll->reply();
+        $ats = $bll->at();
+        $messages = $bll->message();
+        $systems = $bll->system();
+        $notifications = [
+            'replies' => $replies,
+            'ats' => $ats,
+            'messages' => $messages,
+            'systems' => $systems,
+        ];
 
         return $notifications;
+    }
+
+    public function watch(NotificationBll $bll)
+    {
+        $watches = $bll->watch();
+
+        return $watches;
     }
 }

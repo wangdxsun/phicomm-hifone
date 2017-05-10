@@ -80,9 +80,14 @@ class Notification extends Model implements HasPresenter
         return $query->whereIn('type', ['reply_mention', 'thread_mention']);
     }
 
+    public function scopeWatch($query)
+    {
+        return $query->whereIn('type', ['followed_user_new_thread']);
+    }
+
     public function scopeSystem($query)
     {
-        return $query->whereIn('type', ['credit_login', 'reply_like', 'thread_like']);
+        return $query->whereIn('type', ['credit_login', 'reply_like', 'thread_like', 'thread_mark_excellent', 'thread_follow']);
     }
 
     /**

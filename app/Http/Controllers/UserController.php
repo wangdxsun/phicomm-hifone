@@ -15,6 +15,7 @@ use AltThree\Validator\ValidationException;
 use Auth;
 use Hash;
 use Hifone\Http\Bll\FollowBll;
+use Hifone\Http\Bll\UserBll;
 use Hifone\Models\Follow;
 use Hifone\Models\Identity;
 use Hifone\Models\Location;
@@ -114,9 +115,9 @@ class UserController extends Controller
             ->withReplies($replies);
     }
 
-    public function threads(User $user)
+    public function threads(User $user, UserBll $userBll)
     {
-        $threads = Thread::forUser($user->id)->visible()->recent()->paginate(15);
+        $threads = $userBll->getThreads($user);
 
         return $this->view('users.threads')
             ->withUser($user)
