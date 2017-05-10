@@ -35,13 +35,13 @@ class AddFollowCommandHandler
 
     protected function followAction($target)
     {
-        if ($target->follows()->forUser(Auth::id())->count()) {
-            $target->follows()->forUser(Auth::id())->delete();
+        if ($target->followers()->forUser(Auth::id())->count()) {
+            $target->followers()->forUser(Auth::id())->delete();
 
             event(new FollowWasRemovedEvent(Auth::user()));
             event(new FollowedWasRemovedEvent($target));
         } else {
-            $target->follows()->create(['user_id' => Auth::id()]);
+            $target->followers()->create(['user_id' => Auth::id()]);
 
             event(new FollowWasAddedEvent(Auth::user()));
             event(new FollowedWasAddedEvent($target));

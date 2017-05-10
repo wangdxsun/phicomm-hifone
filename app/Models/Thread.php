@@ -71,7 +71,7 @@ class Thread extends BaseModel implements TaggableInterface
         return $this->morphMany(Like::class, 'likeable');
     }
 
-    public function follows()
+    public function followers()
     {
         return $this->morphMany(Follow::class, 'followable');
     }
