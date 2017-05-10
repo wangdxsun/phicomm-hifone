@@ -69,7 +69,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * Find by username, or throw an exception.
      *
      * @param string $username The username.
-     * @param mixed  $columns  The columns to return.
+     * @param mixed  $columns The columns to return.
      *
      * @throws ModelNotFoundException if no matching User exists.
      *
@@ -217,8 +217,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         $content_type = explode('/', $response->getHeader('Content-Type'));
         $ext = array_pop($content_type);
 
-        $avatar_name = $this->id.'_'.time().'.'.$ext;
-        $save_path = public_path('uploads/avatars/').$avatar_name;
+        $avatar_name = $this->id . '_' . time() . '.' . $ext;
+        $save_path = public_path('uploads/avatars/') . $avatar_name;
 
         //Save File
         $content = $response->getBody()->getContents();
@@ -226,7 +226,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
         //Delete old file
         if ($this->avatar) {
-            @unlink(public_path('uploads/avatars/').$this->avatar);
+            @unlink(public_path('uploads/avatars/') . $this->avatar);
         }
 
         //Save to database
@@ -296,6 +296,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function isLikedThread(Thread $thread)
     {
         return $this->likes()->ofType(Thread::class)->ofId($thread->id)->count() > 0;
+    }
+
+    public function isLikedReply(Reply $reply)
+    {
+        return $this->likes()->ofType(Reply::class)->ofId($reply->id)->count() > 0;
     }
 
     public function likes()
