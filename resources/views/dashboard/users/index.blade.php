@@ -58,7 +58,7 @@
                         <td>{{ $user->id }}</td>
                         <td><img src="{{ $user->avatar_small }}" style="width: 20px; height: 20px;"></td>
                         <td><a href="{{ route('user.show',['id'=>$user->id]) }}" target="_blank">{{ $user->username }}</a></td>
-                        <td>{{ $user->roles }}</td>
+                        <td>{{ $user->role }}</td>
                         <td>{{ $user->thread_count }}</td>
                         <td>{{ $user->score }}</td>
                         <td>{{ $user->created_at }}</td>

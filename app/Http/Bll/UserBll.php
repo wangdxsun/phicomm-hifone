@@ -28,7 +28,7 @@ class UserBll extends BaseBll
 
     public function getThreads(User $user)
     {
-        $threads = $user->threads()->visible()->recent()->paginate(15);
+        $threads = $user->threads()->with(['user', 'node'])->visible()->recent()->paginate(15);
 
         return $threads;
     }

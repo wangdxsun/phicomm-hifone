@@ -263,6 +263,22 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         }
     }
 
+    public function getRoleAttribute()
+    {
+        $adminGroup = implode(',', array_column($this->roles->toArray(), 'display_name'));
+        if ($adminGroup) {
+            return $adminGroup;
+        }
+        $userGroup = '未知用户组';
+        $groups = Role::userGroup()->orderBy('credit_low')->get();
+        foreach ($groups as $group) {
+            if ($this->score >= $group->credit_low && $this->score <= $group->credit_high) {
+                $userGroup = $group->display_name;
+            }
+        }
+        return $userGroup;
+    }
+
     public function getCommentAttribute()
     {
         return $this->role_id == Role::NO_COMMENT ? 'fa fa-comment text-danger' : 'fa fa-comment';

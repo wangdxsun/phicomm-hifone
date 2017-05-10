@@ -45,6 +45,12 @@ class ApiRoutes
             $router->post('verify', 'PhicommController@verify');
             $router->post('bind', 'PhicommController@bind');
 
+            //个人中心
+            $router->get('user/{user}', 'UserController@show');
+            $router->get('user/{user}/follows', 'UserController@follows');
+            $router->get('user/{user}/followers', 'UserController@followers');
+            $router->get('user/{user}/threads', 'UserController@threads');
+
             // Authorization Required
             $router->group(['middleware' => 'auth:hifone'], function ($router) {
                 $router->post('thread', 'ThreadController@store')->middleware('permission:new_thread');
@@ -58,11 +64,6 @@ class ApiRoutes
                 $router->get('notification', 'NotificationController@index');
                 $router->get('watch', 'NotificationController@watch');
                 $router->get('credit', 'UserController@credit');
-
-                $router->get('user/{user}/follows', 'UserController@follows');
-                $router->get('user/{user}/followers', 'UserController@followers');
-                $router->get('user/{user}/threads', 'UserController@threads');
-                $router->get('');
             });
         });
     }

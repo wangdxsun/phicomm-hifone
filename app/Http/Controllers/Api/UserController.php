@@ -20,9 +20,19 @@ class UserController extends ApiController
 
     }
 
+    public function show(User $user, UserBll $userBll)
+    {
+        $user['role'] = $user->role;
+
+        return $user;
+    }
+
     public function follows(User $user, FollowBll $followBll)
     {
         $follows = $followBll->follows($user);
+        foreach ($follows as &$follow) {
+            $follow['followed'] = Auth::check() ? $follow['follower']->isFollowUser(Auth::user()) : false;
+        }
 
         return $follows;
     }
@@ -30,6 +40,9 @@ class UserController extends ApiController
     public function followers(User $user, FollowBll $followBll)
     {
         $followers = $followBll->followers($user);
+        foreach ($followers as &$follower) {
+            $follower['followed'] = Auth::check() ? Auth::user()->isFollowUser($follower['follower']) : false;
+        }
 
         return $followers;
     }
