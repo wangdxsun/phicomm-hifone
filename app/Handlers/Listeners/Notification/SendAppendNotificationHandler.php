@@ -55,7 +55,7 @@ class SendAppendNotificationHandler
         app(Notifier::class)->batchNotify(
                     'followed_thread_new_append',
                     $author,
-                    $thread->follows()->get(),
+                    $thread->followers()->get(),
                     $thread,
                     $append->content);
     }

@@ -43,7 +43,7 @@ class SendReplyNotificationHandler
         app('notifier')->batchNotify(
                     'followed_thread_new_reply',
                     $author,
-                    $thread->follows()->get(),
+                    $thread->followers()->get(),
                     $reply->thread,
                     $reply->body
                     );

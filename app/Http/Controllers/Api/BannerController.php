@@ -16,4 +16,9 @@ class BannerController extends ApiController
     {
         return Carousel::visible()->orderBy('order')->get();
     }
+
+    public function show(Carousel $carousel)
+    {
+        return redirect($carousel->url);
+    }
 }

@@ -37,7 +37,7 @@ class SendThreadNotificationHandler
         app('notifier')->batchNotify(
                     'followed_user_new_thread',
                     $author,
-                    $author->follows()->get(),
+                    $author->followers()->get(),
                     $thread);
         // Notify mentioned users
         $parserAt = app('parser.at');
