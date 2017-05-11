@@ -20,8 +20,8 @@ class NodeController extends ApiController
 
     public function show(Node $node, NodeBll $nodeBll)
     {
-        $hot = $nodeBll->threads($node);
-        $recent = $nodeBll->threads($node, 'recent');
+        $hot = $nodeBll->hotThreads($node);
+        $recent = $nodeBll->recentThreads($node);
 
         $node['hot'] = $hot;
         $node['recent'] = $recent;

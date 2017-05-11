@@ -91,6 +91,11 @@ class Thread extends BaseModel implements TaggableInterface
         return $this->belongsTo(Node::class);
     }
 
+    public function scopeOfNode($query, Node $node)
+    {
+        return $query->where('node_id', $node->id);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

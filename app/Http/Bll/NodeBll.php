@@ -8,6 +8,7 @@
 
 namespace Hifone\Http\Bll;
 
+use Hifone\Models\Node;
 use Hifone\Models\Thread;
 use Hifone\Repositories\Criteria\Thread\BelongsToNode;
 use Hifone\Repositories\Criteria\Thread\Filter;
@@ -24,6 +25,20 @@ class NodeBll extends BaseBll
         $repository->pushCriteria(new Filter($filter));
 
         $threads = $repository->model(Thread::class)->getThreadList();
+
+        return $threads;
+    }
+
+    public function recentThreads(Node $node)
+    {
+        $threads = Thread::visible()->ofNode($node)->recent()->with(['user'])->paginate(15);
+
+        return $threads;
+    }
+
+    public function hotThreads(Node $node)
+    {
+        $threads = Thread::visible()->ofNode($node)->pinAndRecentReply()->with(['user'])->paginate(15);
 
         return $threads;
     }

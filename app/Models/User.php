@@ -295,7 +295,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $this->belongsTo(User::class, 'last_op_user_id');
     }
 
-    public function isFollowThread($thread)
+    public function hasFollowThread($thread)
     {
         return $thread->follows()->forUser($this->id)->count() > 0;
     }
@@ -305,17 +305,17 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $thread->favorites()->forUser($this->id)->count() > 0;
     }
 
-    public function isFollowUser(User $user)
+    public function hasFollowUser(User $user)
     {
         return $this->follows()->ofType(User::class)->ofId($user->id)->count() > 0;
     }
 
-    public function isLikedThread(Thread $thread)
+    public function hasLikeThread(Thread $thread)
     {
         return $this->likes()->ofType(Thread::class)->ofId($thread->id)->count() > 0;
     }
 
-    public function isLikedReply(Reply $reply)
+    public function hasLikeReply(Reply $reply)
     {
         return $this->likes()->ofType(Reply::class)->ofId($reply->id)->count() > 0;
     }
