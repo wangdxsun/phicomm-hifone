@@ -2,12 +2,13 @@
 
 namespace Hifone\Models;
 
+use Hifone\Models\Scopes\ForUser;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Report extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, ForUser;
 
     const DELETE = 1;//已删除
     const IGNORE = 2;//已忽略
@@ -50,6 +51,16 @@ class Report extends Model
     public function scopeAudited($query)
     {
         return $query->where('status', '>', 0);
+    }
+
+    public function scopeOfType($query, $type)
+    {
+        return $query->where('reportable_type', $type);
+    }
+
+    public function scopeOfId($query, $id)
+    {
+        return $query->where('reportable_id', $id);
     }
 
     public function lastOpUser()

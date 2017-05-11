@@ -11,6 +11,7 @@
 
 namespace Hifone\Models;
 
+use Auth;
 use AltThree\Validator\ValidatingTrait;
 use Cmgmyr\Messenger\Traits\Messagable;
 use Hifone\Models\Scopes\ForUser;
@@ -319,8 +320,23 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $this->likes()->ofType(Reply::class)->ofId($reply->id)->count() > 0;
     }
 
+    public function hasReportThread(Thread $thread)
+    {
+        return $this->reports()->ofType(Thread::class)->ofId($thread->id)->count() > 0;
+    }
+
+    public function hasReportReply(Reply $reply)
+    {
+        return $this->reports()->ofType(Reply::class)->ofId($reply->id)->count() > 0;
+    }
+
     public function likes()
     {
         return $this->hasMany(Like::class);
+    }
+
+    public function reports()
+    {
+        return $this->hasMany(Report::class);
     }
 }

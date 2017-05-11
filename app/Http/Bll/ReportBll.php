@@ -21,12 +21,19 @@ class ReportBll
     {
         $reportData = Input::get('report');
         $reportData['user_id'] = Auth::id();
+        if ($thread->reports()->forUser(Auth::id())->count() > 0) {
+            throw new \Exception('你已经举报过了哦');
+        }
         $thread->reports()->create($reportData);
     }
 
     public function reportReply(Reply $reply)
     {
         $reportData = Input::get('report');
+        $reportData['user_id'] = Auth::id();
+        if ($reply->reports()->forUser(Auth::id())->count() > 0) {
+            throw new \Exception('你已经举报过了哦');
+        }
         $reply->reports()->save($reportData);
     }
 
