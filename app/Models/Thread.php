@@ -225,7 +225,7 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function isFollowedBy($user)
     {
-        return $this->follows()->forUser($user->id)->count() > 0;
+        return $this->followers()->forUser($user->id)->count() > 0;
     }
 
     public function isFavoritedBy($user)
