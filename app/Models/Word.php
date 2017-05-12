@@ -2,11 +2,9 @@
 
 namespace Hifone\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use AltThree\Validator\ValidatingTrait;
 
-
-class Word extends Model
+class Word extends BaseModel
 {
     use ValidatingTrait;
     // manually maintain

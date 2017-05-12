@@ -11,14 +11,8 @@
 
 namespace Hifone\Models;
 
-use AltThree\Validator\ValidatingTrait;
-use Hifone\Models\Scopes\ForUser;
-use Illuminate\Database\Eloquent\Model;
-
-class Like extends Model
+class Like extends BaseModel
 {
-    use ValidatingTrait, ForUser;
-
     /**
      * Like.
      *

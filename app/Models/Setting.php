@@ -11,10 +11,9 @@
 
 namespace Hifone\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Venturecraft\Revisionable\RevisionableTrait;
 
-class Setting extends Model
+class Setting extends BaseModel
 {
     use RevisionableTrait;
     /**

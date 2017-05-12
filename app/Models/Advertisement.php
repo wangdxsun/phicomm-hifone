@@ -11,16 +11,12 @@
 
 namespace Hifone\Models;
 
-use AltThree\Validator\ValidatingTrait;
 use Hifone\Models\Ad\Adspace;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Venturecraft\Revisionable\RevisionableTrait;
 
-class Advertisement extends Model
+class Advertisement extends BaseModel
 {
-    use ValidatingTrait, RevisionableTrait;
-
     /**
      * The attributes that should be casted to native types.
      *

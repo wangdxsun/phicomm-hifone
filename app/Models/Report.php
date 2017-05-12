@@ -3,10 +3,9 @@
 namespace Hifone\Models;
 
 use Hifone\Models\Scopes\ForUser;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Report extends Model
+class Report extends BaseModel
 {
     use SoftDeletes, ForUser;
 

@@ -2,13 +2,8 @@
 
 namespace Hifone\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use AltThree\Validator\ValidatingTrait;
-
-
-class Notice extends Model
+class Notice extends BaseModel
 {
-    use ValidatingTrait;
     // manually maintain
     public $timestamps = false;
 

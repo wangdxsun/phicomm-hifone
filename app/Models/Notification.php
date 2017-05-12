@@ -11,17 +11,11 @@
 
 namespace Hifone\Models;
 
-use AltThree\Validator\ValidatingTrait;
-use Hifone\Models\Scopes\ForUser;
-use Hifone\Models\Scopes\Recent;
 use Hifone\Presenters\NotificationPresenter;
-use Illuminate\Database\Eloquent\Model;
 use McCool\LaravelAutoPresenter\HasPresenter;
 
-class Notification extends Model implements HasPresenter
+class Notification extends BaseModel implements HasPresenter
 {
-    use ValidatingTrait, ForUser, Recent;
-
     /**
      * The fillable properties.
      *

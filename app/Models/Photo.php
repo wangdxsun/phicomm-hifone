@@ -11,13 +11,8 @@
 
 namespace Hifone\Models;
 
-use AltThree\Validator\ValidatingTrait;
-use Illuminate\Database\Eloquent\Model;
-
-class Photo extends Model
+class Photo extends BaseModel
 {
-    use ValidatingTrait;
-
     /**
      * The fillable properties.
      *

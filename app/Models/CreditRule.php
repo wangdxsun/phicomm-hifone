@@ -11,13 +11,10 @@
 
 namespace Hifone\Models;
 
-use AltThree\Validator\ValidatingTrait;
 use Illuminate\Database\Eloquent\Model;
 
-class CreditRule extends Model
+class CreditRule extends BaseModel
 {
-    use ValidatingTrait;
-
     const NO_LIMIT = 0;
 
     const DAILY = 1;

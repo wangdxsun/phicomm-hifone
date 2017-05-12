@@ -14,7 +14,6 @@ namespace Hifone\Models;
 use AltThree\Validator\ValidatingTrait;
 use Carbon\Carbon;
 use Config;
-use Hifone\Models\Scopes\ForUser;
 use Hifone\Models\Scopes\Recent;
 use Hifone\Models\Traits\Taggable;
 use Hifone\Services\Dates\DateFactory;
@@ -25,7 +24,7 @@ use Venturecraft\Revisionable\RevisionableTrait;
 
 class Thread extends BaseModel implements TaggableInterface
 {
-    use ValidatingTrait, Taggable, ForUser, Recent, RevisionableTrait, SoftDeletes;
+    use ValidatingTrait, Taggable, Recent, RevisionableTrait, SoftDeletes;
 
     const VISIBLE = 0;//正常帖子
     const TRASH = -1;//回收站

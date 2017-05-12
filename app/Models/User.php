@@ -14,21 +14,19 @@ namespace Hifone\Models;
 use Auth;
 use AltThree\Validator\ValidatingTrait;
 use Cmgmyr\Messenger\Traits\Messagable;
-use Hifone\Models\Scopes\ForUser;
 use Hifone\Models\Traits\SearchTrait;
 use Hifone\Presenters\UserPresenter;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
-use Illuminate\Database\Eloquent\Model;
 use McCool\LaravelAutoPresenter\HasPresenter;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 
-class User extends Model implements AuthenticatableContract, CanResetPasswordContract, HasPresenter
+class User extends BaseModel implements AuthenticatableContract, CanResetPasswordContract, HasPresenter
 {
-    use Authenticatable, CanResetPassword, EntrustUserTrait, ValidatingTrait, Messagable, SearchTrait, ForUser;
+    use Authenticatable, CanResetPassword, EntrustUserTrait, ValidatingTrait, Messagable, SearchTrait;
 
     // Enable hasRole( $name ), can( $permission ),
     //   and ability($roles, $permissions, $options)

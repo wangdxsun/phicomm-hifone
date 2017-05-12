@@ -11,14 +11,8 @@
 
 namespace Hifone\Models;
 
-use AltThree\Validator\ValidatingTrait;
-use Hifone\Models\Scopes\ForUser;
-use Illuminate\Database\Eloquent\Model;
-
-class Follow extends Model
+class Follow extends BaseModel
 {
-    use ValidatingTrait, ForUser;
-
     /**
      * The fillable properties.
      *

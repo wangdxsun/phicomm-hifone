@@ -11,7 +11,7 @@
 
 namespace Hifone\Models;
 
-class Location extends BaseModel
+class Log extends BaseModel
 {
     /**
      * The fillable properties.
@@ -19,10 +19,11 @@ class Location extends BaseModel
      * @var string[]
      */
     protected $fillable = [
-        'name',
-        'order',
-        'created_at',
-        'updated_at',
+        'user_id',
+        'logable_id',
+        'logable_type',
+        'type',
+        'body',
     ];
 
     /**
@@ -31,17 +32,11 @@ class Location extends BaseModel
      * @var string[]
      */
     public $rules = [
-        'name'   => 'string|required',
-        'order'  => 'int',
+        'user_id'   => 'required|int',
     ];
 
-    /**
-     * A location has many users.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function users()
+    public function logable()
     {
-        return $this->hasMany(User::class);
+        return $this->morphTo();
     }
 }

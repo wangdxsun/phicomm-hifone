@@ -12,14 +12,9 @@
 namespace Hifone\Models;
 
 use Hifone\Models\Pm\Meta;
-use Hifone\Models\Scopes\ForUser;
-use Hifone\Models\Scopes\Recent;
-use Illuminate\Database\Eloquent\Model;
 
-class Pm extends Model
+class Pm extends BaseModel
 {
-    use ForUser, Recent;
-
     const INBOX = 1;
 
     const OUTBOX = 2;

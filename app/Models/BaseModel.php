@@ -8,14 +8,15 @@
 
 namespace Hifone\Models;
 
+use AltThree\Validator\ValidatingTrait;
 use Carbon\Carbon;
+use Hifone\Models\Scopes\ForUser;
 use Hifone\Models\Traits\SearchTrait;
 use Illuminate\Database\Eloquent\Model;
 
 class BaseModel extends Model
 {
-    use SearchTrait;
-
+    use SearchTrait, ForUser, ValidatingTrait;
 
     public function getCreatedAtAttribute($value)
     {
@@ -35,5 +36,10 @@ class BaseModel extends Model
     public function getUpdatedTimeAttribute()
     {
         return $this->attributes['updated_at'];
+    }
+
+    public function logs()
+    {
+        return $this->morphMany(Log::class, 'logable');
     }
 }

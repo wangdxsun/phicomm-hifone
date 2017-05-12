@@ -12,10 +12,9 @@
 namespace Hifone\Models;
 
 use AltThree\Validator\ValidatingTrait;
-use Illuminate\Database\Eloquent\Model;
 use Venturecraft\Revisionable\RevisionableTrait;
 
-class Section extends Model
+class Section extends BaseModel
 {
     use ValidatingTrait, RevisionableTrait;
 

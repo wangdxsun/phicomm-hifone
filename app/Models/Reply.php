@@ -11,15 +11,11 @@
 
 namespace Hifone\Models;
 
-use AltThree\Validator\ValidatingTrait;
-use Hifone\Models\Scopes\ForUser;
-use Hifone\Models\Scopes\Recent;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Venturecraft\Revisionable\RevisionableTrait;
 
 class Reply extends BaseModel
 {
-    use ValidatingTrait, ForUser, Recent, RevisionableTrait, SoftDeletes;
+    use SoftDeletes;
 
     const VISIBLE = 0;//正常帖子
     const TRASH = -1;//回收站

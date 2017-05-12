@@ -76,5 +76,8 @@ abstract class Controller extends BaseController
         $model->last_op_time = time();
         $model->last_op_reason = $reason;
         $model->save();
+        $logData['user_id'] = Auth::id();
+        $logData['body'] = $reason;
+        $model->logs()->create($logData);
     }
 }

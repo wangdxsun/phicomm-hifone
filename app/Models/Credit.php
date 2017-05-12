@@ -11,18 +11,11 @@
 
 namespace Hifone\Models;
 
-use AltThree\Validator\ValidatingTrait;
-use Hifone\Models\CreditRule;
-use Hifone\Models\Scopes\ForUser;
-use Hifone\Models\Scopes\Recent;
 use Hifone\Presenters\CreditPresenter;
-use Illuminate\Database\Eloquent\Model;
 use McCool\LaravelAutoPresenter\HasPresenter;
 
-class Credit extends Model implements HasPresenter
+class Credit extends BaseModel implements HasPresenter
 {
-    use ValidatingTrait, Recent, ForUser;
-
     /**
      * The fillable properties.
      *
