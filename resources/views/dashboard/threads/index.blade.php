@@ -16,10 +16,16 @@
             @include('partials.errors')
             <div class="toolbar">
                 <form class="form-inline">
-                    <select class="form-control selectpicker" name="thread[id]" style="max-width: 300px">
+                    <select class="form-control selectpicker" name="thread[id]">
+                        <option value="" selected>全部帖子ID</option>
+                        @foreach ($thread_all as $thread)
+                            <option value="{{ $thread->id }}">{{ $thread->id }}</option>
+                        @endforeach
+                    </select>
+                    <select class="form-control selectpicker" name="thread[title]" style="max-width: 300px">
                         <option value="" selected>全部帖子标题</option>
-                        @foreach ($threads as $thread)
-                            <option value="{{ $thread->id }}">{{ $thread->title }}</option>
+                        @foreach ($thread_all as $thread)
+                            <option value="{{ $thread->title }}">{{ $thread->title }}</option>
                         @endforeach
                     </select>
                     <select class="form-control selectpicker" name="thread[node_id]">
