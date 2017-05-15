@@ -39,6 +39,7 @@ class ThreadController extends ApiController
         }
         $thread['followed'] = Auth::check() ? Auth::user()->hasFollowUser($thread->user) : false;
         $thread['liked'] = Auth::check() ? Auth::user()->hasLikeThread($thread) : false;
+        $thread['user']['role'] = $thread->user->role;
         $thread['replies'] = $replies;
 
         return $thread;
