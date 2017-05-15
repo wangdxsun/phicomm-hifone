@@ -106,6 +106,7 @@ class ReplyController extends Controller
      */
     public function destroy(Reply $reply)
     {
+        $this->updateOpLog($reply, '删除回复');
         $reply->delete();
 
         return Redirect::back()->withSuccess('回帖删除成功');
@@ -185,7 +186,7 @@ class ReplyController extends Controller
     {
         try {
             $reply->status = -1;
-            $this->updateOpLog($reply, trim(request('reason')));
+            $this->updateOpLog($reply, '删除回复', trim(request('reason')));
         } catch (ValidationException $e) {
             return Redirect::back()->withErrors($e->getMessageBag());
         }

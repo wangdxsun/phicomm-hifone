@@ -227,8 +227,8 @@ class ThreadController extends Controller
     public function postTrash(Thread $thread)
     {
         try {
-            $thread->status = -1;
-            $this->updateOpLog($thread, trim(request('reason')));
+            $thread->status = Thread::TRASH;
+            $this->updateOpLog($thread, '删除帖子', trim(request('reason')));
         } catch (ValidationException $e) {
             return Redirect::back()->withErrors($e->getMessageBag());
         }

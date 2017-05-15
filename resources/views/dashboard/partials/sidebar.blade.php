@@ -83,6 +83,12 @@
                     <span>举报管理</span>
                 </a>
             </li>
+            <li {!! set_active('dashboard/log*') !!}>
+                <a href="{{ route('dashboard.log.index') }}">
+                    <i class="fa fa-calendar"></i>
+                    <span>操作日志</span>
+                </a>
+            </li>
             {{--<li {!! set_active('dashboard/adspace*') !!} {!! set_active('dashboard/advertisement*') !!} {!! set_active('dashboard/adblock*') !!}>--}}
                 {{--<a href="{{ route('dashboard.advertisement.index') }}">--}}
                     {{--<i class="fa fa-audio-description"></i>--}}

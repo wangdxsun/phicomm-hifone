@@ -22,8 +22,8 @@ class Log extends BaseModel
         'user_id',
         'logable_id',
         'logable_type',
-        'type',
-        'body',
+        'operation',
+        'reason',
     ];
 
     /**
@@ -33,10 +33,36 @@ class Log extends BaseModel
      */
     public $rules = [
         'user_id'   => 'required|int',
+        'operation' => 'required',
     ];
 
     public function logable()
     {
         return $this->morphTo();
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function getObjectTypeAttribute()
+    {
+        switch ($this->logable_type) {
+            case Thread::class:
+                return '帖子';
+            case Reply::class:
+                return '回复';
+            case Report::class:
+                return '举报';
+            case User::class:
+                return '用户';
+            case Carousel::class:
+                return 'banner';
+            case Node::class:
+                return '板块';
+            default:
+                return $this->logable_type;
+        }
     }
 }

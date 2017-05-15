@@ -68,7 +68,8 @@ class NoticeController extends Controller
 
         $noticeData = Request::get('notice');
         try {
-            Notice::create($noticeData);
+            $notice = Notice::create($noticeData);
+            $this->updateOpLog($notice, '新增公告');
         } catch (ValidationException $e) {
 
             $errorMsg = json_decode( json_encode( $e->getMessageBag()),true);
@@ -96,6 +97,7 @@ class NoticeController extends Controller
         $noticeData = Request::get('notice');
         try {
             $notice->update($noticeData);
+            $this->updateOpLog($notice, '修改公告');
         } catch (ValidationException $e) {
             return Redirect::route('dashboard.notice.edit', ['id' => $notice->id])
                 ->withInput(Request::all())
@@ -106,8 +108,10 @@ class NoticeController extends Controller
         return Redirect::route('dashboard.notice.index', ['id' => $notice->id])
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.notices.edit.success')));
     }
+
     public function destroy(Notice $notice)
     {
+        $this->updateOpLog($notice, '删除公告');
         $notice->delete();
 
         return Redirect::route('dashboard.notice.index')

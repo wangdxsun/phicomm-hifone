@@ -60,10 +60,10 @@ class CarouselController extends Controller
      */
     public function store()
     {
-
         $carouselData = Request::get('carousel');
         try {
-            Carousel::create($carouselData);
+            $carousel = Carousel::create($carouselData);
+            $this->updateOpLog($carousel, '添加banner');
         } catch (ValidationException $e) {
             return Redirect::route('dashboard.carousel.create')
                 ->withInput(Request::all())
@@ -87,6 +87,7 @@ class CarouselController extends Controller
         $carouselData = Request::get('carousel');
         try {
             $carousel->update($carouselData);
+            $this->updateOpLog($carousel, '修改banner');
         } catch (ValidationException $e) {
             return Redirect::route('dashboard.carousel.edit', ['id' => $carousel->id])
                 ->withInput(Request::all())
@@ -100,7 +101,8 @@ class CarouselController extends Controller
 
     public function destroy(Carousel $carousel)
     {
-        $carousel->delete();;
+        $this->updateOpLog($carousel, '删除banner');
+        $carousel->delete();
 
         return Redirect::route('dashboard.carousel.index')
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));

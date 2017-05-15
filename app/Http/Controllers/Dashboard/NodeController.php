@@ -70,7 +70,8 @@ class NodeController extends Controller
         $nodeData = Request::get('node');
 
         try {
-            Node::create($nodeData);
+            $node = Node::create($nodeData);
+            $this->updateOpLog($node, '新增板块');
         } catch (ValidationException $e) {
             return Redirect::route('dashboard.node.create')
                 ->withInput(Request::all())
@@ -110,6 +111,7 @@ class NodeController extends Controller
 
         try {
             $node->update($nodeData);
+            $this->updateOpLog($node, '修改板块');
         } catch (ValidationException $e) {
             return Redirect::route('dashboard.node.edit', ['id' => $node->id])
                 ->withInput(Request::all())
@@ -133,6 +135,7 @@ class NodeController extends Controller
         if ($node->threads()->count() > 0) {
             return back()->withErrors('该板块下存在帖子，无法删除');
         }
+        $this->updateOpLog($node, '删除板块');
         $node->delete();
 
         return back()->withSuccess('板块删除成功');

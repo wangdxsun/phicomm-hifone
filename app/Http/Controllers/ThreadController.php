@@ -285,7 +285,7 @@ class ThreadController extends Controller
 
         try {
             $thread->status = -1;
-            $this->updateOpLog($thread, trim(request('reason')));
+            $this->updateOpLog($thread, '删除帖子', trim(request('reason')));
         } catch (ValidationException $e) {
             return Redirect::back()->withErrors($e->getMessageBag());
         }

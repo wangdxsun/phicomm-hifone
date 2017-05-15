@@ -12,8 +12,8 @@
 namespace Hifone\Http\Controllers;
 
 use Auth;
+use Hifone\Models\BaseModel;
 use Hifone\Services\Breadcrumb\Breadcrumb;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
@@ -70,14 +70,15 @@ abstract class Controller extends BaseController
         });
     }
 
-    public function updateOpLog(Model $model, $reason)
+    public function updateOpLog(BaseModel $model, $operation, $reason = null)
     {
-        $model->last_op_user_id = \Auth::id();
+        $model->last_op_user_id = Auth::id();
         $model->last_op_time = time();
-        $model->last_op_reason = $reason;
+        $reason && $model->last_op_reason = $reason;
         $model->save();
         $logData['user_id'] = Auth::id();
-        $logData['body'] = $reason;
+        $logData['operation'] = $operation;
+        $logData['reason'] = $reason;
         $model->logs()->create($logData);
     }
 }

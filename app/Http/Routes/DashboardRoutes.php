@@ -112,6 +112,7 @@ class DashboardRoutes
             $router->resource('notice', 'NoticeController');
             $router->resource('carousel', 'CarouselController');
             $router->resource('report', 'ReportController');
+            $router->resource('log', 'LogController');
         });
 
     }

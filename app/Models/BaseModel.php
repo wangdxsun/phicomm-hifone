@@ -11,12 +11,13 @@ namespace Hifone\Models;
 use AltThree\Validator\ValidatingTrait;
 use Carbon\Carbon;
 use Hifone\Models\Scopes\ForUser;
+use Hifone\Models\Scopes\Recent;
 use Hifone\Models\Traits\SearchTrait;
 use Illuminate\Database\Eloquent\Model;
 
 class BaseModel extends Model
 {
-    use SearchTrait, ForUser, ValidatingTrait;
+    use SearchTrait, ForUser, ValidatingTrait, Recent;
 
     public function getCreatedAtAttribute($value)
     {

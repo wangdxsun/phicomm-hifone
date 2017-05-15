@@ -12,10 +12,9 @@
 namespace Hifone\Models;
 
 use Hifone\Presenters\NodePresenter;
-use Illuminate\Database\Eloquent\Model;
 use McCool\LaravelAutoPresenter\HasPresenter;
 
-class Node extends Model implements HasPresenter
+class Node extends BaseModel implements HasPresenter
 {
     /**
      * List of attributes that have default values.
