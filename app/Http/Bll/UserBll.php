@@ -14,11 +14,6 @@ use Hifone\Models\User;
 
 class UserBll extends BaseBll
 {
-    public function allUser()
-    {
-//        $users = User::;
-    }
-
     public function getCredits()
     {
         $credits = Auth::user()->credits()->with('rule')->recent()->paginate(Config::get('setting.per_page'));

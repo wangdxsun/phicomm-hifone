@@ -67,6 +67,10 @@ class ApiRoutes
                 $router->get('credit', 'UserController@credit');
                 $router->get('user/me', 'UserController@me');
                 $router->get('user/replies', 'UserController@replies');
+
+                $router->get('chats', 'ChatController@chats');
+                $router->get('chat/{user}', 'ChatController@messages');
+                $router->post('chat/{user}', 'ChatController@store');
             });
         });
     }

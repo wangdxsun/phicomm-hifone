@@ -157,6 +157,10 @@ class EventServiceProvider extends ServiceProvider
             //'SocialiteProviders\Weixin\WeixinExtendSocialite@handle',
         ],
 
+        \Hifone\Events\Chat\NewChatMessageEvent::class => [
+            \Hifone\Handlers\Listeners\Chat\NewChatMessageHandler::class,
+        ],
+
     ];
 
     /**
