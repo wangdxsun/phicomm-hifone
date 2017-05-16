@@ -17,6 +17,7 @@ use Hifone\Events\Follow\FollowWasAddedEvent;
 use Hifone\Events\Follow\FollowedWasAddedEvent;
 use Hifone\Events\Follow\FollowedWasRemovedEvent;
 use Hifone\Events\Follow\FollowWasRemovedEvent;
+use Hifone\Models\User;
 use Hifone\Services\Dates\DateFactory;
 
 class AddFollowCommandHandler
@@ -37,11 +38,19 @@ class AddFollowCommandHandler
     {
         if ($target->followers()->forUser(Auth::id())->count()) {
             $target->followers()->forUser(Auth::id())->delete();
+            $target->decrement('follower_count', 1);
+            if ($target instanceOf User) {
+                Auth::user()->decrement('follow_count', 1);
+            }
 
             event(new FollowWasRemovedEvent(Auth::user()));
             event(new FollowedWasRemovedEvent($target));
         } else {
             $target->followers()->create(['user_id' => Auth::id()]);
+            $target->increment('follower_count', 1);
+            if ($target instanceOf User) {
+                Auth::user()->increment('follow_count', 1);
+            }
 
             event(new FollowWasAddedEvent(Auth::user()));
             event(new FollowedWasAddedEvent($target));
