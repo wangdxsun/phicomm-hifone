@@ -8,6 +8,7 @@
 
 namespace Hifone\Http\Bll;
 
+use Hifone\Commands\Image\UploadBase64ImageCommand;
 use Hifone\Commands\Image\UploadImageCommand;
 use Hifone\Commands\Thread\AddThreadCommand;
 use Hifone\Models\Thread;
@@ -37,12 +38,21 @@ class ThreadBll extends BaseBll
         $tags = isset($threadData['tags']) ? $threadData['tags'] : '';
 
         //如果有单独上传图片，将图片拼接到正文后面
-        if (Input::hasFile('images')) {
-            foreach ($images = Input::file('images') as $image) {
-                $res = dispatch(new UploadImageCommand($image));
-                $threadData['body'] .= "<img src='{$res["filename"]}'/>";
+//        if (Input::hasFile('images')) {
+//            foreach ($images = Input::file('images') as $image) {
+//                $res = dispatch(new UploadImageCommand($image));
+//                $threadData['body'] .= "<img src='{$res["filename"]}'/>";
+//            }
+//        }
+
+        //base64上传
+        if (Input::has('images')) {
+            foreach ($images = Input::get('images') as $image) {
+                $upload = dispatch(new UploadBase64ImageCommand($image));
+                $threadData['body'] .= "<img src='{$upload["filename"]}'/>";
             }
         }
+
         dispatch(new AddThreadCommand(
             $threadData['title'],
             $threadData['body'],
