@@ -188,11 +188,8 @@ if (!function_exists('error')) {
 }
 
 if (!function_exists('success')) {
-    function success($data = []) {
-        return [
-            'code' => 0,
-            'data' => $data
-        ];
+    function success($msg) {
+        return response()->json(['msg' => $msg]);
     }
 }
 

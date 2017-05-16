@@ -26,21 +26,9 @@ class ThreadController extends ApiController
         return $threads;
     }
 
-    public function show(Thread $thread)
+    public function show(Thread $thread, ThreadBll $threadBll)
     {
-        if ($thread->inVisible()) {
-            throw new NotFoundHttpException('帖子状态不可见');
-        }
-        $thread = $thread->load(['user', 'node']);
-        $replies = $thread->replies()->visible()->with(['user'])
-            ->orderBy('order', 'desc')->orderBy('created_at', 'desc')->paginate(15);
-        foreach ($replies as &$reply) {
-            $reply['liked'] = Auth::check() ? Auth::user()->hasLikeReply($reply) : false;
-        }
-        $thread['followed'] = Auth::check() ? Auth::user()->hasFollowUser($thread->user) : false;
-        $thread['liked'] = Auth::check() ? Auth::user()->hasLikeThread($thread) : false;
-        $thread['user']['role'] = $thread->user->role;
-        $thread['replies'] = $replies;
+        $threadBll->showThread($thread);
 
         return $thread;
     }
@@ -49,6 +37,6 @@ class ThreadController extends ApiController
     {
         $threadBll->createThread();
 
-        return response()->json('帖子发表成功，请耐心等待审核通过');
+        return success('帖子发表成功，请耐心等待审核通过');
     }
 }

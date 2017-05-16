@@ -8,6 +8,7 @@
 
 namespace Hifone\Http\Controllers\Api;
 
+use Hifone\Events\Banner\BannerWasViewedEvent;
 use Hifone\Models\Carousel;
 
 class BannerController extends ApiController
@@ -19,6 +20,7 @@ class BannerController extends ApiController
 
     public function show(Carousel $carousel)
     {
-        return redirect($carousel->url);
+        event(new BannerWasViewedEvent($carousel));
+        return redirect($carousel->jump_url);
     }
 }

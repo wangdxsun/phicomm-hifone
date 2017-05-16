@@ -11,6 +11,7 @@ namespace Hifone\Http\Bll;
 use Hifone\Commands\Image\UploadBase64ImageCommand;
 use Hifone\Commands\Image\UploadImageCommand;
 use Hifone\Commands\Thread\AddThreadCommand;
+use Hifone\Events\Thread\ThreadWasViewedEvent;
 use Hifone\Models\Thread;
 use Hifone\Repositories\Criteria\Thread\Filter;
 use Hifone\Repositories\Criteria\Thread\Search;
@@ -60,5 +61,26 @@ class ThreadBll extends BaseBll
             $node_id,
             $tags
         ));
+    }
+
+    public function showThread($thread)
+    {
+        if ($thread->inVisible()) {
+            throw new NotFoundHttpException('帖子状态不可见');
+        }
+        event(new ThreadWasViewedEvent($thread));
+
+        $thread = $thread->load(['user', 'node']);
+        $replies = $thread->replies()->visible()->with(['user'])
+            ->orderBy('order', 'desc')->orderBy('created_at', 'desc')->paginate(15);
+        foreach ($replies as &$reply) {
+            $reply['liked'] = Auth::check() ? Auth::user()->hasLikeReply($reply) : false;
+        }
+        $thread['followed'] = Auth::check() ? Auth::user()->hasFollowUser($thread->user) : false;
+        $thread['liked'] = Auth::check() ? Auth::user()->hasLikeThread($thread) : false;
+        $thread['user']['role'] = $thread->user->role;
+        $thread['replies'] = $replies;
+
+        return $thread;
     }
 }

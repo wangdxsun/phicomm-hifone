@@ -18,14 +18,14 @@ class ReportController extends ApiController
     {
         $reportBll->reportThread($thread);
 
-        return response()->json('举报成功');
+        return success('举报成功');
     }
 
     public function reply(Reply $reply, ReportBll $reportBll)
     {
         $reportBll->reportReply($reply);
 
-        return response()->json('举报成功');
+        return success('举报成功');
     }
 
     public function reason(ReportBll $reportBll)

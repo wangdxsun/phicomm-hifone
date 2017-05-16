@@ -21,9 +21,9 @@
                 <div class="col-xs-3">
                     <a href="{{ $carousel->url }}" target="_blank"><img src="{{ $carousel->image }}" style="max-width: 200px; max-height: 50px;"></a>
                 </div>
-                <div class="col-xs-4">{{ $carousel->description }}<br><a href="{{ $carousel->url }}" target="_blank">{{ $carousel->url }}</a></div>
+                <div class="col-xs-4">{{ $carousel->description }}<br><a href="{{ $carousel->url }}" target="_blank">{{ $carousel->jump_url }}</a></div>
                 <div class="col-xs-2">
-                    <div>{!! $carousel->user->username.'<br>'.$carousel->updated_at !!}  </div>
+                    <div>{!! $carousel->user->username.'<br>'.$carousel->updated_time !!}  </div>
                 </div>
                 <div class="col-xs-2 text-right">
                     <a href="{{ route('dashboard.carousel.edit',['id'=>$carousel->id]) }}" class="btn btn-default btn-sm">{{ trans('forms.edit') }}</a>

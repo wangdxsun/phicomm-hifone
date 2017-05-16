@@ -16,6 +16,6 @@ class ReplyController extends ApiController
     {
         $replyBll->createReply();
 
-        return response()->json('回复发表成功，请耐心等待审核通过');
+        return success('回复发表成功，请耐心等待审核通过');
     }
 }

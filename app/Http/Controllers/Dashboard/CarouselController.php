@@ -43,6 +43,11 @@ class CarouselController extends Controller
             ->withCarousels($carousels);
     }
 
+    public function show(Carousel $carousel)
+    {
+        return redirect($carousel->jump_url);
+    }
+
     /**
      * Shows the create carousel view.
      *
@@ -110,10 +115,13 @@ class CarouselController extends Controller
 
     public function close(Carousel $carousel)
     {
-        $carousel->visible = ($carousel->visible > 0) ? $carousel->visible - 1 : $carousel->visible + 1;
-        $carousel->save();
-
-//        ($carousel->visible > 0) ? $carousel->decrement('visible', 1) : $carousel->increment('visible', 1);
+        if ($carousel->visible > 0) {
+            $carousel->visible -= 1;
+            $this->updateOpLog($carousel, '关闭banner');
+        } else {
+            $carousel->visible += 1;
+            $this->updateOpLog($carousel, '开启banner');
+        }
 
         return Redirect::back()->withSuccess('修改成功！');
     }

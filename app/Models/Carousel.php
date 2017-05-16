@@ -31,4 +31,14 @@ class Carousel extends BaseModel
     {
         return $query->where('visible', 1);
     }
+
+    public function getUrlAttribute()
+    {
+        return route('banner.show', ['carousel' => $this->id]);
+    }
+
+    public function getJumpUrlAttribute()
+    {
+        return $this->attributes['url'];
+    }
 }

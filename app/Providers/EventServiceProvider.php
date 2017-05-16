@@ -132,9 +132,12 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Thread\UpdateThreadNodesHandler::class,
         ],
 
-        //
         \Hifone\Events\Thread\ThreadWasViewedEvent::class => [
             \Hifone\Handlers\Listeners\Thread\UpdateThreadViewCountHandler::class,
+        ],
+
+        \Hifone\Events\Banner\BannerWasViewedEvent::class => [
+            \Hifone\Handlers\Listeners\Banner\UpdateBannerViewCountHandler::class,
         ],
 
         \Hifone\Events\User\UserWasAddedEvent::class => [
