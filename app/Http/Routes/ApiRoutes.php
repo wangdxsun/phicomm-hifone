@@ -66,6 +66,7 @@ class ApiRoutes
                 $router->get('watch', 'NotificationController@watch');
                 $router->get('credit', 'UserController@credit');
                 $router->get('user/me', 'UserController@me');
+                $router->get('user/replies', 'UserController@replies');
             });
         });
     }

@@ -32,4 +32,11 @@ class UserBll extends BaseBll
 
         return $threads;
     }
+
+    public function getReplies()
+    {
+        $replies = Auth::user()->replies()->visible()->with(['thread'])->recent()->paginate();
+
+        return $replies;
+    }
 }
