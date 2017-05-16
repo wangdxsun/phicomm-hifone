@@ -46,7 +46,7 @@ class ApiRoutes
             $router->post('bind', 'PhicommController@bind');
 
             //个人中心
-            $router->get('user/{user}', 'UserController@show');
+            $router->get('user/{user}', 'UserController@show')->where('user', '[0-9]+');
             $router->get('user/{user}/follows', 'UserController@follows');
             $router->get('user/{user}/followers', 'UserController@followers');
             $router->get('user/{user}/threads', 'UserController@threads');
@@ -64,6 +64,7 @@ class ApiRoutes
                 $router->get('notification', 'NotificationController@index');
                 $router->get('watch', 'NotificationController@watch');
                 $router->get('credit', 'UserController@credit');
+                $router->get('user/me', 'UserController@me');
             });
         });
     }

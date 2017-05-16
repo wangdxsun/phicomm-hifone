@@ -52,7 +52,7 @@ class Log extends BaseModel
             case Thread::class:
                 return '帖子';
             case Reply::class:
-                return '回复';
+                return '回帖';
             case Report::class:
                 return '举报';
             case User::class:

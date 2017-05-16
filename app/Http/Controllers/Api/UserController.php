@@ -15,9 +15,12 @@ use Hifone\Models\User;
 
 class UserController extends ApiController
 {
-    public function index(UserBll $userBll)
+    public function me()
     {
+        $user = Auth::user();
+        $user['role'] = $user->role;
 
+        return $user;
     }
 
     public function show(User $user, UserBll $userBll)
