@@ -130,7 +130,7 @@ class Thread extends BaseModel implements TaggableInterface
         $lastReply = $this->replies()->recent()->first();
 
         $this->last_reply_user_id = $lastReply ? $lastReply->user_id : 0;
-        $this->updated_at = $lastReply->created_at;
+        $this->updated_at = $lastReply->created_time;
         $this->save();
     }
 

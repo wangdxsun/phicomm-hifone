@@ -77,7 +77,7 @@ class HomeController extends Controller
                 $thread->title,
                 Config::get('setting.site_name'),
                 Str::canonicalize(route('thread.show', $thread->id)),
-                date('Y-m-d', strtotime($thread->created_at)),
+                date('Y-m-d', strtotime($thread->created_time)),
                 str_limit($thread->body, 200));
         }
 

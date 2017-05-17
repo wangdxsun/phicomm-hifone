@@ -12,6 +12,7 @@
 namespace Hifone\Http\Routes;
 
 use Illuminate\Contracts\Routing\Registrar;
+use Illuminate\Support\Facades\Broadcast;
 
 /**
  * This is the api routes class.

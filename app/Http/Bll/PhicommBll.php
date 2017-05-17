@@ -173,4 +173,23 @@ class PhicommBll extends BaseBll
         event(new UserWasAddedEvent($user));
         Auth::login($user);
     }
+
+    public function pushMessage($type, $outline, $title, $message, $uid, $url = null)
+    {
+        $parameter = [
+            'coverimg' => '',
+            'msgcontent' =>$message,
+            'msgtype' => $type,
+            'outline' => $outline,
+            'source' => '1',
+            'ticker' => 'ticker',
+            'timestamp' =>date('Y-m-d H:i'),
+            'title' =>$title,
+            'uid' =>$uid,
+            'url' =>$url
+        ];
+        $output = json_decode(curlPost(env('PHIDELiVER'), $parameter),true);
+
+        return $output;
+    }
 }

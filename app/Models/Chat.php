@@ -21,8 +21,8 @@ class Chat extends BaseModel
      * @var string[]
      */
     protected $fillable = [
-        'from',
-        'to',
+        'from_user_id',
+        'to_user_id',
         'from_to',
         'message',
     ];
@@ -33,20 +33,20 @@ class Chat extends BaseModel
      * @var string[]
      */
     public $rules = [
-        'from'      => 'required|int',
-        'to'     => 'required|int',
+        'from_user_id'      => 'required|int',
+        'to_user_id'     => 'required|int',
         'from_to'    => 'required|int',
         'message' => 'required|string',
     ];
 
     public function from()
     {
-        return $this->belongsTo(User::class, 'from');
+        return $this->belongsTo(User::class, 'from_user_id');
     }
 
     public function to()
     {
-        return $this->belongsTo(User::class, 'to');
+        return $this->belongsTo(User::class, 'to_user_id');
     }
 
     public function scopeChatWith($query, User $user)
@@ -56,6 +56,6 @@ class Chat extends BaseModel
 
     public function scopeMy($query)
     {
-        return $query->where('from', \Auth::id())->orWhere('to', \Auth::id());
+        return $query->where('from_user_id', \Auth::id())->orWhere('to_user_id', \Auth::id());
     }
 }
