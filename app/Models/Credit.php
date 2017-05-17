@@ -11,10 +11,7 @@
 
 namespace Hifone\Models;
 
-use Hifone\Presenters\CreditPresenter;
-use McCool\LaravelAutoPresenter\HasPresenter;
-
-class Credit extends BaseModel implements HasPresenter
+class Credit extends BaseModel
 {
     /**
      * The fillable properties.
@@ -82,13 +79,15 @@ class Credit extends BaseModel implements HasPresenter
         return date('Ymd');
     }
 
-    /**
-     * Get the presenter class.
-     *
-     * @return string
-     */
-    public function getPresenterClass()
+    public function getRewardAttribute()
     {
-        return CreditPresenter::class;
+        $reward = $this->body ?: $this->rule->reward;
+        if ($reward > 0) {
+            $prefix = '<strong class="text-success">+';
+        } else {
+            $prefix = '<strong class="text-danger">';
+        }
+
+        return $prefix.number_format($reward, 1).'</strong>';
     }
 }

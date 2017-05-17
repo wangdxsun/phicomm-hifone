@@ -45,10 +45,6 @@ class ForumRoutes
                 $router->get('/messages/{id}', 'MessagesController@show')->name('messages.show');
                 $router->put('/messages/{id}', 'MessagesController@update')->name('messages.update');
                 $router->post('/thread/{thread}/trash', 'ThreadController@postTrash')->name('thread.trash');
-
-//                $router->post('/thread', 'ThreadController@store')->name('thread.store');
-//                $router->post('/thread/{thread}', 'ThreadController@update')->name('thread.update');
-//                $router->delete('/thread/{thread}', 'ThreadController@destroy')->name('thread.destroy');
             });
 
             //Sitemap Stuff
@@ -68,11 +64,6 @@ class ForumRoutes
             $router->resource('pm', 'PmController');
             $router->resource('reply', 'ReplyController', ['only' => ['store']]);
             $router->resource('tag', 'TagController');
-
-//            $router->get('/thread', 'ThreadController@index')->name('thread.index');
-//            $router->get('/thread/create', 'ThreadController@create')->name('thread.create');
-//            $router->get('/thread/{thread}', 'ThreadController@show')->name('thread.show');
-//            $router->get('/thread/{thread}/edit', 'ThreadController@edit')->name('thread.edit');
         });
     }
 }

@@ -26,6 +26,7 @@ class UserController extends ApiController
     public function show(User $user, UserBll $userBll)
     {
         $user['role'] = $user->role;
+        $user['followed'] = Auth::check() ? Auth::user()->hasFollowUser($user) : false;
 
         return $user;
     }

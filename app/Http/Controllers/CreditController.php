@@ -11,16 +11,14 @@
 
 namespace Hifone\Http\Controllers;
 
-use Auth;
-use Config;
 use Hifone\Http\Bll\CreditBll;
-use Illuminate\Support\Facades\View;
+use Hifone\Http\Bll\UserBll;
 
 class CreditController extends Controller
 {
-    public function index(CreditBll $creditBll)
+    public function index(UserBll $userBll)
     {
-        $credits = $creditBll->getCredits();
+        $credits = $userBll->getCredits();
 
         return $this->view('credits.index')
             ->withCredits($credits);
