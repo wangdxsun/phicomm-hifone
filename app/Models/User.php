@@ -303,9 +303,22 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         return $thread->favorites()->forUser($this->id)->count() > 0;
     }
 
-    public function hasFollowUser(User $user)
+    public static function hasFollowUser(User $user)
     {
-        return $this->follows()->ofType(User::class)->ofId($user->id)->count() > 0;
+        if (Auth::guest()) {
+            return 'unFollow';
+        }
+
+        $iFollowUser = Auth::user()->follows()->ofType(User::class)->ofId($user->id)->count() > 0;
+        $userFollowMe = $user->follows()->ofType(User::class)->ofId(Auth::id())->count() > 0;
+
+        if ($userFollowMe && $iFollowUser) {
+            return 'followEachOther';
+        } elseif ($iFollowUser) {
+            return 'followed';
+        } else {
+            return 'unFollow';
+        }
     }
 
     public function hasLikeThread(Thread $thread)
