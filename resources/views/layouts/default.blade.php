@@ -13,6 +13,8 @@
         <link rel="shortcut icon" href="/images/favicon.ico">
         <link rel="alternate" type="application/atom+xml" href="/feed" />
         <link rel="stylesheet" href="{{ elixir('dist/css/all.css') }}">
+        {{--<script src="/dist/js/echo.js"></script>--}}
+        {{--<script src="http://222.73.156.127:20063/socket.io/socket.io.js"></script>--}}
         <script src="{{ elixir('dist/js/all.js') }}"></script>
         <script type="text/javascript">
             Hifone.Config = {
@@ -35,6 +37,16 @@
                 'like' : '{{ trans('hifone.like') }}',
                 'dislike' : '{{ trans('hifone.unlike') }}'
             };
+        </script>
+        <script src="//cdn.bootcss.com/vue/1.0.17/vue.min.js"></script>
+        <script src="//cdn.bootcss.com/socket.io/1.4.5/socket.io.min.js"></script>
+        <script>
+            $().ready(function() {
+                var socket = io('222.73.156.127:20063');
+                socket.on('messages:newMessage', function(data) {
+                    console.log(data);
+                });
+            });
         </script>
         @if($stylesheet)
 		<style type="text/css">

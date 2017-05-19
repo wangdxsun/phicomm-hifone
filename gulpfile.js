@@ -4,7 +4,7 @@ var elixir = require('laravel-elixir'),
     coffee = require('gulp-coffee');
 
 elixir.config.production = true;
-elixir.config.sourcemaps = false;
+elixir.config.sourcemaps = true;
 
 elixir(function (mix) {
     mix

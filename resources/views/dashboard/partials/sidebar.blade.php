@@ -89,6 +89,12 @@
                     <span>操作日志</span>
                 </a>
             </li>
+            <li {!! set_active('dashboard/stat*') !!}>
+                <a href="{{ route('dashboard.stat.index') }}">
+                    <i class="fa fa-bar-chart"></i>
+                    <span>数据统计</span>
+                </a>
+            </li>
             {{--<li {!! set_active('dashboard/adspace*') !!} {!! set_active('dashboard/advertisement*') !!} {!! set_active('dashboard/adblock*') !!}>--}}
                 {{--<a href="{{ route('dashboard.advertisement.index') }}">--}}
                     {{--<i class="fa fa-audio-description"></i>--}}
