@@ -22,6 +22,7 @@ use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Pin\SinkWasAddedEvent;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Http\Bll\ThreadBll;
+use Hifone\Http\Bll\PhicommBll;
 use Hifone\Models\Node;
 use Hifone\Models\Section;
 use Hifone\Models\Thread;
@@ -49,6 +50,20 @@ class ThreadController extends Controller
             ->withThreads($threads)
             ->withSections(Section::orderBy('order')->get());
     }
+
+
+   /* public function index(PhicommBll $phicommBll)
+    {
+        $title = '【私信】XX 给你发了 X 条私信';
+        $outline = '你好';
+        $in_title = 'XX 对您说：';
+        $type = 1004;
+        $message = '你好';
+        $uid = 1230421;
+        $url = null;
+        $response = $phicommBll->pushMessage('0', $title, $outline, $in_title, $type, $message, $uid, $url);
+        echo var_dump($response);
+    }*/
 
     /**
      * Shows a thread in more detail.
