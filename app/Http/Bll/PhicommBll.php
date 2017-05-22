@@ -10,6 +10,7 @@ namespace Hifone\Http\Bll;
 
 use GuzzleHttp\Client;
 use Hifone\Events\User\UserWasAddedEvent;
+use Hifone\Models\Keyword;
 use Hifone\Models\User;
 use Auth;
 
@@ -169,23 +170,29 @@ class PhicommBll extends BaseBll
             'password' => str_random(32),
             'regip' => request()->server('REMOTE_ADDR'),
         ];
+        if (User::where('username', request('username'))->count() > 0) {
+            throw new \Exception('用户名已存在');
+        } elseif (Keyword::where('word', 'like', request('username'))->count() > 0) {
+            throw new \Exception('用户名包含敏感词，换一个试试');
+        }
         $user = User::create($userData);
         event(new UserWasAddedEvent($user));
         Auth::login($user);
     }
-    /*
-         * 参数说明：
-         * source   1——论坛 2——商场  3——路由器  4——APP
-         * title    消息列表中消息标题
-         * outline  消息列表中消息概括
-         * type     1001——评论帖子  1002——帖子评论回复  1003——管理员操作（帖子置顶、高亮、提升等）
-         *          1004——私信  1005——系统提示（帖子审核通过、成为超级会员等）
-         * in_title 消息详情的标题
-         * message  消息内容
-         * uid      接收消息的斐讯云账户ID
-         * url      私信类消息的对话页面链接   帖子类消息的帖子链接  系统提示类消息链接为空
-         *
-         */
+    /**
+     * 参数说明：
+     * $msg_type 0，通知（会响）， 1，消息
+     * source   1——论坛 2——商场  3——路由器  4——APP
+     * title    消息列表中消息标题
+     * outline  消息列表中消息概括
+     * type     1001——评论帖子  1002——帖子评论回复  1003——管理员操作（帖子置顶、高亮、提升等）
+     *          1004——私信  1005——系统提示（帖子审核通过、成为超级会员等）
+     * in_title 消息详情的标题
+     * message  消息内容
+     * uid      接收消息的斐讯云账户ID
+     * url      私信类消息的对话页面链接   帖子类消息的帖子链接  系统提示类消息链接为空
+     *
+     */
     public function pushMessage($msg_type, $title, $outline, $in_title, $type, $message, $uid, $url = null)
     {
         $ticker = '';

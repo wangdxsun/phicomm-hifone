@@ -112,7 +112,11 @@ class PhicommController extends Controller
             'phicomm_id' => 'required|integer|min:1',
             'username' => 'required',
         ]);
-        $phicommBll->bind();
+        try {
+            $phicommBll->bind();
+        } catch (\Exception $e) {
+            return back()->withInput()->withErrors($e->getMessage());
+        }
 
         return redirect('/');
     }

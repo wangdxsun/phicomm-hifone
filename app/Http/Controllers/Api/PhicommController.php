@@ -70,7 +70,7 @@ class PhicommController extends ApiController
         ]);
         $phicommBll->bind();
 
-        return response();
+        return response()->json('绑定成功');
     }
 
     public function reset()
