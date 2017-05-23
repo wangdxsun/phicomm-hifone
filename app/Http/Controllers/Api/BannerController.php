@@ -21,6 +21,7 @@ class BannerController extends ApiController
     public function show(Carousel $carousel)
     {
         event(new BannerWasViewedEvent($carousel));
+
         return redirect($carousel->jump_url);
     }
 }

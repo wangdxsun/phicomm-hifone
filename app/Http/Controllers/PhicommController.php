@@ -12,6 +12,8 @@ use Hifone\Events\User\UserWasAddedEvent;
 use Hifone\Http\Bll\PhicommBll;
 use Hifone\Models\Provider;
 use Hifone\Models\User;
+use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\Request;
 use Config;
 use Session;
@@ -21,6 +23,8 @@ use Input;
 
 class PhicommController extends Controller
 {
+    use ThrottlesLogins, AuthenticatesAndRegistersUsers;
+
     private $phicomm;
 
     public function __construct(PhicommBll $phicomm)

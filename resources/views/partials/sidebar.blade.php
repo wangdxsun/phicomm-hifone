@@ -48,12 +48,12 @@
                 <h3 class="panel-title">{{ $site_name }} - {{ $site_about }}</h3>
             </div>
             <div class="panel-body text-center">
-                <a href="/auth/register" class="btn btn-primary">
+                <a href="{{ route('auth.register') }}" class="btn btn-primary">
                     <i class="fa fa-user"> </i> {!! trans('hifone.signup') !!}
                 </a>
             </div>
             <div class="panel-footer text-center">
-                {{ trans('hifone.registered_users') }} <a href="/auth/login">{{ trans('hifone.login.login') }}</a>
+                {{ trans('hifone.registered_users') }} <a href="{{ route('auth.login') }}">{{ trans('hifone.login.login') }}</a>
             </div>
         </div>
     @endif

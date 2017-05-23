@@ -28,7 +28,7 @@ class AuthRoutes
     public function map(Registrar $router)
     {
         $router->group([
-            'as' => 'auth.',
+            'as' => 'hifone.',
             'middleware' => ['web', 'localize'],
             'prefix' => 'auth',
             'namespace' => 'Auth'

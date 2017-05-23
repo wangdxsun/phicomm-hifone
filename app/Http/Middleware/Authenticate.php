@@ -57,7 +57,7 @@ class Authenticate
                     $method = 'to';
                 }
 
-                return redirect()->$method('auth/login')
+                return redirect()->$method(route('auth.login'))
                     ->withInfo(trans('hifone.login.auth_prompt'));
             }
         }

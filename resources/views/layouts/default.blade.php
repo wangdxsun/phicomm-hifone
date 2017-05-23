@@ -38,7 +38,6 @@
                 'dislike' : '{{ trans('hifone.unlike') }}'
             };
         </script>
-        <script src="//cdn.bootcss.com/vue/1.0.17/vue.min.js"></script>
         <script src="//cdn.bootcss.com/socket.io/1.4.5/socket.io.min.js"></script>
         <script>
             $().ready(function() {

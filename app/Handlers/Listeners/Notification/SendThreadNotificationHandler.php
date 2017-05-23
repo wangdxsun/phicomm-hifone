@@ -28,25 +28,27 @@ class SendThreadNotificationHandler
 
     protected function trigger(Thread &$thread)
     {
-        $this->newThreadNotify(Auth::user(), $thread);
+        $this->newThreadNotify($thread);
     }
 
-    protected function newThreadNotify(User $author, Thread $thread)
+    protected function newThreadNotify(Thread $thread)
     {
         // Notify followed users
         app('notifier')->batchNotify(
-                    'followed_user_new_thread',
-                    $author,
-                    $author->followers()->get(),
-                    $thread);
+            'followed_user_new_thread',
+            $thread->user,
+            $thread->user->followers()->get(),
+            $thread
+        );
         // Notify mentioned users
         $parserAt = app('parser.at');
         $parserAt->parse($thread->body_original);
 
         app('notifier')->batchNotify(
-                    'thread_mention',
-                    $author,
-                    $parserAt->users,
-                    $thread);
+            'thread_mention',
+            $thread->user,
+            $parserAt->users,
+            $thread
+        );
     }
 }

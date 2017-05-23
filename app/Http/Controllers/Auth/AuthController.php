@@ -21,11 +21,10 @@ use Hifone\Models\Provider;
 use Hifone\Models\User;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
-use \Auth;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\View;
+use Auth;
+use Config;
+use Redirect;
+use Session;
 use Illuminate\Support\Str;
 use Input;
 use Laravel\Socialite\Two\InvalidStateException;
@@ -86,7 +85,7 @@ class AuthController extends Controller
         $verifycode = array_pull($loginData, 'verifycode');
         if (!Config::get('setting.captcha_login_disabled') && $verifycode != Session::get('phrase')) {
             // instructions if user phrase is good
-            return Redirect::to('auth/login')
+            return Redirect::to(route('auth.login'))
             ->withInput(Input::except('password'))
             ->withError(trans('hifone.captcha.failure'));
         }
@@ -107,7 +106,7 @@ class AuthController extends Controller
 
             if (Auth::user()->hasRole('NoLogin')) {
                 \Auth::logout();
-                return Redirect::to('auth/login')
+                return Redirect::to(route('auth.login'))
                     ->withInput(Input::except('password'))
                     ->withError('您已被系统管理员禁止登录');
             }
@@ -116,7 +115,7 @@ class AuthController extends Controller
                 ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.login.success')));
         }
 
-        return redirect('/auth/login')
+        return redirect(route('auth.login'))
             ->withInput(Input::except('password'))
             ->withError(trans('hifone.login.invalid'));
     }
@@ -235,7 +234,7 @@ class AuthController extends Controller
             try {
                 $extern_user = \Socialite::with($slug)->user();
             } catch (InvalidStateException $e) {
-                return Redirect::to('/auth/login')
+                return Redirect::to(route('auth.login'))
                     ->withErrors([trans('hifone.login.oauth.errors.invalidstate')]);
             }
 

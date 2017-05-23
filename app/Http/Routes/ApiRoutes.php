@@ -72,6 +72,9 @@ class ApiRoutes
                 $router->get('chats', 'ChatController@chats');
                 $router->get('chat/{user}', 'ChatController@messages');
                 $router->post('chat/{user}', 'ChatController@store');
+                $router->get('notification/reply', 'NotificationController@reply');
+                $router->get('notification/at', 'NotificationController@at');
+                $router->get('notification/system', 'NotificationController@system');
             });
         });
     }
