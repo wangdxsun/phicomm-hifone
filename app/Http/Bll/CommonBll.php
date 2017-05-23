@@ -9,7 +9,9 @@
 namespace Hifone\Http\Bll;
 
 use Auth;
+use Hifone\Commands\Image\UploadBase64ImageCommand;
 use Hifone\Events\User\UserWasLoggedinEvent;
+use Input;
 
 class CommonBll extends BaseBll
 {
@@ -22,6 +24,18 @@ class CommonBll extends BaseBll
                 event(new UserWasLoggedinEvent(Auth::user()));
                 app('session')->put('active_date', date('Ymd'));
             }
+        }
+    }
+
+    public function upload()
+    {
+        if (Input::has('image')) {
+            $image = Input::get('image');
+            $upload = dispatch(new UploadBase64ImageCommand($image));
+
+            return $upload;
+        } else {
+            throw new \Exception('没有上传图片');
         }
     }
 }
