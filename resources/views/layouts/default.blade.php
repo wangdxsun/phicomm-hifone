@@ -41,7 +41,7 @@
         <script src="//cdn.bootcss.com/socket.io/1.4.5/socket.io.min.js"></script>
         <script>
             $().ready(function() {
-                var socket = io('222.73.156.127:20063');
+                var socket = io('{{ env('SOCKET_HOST') }}:{{ env('SOCKET_PORT') }}');
                 socket.on('messages:newMessage', function(data) {
                     console.log(data);
                 });
