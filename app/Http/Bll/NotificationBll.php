@@ -32,7 +32,9 @@ class NotificationBll extends BaseBll
     {
         $notifications = Notification::forUser(Auth::id())->at()->recent()->with(['author'])->get();
         foreach ($notifications as $notification) {
-            $notification->object->thread;
+            if ($notification->object) {
+                $notification->object->thread;
+            }
         }
 
         return $notifications;
