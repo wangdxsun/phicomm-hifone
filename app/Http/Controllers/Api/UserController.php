@@ -9,6 +9,7 @@
 namespace Hifone\Http\Controllers\Api;
 
 use Auth;
+use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\FollowBll;
 use Hifone\Http\Bll\UserBll;
 use Hifone\Models\User;
@@ -70,5 +71,16 @@ class UserController extends ApiController
         $replies = $userBll->getReplies();
 
         return $replies;
+    }
+
+    /**
+     * 上传头像
+     */
+    public function upload(CommonBll $commonBll)
+    {
+        $avatar = $commonBll->upload();
+        Auth::user()->update(['avatar_url' => $avatar['filename']]);
+
+        return $avatar;
     }
 }
