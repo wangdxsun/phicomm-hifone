@@ -40,6 +40,6 @@ class FollowBll extends BaseBll
 
     public function followers(User $user)
     {
-        return $user->followers()->with('follower')->paginate(15);
+        return $user->followers()->with('user')->paginate(15);
     }
 }
