@@ -190,7 +190,7 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
 
     public function getAvatarAttribute()
     {
-        return $this->attributes['avatar_url'] ?: '/images/discuz_big.gif';
+        return $this->attributes['avatar_url'] ?: request()->getSchemeAndHttpHost() . '/images/discuz_big.gif';
     }
 
     public function getAvatarSmallAttribute()
@@ -200,7 +200,7 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
 
     public function getAvatarUrlAttribute($value)
     {
-        return $value ?: '/images/discuz_big.gif';
+        return $value ?: request()->getSchemeAndHttpHost() . '/images/discuz_big.gif';;
     }
 
     /**
