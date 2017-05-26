@@ -71,15 +71,11 @@ class HifoneGuard extends SessionGuard implements Guard
     }
 
     private function getIdFromToken($token) {
-        if (env('APP_ENV') == 'local') {
-            return $token;
-        } else {
-            $tokens = explode('.', $token);
-            if (! is_array($tokens) || count($tokens) <> 3) {
-                throw new \Exception('token格式不正确');
-            }
-            $tokenInfo = json_decode(base64_decode($tokens[1]), true);
-            return $tokenInfo['uid'];
+        $tokens = explode('.', $token);
+        if (! is_array($tokens) || count($tokens) <> 3) {
+            throw new \Exception('token格式不正确');
         }
+        $tokenInfo = json_decode(base64_decode($tokens[1]), true);
+        return $tokenInfo['uid'];
     }
 }
