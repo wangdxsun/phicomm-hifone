@@ -190,17 +190,17 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
 
     public function getAvatarAttribute()
     {
-        return $this->attributes['avatar_url'] ?: request()->getSchemeAndHttpHost() . '/images/discuz_big.gif';
+        return $this->attributes['avatar_url'] ?: request()->getSchemeAndHttpHost() . '/images/phiwifi.png';
     }
 
     public function getAvatarSmallAttribute()
     {
-        return $this->attributes['avatar_url'] ?: '/images/discuz_small.gif';
+        return $this->attributes['avatar_url'] ?: '/images/phiwifi.png';
     }
 
     public function getAvatarUrlAttribute($value)
     {
-        return $value ?: request()->getSchemeAndHttpHost() . '/images/discuz_big.gif';;
+        return $value ?: request()->getSchemeAndHttpHost() . '/images/phiwifi.png';
     }
 
     /**
