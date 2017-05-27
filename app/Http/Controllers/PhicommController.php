@@ -77,15 +77,13 @@ class PhicommController extends Controller
     public function postLogin(Request $request)
     {
         $this->validate($request, [
-            'phicommToken' => 'required_without:phone',
-            'phone' => 'required_without:phicommToken|phone',
-            'password' => 'required_with:phone',
+            'phone' => 'required|phone',
+            'password' => 'required',
         ]);
-        $phicommToken = $request->get('phicommToken');
         $phone = $request->get('phone');
         $password = strtoupper(md5($request->get('password')));
         try {
-            $phicommId = $phicommToken ? $this->phicomm->getIdFromToken($phicommToken) : $this->phicomm->login($phone, $password);
+            $phicommId = $this->phicomm->login($phone, $password);
         } catch (\Exception $e) {
             return Redirect::back()->withInput(Input::except('password'))->withErrors($e->getMessage());
         }

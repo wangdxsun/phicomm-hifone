@@ -42,14 +42,12 @@ class PhicommController extends ApiController
     public function login(Request $request)
     {
         $this->validate($request, [
-            'phicommToken' => 'required_without:phone',
-            'phone' => 'required_without:phicommToken|phone',
-            'password' => 'required_with:phone',
+            'phone' => 'required|phone',
+            'password' => 'required',
         ]);
-        $phicommToken = $request->get('phicommToken');
         $phone = $request->get('phone');
         $password = strtoupper(md5($request->get('password')));
-        $phicommId = $phicommToken ? $this->phicommBll->getIdFromToken($phicommToken) : $this->phicommBll->login($phone, $password);
+        $phicommId = $this->phicommBll->login($phone, $password);
 
         $user = User::findUserByPhicommId($phicommId);
         if ($user) {
