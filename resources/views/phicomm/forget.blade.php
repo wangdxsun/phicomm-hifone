@@ -16,7 +16,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input id="verifyCode" name="verifyCode" type="text" placeholder="验证码" class="form-control" required>
+                                    <input id="verifyCode" name="verify" type="text" placeholder="验证码" class="form-control" required>
                                     <div id="checkNum" onclick="sendVerifyCode()" class="btn input-group-addon">获取验证码</div>
                                 </div>
                             </div>

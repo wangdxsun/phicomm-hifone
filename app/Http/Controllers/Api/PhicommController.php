@@ -76,10 +76,10 @@ class PhicommController extends ApiController
         $this->validate(request(), [
             'phone' => 'required|phone',
             'password' => 'required|string|min:6',
-            'verifyCode' => 'required|size:6',
+            'verify' => 'required|size:6',
         ]);
         $password = strtoupper(md5(request('password')));
-        $this->phicommBll->reset(request('phone'), $password, request('verifyCode'));
+        $this->phicommBll->reset(request('phone'), $password, request('verify'));
 
         return Response::json('密码重置成功');
     }
