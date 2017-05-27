@@ -32,6 +32,11 @@ class UserController extends ApiController
         return $user;
     }
 
+    public function showByUsername(User $user)
+    {
+        return $this->show($user);
+    }
+
     public function follows(User $user, FollowBll $followBll)
     {
         $follows = $followBll->follows($user);

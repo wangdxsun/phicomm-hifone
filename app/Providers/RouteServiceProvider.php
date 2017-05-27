@@ -74,6 +74,9 @@ class RouteServiceProvider extends ServiceProvider
         $this->app->router->model('tag', Tag::class, function ($name) {
             return Tag::where('name', urldecode($name))->firstOrFail();
         });
+        $this->app->router->bind('username', function ($username) {
+            return User::where('username', $username)->first();
+        });
     }
 
     /**

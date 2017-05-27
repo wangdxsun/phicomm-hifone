@@ -21,12 +21,12 @@ class BaseModel extends Model
 
     public function getCreatedAtAttribute($value)
     {
-        return Carbon::parse($value)->diffForHumans();
+        return substr($value, 0, 16);
     }
 
     public function getUpdatedAtAttribute($value)
     {
-        return Carbon::parse($value)->diffForHumans();
+        return substr($value, 0, 16);
     }
 
     public function getCreatedTimeAttribute()
