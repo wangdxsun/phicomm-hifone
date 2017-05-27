@@ -29,11 +29,11 @@ class PhicommController extends ApiController
         $this->validate($request, [
             'phone' => 'required|phone',
             'password' => 'required',
-            'verifyCode' => 'required',
+            'verify' => 'required',
         ]);
         $password = strtoupper(md5($request->get('password')));
         $this->phicommBll->checkPhoneAvailable($request->phone);
-        $this->phicommBll->register($request->phone, $password, $request->verifyCode);
+        $this->phicommBll->register($request->phone, $password, $request->verify);
         $phicommId = $this->phicommBll->login($request->phone, $password);
 
         return compact($phicommId);
