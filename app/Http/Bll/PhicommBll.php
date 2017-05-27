@@ -115,14 +115,14 @@ class PhicommBll extends BaseBll
         }
     }
 
-    public function reset($phone, $password, $verifyCode)
+    public function reset($phone, $password, $verify)
     {
         $url = env('PHICLOUND_DOMAIN') . 'forgetpassword';
         $data = [
             'authorizationcode' => $this->getAccessCode(),
             'phonenumber' => $phone,
             'newpassword' => $password,
-            'verificationcode' => $verifyCode
+            'verificationcode' => $verify
         ];
         $output = json_decode(curlPost($url, $data), true);
         if ($output){
