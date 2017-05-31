@@ -19,6 +19,9 @@ class UserController extends ApiController
     public function me()
     {
         $user = Auth::user();
+        if ($user == 'unbind') {
+            throw new \Exception('unbind', 400);
+        }
         $user['role'] = $user->role;
 
         return $user;
