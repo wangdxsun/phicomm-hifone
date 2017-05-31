@@ -37,6 +37,9 @@ class HifoneGuard extends SessionGuard implements Guard
             $user = $this->provider->retrieveByCredentials([
                 'phicomm_id' => $this->getIdFromToken($token)
             ]);
+            if (is_null($user)) {
+                throw new \Exception('unbind', 405);
+            }
         } else {
             $id = $this->session->get($this->getName());
             if (! is_null($id)) {

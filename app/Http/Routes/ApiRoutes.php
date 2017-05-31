@@ -30,6 +30,7 @@ class ApiRoutes
 
             $router->get('/', 'HomeController@index');
             $router->get('ping', 'GeneralController@ping');
+            $router->get('exception', 'GeneralController@exception');
 
             //内容相关
             $router->get('thread', 'ThreadController@index');
@@ -56,8 +57,8 @@ class ApiRoutes
 
             // Authorization Required
             $router->group(['middleware' => 'auth:hifone'], function ($router) {
-                $router->post('thread', 'ThreadController@store')->middleware('permission:new_thread');
-                $router->post('reply', 'ReplyController@store')->middleware('permission:new_thread');
+                $router->post('thread', 'ThreadController@store');
+                $router->post('reply', 'ReplyController@store');
                 $router->post('follow/user/{user}', 'FollowController@user');
                 $router->post('follow/thread/{thread}', 'FollowController@thread');
                 $router->post('like/thread/{thread}', 'LikeController@thread');

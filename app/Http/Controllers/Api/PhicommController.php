@@ -8,7 +8,6 @@
 
 namespace Hifone\Http\Controllers\Api;
 
-use Hifone\Events\User\UserWasAddedEvent;
 use Hifone\Http\Bll\PhicommBll;
 use Hifone\Models\User;
 use Illuminate\Http\Request;

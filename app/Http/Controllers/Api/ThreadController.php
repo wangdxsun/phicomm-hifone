@@ -35,6 +35,9 @@ class ThreadController extends ApiController
 
     public function store(ThreadBll $threadBll)
     {
+        if (Auth::user()->hasRole('NoComment')) {
+            throw new \Exception('您已被系统管理员禁言');
+        }
         $threadBll->createThread();
 
         return success('帖子发表成功，请耐心等待审核通过');

@@ -22,4 +22,9 @@ class GeneralController extends ApiController
     {
         return $this->item('Pong!');
     }
+
+    public function exception()
+    {
+        throw new \Exception('myException', 444);
+    }
 }
