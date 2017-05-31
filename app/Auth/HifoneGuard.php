@@ -18,6 +18,8 @@ class HifoneGuard extends SessionGuard implements Guard
 {
     protected $inputKey = 'token';
 
+    public $bind = true;
+
     /**
      * Get the currently authenticated user.
      *
@@ -38,7 +40,7 @@ class HifoneGuard extends SessionGuard implements Guard
                 'phicomm_id' => $this->getIdFromToken($token)
             ]);
             if (is_null($user)) {
-                $user = 'unbind';
+                $this->bind = false;
             }
         } else {
             $id = $this->session->get($this->getName());
