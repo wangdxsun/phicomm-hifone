@@ -64,6 +64,11 @@ class HifoneGuard extends SessionGuard implements Guard
         return $phicommId;
     }
 
+    public function bind()
+    {
+        return $this->bind;
+    }
+
     protected function getTokenForRequest()
     {
         $token = $this->request->input($this->inputKey);

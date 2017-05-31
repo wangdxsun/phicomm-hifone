@@ -19,7 +19,7 @@ class UserController extends ApiController
     public function me()
     {
         $user = Auth::user();
-        if (Auth::bind == false) {
+        if (Auth::bind() == false) {
             throw new \Exception('unbind', 400);
         }
         $user['role'] = $user->role;
