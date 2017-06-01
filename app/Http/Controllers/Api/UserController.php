@@ -13,6 +13,7 @@ use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\FollowBll;
 use Hifone\Http\Bll\UserBll;
 use Hifone\Models\User;
+use Illuminate\Http\JsonResponse;
 
 class UserController extends ApiController
 {
@@ -20,7 +21,10 @@ class UserController extends ApiController
     {
         $user = Auth::user();
         if (Auth::bind() == false) {
-            throw new \Exception('unbind', 400);
+            return new JsonResponse('unbind.', 400);
+        }
+        if (is_null($user)) {
+            return new JsonResponse('Unauthorized.', 401);
         }
         $user['role'] = $user->role;
 
