@@ -23,10 +23,9 @@ class UserController extends ApiController
         if (Auth::bind() == false) {
             return new JsonResponse('unbind.', 400);
         }
-        if (is_null($user)) {
-            return new JsonResponse('Unauthorized.', 401);
+        if (! is_null($user)) {
+            $user['role'] = $user->role;
         }
-        $user['role'] = $user->role;
 
         return $user;
     }

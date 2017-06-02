@@ -72,7 +72,7 @@ class ThreadBll extends BaseBll
 
         $thread = $thread->load(['user', 'node']);
         $replies = $thread->replies()->visible()->with(['user'])
-            ->orderBy('order', 'desc')->orderBy('created_at', 'desc')->paginate(15);
+            ->orderBy('order', 'desc')->orderBy('created_at', 'desc')->get();
         foreach ($replies as &$reply) {
             $reply['liked'] = Auth::check() ? Auth::user()->hasLikeReply($reply) : false;
         }
