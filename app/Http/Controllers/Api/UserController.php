@@ -25,9 +25,10 @@ class UserController extends ApiController
         }
         if (! is_null($user)) {
             $user['role'] = $user->role;
+            return $user;
+        } else {
+            return 'PhicommNoLogin';
         }
-
-        return $user;
     }
 
     public function show(User $user)
