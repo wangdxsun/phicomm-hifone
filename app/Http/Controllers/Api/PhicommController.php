@@ -54,9 +54,9 @@ class PhicommController extends ApiController
                 return response('您已被系统管理员禁止登录', 401);
             }
             Auth::loginUsingId($user->id);
-            return response(['bind' => true]);
+            return response(['user' => Auth::user()]);
         } else {
-            return response(['bind' => false]);
+            return response(['user' => 'Unbind']);
         }
     }
 
@@ -65,9 +65,9 @@ class PhicommController extends ApiController
         $this->validate(request(), [
             'username' => 'required',
         ]);
-        $phicommBll->bind();
+        $user = $phicommBll->bind();
 
-        return response()->json('绑定成功');
+        return response(['user' => $user]);
     }
 
     public function reset()

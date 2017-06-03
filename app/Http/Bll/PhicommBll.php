@@ -178,6 +178,8 @@ class PhicommBll extends BaseBll
         $user = User::create($userData);
         event(new UserWasAddedEvent($user));
         Auth::login($user);
+
+        return $user;
     }
     /**
      * 参数说明：
