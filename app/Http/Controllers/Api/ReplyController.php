@@ -16,10 +16,10 @@ class ReplyController extends ApiController
     public function store(ReplyBll $replyBll)
     {
         if (Auth::user()->hasRole('NoComment')) {
-            throw new \Exception('您已被系统管理员禁言');
+            throw new \Exception('对不起，你已被管理员禁止发言');
         }
         $replyBll->createReply();
 
-        return success('回复发表成功，请耐心等待审核通过');
+        return success('发表成功，待审核');
     }
 }
