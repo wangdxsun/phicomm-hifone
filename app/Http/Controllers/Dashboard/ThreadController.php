@@ -178,11 +178,8 @@ class ThreadController extends Controller
     //从待审核列表审核通过帖子
     public function postAudit(Thread $thread)
     {
-        if ($thread->node) {
-            $thread->node->increment('thread_count', 1);
-        }
-        $thread->user->increment('thread_count', 1);
         event(new ThreadWasAddedEvent($thread));
+
         return $this->passAudit($thread);
     }
 
@@ -196,6 +193,8 @@ class ThreadController extends Controller
     public function passAudit($thread)
     {
         try {
+            $thread->node->increment('thread_count', 1);
+            $thread->user->increment('thread_count', 1);
             $thread->status = 0;
             $this->updateOpLog($thread, '审核通过');
         } catch (ValidationException $e) {
@@ -227,6 +226,8 @@ class ThreadController extends Controller
     public function postTrash(Thread $thread)
     {
         try {
+            $thread->node->decrement('thread_count', 1);
+            $thread->user->decrement('thread_count', 1);
             $thread->status = Thread::TRASH;
             $this->updateOpLog($thread, '删除帖子', trim(request('reason')));
         } catch (ValidationException $e) {

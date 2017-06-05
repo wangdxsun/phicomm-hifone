@@ -156,7 +156,6 @@ class ReplyController extends Controller
     {
         $thread = $reply->thread;
         $thread->last_reply_user_id = $reply->user_id;
-        $thread->reply_count++;
         $thread->updated_at = Carbon::now()->toDateTimeString();
         $thread->save();
         $reply->user->increment('reply_count', 1);
@@ -174,6 +173,9 @@ class ReplyController extends Controller
     public function passAudit($reply)
     {
         try {
+            $reply->thread->increament('reply_count', 1);
+            $reply->user->increament('reply_count', 1);
+
             $reply->status = 0;
             $this->updateOpLog($reply, '审核通过');
         } catch (ValidationException $e) {
@@ -185,6 +187,9 @@ class ReplyController extends Controller
     public function postTrash(Reply $reply)
     {
         try {
+            $reply->thread->decreament('reply_count', 1);
+            $reply->user->decreament('reply_count', 1);
+
             $reply->status = -1;
             $this->updateOpLog($reply, '删除回复', trim(request('reason')));
         } catch (ValidationException $e) {
