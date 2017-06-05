@@ -23,7 +23,7 @@ class FollowBll extends BaseBll
             throw new Exception('不能关注自己');
         }
         return dispatch(new AddFollowCommand($user));
-    }
+}
 
     public function followThread($thread)
     {
