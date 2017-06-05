@@ -176,7 +176,8 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function scopePinAndRecentReply($query)
     {
-        return $query->whereRaw("(`created_at` > '" . Carbon::today()->subMonths(6)->toDateString() . "' or (`order` > 0) )")
+        $days = Config::get('settings.hot_thread', 14);
+        return $query->whereRaw("(`created_at` > '" . Carbon::today()->subDays($days)->toDateString() . "' or (`order` > 0) )")
             ->orderBy('order', 'desc')
             ->orderBy('updated_at', 'desc');
     }
