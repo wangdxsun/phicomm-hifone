@@ -60,9 +60,7 @@ class UserController extends Controller
 
     public function showByUsername($username, FollowBll $followBll)
     {
-        $user = User::findByUsernameOrFail($username);
-
-        return $this->show($user, $followBll);
+        return $this->show($username, $followBll);
     }
 
     public function edit(User $user)

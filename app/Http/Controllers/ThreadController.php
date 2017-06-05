@@ -51,20 +51,6 @@ class ThreadController extends Controller
             ->withSections(Section::orderBy('order')->get());
     }
 
-
-   /* public function index(PhicommBll $phicommBll)
-    {
-        $title = '【私信】XX 给你发了 X 条私信';
-        $outline = '你好';
-        $in_title = 'XX 对您说：';
-        $type = 1004;
-        $message = '你好';
-        $uid = 1230421;
-        $url = null;
-        $response = $phicommBll->pushMessage('0', $title, $outline, $in_title, $type, $message, $uid, $url);
-        echo var_dump($response);
-    }*/
-
     /**
      * Shows a thread in more detail.
      *
@@ -233,13 +219,6 @@ class ThreadController extends Controller
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
     }
 
-    /**
-     * Pin a thread.
-     *
-     * @param \Hifone\Models\Thread $thread
-     *
-     * @return \Illuminate\View\View
-     */
     public function pin(Thread $thread)
     {
         $this->needAuthorOrAdminPermission($thread->user_id);
@@ -254,13 +233,6 @@ class ThreadController extends Controller
         return Redirect::route('thread.show', $thread->id);
     }
 
-    /**
-     * Sink a thread.
-     *
-     * @param \Hifone\Models\Thread $thread
-     *
-     * @return \Illuminate\View\View
-     */
     public function sink(Thread $thread)
     {
         $this->needAuthorOrAdminPermission($thread->user_id);
