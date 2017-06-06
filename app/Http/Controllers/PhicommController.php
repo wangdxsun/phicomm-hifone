@@ -55,10 +55,10 @@ class PhicommController extends Controller
             $this->phicomm->checkPhoneAvailable($request->phone);
             $this->phicomm->register($request->phone, $password, $request->verifyCode);
             $phicommId = $this->phicomm->login($request->phone, $password);
+
         } catch (\Exception $e) {
             return Redirect::back()->withInput(Input::except('password'))->withErrors($e->getMessage());
         }
-
         return view('phicomm.bind')->withPhicommId($phicommId);
     }
 
@@ -84,10 +84,10 @@ class PhicommController extends Controller
         $password = strtoupper(md5($request->get('password')));
         try {
             $phicommId = $this->phicomm->login($phone, $password);
+            Session::set('phicommId', $phicommId);
         } catch (\Exception $e) {
             return Redirect::back()->withInput(Input::except('password'))->withErrors($e->getMessage());
         }
-
         $user = User::findUserByPhicommId($phicommId);
         if ($user) {
             if ($user->hasRole('NoLogin')) {
@@ -111,7 +111,6 @@ class PhicommController extends Controller
     public function postBind(PhicommBll $phicommBll)
     {
         $this->validate(request(), [
-            'phicomm_id' => 'required|integer|min:1',
             'username' => 'required',
         ]);
         try {

@@ -178,6 +178,7 @@ class ReplyController extends Controller
 
             $reply->status = 0;
             $this->updateOpLog($reply, '审核通过');
+
         } catch (ValidationException $e) {
             return Redirect::back()->withErrors($e->getMessageBag());
         }
