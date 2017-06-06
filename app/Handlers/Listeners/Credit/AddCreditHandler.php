@@ -36,6 +36,7 @@ use Hifone\Events\Like\LikedWasAddedEvent;
 use Hifone\Events\Like\LikedWasRemovedEvent;
 use Hifone\Events\Image\AvatarWasUploadedEvent;
 use Hifone\Models\Thread;
+use Hifone\Models\User;
 
 class AddCreditHandler
 {
@@ -85,56 +86,33 @@ class AddCreditHandler
         } elseif ($event instanceof FollowWasAddedEvent) {
             if ($event->target instanceof Thread) {
                 $action = 'follow_thread';
-                if (Auth::id() == $event->target->user->id) {//关注自己的帖子
-                    return false;
-                }
             } else {
                 $action = 'follow_user';
-                if (Auth::id() == $event->target->id) {//关注自己
-                    return false;
-                }
             }
             $user = Auth::user();
         } elseif ($event instanceof FollowWasRemovedEvent) {
             if ($event->target instanceof Thread) {
                 $action = 'follow_thread_removed';
-                if (Auth::id() == $event->target->user->id) {
-                    return false;
-                }
             } else {
                 $action = 'follow_user_removed';
-                if (Auth::id() == $event->target->id) {
-                    return false;
-                }
             }
             $user = Auth::user();
         } elseif ($event instanceof FollowedWasAddedEvent) {
             if ($event->target instanceof Thread) {
                 $action = 'followed_thread';
                 $user = $event->target->user;
-                if (Auth::id() == $user->id) {
-                    return false;
-                }
             } else {
                 $action = 'followed_user';
                 $user = $event->target;
-                if (Auth::id() == $user->id) {
-                    return false;
-                }
             }
+
         } elseif ($event instanceof FollowedWasRemovedEvent) {
             if ($event->target instanceof Thread) {
                 $action = 'followed_thread_removed';
                 $user = $event->target->user;
-                if (Auth::id() == $user->id) {
-                    return false;
-                }
             } else {
                 $action = 'followed_user_removed';
                 $user = $event->target;
-                if (Auth::id() == $user->id) {
-                    return false;
-                }
             }
         } elseif ($event instanceof ExcellentWasAddedEvent) {
             $action = 'thread_excellent';
@@ -142,26 +120,22 @@ class AddCreditHandler
         } elseif ($event instanceof LikeWasAddedEvent) {
             $action = 'like';
             $user = $event->target;
-            if (Auth::id() == $user->id) {
-                return false;
-            }
         } elseif ($event instanceof LikeWasRemovedEvent) {
             $action = 'like_removed';
             $user = $event->target;
-            if (Auth::id() == $user->id) {
-                return false;
-            }
         } elseif ($event instanceof LikedWasAddedEvent) {
-            $action = 'liked';
             $user = $event->target;
             if (Auth::id() == $user->id) {
-                return false;
+                return false;//操作者和被操作者相同，加分在主动事件已完成，不重复加分
+            } else {
+                $action = 'liked';
             }
         } elseif ($event instanceof LikedWasRemovedEvent) {
-            $action = 'liked_removed';
             $user = $event->target;
             if (Auth::id() == $user->id) {
-                return false;
+                return false;//操作者和被操作者相同，加分在主动事件已完成，不重复加分
+            } else{
+                $action = 'liked_removed';
             }
         } elseif ($event instanceof AvatarWasUploadedEvent) {
             $action = 'upload_avatar';
@@ -182,8 +156,5 @@ class AddCreditHandler
         if (!$credit) {
             return;
         }
-
-        // event trigger
-//        event(new CreditWasAddedEvent($credit, $event));
     }
 }
