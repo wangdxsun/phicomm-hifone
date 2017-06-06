@@ -13,6 +13,7 @@ use Hifone\Events\User\UserWasAddedEvent;
 use Hifone\Models\Keyword;
 use Hifone\Models\User;
 use Auth;
+use Session;
 
 class PhicommBll extends BaseBll
 {
@@ -165,7 +166,8 @@ class PhicommBll extends BaseBll
     public function bind()
     {
         $userData = [
-            'phicomm_id' => Auth::phicommId(),
+            'phicomm_id' => Session::get('phicommId'),
+
             'username' => request('username'),
             'password' => str_random(32),
             'regip' => request()->server('REMOTE_ADDR'),
