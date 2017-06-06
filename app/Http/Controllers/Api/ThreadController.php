@@ -12,6 +12,7 @@
 namespace Hifone\Http\Controllers\Api;
 
 use Auth;
+use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\ThreadBll;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
@@ -19,7 +20,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ThreadController extends ApiController
 {
-    public function index(ThreadBll $threadBll)
+    public function index(ThreadBll $threadBll, CommonBll $commonBll)
     {
         $threads = $threadBll->getThreads();
 
