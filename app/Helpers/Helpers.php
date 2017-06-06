@@ -99,20 +99,6 @@ if (!function_exists('cdn')) {
     }
 }
 
-if (!function_exists('upload_url')) {
-    /**
-     * Create a new upload url.
-     *
-     * @param string|null $filepath
-     *
-     * @return string
-     */
-    function upload_url()
-    {
-        return Config::get('setting.site_domain') ?: Config::get('app.url');
-    }
-}
-
 if (!function_exists('option_is_selected')) {
     /**
      * Check if option is selected and output selected else output an empty string.

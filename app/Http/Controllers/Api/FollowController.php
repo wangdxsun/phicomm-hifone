@@ -16,9 +16,7 @@ class FollowController extends ApiController
 {
     public function user(User $user, FollowBll $followBll)
     {
-        $followBll->followUser($user);
-
-        return ['status' => 1];
+        return $followBll->followUser($user);
     }
 
     public function thread(Thread $thread, FollowBll $followBll)
