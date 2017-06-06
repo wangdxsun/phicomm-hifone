@@ -173,8 +173,8 @@ class ReplyController extends Controller
     public function passAudit($reply)
     {
         try {
-            $reply->thread->increament('reply_count', 1);
-            $reply->user->increament('reply_count', 1);
+            $reply->thread->increment('reply_count', 1);
+            $reply->user->increment('reply_count', 1);
 
             $reply->status = 0;
             $this->updateOpLog($reply, '审核通过');
