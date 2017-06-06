@@ -141,17 +141,17 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function scopeVisible($query)
     {
-        return $query->where('status', '>=', 0);
+        return $query->where('status', '>=', static::VISIBLE);
     }
 
     public function scopeAudit($query)
     {
-        return $query->where('status', -2);//审核中
+        return $query->where('status', static::Audit);//审核中
     }
 
     public function scopeTrash($query)
     {
-        return $query->where('status', -1);//回收站
+        return $query->where('status', static::TRASH);//回收站
     }
 
     public function scopeTitle($query, $search)
@@ -161,6 +161,15 @@ class Thread extends BaseModel implements TaggableInterface
         }
 
         return $query->where('title', 'LIKE', "%$search%");
+    }
+
+    public function scopeBody($query, $search)
+    {
+        if (!$search) {
+            return null;
+        }
+
+        return $query->where('body', 'LIKE', "%$search%");
     }
 
     /**
