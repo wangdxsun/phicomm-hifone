@@ -24,7 +24,6 @@ class UserController extends ApiController
             return new JsonResponse('unbind.', 400);
         }
         if (! is_null($user)) {
-            $user['role'] = $user->role;
             return $user;
         } else {
             return 'PhicommNoLogin';
@@ -33,7 +32,6 @@ class UserController extends ApiController
 
     public function show(User $user)
     {
-        $user['role'] = $user->role;
         $user['followed'] = User::hasFollowUser($user);
 
         return $user;
@@ -49,7 +47,6 @@ class UserController extends ApiController
         $follows = $followBll->follows($user);
         foreach ($follows as &$follow) {
             $follow['followed'] = User::hasFollowUser($follow['follower']);
-            $follow['role'] = $follow->follower->role;
         }
 
         return $follows;
@@ -60,7 +57,6 @@ class UserController extends ApiController
         $followers = $followBll->followers($user);
         foreach ($followers as &$follower) {
             $follower['followed'] = User::hasFollowUser($follower['user']);
-            $follower['role'] = $follower->user->role;
         }
 
         return $followers;
