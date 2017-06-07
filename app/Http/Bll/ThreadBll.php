@@ -9,20 +9,21 @@
 namespace Hifone\Http\Bll;
 
 use Hifone\Commands\Image\UploadBase64ImageCommand;
-use Hifone\Commands\Image\UploadImageCommand;
 use Hifone\Commands\Thread\AddThreadCommand;
 use Hifone\Events\Thread\ThreadWasViewedEvent;
 use Hifone\Models\Thread;
+use Hifone\Models\User;
 use Hifone\Repositories\Criteria\Thread\Filter;
 use Hifone\Repositories\Criteria\Thread\Search;
 use Input;
 use Auth;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ThreadBll extends BaseBll
 {
     public function getThreads()
     {
-        (new CommonBll())->checkLogin();
+        (new CommonBll())->login();
 
         $repository = app('repository');
         $repository->pushCriteria(new Filter(Input::query('filter')));
@@ -76,9 +77,8 @@ class ThreadBll extends BaseBll
         foreach ($replies as &$reply) {
             $reply['liked'] = Auth::check() ? Auth::user()->hasLikeReply($reply) : false;
         }
-        $thread['followed'] = Auth::check() ? Auth::user()->hasFollowUser($thread->user) : false;
+        $thread['followed'] = User::hasFollowUser($thread->user);
         $thread['liked'] = Auth::check() ? Auth::user()->hasLikeThread($thread) : false;
-        $thread['user']['role'] = $thread->user->role;
         $thread['replies'] = $replies;
 
         return $thread;

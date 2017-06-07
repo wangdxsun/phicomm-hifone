@@ -15,7 +15,7 @@ use Input;
 
 class CommonBll extends BaseBll
 {
-    public function checkLogin()
+    public function login()
     {
         if (Auth::check()) {
             $activeDate = app('session')->get('active_date');
