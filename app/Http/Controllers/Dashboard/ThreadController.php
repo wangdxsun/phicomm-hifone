@@ -27,6 +27,7 @@ use Hifone\Services\Parsers\Markdown;
 use Redirect;
 use View;
 use Input;
+use Hifone\Events\Thread\ThreadWasPinnedEvent;
 
 class ThreadController extends Controller
 {
@@ -111,11 +112,14 @@ class ThreadController extends Controller
         } elseif($thread->order == 0){
             $thread->increment('order', 1);
             $this->updateOpLog($thread, '置顶');
+            event(new ThreadWasPinnedEvent($thread));
             event(new PinWasAddedEvent($thread->user, 'Thread'));
         } elseif($thread->order < 0){
             $thread->increment('order', 2);
             $this->updateOpLog($thread, '置顶');
+            event(new ThreadWasPinnedEvent($thread));
             event(new PinWasAddedEvent($thread->user, 'Thread'));
+
         }
 
         return Redirect::back()->withSuccess('恭喜，操作成功！');

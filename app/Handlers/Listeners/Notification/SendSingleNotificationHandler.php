@@ -24,7 +24,7 @@ use Hifone\Events\User\UserWasAddedEvent;
 use Hifone\Events\User\UserWasLoggedinEvent;
 use Hifone\Events\Favorite\FavoriteWasAddedEvent;
 use Hifone\Models\Thread;
-
+use Hifone\Events\Thread\ThreadWasPinnedEvent;
 class SendSingleNotificationHandler
 {
     public function handle(EventInterface $event)
@@ -40,7 +40,10 @@ class SendSingleNotificationHandler
             $this->markedExcellent($event->target);
         } elseif ($event instanceof ThreadWasMovedEvent) {
             $this->movedThread($event->target);
-        } elseif ($event instanceof CreditWasAddedEvent) {
+        } elseif ($event instanceof ThreadWasPinnedEvent){
+            $this->threadPinned($event->target);
+        }
+        elseif ($event instanceof CreditWasAddedEvent) {
 //            if ($event->upstream_event instanceof UserWasAddedEvent) {
 //                $this->notifyCredit('credit_register', $event->upstream_event->user, $event->credit);
 //            } elseif ($event->upstream_event instanceof UserWasLoggedinEvent) {
@@ -88,5 +91,9 @@ class SendSingleNotificationHandler
     protected function notifyCredit($action, $user, $credit)
     {
         app('notifier')->notify($action, $user, $user, $credit);
+    }
+    protected function threadPinned($target)
+    {
+        app('notifier')->notify('thread_pin', Auth::user(), $target->user, $target);
     }
 }

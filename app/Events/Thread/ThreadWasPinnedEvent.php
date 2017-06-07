@@ -11,7 +11,7 @@
 
 namespace Hifone\Events\Thread;
 
-use Hifone\Models\User;
+use Hifone\Models\Thread;
 
 final class ThreadWasPinnedEvent implements ThreadEventInterface
 {
@@ -25,8 +25,8 @@ final class ThreadWasPinnedEvent implements ThreadEventInterface
     /**
      * Create a new thread has reported event instance.
      */
-    public function __construct(User $user)
+    public function __construct(Thread $thread)
     {
-        $this->user = $user;
+        $this->target = $thread;
     }
 }

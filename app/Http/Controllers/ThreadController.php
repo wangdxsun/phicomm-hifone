@@ -31,6 +31,7 @@ use Config;
 use Input;
 use Redirect;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Hifone\Events\Thread\ThreadWasPinnedEvent;
 
 class ThreadController extends Controller
 {
@@ -229,6 +230,7 @@ class ThreadController extends Controller
             $thread->increment('order', 1);
             $this->updateOpLog($thread, '置顶');
             event(new PinWasAddedEvent($thread->user, 'Thread'));
+            event(new ThreadWasPinnedEvent($thread));
         }
         return Redirect::route('thread.show', $thread->id);
     }

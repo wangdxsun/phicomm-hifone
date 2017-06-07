@@ -125,6 +125,10 @@ class EventServiceProvider extends ServiceProvider
         \Hifone\Events\Thread\ThreadWasMarkedExcellentEvent::class => [
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
+        //
+        \Hifone\Events\Thread\ThreadWasPinnedEvent::class => [
+            \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
+        ],
 
         //
         \Hifone\Events\Thread\ThreadWasMovedEvent::class => [

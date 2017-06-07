@@ -70,7 +70,7 @@ return [
         'noitem'         => '暂无话题',
         'is_excellent'   => '该帖已被设为优质帖子！',
         'login_needed'   => '需要 <a class="btn btn-success" href="/auth/login">登录</a> 后方可回复, 如果你还没有账号请点击这里 <a class="btn btn-primary" href="/auth/register">注册</a>。',
-        'thread_count'   => '共有 :threads 个讨论主题',
+        'thread_count'   => '共有 :threads 个讨论帖子',
 
         // Share
         'share2weibo'    => '分享到微博',
@@ -81,15 +81,15 @@ return [
         // Create or Edit
         'pick_node'      => '选择板块',
         'mark_excellent' => '设为精华贴',
-        'mark_stick'     => '置顶此主题',
-        'mark_sink'      => '下沉此主题',
+        'mark_stick'     => '置顶此帖子',
+        'mark_sink'      => '下沉此帖子',
         // Posting Tips
         'posting_tips'   => [
             'title'     => '发帖提示',
-            'pt1_title' => '主题标题',
+            'pt1_title' => '帖子标题',
             'pt1_desc'  => '请在标题中描述内容要点。',
             'pt2_title' => '选择节点',
-            'pt2_desc'  => '请为你的主题选择一个节点。恰当的归类会让你发布的信息更有用。',
+            'pt2_desc'  => '请为你的帖子选择一个节点。恰当的归类会让你发布的信息更有用。',
             'pt3_title' => '正文',
             'pt3_desc'  => 'Hifone 支持 <span style="font-family: Consolas, \'Panic Sans\', mono"><a href="https://help.github.com/articles/github-flavored-markdown" target="_blank">GitHub Flavored Markdown</a></span> 文本标记语法。你可以在页面下方实时预览正文的实际渲染效果。',
         ],
@@ -115,7 +115,7 @@ return [
 // 收藏
     'favorites' => [
         'favorites' => '收藏',
-        'noitem'    => '暂未收藏任何主题',
+        'noitem'    => '暂未收藏任何帖子',
     ],
 
 // 回复
@@ -203,14 +203,14 @@ return [
         'my'                          => '我的通知',
         'deleted'                     => '信息已被删除.',
         'noitem'                      => '还未收到通知!',
-        'thread_new_reply'            => '回复了你的主题:',
-        'thread_mention'              => '在主题中提及你:',
-        'thread_favorite'             => '收藏了你的主题',
-        'thread_follow'               => '关注了你的主题',
-        'thread_like'                 => '赞了你的主题',
-        'thread_mark_excellent'       => '推荐了你的主题',
-        'thread_move'                 => '移动了你的主题',
-        'followed_thread_new_reply'   => '回复了你关注的主题:',
+        'thread_new_reply'            => '回复了你的帖子:',
+        'thread_mention'              => '在帖子中提及你:',
+        'thread_favorite'             => '收藏了你的帖子',
+        'thread_follow'               => '关注了你的帖子',
+        'thread_like'                 => '赞了你的帖子',
+        'thread_mark_excellent'       => '推荐了你的帖子',
+        'thread_move'                 => '移动了你的帖子',
+        'followed_thread_new_reply'   => '回复了你关注的帖子:',
         'followed_thread_new_append'  => '关注的话题有新备注',
         'followed_user_new_thread'    => '发表了新话题',
         'commented_thread_new_append' => '评论过的话题有新备注',
@@ -219,6 +219,7 @@ return [
         'reply_mention'               => '在回复中提及你:',
         'credit_register'             => '注册获得积分',
         'credit_login'                => '每日登录获得积分',
+        'thread_pin'                  => '置顶了你的帖子：',
         'credit_favorite'             =>''
     ],
 
@@ -267,7 +268,7 @@ return [
     'stats' => [
         'title'   => '统计信息',
         'users'   => '社区会员',
-        'threads' => '主题数',
+        'threads' => '帖子数',
         'replies' => '回帖数',
     ],
 
