@@ -44,9 +44,7 @@ class ReplyController extends Controller
                 ->withInput(Input::all())
                 ->withErrors($e->getMessageBag());
         }
-
-        return Redirect::back()
-            ->withSuccess('回复发表成功，请耐心等待审核通过');
+        return Redirect::back()->withSuccess('回复发表成功，请耐心等待审核通过');
     }
 
     public function destroy(Reply $reply)

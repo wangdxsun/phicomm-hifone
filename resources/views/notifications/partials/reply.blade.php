@@ -5,6 +5,10 @@
   <div class="media-body">
     
   <div class="media-heading">
+      <a href="{{ route('user.home', [$notification->author->username]) }}">
+          {{ $notification->author->username }}
+      </a>
+      •
     {{ $notification->labelUp }}
 	<a href="{{ route('thread.show', [$notification->object->thread->id]) }}#reply{{$notification->object_id}}" title="{{ $notification->object->thread->title }}">
 		{!! str_limit($notification->object->thread->title, '100') !!}
