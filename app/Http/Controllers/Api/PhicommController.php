@@ -56,6 +56,7 @@ class PhicommController extends ApiController
             Auth::loginUsingId($user->id);
             return response(['user' => Auth::user()]);
         } else {
+            \Session::set('phicommId', $phicommId);
             return response(['user' => 'Unbind']);
         }
     }

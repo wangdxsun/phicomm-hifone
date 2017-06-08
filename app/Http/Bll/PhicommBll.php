@@ -167,7 +167,6 @@ class PhicommBll extends BaseBll
     {
         $userData = [
             'phicomm_id' => Session::get('phicommId'),
-
             'username' => request('username'),
             'password' => str_random(32),
             'regip' => request()->server('REMOTE_ADDR'),
@@ -177,7 +176,8 @@ class PhicommBll extends BaseBll
         } elseif (Keyword::where('word', 'like', request('username'))->count() > 0) {
             throw new \Exception('用户名包含被系统屏蔽字符');
         }
-        $user = User::create($userData);
+        $user = User::create($userData);//直接通过create返回的用户信息不全
+        $user = User::find($user->id);
         event(new UserWasAddedEvent($user));
         Auth::login($user);
 
