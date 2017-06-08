@@ -173,9 +173,9 @@ class PhicommBll extends BaseBll
             'regip' => request()->server('REMOTE_ADDR'),
         ];
         if (User::where('username', request('username'))->count() > 0) {
-            throw new \Exception('用户名已存在');
+            throw new \Exception('该用户名已被使用');
         } elseif (Keyword::where('word', 'like', request('username'))->count() > 0) {
-            throw new \Exception('用户名包含敏感词，换一个试试');
+            throw new \Exception('用户名包含被系统屏蔽字符');
         }
         $user = User::create($userData);
         event(new UserWasAddedEvent($user));

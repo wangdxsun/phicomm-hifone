@@ -51,7 +51,7 @@ class PhicommController extends ApiController
         $user = User::findUserByPhicommId($phicommId);
         if ($user) {
             if ($user->hasRole('NoLogin')) {
-                return response('您已被系统管理员禁止登录', 401);
+                return response('对不起，你已被管理员禁止登录', 403);
             }
             Auth::loginUsingId($user->id);
             return response(['user' => Auth::user()]);
