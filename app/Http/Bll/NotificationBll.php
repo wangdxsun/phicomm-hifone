@@ -42,7 +42,7 @@ class NotificationBll extends BaseBll
 
     public function system()
     {
-        $notifications = Notification::forUser(Auth::id())->system()->recent()->with(['object'])->get();
+        $notifications = Notification::forUser(Auth::id())->system()->recent()->with(['object', 'author'])->get();
 
         return $notifications;
     }
