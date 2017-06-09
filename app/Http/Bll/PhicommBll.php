@@ -166,7 +166,7 @@ class PhicommBll extends BaseBll
     public function bind()
     {
         $userData = [
-            'phicomm_id' => Session::get('phicommId'),
+            'phicomm_id' => Session::get('phicommId') ?: Auth::phicommId(),
             'username' => request('username'),
             'password' => str_random(32),
             'regip' => request()->server('REMOTE_ADDR'),
