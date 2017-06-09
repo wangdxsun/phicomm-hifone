@@ -25,6 +25,7 @@ use Hifone\Events\User\UserWasLoggedinEvent;
 use Hifone\Events\Favorite\FavoriteWasAddedEvent;
 use Hifone\Models\Thread;
 use Hifone\Events\Thread\ThreadWasPinnedEvent;
+use Hifone\Events\Thread\ThreadWasLikedEvent;
 class SendSingleNotificationHandler
 {
     public function handle(EventInterface $event)
@@ -32,7 +33,7 @@ class SendSingleNotificationHandler
         // follow
         if ($event instanceof FollowedWasAddedEvent) {
             $this->follow($event->target);
-        } elseif ($event instanceof LikeEventInterface) {
+        } elseif ($event instanceof ThreadWasLikedEvent) {
             $this->like($event->target);
         } elseif ($event instanceof FavoriteWasAddedEvent) {
             $this->favorite($event->thread);

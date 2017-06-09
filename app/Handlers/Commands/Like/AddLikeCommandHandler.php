@@ -73,6 +73,7 @@ class AddLikeCommandHandler
             $target->likes()->create(['user_id' => Auth::id(), 'rating' => Like::LIKE]);
             $target->increment('like_count', 2);
 
+            event(new ThreadWasLikedEvent($target));//点赞帖子
             event(new LikeWasAddedEvent(Auth::user()));
             event(new LikedWasAddedEvent($user));
         } else {
