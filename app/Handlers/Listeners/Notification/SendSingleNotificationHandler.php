@@ -62,8 +62,10 @@ class SendSingleNotificationHandler
 
         if ($type == 'thread_follow') {
             app('notifier')->notify($type, Auth::user(), $target->user, $target);
+            $target->user->increment('notification_system_count', 1);
         } else {
             app('notifier')->notify($type, Auth::user(), $target, $target);
+            $target->increment('notification_system_count', 1);
         }
     }
 
@@ -71,16 +73,19 @@ class SendSingleNotificationHandler
     {
         $type = ($target instanceof Thread) ? 'thread_like' : 'reply_like';
         app('notifier')->notify($type, Auth::user(), $target->user, $target);
+        $target->user->increment('notification_system_count', 1);
     }
 
     protected function favorite($thread)
     {
         app('notifier')->notify('thread_favorite', Auth::user(), $thread->user, $thread);
+        $thread->user->increment('notification_system_count', 1);
     }
 
     protected function markedExcellent($target)
     {
         app('notifier')->notify('thread_mark_excellent', Auth::user(), $target->user, $target);
+        $target->user->increment('notification_system_count', 1);
     }
 
     protected function movedThread($target)
@@ -95,5 +100,6 @@ class SendSingleNotificationHandler
     protected function threadPinned($target)
     {
         app('notifier')->notify('thread_pin', Auth::user(), $target->user, $target);
+        $target->user->increment('notification_system_count', 1);
     }
 }

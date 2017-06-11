@@ -20,6 +20,10 @@ class UserController extends ApiController
     public function me()
     {
         $user = Auth::user();
+        $user->notification_count = $user->notification_reply_count  + $user->notification_at_count   +
+            $user->notification_system_count + $user->notification_chat_count +
+            $user->notification_follow_count ;
+        Auth::user()->save();
         if (Auth::bind() == false) {
             return new JsonResponse('unbind.', 400);
         }

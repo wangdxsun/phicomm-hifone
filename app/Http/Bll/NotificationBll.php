@@ -15,6 +15,8 @@ class NotificationBll extends BaseBll
 {
     public function watch()
     {
+        Auth::user()->notification_follow_count = 0;
+        Auth::user()->save();
         return Notification::forUser(Auth::id())->watch()->recent()->with(['object', 'author'])->get();
     }
 
@@ -24,6 +26,8 @@ class NotificationBll extends BaseBll
         foreach ($notifications as &$notification) {
             $notification->object->thread;
         }
+        Auth::user()->notification_reply_count = 0;
+        Auth::user()->save();
 
         return $notifications;
     }
@@ -36,14 +40,17 @@ class NotificationBll extends BaseBll
                 $notification->object->thread;
             }
         }
-
+        Auth::user()->notification_at_count = 0;
+        Auth::user()->save();
         return $notifications;
     }
 
     public function system()
     {
         $notifications = Notification::forUser(Auth::id())->system()->recent()->with(['object'])->get();
-
+        Auth::user()->notification_system_count = 0;
+        Auth::user()->save();
         return $notifications;
     }
+
 }

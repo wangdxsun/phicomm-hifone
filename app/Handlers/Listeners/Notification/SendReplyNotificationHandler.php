@@ -29,8 +29,8 @@ class SendReplyNotificationHandler
 
     protected function newReplyNotify(Reply $reply)
     {
-        \Log::info('before notify');
         $thread = $reply->thread;
+        $thread->user()->increment('notification_reply_count', 1);
         // Notify the author
         app('notifier')->batchNotify(
             'thread_new_reply',
@@ -39,7 +39,6 @@ class SendReplyNotificationHandler
             $reply,
             $reply->body
         );
-        \Log::info('after notify');
 
         // Notify followed users
         app('notifier')->batchNotify(
@@ -49,6 +48,10 @@ class SendReplyNotificationHandler
             $reply->thread,
             $reply->body
         );
+        foreach($thread->followers()->get() as $followers)
+        {
+            $followers->user()->increment('notification_follow_count',1);
+        }
 
         $parserAt = app('parser.at');
         $parserAt->parse($reply->body_original);
@@ -61,5 +64,10 @@ class SendReplyNotificationHandler
             $reply,
             $reply->body
         );
+        dd($parserAt->users);
+        foreach($parserAt->users as $users)
+        {
+            $users->increment('notification_at_count',1);
+        }
     }
 }

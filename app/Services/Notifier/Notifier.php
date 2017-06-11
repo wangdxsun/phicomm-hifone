@@ -39,6 +39,7 @@ class Notifier
 
         $toUser->increment('notification_count', 1);
 
+
         $object->notifications()->create($data);
     }
 

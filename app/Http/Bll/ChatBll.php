@@ -17,6 +17,8 @@ class ChatBll extends BaseBll
     public function chats()
     {
         $messages = Chat::my()->latest()->get()->unique('from_to')->load(['from', 'to']);
+        \Auth::user()->notification_chat_count = 0;
+        \Auth::user()->save();
 
         return $messages;
     }
@@ -32,7 +34,7 @@ class ChatBll extends BaseBll
         $message = request('message');
 
         event(new NewChatMessageEvent($from, $to, $message));
-
+        $to->increment('notification_chat_count', 1);
         return [
             'from' => $from->username,
             'to' => $to->username,

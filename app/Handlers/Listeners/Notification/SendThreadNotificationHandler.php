@@ -34,6 +34,10 @@ class SendThreadNotificationHandler
     protected function newThreadNotify(Thread $thread)
     {
         // Notify followed users
+        foreach($thread->user->followers()->get() as $followers)
+        {
+            $followers->user()->increment('notification_follow_count',1);
+        }
         app('notifier')->batchNotify(
             'followed_user_new_thread',
             $thread->user,
@@ -43,6 +47,10 @@ class SendThreadNotificationHandler
         // Notify mentioned users
         $parserAt = app('parser.at');
         $parserAt->parse($thread->body_original);
+        foreach($parserAt->users as $users)
+        {
+            $users->increment('notification_at_count',1);
+        }
 
         app('notifier')->batchNotify(
             'thread_mention',
