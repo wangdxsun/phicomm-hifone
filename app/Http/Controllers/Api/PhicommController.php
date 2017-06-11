@@ -12,7 +12,7 @@ use Hifone\Http\Bll\PhicommBll;
 use Hifone\Models\User;
 use Illuminate\Http\Request;
 use Auth;
-use Response;
+use Session;
 
 class PhicommController extends ApiController
 {
@@ -34,28 +34,30 @@ class PhicommController extends ApiController
         $this->phicommBll->checkPhoneAvailable($request->phone);
         $this->phicommBll->register($request->phone, $password, $request->verify);
         $phicommId = $this->phicommBll->login($request->phone, $password);
+        Session::set('phicommId', $phicommId);
 
-        return compact($phicommId);
+        return success('云账号注册成功');
     }
 
-    public function login(Request $request)
+    public function login()
     {
-        $this->validate($request, [
+        $this->validate(request(), [
             'phone' => 'required|phone',
             'password' => 'required',
         ]);
-        $phone = $request->get('phone');
-        $password = strtoupper(md5($request->get('password')));
+        $phone = request('phone');
+        $password = strtoupper(md5(request('password')));
         $phicommId = $this->phicommBll->login($phone, $password);
 
         $user = User::findUserByPhicommId($phicommId);
         if ($user) {
             if ($user->hasRole('NoLogin')) {
-                return response('您已被系统管理员禁止登录', 401);
+                return response('对不起，你已被管理员禁止登录', 403);
             }
             Auth::loginUsingId($user->id);
             return response(['user' => Auth::user()]);
         } else {
+            Session::set('phicommId', $phicommId);
             return response(['user' => 'Unbind']);
         }
     }
@@ -80,7 +82,7 @@ class PhicommController extends ApiController
         $password = strtoupper(md5(request('password')));
         $this->phicommBll->reset(request('phone'), $password, request('verify'));
 
-        return Response::json('密码重置成功');
+        return success('密码重置成功');
     }
 
     /**
@@ -91,9 +93,11 @@ class PhicommController extends ApiController
         $this->validate(request(), [
             'phone' => 'required|phone',
         ]);
-        $phone = request('phone');
-        $this->phicommBll->sendVerifyCode($phone);
+        if (request('type') == 'register') {
+            $this->phicommBll->checkPhoneAvailable(\request('phone'));
+        }
+        $this->phicommBll->sendVerifyCode(request('phone'));
 
-        return Response::json('验证码发送成功');
+        return success('验证码发送成功');
     }
 }

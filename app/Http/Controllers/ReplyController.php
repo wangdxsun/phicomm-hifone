@@ -34,12 +34,9 @@ class ReplyController extends Controller
      */
     public function store(ReplyBll $replyBll)
     {
-        if (Auth::user()->hasRole('NoComment')) {
-            return Redirect::back()->withErrors('您已被系统管理员禁言');
-        }
         try {
             $replyBll->createReply();
-        } catch (ValidationException $e) {
+        } catch (\Exception $e) {
             return Redirect::back()
                 ->withInput(Input::all())
                 ->withErrors($e->getMessageBag());
