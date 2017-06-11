@@ -26,7 +26,7 @@
                     </div>
                     <div class="form-group">
                         <label>链接</label>
-                        {!! Form::url('carousel[url]', isset($carousel) ? $carousel->url : null, ['class' => 'form-control']) !!}
+                        {!! Form::url('carousel[url]', isset($carousel) ? $carousel->jump_url : null, ['class' => 'form-control']) !!}
                     </div>
                     <div class="form-group">
                         <label>描述</label>
