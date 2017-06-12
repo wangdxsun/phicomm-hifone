@@ -40,7 +40,9 @@ class Notifier
         $toUser->increment('notification_count', 1);
         $toUser->increment('notification_system_count', 1);
 
-
+        if ($type == 'reply_like') {
+            $object = $object->thread;
+        }
         $object->notifications()->create($data);
     }
 

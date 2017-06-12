@@ -66,9 +66,6 @@ class SendSingleNotificationHandler
     protected function like($target)
     {
         $type = ($target instanceof Thread) ? 'thread_like' : 'reply_like';
-        if ($type == 'reply_like'){
-            $target = $target->thread;
-        }
         app('notifier')->notify($type, Auth::user(), $target->user, $target);
     }
 
