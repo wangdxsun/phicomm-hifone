@@ -28,6 +28,9 @@ use Hifone\Events\Thread\ThreadWasPinnedEvent;
 use Hifone\Events\Thread\ThreadWasLikedEvent;
 class SendSingleNotificationHandler
 {
+    /**
+     * @param EventInterface $event
+     */
     public function handle(EventInterface $event)
     {
         // follow
@@ -47,17 +50,6 @@ class SendSingleNotificationHandler
         } elseif ($event instanceof ThreadWasPinnedEvent){
             $this->threadPinned($event->target);
         }
-        elseif ($event instanceof CreditWasAddedEvent) {
-//            if ($event->upstream_event instanceof UserWasAddedEvent) {
-//                $this->notifyCredit('credit_register', $event->upstream_event->user, $event->credit);
-//            } elseif ($event->upstream_event instanceof UserWasLoggedinEvent) {
-//                $this->notifyCredit('credit_login', $event->upstream_event->user, $event->credit);
-//            }elseif ($event->upstream_event instanceof FavoriteWasAddedEvent) {
-//                $this->notifyCredit('credit_favorite', $event->upstream_event->user, $event->credit);
-//            } else {
-//                return;
-//            }
-        }
     }
 
     protected function follow($target)
@@ -74,6 +66,9 @@ class SendSingleNotificationHandler
     protected function like($target)
     {
         $type = ($target instanceof Thread) ? 'thread_like' : 'reply_like';
+        if ($type == 'reply_like'){
+            $target = $target->thread;
+        }
         app('notifier')->notify($type, Auth::user(), $target->user, $target);
     }
 
