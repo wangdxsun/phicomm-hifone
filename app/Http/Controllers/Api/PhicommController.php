@@ -94,7 +94,9 @@ class PhicommController extends ApiController
             'phone' => 'required|phone',
         ]);
         if (request('type') == 'register') {
-            $this->phicommBll->checkPhoneAvailable(\request('phone'));
+            $this->phicommBll->checkPhoneAvailable(request('phone'));
+        } elseif (request('type') == 'reset' && $this->phicommBll->checkPhoneAvailable(request('phone'))) {
+            throw new \Exception('该手机号还没有注册');
         }
         $this->phicommBll->sendVerifyCode(request('phone'));
 

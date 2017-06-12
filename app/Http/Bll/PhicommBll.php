@@ -104,10 +104,9 @@ class PhicommBll extends BaseBll
         if($output){
             switch($output['error']){
                 case 0:
-                    break;
+                    return true;
                 case 14:
                     throw new \Exception('该手机号已注册！');
-                    break;
                 default:
                     throw new \Exception('操作失败，请联系客服！');
             }
