@@ -47,7 +47,6 @@ class ApiRoutes
             $router->post('reset', 'PhicommController@reset');
             $router->post('verify', 'PhicommController@verify');
             $router->post('bind', 'PhicommController@bind');
-            $router->post('logout', 'PhicommController@logout');
 
             //个人中心
             $router->get('user/me', 'UserController@me');
@@ -79,6 +78,7 @@ class ApiRoutes
                 $router->get('notification/reply', 'NotificationController@reply');
                 $router->get('notification/at', 'NotificationController@at');
                 $router->get('notification/system', 'NotificationController@system');
+                $router->post('logout', 'PhicommController@logout');
             });
         });
     }
