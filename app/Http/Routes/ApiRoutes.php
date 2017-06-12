@@ -47,6 +47,7 @@ class ApiRoutes
             $router->post('reset', 'PhicommController@reset');
             $router->post('verify', 'PhicommController@verify');
             $router->post('bind', 'PhicommController@bind');
+            $router->post('logout', 'PhicommController@logout');
 
             //个人中心
             $router->get('user/me', 'UserController@me');

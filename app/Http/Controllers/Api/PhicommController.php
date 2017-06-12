@@ -102,4 +102,11 @@ class PhicommController extends ApiController
 
         return success('验证码发送成功');
     }
+
+    public function logout()
+    {
+        Auth::logout();
+
+        return success('退出成功');
+    }
 }
