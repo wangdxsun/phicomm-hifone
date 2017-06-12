@@ -38,6 +38,7 @@ class Notifier
         ];
 
         $toUser->increment('notification_count', 1);
+        $toUser->increment('notification_system_count', 1);
 
 
         $object->notifications()->create($data);

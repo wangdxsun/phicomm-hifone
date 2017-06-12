@@ -35,6 +35,7 @@ class ChatBll extends BaseBll
 
         event(new NewChatMessageEvent($from, $to, $message));
         $to->increment('notification_chat_count', 1);
+        $to->increment('notification_count', 1);
         return [
             'from' => $from->username,
             'to' => $to->username,
