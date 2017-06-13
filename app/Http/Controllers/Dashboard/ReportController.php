@@ -63,9 +63,17 @@ class ReportController extends Controller
 
     public function trash(Report $report)
     {
-        $thread = $report->reportable;
-        $thread->status = Thread::TRASH;
-        $this->updateOpLog($thread, '删除帖子', trim(request('reason')));
+        $target = $report->reportable;
+        $target->status = Thread::TRASH;
+        if ($target instanceof Thread) {
+            $operation = '删除帖子';
+            $target->user->decrement('thread_count', 1);
+            $target->node->decrement('thread_count', 1);
+        } else {
+            $operation = '删除回复';
+            $target->user->decrement('reply_count', 1);
+        }
+        $this->updateOpLog($target, $operation, trim(request('reason')));
 
         $report->status = Report::DELETE;
         $this->updateOpLog($report, '处理举报', trim(request('reason')));
