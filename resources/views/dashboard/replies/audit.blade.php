@@ -40,7 +40,7 @@
                 <td>
                     <a data-url="/dashboard/reply/{{$reply->id}}/audit" data-method="post"><i class="fa fa-check"></i></a>
                     <a href="/dashboard/reply/{{ $reply->id }}/edit"><i class="fa fa-pencil"></i></a>
-                    <a data-url="/dashboard/reply/{{ $reply->id }}/trash" data-method="post" class="need-reason"><i class="fa fa-trash"></i></a>
+                    <a data-url="/dashboard/reply/{{ $reply->id }}/audit/to/trash" data-method="post" class="need-reason"><i class="fa fa-trash"></i></a>
                 </td>
             </tr>
             @endforeach

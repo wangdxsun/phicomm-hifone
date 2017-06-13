@@ -36,7 +36,7 @@ return [
     'powered_by'          => 'Copyright &copy; 2015-2016',
     'feed'                => 'Feed',
     'registered_users'    => '已注册用户请',
-    'ranking'             => '积分榜',
+    'ranking'             => '经验值榜',
     'member'              => '的会员',
     'yes'                 => 'Yes',
     'error_occurred'      => 'An error occurred',
@@ -154,7 +154,7 @@ return [
         'avatar_upload_success'     => '头像更新成功',
         'nickname'                  => '昵称',
         'company'                   => '公司',
-        'score'                     => '积分',
+        'score'                     => '经验值',
         'location'                  => '城市',
         'location_help'             => '请用中文填写所在城市',
         'blog'                      => '博客',
@@ -174,7 +174,7 @@ return [
         'website'                   => '网址',
         'profile'                   => '我的主页',
         'favorites'                 => '我的收藏',
-        'credits'                   => '我的积分',
+        'credits'                   => '我的经验值',
         'locale'                    => '系统语言',
         'edit_profile'              => '编辑个人资料',
         'edit_avatar'               => '头像设置',
@@ -217,8 +217,8 @@ return [
         'user_follow'                 => '关注了你',
         'reply_like'                  => '赞了你的回复',
         'reply_mention'               => '在回复中提及你:',
-        'credit_register'             => '注册获得积分',
-        'credit_login'                => '每日登录获得积分',
+        'credit_register'             => '注册获得经验值',
+        'credit_login'                => '每日登录获得经验值',
         'thread_pin'                  => '置顶了你的帖子：',
         'credit_favorite'             =>''
     ],
@@ -243,10 +243,10 @@ return [
         'same_user_error' => '收件人和发件人相同.',
     ],
 
-//积分
+//经验值
     'credits' => [
-        'credits'         => '积分',
-        'mine'            => '我的积分',
+        'credits'         => '经验值',
+        'mine'            => '我的经验值',
         'time'            => '日期',
         'type'            => '类型',
         'reward'          => '数额',

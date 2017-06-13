@@ -135,7 +135,7 @@ class ReplyController extends Controller
             ->withReplies($replies)->withCurrentMenu('audit');
     }
 
-    public function trash()
+    public function trashView()
     {
         $search = $this->filterEmptyValue(Input::get('reply'));
         $replies = Reply::trash()->search($search)->with('thread', 'user', 'lastOpUser')->orderBy('last_op_time', 'desc')->paginate(20);
@@ -184,17 +184,31 @@ class ReplyController extends Controller
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
-    public function postTrash(Reply $reply)
+    public function indexToTrash(Reply $reply)
     {
         try {
             $reply->thread->decrement('reply_count', 1);
             $reply->user->decrement('reply_count', 1);
-
-            $reply->status = -1;
-            $this->updateOpLog($reply, '删除回复', trim(request('reason')));
-        } catch (ValidationException $e) {
+            $this->trash($reply);
+        } catch (\Exception $e) {
             return Redirect::back()->withErrors($e->getMessageBag());
         }
         return Redirect::back()->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
+    }
+
+    public function auditToTrash(Reply $reply)
+    {
+        try {
+            $this->trash($reply);
+        } catch (\Exception $e) {
+            return Redirect::back()->withErrors($e->getMessageBag());
+        }
+        return Redirect::back()->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
+    }
+
+    public function trash(Reply $reply)
+    {
+        $reply->status = Reply::TRASH;
+        $this->updateOpLog($reply, '删除回复', trim(request('reason')));
     }
 }

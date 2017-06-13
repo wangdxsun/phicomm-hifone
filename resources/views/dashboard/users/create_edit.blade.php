@@ -40,7 +40,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="user-credit">用户积分</label>
+                            <label for="user-credit">用户经验值</label>
                             <input type="number" class="form-control" name="user[score]" value="{{ isset($user) ? $user->score : 0 }}" min=0>
                         </div>
                         @if (!isset($user))

@@ -6,7 +6,7 @@
     @endif
     <div class="content-wrapper">
         <div class="header sub-header">
-            <i class="fa fa-star"></i> 积分管理
+            <i class="fa fa-star"></i> 经验值管理
             <div class="clearfix"></div>
         </div>
         @include('partials.errors')
@@ -17,10 +17,10 @@
                     <tbody>
                     <tr class="head">
                         <td class="first">#</td>
-                        <td >积分规则</td>
+                        <td >经验值规则</td>
                         <td >周期</td>
                         <td>奖励次数</td>
-                        <td>奖励积分</td>
+                        <td>奖励经验值</td>
                         <td style="width:10%">操作</td>
                     </tr>
                     @foreach($credit_rules as $credit_rule)

@@ -6,7 +6,7 @@
 @endif
 <div class="content-wrapper">
     <div class="header sub-header" id="sections">
-        <span class="uppercase">修改积分规则</span>
+        <span class="uppercase">修改经验值规则</span>
     </div>
     <div class="row">
         <div class="col-sm-12">
@@ -14,7 +14,7 @@
             @include('partials.errors')
             <fieldset>
                 <div class="form-group">
-                    <label>积分规则名称</label>
+                    <label>经验值规则名称</label>
                     {!! Form::text('creditRule[name]', $credit_rule->name, ['class' => 'form-control', 'disabled']) !!}
                 </div>
                 <div class="form-group">
@@ -30,7 +30,7 @@
                     {!! Form::number('creditRule[times]', $credit_rule->times, ['class' => 'form-control', 'placeholder' => '奖励周期选择每日时才需要填']) !!}
                 </div>
                 <div class="form-group">
-                    <label>奖励积分</label>
+                    <label>奖励经验值</label>
                     {!! Form::number('creditRule[reward]', $credit_rule->reward, ['class' => 'form-control', 'max' => 99, 'min' => -99]) !!}
                 </div>
             </fieldset>

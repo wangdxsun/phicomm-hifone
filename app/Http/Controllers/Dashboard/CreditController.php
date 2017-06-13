@@ -29,7 +29,7 @@ class CreditController extends Controller
     {
         View::share([
             'current_menu'  => 'credit',
-            'sub_title'     => '积分管理',
+            'sub_title'     => '经验值管理',
         ]);
     }
 
@@ -43,14 +43,14 @@ class CreditController extends Controller
         $creditRules = CreditRule::all();
 
         return View::make('dashboard.credit.index')
-            ->withPageTitle('积分管理')
+            ->withPageTitle('经验值管理')
             ->withCreditRules($creditRules);
     }
 
     public function edit(CreditRule $creditRule)
     {
         return View::make('dashboard.credit.edit')
-            ->withPageTitle('修改积分规则 - '.trans('dashboard.dashboard'))
+            ->withPageTitle('修改经验值规则 - '.trans('dashboard.dashboard'))
             ->withCreditRule($creditRule);
     }
 
@@ -61,10 +61,10 @@ class CreditController extends Controller
             $creditRule->update($creditRuleData);
         } catch (ValidationException $e) {
             return Redirect::route('dashboard.creditRule.edit', ['id' => $creditRule->id])
-                ->withTitle('积分规则修改失败')
+                ->withTitle('经验值规则修改失败')
                 ->withErrors($e->getMessageBag());
         }
         return Redirect::back()
-            ->withSuccess('积分规则修改成功');
+            ->withSuccess('经验值规则修改成功');
     }
 }

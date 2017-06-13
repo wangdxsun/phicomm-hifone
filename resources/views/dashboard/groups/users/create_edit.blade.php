@@ -24,7 +24,7 @@
                     {!! Form::text('role[description]', isset($role) ? $role->description : null, ['class' => 'form-control']) !!}
                 </div>
                 <div class="form-group">
-                    <label>积分范围</label>
+                    <label>经验值范围</label>
                     <div class="form-inline">
                         <div class="input-group">
                             <input type="number" name="role[credit_low]" value="{{ isset($role) ? $role->credit_low : 0 }}" class="form-control" placeholder="最小值" required>

@@ -208,7 +208,7 @@ class ThreadController extends Controller
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
-    public function trash()
+    public function trashView()
     {
         $search = $this->filterEmptyValue(Input::get('thread'));
         $threads = Thread::trash()->search($search)->with('node', 'user', 'lastOpUser')->orderBy('last_op_time', 'desc')->paginate(20);
@@ -227,17 +227,36 @@ class ThreadController extends Controller
             ->withOperators(User::find($operators));
     }
 
-    public function postTrash(Thread $thread)
+    //从审核通过删除帖子，需要将帖子数-1
+    public function indexToTrash(Thread $thread)
     {
         try {
             $thread->node->decrement('thread_count', 1);
             $thread->user->decrement('thread_count', 1);
-            $thread->status = Thread::TRASH;
-            $this->updateOpLog($thread, '删除帖子', trim(request('reason')));
+            $this->trash($thread);
         } catch (ValidationException $e) {
             return Redirect::back()->withErrors($e->getMessageBag());
         }
 
         return Redirect::back()->withSuccess('恭喜，操作成功！');
+    }
+
+    //从待审核删除帖子
+    public function auditToTrash(Thread $thread)
+    {
+        try {
+            $this->trash($thread);
+        } catch (\Exception $e) {
+            return Redirect::back()->withErrors($e->getMessageBag());
+        }
+
+        return Redirect::back()->withSuccess('恭喜，操作成功！');
+    }
+
+    //将帖子放到回收站
+    public function trash(Thread $thread)
+    {
+        $thread->status = Thread::TRASH;
+        $this->updateOpLog($thread, '删除帖子', trim(request('reason')));
     }
 }

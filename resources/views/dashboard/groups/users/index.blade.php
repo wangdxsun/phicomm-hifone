@@ -20,7 +20,7 @@
                     <td >#</td>
                     <td>用户组名称</td>
                     <td>权限列表</td>
-                    <td>积分范围</td>
+                    <td>经验值范围</td>
                     <td>创建人</td>
                     <td>创建时间</td>
                     <td style="width: 110px">操作</td>

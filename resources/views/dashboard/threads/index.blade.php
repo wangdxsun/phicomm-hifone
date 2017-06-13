@@ -81,7 +81,7 @@
                         <a data-url="/dashboard/thread/{{$thread->id}}/pin" data-method="post" title="置顶"><i class="{{ $thread->pin }}"></i></a>
                         <a data-url="/dashboard/thread/{{$thread->id}}/sink" data-method="post" title="下沉"><i class="{{ $thread->sink }}"></i></a>
                         <a href="/dashboard/thread/{{ $thread->id }}/edit"><i class="fa fa-pencil" title="编辑"></i></a>
-                        <a data-url="/dashboard/thread/{{ $thread->id }}/trash" data-method="post" class="need-reason" title="删除"><i class="fa fa-trash"></i></a>
+                        <a data-url="/dashboard/thread/{{ $thread->id }}/index/to/trash" data-method="post" class="need-reason" title="删除"><i class="fa fa-trash"></i></a>
                     </td>
                 </tr>
                 @endforeach

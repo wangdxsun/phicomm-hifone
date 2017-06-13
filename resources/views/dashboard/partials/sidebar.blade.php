@@ -56,7 +56,7 @@
             <li {!! set_active('dashboard/creditRule*') !!}>
                 <a href="{{ route('dashboard.creditRule.index') }}">
                     <i class="fa fa-star"></i>
-                    <span>积分管理</span>
+                    <span>经验值管理</span>
                 </a>
             </li>
             {{--<li {!! set_active('dashboard/page*') !!} {!! set_active('dashboard/photo*') !!}>--}}

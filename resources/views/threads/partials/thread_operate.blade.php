@@ -64,9 +64,9 @@
                 </a>
             @endif
 
-            <a data-method="delete" id="thread-delete-button" data-url="{{ route('thread.trash', [$thread->id]) }}" title="{{ trans('forms.delete') }}" class="admin need-reason">
-                <i class="fa fa-trash-o"></i>
-            </a>
+            {{--<a data-method="delete" id="thread-delete-button" data-url="{{ route('thread.trash', [$thread->id]) }}" title="{{ trans('forms.delete') }}" class="admin need-reason">--}}
+                {{--<i class="fa fa-trash-o"></i>--}}
+            {{--</a>--}}
         @endif
 
         @if ( Auth::user() && (Auth::user()->can("manage_threads") || Auth::user()->id == $thread->user_id) )

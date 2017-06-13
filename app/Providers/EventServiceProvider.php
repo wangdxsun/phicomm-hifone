@@ -31,7 +31,7 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Notification\SendAppendNotificationHandler::class,
         ],
 
-        // 增加积分后通知用户
+        // 增加经验值后通知用户
         \Hifone\Events\Credit\CreditWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
