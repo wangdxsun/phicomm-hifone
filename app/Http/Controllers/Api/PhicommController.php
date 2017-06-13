@@ -54,8 +54,13 @@ class PhicommController extends ApiController
             if ($user->hasRole('NoLogin')) {
                 return response('对不起，你已被管理员禁止登录', 403);
             }
-            Auth::loginUsingId($user->id);
-            return response(['user' => Auth::user()]);
+            Auth::login($user);
+            $cloudUser = $this->phicommBll->userInfo();
+            if ($cloudUser['img'] && $user->avatar_url != $cloudUser['img']) {
+                $user->avatar_url = $cloudUser['img'];
+                $user->save();
+            }
+            return response($user);
         } else {
             Session::set('phicommId', $phicommId);
             return response(['user' => 'Unbind']);

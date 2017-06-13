@@ -11,22 +11,25 @@ namespace Hifone\Http\Controllers\Api;
 use Auth;
 use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\FollowBll;
+use Hifone\Http\Bll\PhicommBll;
 use Hifone\Http\Bll\UserBll;
 use Hifone\Models\User;
 use Illuminate\Http\JsonResponse;
 
 class UserController extends ApiController
 {
-    public function me()
+    public function me(PhicommBll $phicommBll)
     {
         $user = Auth::user();
         if (Auth::bind() == false) {
             return new JsonResponse('unbind.', 400);
         }
         if (! is_null($user)) {
-            $user->notification_count = $user->notification_reply_count  + $user->notification_at_count   +
-                $user->notification_system_count + $user->notification_chat_count + $user->notification_follow_count ;
-            Auth::user()->save();
+            $cloudUser = $phicommBll->userInfo();
+            if ($cloudUser['img'] && $user->avatar_url != $cloudUser['img']) {
+                $user->avatar_url = $cloudUser['img'];
+                $user->save();
+            }
             return $user;
         } else {
             return 'PhicommNoLogin';
@@ -86,13 +89,13 @@ class UserController extends ApiController
         return $replies;
     }
 
-    /**
-     * 上传头像
-     */
-    public function upload(CommonBll $commonBll)
+    //上传头像
+    public function upload(CommonBll $commonBll, PhicommBll $phicommBll)
     {
         $avatar = $commonBll->upload();
         Auth::user()->update(['avatar_url' => $avatar['filename']]);
+        $upload = $phicommBll->upload($avatar['localFile']);
+        unset($avatar['localFile']);
 
         return $avatar;
     }

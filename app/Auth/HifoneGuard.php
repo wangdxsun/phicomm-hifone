@@ -58,7 +58,7 @@ class HifoneGuard extends SessionGuard implements Guard
         if (!is_null($token)) {
             $phicommId = $this->getIdFromToken($token);
         } else {
-            $phicommId = $this->user()->phicomm_id;
+            $phicommId = $this->session->get('phicommId');
         }
 
         return $phicommId;
@@ -67,6 +67,16 @@ class HifoneGuard extends SessionGuard implements Guard
     public function bind()
     {
         return $this->bind;
+    }
+
+    public function token()
+    {
+        $token = $this->getTokenForRequest();
+        if (empty($token)) {
+            $token = $this->session->get('access_token');
+        }
+
+        return $token;
     }
 
     protected function getTokenForRequest()

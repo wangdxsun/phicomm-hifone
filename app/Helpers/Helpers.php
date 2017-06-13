@@ -180,8 +180,44 @@ if (!function_exists('success')) {
 }
 
 if (!function_exists('curlGet')) {
-    function curlGet($url, $header=null)
+    function curlGet($url, $header = null)
     {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        if (! empty($header)) {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+        }
+        $output = curl_exec($ch);
+        curl_close($ch);
+        return $output;
+    }
+}
+
+if (!function_exists('curlPost')) {
+    function curlPost($url, $data, $header = null)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+        if(! empty($header)) {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+        }
+        $output = curl_exec($ch);
+        curl_close($ch);
+        return $output;
+    }
+}
+
+if (!function_exists('curl_get')) {
+    function curl_get($url ,$header=null){
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,FALSE);
@@ -193,23 +229,44 @@ if (!function_exists('curlGet')) {
         }
         $output = curl_exec($ch);
         curl_close($ch);
+
+        //打印获得的数据
         return $output;
     }
 }
 
-if (!function_exists('curlPost')) {
-
-    function curlPost($url,$data)
+if (!function_exists('curl_form_post')) {
+    function curl_form_post($url,$data,$header=null,$method='post')
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,FALSE);
         curl_setopt($ch,CURLOPT_SSL_VERIFYHOST,FALSE);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+        if($method=='post'&&empty($header)){
+            curl_setopt($ch, CURLOPT_POST, 1);
+        }else if($method=='post'&&!empty($header)){
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method); //设置请求方式
+            if (!empty($header)) {
+                $new_header = array("X-HTTP-Method-Override: $method",$header);
+            } else {
+                $new_header = array("X-HTTP-Method-Override: $method");
+            }
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $new_header);
+        }else{
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method); //设置请求方式
+            if (!empty($header)) {
+                $new_header = array("X-HTTP-Method-Override: $method",$header);
+            } else {
+                $new_header = array("X-HTTP-Method-Override: $method");
+            }
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $new_header);
+        }
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         $output = curl_exec($ch);
         curl_close($ch);
+
+        //打印获得的数据
         return $output;
     }
 }

@@ -32,9 +32,10 @@ class UploadBase64ImageCommandHandler
             $destinationPath = public_path().'/'.$folderName;
             is_dir($destinationPath) || mkdir($destinationPath, 0777, true);
             $safeName = str_random(10).'.'.$extension;
-            $new_file = $destinationPath.'/'.$safeName;
-            file_put_contents($new_file, base64_decode(str_replace($result[1], '', $file)));
+            $newFile = $destinationPath.'/'.$safeName;
+            file_put_contents($newFile, base64_decode(str_replace($result[1], '', $file)));
             $data['filename'] = request()->getSchemeAndHttpHost().'/'.$folderName.'/'.$safeName;
+            $data['localFile'] = $newFile;
             event(new ImageWasUploadedEvent($data));
 
             return $data;

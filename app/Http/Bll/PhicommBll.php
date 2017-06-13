@@ -70,6 +70,8 @@ class PhicommBll extends BaseBll
         if ($output['error'] > 0) {
             throw new \Exception('手机号或密码错误');
         }
+        Session::set('access_token', $output['access_token']);
+
         return $output['uid'];
     }
 
@@ -182,6 +184,48 @@ class PhicommBll extends BaseBll
 
         return $user;
     }
+
+    public function upload($file)
+    {
+        $file = new \CURLFile($file);
+        $data = [
+            'file' => $file,
+            'type' => 1,
+        ];
+
+        $token = Auth::token();
+        $header = "Authorization:$token";
+        $res = json_decode(curl_form_post(env('PORTRAIT'), $data, $header, 'POST'), true);
+
+        if ($res) {
+            switch($res['error']){
+                case 0:
+                    return $res;
+                case 18:
+                    throw new \Exception('图片格式错误！');
+                case 19:
+                    throw new \Exception('图片为空！');
+                case 50:
+                    throw new \Exception('服务器异常！');
+                default:
+                    throw new \Exception($res['message']);
+            }
+        } else {
+            throw new \Exception('服务器异常！');
+        }
+    }
+
+    public function userInfo()
+    {
+        $url = env('PHICLOUND_DOMAIN').'accountDetail';
+        $header = ["Authorization:".Auth::token()];
+        $res = json_decode(curlGet($url, $header), true);
+        if (array_get($res, 'error') == 0) {
+            return $res['data'];
+        }
+        return null;
+    }
+
     /**
      * 参数说明：
      * $msg_type 0，通知（会响）， 1，消息
