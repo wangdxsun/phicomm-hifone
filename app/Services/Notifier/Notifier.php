@@ -37,8 +37,10 @@ class Notifier
             'updated_at'    => $nowTimestamp,
         ];
 
-        $toUser->increment('notification_count', 1);
-        $toUser->increment('notification_system_count', 1);
+        if($type != 'thread_favorite' && $type != 'thread_mark_excellent' && $type != 'thread_pin' && $type != 'thread_follow' ) {
+            $toUser->increment('notification_system_count', 1);
+            $toUser->increment('notification_count', 1);
+        }
 
         $object->notifications()->create($data);
     }
