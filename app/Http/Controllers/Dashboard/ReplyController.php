@@ -187,8 +187,8 @@ class ReplyController extends Controller
     public function postTrash(Reply $reply)
     {
         try {
-            $reply->thread->decreament('reply_count', 1);
-            $reply->user->decreament('reply_count', 1);
+            $reply->thread->decrement('reply_count', 1);
+            $reply->user->decrement('reply_count', 1);
 
             $reply->status = -1;
             $this->updateOpLog($reply, '删除回复', trim(request('reason')));
