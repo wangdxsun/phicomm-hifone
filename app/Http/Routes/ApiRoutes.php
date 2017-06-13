@@ -78,6 +78,7 @@ class ApiRoutes
                 $router->get('notification/reply', 'NotificationController@reply');
                 $router->get('notification/at', 'NotificationController@at');
                 $router->get('notification/system', 'NotificationController@system');
+                $router->post('logout', 'PhicommController@logout');
             });
         });
     }
