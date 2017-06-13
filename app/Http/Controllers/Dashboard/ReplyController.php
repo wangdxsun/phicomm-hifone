@@ -158,7 +158,6 @@ class ReplyController extends Controller
         $thread->last_reply_user_id = $reply->user_id;
         $thread->updated_at = Carbon::now()->toDateTimeString();
         $thread->save();
-        $reply->user->increment('reply_count', 1);
         event(new ReplyWasAddedEvent($reply));
         event(new RepliedWasAddedEvent($reply->user, $thread->user));
 
