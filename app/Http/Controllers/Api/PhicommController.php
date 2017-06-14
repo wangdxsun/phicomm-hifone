@@ -60,10 +60,10 @@ class PhicommController extends ApiController
                 $user->avatar_url = $cloudUser['img'];
                 $user->save();
             }
-            return response($user);
+            return $user;
         } else {
             Session::set('phicommId', $phicommId);
-            return response(['user' => 'Unbind']);
+            return 'Unbind';
         }
     }
 
@@ -74,7 +74,7 @@ class PhicommController extends ApiController
         ]);
         $user = $phicommBll->bind();
 
-        return response(['user' => $user]);
+        return $user;
     }
 
     public function reset()
