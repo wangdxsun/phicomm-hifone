@@ -59,7 +59,7 @@ class Thread extends BaseModel implements TaggableInterface
      * @var string[]
      */
     public $rules = [
-        'title'   => 'required|min:2|max:80',
+        'title'   => 'required|min:1|max:80',
         'body'    => 'required|min:2',
         'node_id' => 'required|int',
         'user_id' => 'required|int',
