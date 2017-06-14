@@ -20,6 +20,7 @@ use Hifone\Composers\Dashboard\ReplyMenuComposer;
 use Hifone\Composers\Dashboard\ReportMenuComposer;
 use Hifone\Composers\Dashboard\RoleMenuComposer;
 use Hifone\Composers\Dashboard\SettingMenuComposer;
+use Hifone\Composers\Dashboard\StatMenuComposer;
 use Hifone\Composers\Dashboard\ThreadMenuComposer;
 use Hifone\Composers\Dashboard\UserMenuComposer;
 use Hifone\Composers\LocaleComposer;
@@ -52,6 +53,7 @@ class ComposerServiceProvider extends ServiceProvider
         $factory->composer(['dashboard.nodes.*', 'dashboard.sections.*'], NodeMenuComposer::class);
         $factory->composer(['dashboard.reports.*'], ReportMenuComposer::class);
         $factory->composer(['dashboard.groups.*'], RoleMenuComposer::class);
+        $factory->composer(['dashboard.stats.*'], StatMenuComposer::class);
         $factory->composer(['dashboard.tips.*', 'dashboard.links.*', 'dashboard.locations.*', 'dashboard.settings.*', ], SettingMenuComposer::class);
     }
 

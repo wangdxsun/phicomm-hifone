@@ -60,6 +60,8 @@ class DashboardRoutes
             $router->post('report/{report}/ignore', 'ReportController@ignore');
             $router->post('carousel/{carousel}/close', 'CarouselController@close')->name('carousel.close');
             $router->get('stat', 'StatController@index')->name('stat.index');
+            $router->get('stat/node', 'StatController@node')->name('stat.node');
+            $router->get('stat/banner', 'StatController@banner')->name('stat.banner');
 
             $router->get('wordsExcel/export','WordsExcelController@export')->name('wordsExcel.export');
             $router->post('wordsExcel/import','WordsExcelController@import');
