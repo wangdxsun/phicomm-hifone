@@ -208,6 +208,7 @@ class UserController extends Controller
 
         event(new AvatarWasUploadedEvent(Auth::user()));
 
+
         return Redirect::back()
             ->withSuccess(trans('hifone.users.avatar_upload_success'));
     }
