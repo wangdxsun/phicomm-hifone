@@ -21,7 +21,7 @@
                         <td>累计独立用户数</td>
                         <td>查看</td>
                     </tr>
-                    @foreach($carousels as $carousel)
+                    @foreach ($carousels as $carousel)
                         <tr>
                             <td><a href="{{ $carousel->url }}" target="_blank"><img src="{{ $carousel->image }}" style="max-width: 200px; max-height: 50px;"></a></td>
                             <td>{{ $carousel->click_count }}</td>

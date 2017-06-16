@@ -31,17 +31,26 @@
                         <td>消息数量</td>
                         <td>独立用户数</td>
                     </tr>
-                    @foreach($carousels as $carousel)
+                    @foreach ($daily_stats as $dailyStat)
                         <tr>
-                            <td><a href="{{ $carousel->url }}" target="_blank"><img src="{{ $carousel->image }}" style="max-width: 200px; max-height: 50px;"></a></td>
-                            <td>{{ $carousel->click_count }}</td>
-                            <td>{{ $carousel->view_count }}</td>
-                            <td><a href="/dashboard/stat/banner/{{ $carousel->id }}">详情</a></td>
+                            <td>{{ $dailyStat->date }}</td>
+                            <td>{{ $dailyStat->click_count }}</td>
+                            <td>{{ $dailyStat->view_count }}</td>
                         </tr>
                     @endforeach
                 </table>
+                {{--分页--}}
+                <div>
+                    <div class="pull_right">
+                        {{ $daily_stats->render() }}
+                    </div>
+                </div>
 
             </div>
         </div>
+
     </div>
+
+
+
 @stop

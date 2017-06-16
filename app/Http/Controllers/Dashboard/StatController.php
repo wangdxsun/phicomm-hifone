@@ -32,7 +32,8 @@ class StatController extends Controller
 
     public function banner_detail(Carousel $carousel)
     {
-        $dailyBanners = $carousel->dailyBanners;
-        return view('dashboard.stats.banner_detail')->withCurrentMenu('banner_detail')->withDailyBanners($dailyBanners);
+        $dailyStats = $carousel->dailyStats()->recent()->paginate(2);
+        //dd($dailyStats);
+        return view('dashboard.stats.banner_detail')->withCurrentMenu('banner_detail')->withDailyStats($dailyStats);
     }
 }

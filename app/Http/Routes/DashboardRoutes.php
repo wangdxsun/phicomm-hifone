@@ -62,7 +62,7 @@ class DashboardRoutes
             $router->get('stat', 'StatController@index')->name('stat.index');
             $router->get('stat/node', 'StatController@node')->name('stat.node');
             $router->get('stat/banner', 'StatController@banner')->name('stat.banner');
-            $router->get('stat/banner/{banner}', 'StatController@banner_detail')->name('stat.banner.show');
+            $router->get('stat/banner/{carousel}', 'StatController@banner_detail')->name('stat.banner.show');
 
 
             $router->get('wordsExcel/export','WordsExcelController@export')->name('wordsExcel.export');
