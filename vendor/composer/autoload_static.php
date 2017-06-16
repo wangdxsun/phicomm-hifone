@@ -593,6 +593,7 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
         'CreateLocationsTable' => __DIR__ . '/../..' . '/database/migrations/2016_06_01_233353_create_locations_table.php',
         'CreateMessagesTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_28_175710_create_messages_table.php',
         'CreateMessengerThreadsTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_28_175635_create_messenger_threads_table.php',
+        'CreateNodeBannersTable' => __DIR__ . '/../..',
         'CreateNodesTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_29_013301_create_nodes_table.php',
         'CreateNotificationsTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_29_013615_create_notifications_table.php',
         'CreatePagesTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_23_153224_create_pages_table.php',

@@ -10,6 +10,7 @@ namespace Hifone\Http\Bll;
 
 use Auth;
 use Hifone\Commands\Image\UploadBase64ImageCommand;
+use Hifone\Events\Image\AvatarWasUploadedEvent;
 use Hifone\Events\User\UserWasLoggedinEvent;
 use Input;
 
@@ -32,6 +33,7 @@ class CommonBll extends BaseBll
         if (Input::has('image')) {
             $image = Input::get('image');
             $upload = dispatch(new UploadBase64ImageCommand($image));
+            event(new AvatarWasUploadedEvent(Auth::user()));
 
             return $upload;
         } else {

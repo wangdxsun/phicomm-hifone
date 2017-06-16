@@ -5,12 +5,7 @@ class DailyStat extends BaseModel
 {
     protected $table = 'daily_stats';
 
-    public function dailyBanners()
-    {
-        return $this->morphTo();
-    }
-
-    public function dailyNodes()
+    public function object()
     {
         return $this->morphTo();
     }
