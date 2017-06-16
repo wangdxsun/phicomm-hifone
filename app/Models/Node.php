@@ -93,4 +93,14 @@ class Node extends BaseModel implements HasPresenter
     {
         return NodePresenter::class;
     }
+
+    /**
+     * define morph relations
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function dailyNodes()
+    {
+        return $this->morphMany(DailyStat::class,'object');
+    }
 }

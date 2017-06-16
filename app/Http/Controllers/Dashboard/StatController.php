@@ -9,6 +9,8 @@
 namespace Hifone\Http\Controllers\Dashboard;
 
 use Hifone\Http\Controllers\Controller;
+use Hifone\Models\Node;
+use Hifone\Models\DailyStat;
 
 class StatController extends Controller
 {
@@ -24,6 +26,13 @@ class StatController extends Controller
 
     public function node()
     {
-        return view('dashboard.stats.node')->withCurrentMenu('node');
+        $nodes = Node::orderBy('order')->get();
+        return view('dashboard.stats.node')->withCurrentMenu('node')->withNodes($nodes);
+    }
+
+    public function node_detail(Node $node)
+    {
+        $dailyNodes = $node->dailyStats;
+        return view('dashboard.stats.node_detail')->withCurrentMenu('node_detail')->withDailyNodes($dailyStats);
     }
 }
