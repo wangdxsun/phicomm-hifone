@@ -7,7 +7,7 @@
     <div class="content-wrapper">
         <div class="header sub-header">
             <span class="uppercase">
-                 <i class="fa fa-calendar"></i> node数据详情
+                 <i class="fa fa-calendar"></i> 版块数据详情
             </span>
         </div>
         <div class="row">
@@ -31,7 +31,7 @@
                         <td>新增帖子数量</td>
                         <td>新增回复数量</td>
                     </tr>
-                    @foreach($dailyNodes as $dailyNode)
+                    @foreach($daily_stats as $dailyNode)
                         <tr>
                             <td>{{ $dailyNode->date }}</td>
                             <td>{{ $dailyNode->thread_count }}</td>
@@ -39,6 +39,12 @@
                         </tr>
                     @endforeach
                 </table>
+                {{--分页--}}
+                <div>
+                    <div class="pull_right">
+                        {{ $daily_stats->render() }}
+                    </div>
+                </div>
 
             </div>
         </div>

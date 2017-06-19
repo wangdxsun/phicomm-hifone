@@ -61,6 +61,7 @@ class DashboardRoutes
             $router->post('carousel/{carousel}/close', 'CarouselController@close')->name('carousel.close');
             $router->get('stat', 'StatController@index')->name('stat.index');
             $router->get('stat/node', 'StatController@node')->name('stat.node');
+            $router->get('stat/node/{node}', 'StatController@node_detail')->name('stat.node.show');
             $router->get('stat/banner', 'StatController@banner')->name('stat.banner');
             $router->get('stat/banner/{carousel}', 'StatController@banner_detail')->name('stat.banner.show');
 

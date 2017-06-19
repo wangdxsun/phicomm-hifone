@@ -99,7 +99,7 @@ class Node extends BaseModel implements HasPresenter
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
-    public function dailyNodes()
+    public function dailyStats()
     {
         return $this->morphMany(DailyStat::class,'object');
     }
