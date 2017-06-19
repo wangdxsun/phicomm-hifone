@@ -23,14 +23,16 @@ class UserBll extends BaseBll
 
     public function getThreads(User $user)
     {
-        $threads = $user->threads()->with(['user', 'node'])->visible()->recent()->paginate(15);
+        $threads = $user->threads()->with(['user', 'node'])->visible()->recent()->get();
 
         return $threads;
     }
 
     public function getReplies()
     {
-        $replies = Auth::user()->replies()->visible()->with(['thread'])->recent()->paginate();
+        $replies = Auth::user()->replies()->visible()->with(['thread' => function ($query) {
+            return $query->where('status', 0);
+        }])->recent()->paginate();
 
         return $replies;
     }
