@@ -56,10 +56,11 @@ class NotificationBll extends BaseBll
 
     public function system()
     {
-        $notifications = Notification::forUser(Auth::id())->system()->recent()->with(['object' => function ($query) {
-            return $query->where('status', 0);
-        }, 'author'])->get();
+        $notifications = Notification::forUser(Auth::id())->system()->recent()->with(['object', 'author'])->get();
         foreach ($notifications as $key => &$notification) {
+            if ($notification->type <> 'user_follow' && $notification->object->status < 0) {
+                unset($notifications[$key]);
+            }
             if ($notification->type == 'reply_like' && $notification->object->thread->status < 0) {
                 unset($notifications[$key]);
             }
