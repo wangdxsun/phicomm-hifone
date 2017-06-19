@@ -107,7 +107,7 @@ class PhicommController extends ApiController
                 $this->phicommBll->checkPhoneAvailable(request('phone'));
                 throw new \Exception('该手机号还没有注册');
             } catch (\Exception $e) {
-                if ($e->getMessage() <> '该手机号已注册') {
+                if ($e->getMessage() <> '该手机号已注册！') {
                     throw $e;
                 }
             }
