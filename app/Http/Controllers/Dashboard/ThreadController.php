@@ -24,6 +24,7 @@ use Hifone\Models\Section;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
 use Hifone\Services\Parsers\Markdown;
+use Illuminate\Support\Facades\DB;
 use Redirect;
 use View;
 use Input;
@@ -196,12 +197,15 @@ class ThreadController extends Controller
     //将帖子状态修改为审核通过
     public function passAudit($thread)
     {
+        DB::beginTransaction();
         try {
             $thread->node->increment('thread_count', 1);
             $thread->user->increment('thread_count', 1);
             $thread->status = 0;
             $this->updateOpLog($thread, '审核通过');
+            DB::commit();
         } catch (ValidationException $e) {
+            DB::rollBack();
             return Redirect::back()->withErrors($e->getMessageBag());
         }
 
@@ -230,11 +234,14 @@ class ThreadController extends Controller
     //从审核通过删除帖子，需要将帖子数-1
     public function indexToTrash(Thread $thread)
     {
+        DB::beginTransaction();
         try {
             $thread->node->decrement('thread_count', 1);
             $thread->user->decrement('thread_count', 1);
             $this->trash($thread);
+            DB::commit();
         } catch (ValidationException $e) {
+            DB::rollBack();
             return Redirect::back()->withErrors($e->getMessageBag());
         }
 

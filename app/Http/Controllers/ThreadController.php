@@ -28,6 +28,7 @@ use Hifone\Models\Section;
 use Hifone\Models\Thread;
 use Hifone\Repositories\Criteria\Thread\BelongsToNode;
 use Config;
+use Illuminate\Support\Facades\DB;
 use Input;
 use Redirect;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -272,12 +273,15 @@ class ThreadController extends Controller
     {
         $this->needAuthorOrAdminPermission($thread->user_id);
 
+        DB::beginTransaction();
         try {
             $thread->node->decrement('thread_count', 1);
             $thread->user->decrement('thread_count', 1);
             $thread->status = -1;
             $this->updateOpLog($thread, '删除帖子', trim(request('reason')));
+            DB::commit();
         } catch (ValidationException $e) {
+            DB::rollBack();
             return Redirect::back()->withErrors($e->getMessageBag());
         }
 
