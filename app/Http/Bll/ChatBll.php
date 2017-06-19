@@ -32,6 +32,7 @@ class ChatBll extends BaseBll
     {
         $from = \Auth::user();
         $message = request('message');
+//        $message = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse(request('message')));
 
         event(new NewChatMessageEvent($from, $to, $message));
         $to->increment('notification_chat_count', 1);

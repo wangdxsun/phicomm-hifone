@@ -17,14 +17,23 @@ class NotificationBll extends BaseBll
     {
         Auth::user()->notification_follow_count = 0;
         Auth::user()->save();
-        return Notification::forUser(Auth::id())->watch()->recent()->with(['object', 'author'])->get();
+        $notifications = Notification::forUser(Auth::id())->watch()->recent()->with(['object' => function ($query) {
+            return $query->where('status', 0);
+        }, 'author'])->get();
+        foreach ($notifications as &$notification) {
+            $notification->object->node;
+        }
+
+        return $notifications;
     }
 
     public function reply()
     {
         $notifications = Notification::forUser(Auth::id())->ofType('thread_new_reply')->recent()->with(['author'])->get();
-        foreach ($notifications as &$notification) {
-            $notification->object->thread;
+        foreach ($notifications as $key => &$notification) {
+            if ($notification->object->status < 0 || $notification->object->thread->status < 0) {
+                unset($notifications[$key]);
+            }
         }
         Auth::user()->notification_reply_count = 0;
         Auth::user()->save();
@@ -35,8 +44,8 @@ class NotificationBll extends BaseBll
     public function at()
     {
         $notifications = Notification::forUser(Auth::id())->at()->recent()->with(['author'])->get();
-        foreach ($notifications as $notification) {
-            if ($notification->object) {
+        foreach ($notifications as &$notification) {
+            if ($notification->object->status < 0 || $notification->object->thread->status < 0) {
                 $notification->object->thread;
             }
         }
@@ -47,10 +56,12 @@ class NotificationBll extends BaseBll
 
     public function system()
     {
-        $notifications = Notification::forUser(Auth::id())->system()->recent()->with(['object', 'author'])->get();
-        foreach ($notifications as &$notification) {
-            if ($notification->type == 'reply_like') {
-                $notification->object = $notification->object->thread;
+        $notifications = Notification::forUser(Auth::id())->system()->recent()->with(['object' => function ($query) {
+            return $query->where('status', 0);
+        }, 'author'])->get();
+        foreach ($notifications as $key => &$notification) {
+            if ($notification->type == 'reply_like' && $notification->object->thread->status < 0) {
+                unset($notifications[$key]);
             }
         }
         Auth::user()->notification_system_count = 0;
