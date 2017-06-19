@@ -20,12 +20,17 @@ class UpdateBannerViewCountHandler
     public function handle(BannerWasViewedEvent $event)
     {
         $banner = $event->carousel;
+        $dailyStats = $banner->dailyStats;
+        $dates = $dailyStats->pluck('date');
+        dd($dates);
 
         if (!$this->hasViewedBanner($banner)) {
             $banner->increment('view_count', 1);
+            $dailyStats->increment('view_count', 1);
             $this->storeViewedBanner($banner);
         }
         $banner->increment('click_count', 1);
+        $dailyStats->increment('click_count', 1);
     }
 
     protected function hasViewedBanner($banner)

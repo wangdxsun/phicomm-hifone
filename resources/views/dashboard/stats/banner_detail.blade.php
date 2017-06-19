@@ -41,7 +41,7 @@
                 </table>
                 {{--分页--}}
                 <div>
-                    <div class="pull_right">
+                    <div class="pull_right" align="right">
                         {{ $daily_stats->render() }}
                     </div>
                 </div>

@@ -9,4 +9,5 @@ class DailyStat extends BaseModel
     {
         return $this->morphTo();
     }
+
 }

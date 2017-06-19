@@ -164,6 +164,11 @@ class EventServiceProvider extends ServiceProvider
         \Hifone\Events\Chat\NewChatMessageEvent::class => [
             \Hifone\Handlers\Listeners\Chat\NewChatMessageHandler::class,
         ],
+        //点击banner图，触发每日数据统计事件
+        \Hifone\Events\Banner\BannerWasViewedEvent::class =>[
+            \Hifone\Handlers\Commands\Stat\DailyStatCommandHandler::class,
+
+        ],
 
     ];
 
