@@ -37,11 +37,11 @@ class FollowBll extends BaseBll
 
     public function follows(User $user)
     {
-        return $user->follows()->ofType(User::class)->with('follower')->paginate(15);
+        return $user->follows()->ofType(User::class)->recent()->with('follower')->paginate(15);
     }
 
     public function followers(User $user)
     {
-        return $user->followers()->with('user')->paginate(15);
+        return $user->followers()->with('user')->recent()->paginate(15);
     }
 }
