@@ -36,23 +36,26 @@ class AddFollowCommandHandler
 
     protected function followAction($target)
     {
-        if ($target->followers()->forUser(Auth::id())->count()) {
-            $target->followers()->forUser(Auth::id())->delete();
-            $target->decrement('follower_count', 1);
-            if ($target instanceOf User) {
-                Auth::user()->decrement('follow_count', 1);
-            }
+        DB::transaction(function () use ($target) {
+            dd('qqq');
+            if ($target->followers()->forUser(Auth::id())->count()) {
+                $target->followers()->forUser(Auth::id())->delete();
+                $target->decrement('follower_count', 1);
+                if ($target instanceOf User) {
+                    Auth::user()->decrement('follow_count', 1);
+                }
 
-            event(new FollowWasRemovedEvent($target));
-            event(new FollowedWasRemovedEvent($target));
-        } else {
-            $target->followers()->create(['user_id' => Auth::id()]);
-            $target->increment('follower_count', 1);
-            if ($target instanceOf User) {
-                Auth::user()->increment('follow_count', 1);
+                event(new FollowWasRemovedEvent($target));
+                event(new FollowedWasRemovedEvent($target));
+            } else {
+                $target->followers()->create(['user_id' => Auth::id()]);
+                $target->increment('follower_count', 1);
+                if ($target instanceOf User) {
+                    Auth::user()->increment('follow_count', 1);
+                }
+                event(new FollowWasAddedEvent($target));
+                event(new FollowedWasAddedEvent($target));
             }
-            event(new FollowWasAddedEvent($target));
-            event(new FollowedWasAddedEvent($target));
-        }
+        });
     }
 }
