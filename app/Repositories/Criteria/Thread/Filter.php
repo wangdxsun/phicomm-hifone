@@ -45,7 +45,7 @@ class Filter extends Criteria
                 return $model->recentReply();
                 break;
             default:
-                return $model->pinAndRecentReply();
+                return $model->hot();
                 break;
         }
     }

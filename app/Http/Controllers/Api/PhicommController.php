@@ -8,6 +8,7 @@
 
 namespace Hifone\Http\Controllers\Api;
 
+use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\PhicommBll;
 use Hifone\Models\User;
 use Illuminate\Http\Request;
@@ -39,7 +40,7 @@ class PhicommController extends ApiController
         return success('云账号注册成功');
     }
 
-    public function login()
+    public function login(CommonBll $commonBll)
     {
         $this->validate(request(), [
             'phone' => 'required|phone',
@@ -48,6 +49,7 @@ class PhicommController extends ApiController
         $phone = request('phone');
         $password = strtoupper(md5(request('password')));
         $phicommId = $this->phicommBll->login($phone, $password);
+        $commonBll->login();
 
         $user = User::findUserByPhicommId($phicommId);
         if ($user) {
@@ -100,8 +102,15 @@ class PhicommController extends ApiController
         ]);
         if (request('type') == 'register') {
             $this->phicommBll->checkPhoneAvailable(request('phone'));
-        } elseif (request('type') == 'reset' && $this->phicommBll->checkPhoneAvailable(request('phone'))) {
-            throw new \Exception('该手机号还没有注册');
+        } elseif (request('type') == 'reset') {
+            try {
+                $this->phicommBll->checkPhoneAvailable(request('phone'));
+                throw new \Exception('该手机号还没有注册');
+            } catch (\Exception $e) {
+                if ($e->getMessage() <> '该手机号已注册！') {
+                    throw $e;
+                }
+            }
         }
         $this->phicommBll->sendVerifyCode(request('phone'));
 
