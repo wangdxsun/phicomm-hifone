@@ -50,7 +50,7 @@ class UserController extends Controller
             ->withPageTitle(trans('dashboard.users.users').' - '.trans('dashboard.dashboard'))
             ->withUsers($users)
             ->withRoles($roles)
-            ->withAllUsers(User::all());
+            ->withAllUsers([]);
     }
 
     /**
