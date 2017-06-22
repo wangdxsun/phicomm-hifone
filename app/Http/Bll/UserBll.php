@@ -16,7 +16,9 @@ class UserBll extends BaseBll
 {
     public function getCredits()
     {
-        $credits = Auth::user()->credits()->with('rule')->recent()->paginate(Config::get('setting.per_page'));
+        $credits = Auth::user()->credits()->with(['rule' => function ($query) {
+            $query->where('reward', '<>', 0);
+        }])->recent()->paginate();
 
         return $credits;
     }
