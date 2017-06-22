@@ -12,9 +12,4 @@ class DailyStatController extends Controller
 
     }
 
-//    public function index()
-//    {
-//
-//    }
-
 }
