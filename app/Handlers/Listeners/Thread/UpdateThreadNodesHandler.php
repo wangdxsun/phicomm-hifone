@@ -23,7 +23,7 @@ class UpdateThreadNodesHandler
         $targetNode = $thread->node;
         $originalNode = $event->originalNode;
 
-        $targetNode->update(['thread_count' => Thread::where('node_id', $targetNode->id)->count()]);
-        $originalNode->update(['thread_count' => Thread::where('node_id', $targetNode->id)->count()]);
+        $targetNode->update(['thread_count' => $targetNode->thread_count + 1]);
+        $originalNode->update(['thread_count' => $originalNode->thread_count - 1]);
     }
 }
