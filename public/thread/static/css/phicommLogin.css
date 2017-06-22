@@ -1,0 +1,325 @@
+@charset "UTF-8";
+@media screen and (min-width: 320px) {
+  html {
+    font-size: 29.62963px;
+  }
+}
+
+@media screen and (min-width: 360px) {
+  html {
+    font-size: 33.33333px;
+  }
+}
+
+@media screen and (min-width: 375px) {
+  html {
+    font-size: 34.72222px;
+  }
+}
+
+@media screen and (min-width: 380px) {
+  html {
+    font-size: 35.18519px;
+  }
+}
+
+@media screen and (min-width: 384px) {
+  html {
+    font-size: 35.55556px;
+  }
+}
+
+@media screen and (min-width: 412px) {
+  html {
+    font-size: 38.14815px;
+  }
+}
+
+@media screen and (min-width: 414px) {
+  html {
+    font-size: 38.33333px;
+  }
+}
+
+@media screen and (min-width: 1080px) {
+  html {
+    font-size: 100px;
+  }
+}
+
+@media screen and (min-width: 1080px) {
+  html {
+    font-size: 100px;
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+ul, li {
+  list-style: none;
+}
+
+body {
+  font-size: 16px;
+  font-family: "微软雅黑",sans-serif;
+  color: #2a2a2a;
+}
+
+a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  outline: none;
+  background-color: transparent;
+  cursor: auto;
+  -webkit-tap-highlight-color:rgba(255,0,0,0);
+}
+
+.title {
+  width: 100%;
+  height: 1.44rem;
+  line-height: 1.44rem;
+  text-align: center;
+  border-bottom: 1px solid #dcdcdc;
+  position: relative;
+}
+
+.title .back {
+  width: 0.96rem;
+  height: 0.96rem;
+  background: url("../image/loginimg/icon_back_orange.png");
+  background-size: cover;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  left: 0.24rem;
+  font-size: 0.51rem;
+  color: #2a2a2a;
+}
+
+.kongBai {
+  width: 100%;
+  height: 0.96rem;
+  border-bottom: 1px solid #dcdcdc;
+  background: #f6f6f6;
+}
+
+.content {
+  padding: 0.96rem 0.75rem;
+}
+
+.content .inputBox {
+  width: 100%;
+  padding: 0.36rem 0.27rem;
+  box-sizing: border-box;
+  border-bottom: 1px solid #dcdcdc;
+}
+
+.content .inputBox .userNameImg {
+  width: 0.72rem;
+  height: 0.72rem;
+  background: url("../image/loginimg/icon_user_grey.png");
+  background-size: cover;
+  float: left;
+}
+
+.content .inputBox .passwordImg {
+  width: 0.72rem;
+  height: 0.72rem;
+  background: url("../image/loginimg/icon_lock_grey.png");
+  background-size: cover;
+  float: left;
+}
+
+.content .inputBox #eyes {
+  width: 0.72rem;
+  height: 0.72rem;
+  float: right;
+  background: url("../image/loginimg/no_see.png");
+  background-size: cover;
+}
+
+.content .inputBox #eyes.show {
+  background: url("../image/loginimg/see.png");
+  background-size: cover;
+}
+
+.content .inputBox #eyes a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.content .inputBox input {
+  float: left;
+  font-size: 0.42rem;
+  height: 0.72rem;
+  width: 7.2rem;
+  box-sizing: border-box;
+  line-height: 0.72rem;
+  border: none;
+  outline: none;
+  padding-left: 0.26rem;
+}
+
+.content .forgetPW {
+  margin-top: 0.6rem;
+  margin-bottom: 0.6rem;
+  text-align: right;
+  color: #949494;
+}
+
+.content .loginS {
+  width: 8.04rem;
+  height: 1.26rem;
+  background: #ff8b02;
+  color: #fff;
+  font-size: 0.45rem;
+  text-align: center;
+  line-height: 1.26rem;
+  border-radius: 20px;
+  margin: auto;
+  margin-bottom: 0.6rem;
+}
+
+.content .loginX {
+  width: 8.02rem;
+  height: 1.24rem;
+  border: 1px solid #dcdcdc;
+  color: #ff8b02;
+  font-size: 0.45rem;
+  text-align: center;
+  line-height: 1.26rem;
+  border-radius: 20px;
+  margin: auto;
+}
+
+.content::after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+.inputBox::after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+/*阴影遮罩*/
+.shadow{
+  width: 100%;
+  height: 100vh;
+  background: rgba(0,0,0,0.4);
+  position: fixed;
+  top:0;
+  left:0;
+  display: none;
+}
+
+.shadow .tipBox1 {
+  background: #fff;
+  margin: auto 1.65rem;
+  border-radius: 10px;
+  display: none;
+}
+
+.shadow .tipBox1 span {
+  display: block;
+}
+
+.shadow .tipBox1 span.contentText {
+  padding: 1rem 0.2rem;
+  text-align: center;
+}
+
+.shadow .tipBox1 .okBtn {
+  width: 100%;
+  height: 1.26rem;
+  line-height: 1.26rem;
+  text-align: center;
+  color: #ff8000;
+  border-top: 1px solid #dcdcdc;
+}
+
+.shadow .tipBox2 {
+  width: auto;
+  height: auto;
+  border-radius: 10px;
+  background: #fff;
+  margin-left: 1.65rem;
+  margin-right: 1.65rem;
+  display: none;
+}
+
+.shadow .tipBox2 .contentBox {
+  padding: 0.6rem;
+}
+
+.shadow .tipBox2 .contentBox span {
+  display: block;
+}
+
+.shadow .tipBox2 .contentBox span.titleTs {
+  text-align: center;
+  margin-bottom: 0.3rem;
+}
+
+.shadow .tipBox2 .okBtn, .tipBox2 .cancel {
+  width: 50%;
+  height: 1.26rem;
+  line-height: 1.26rem;
+  text-align: center;
+  color: #ff8000;
+  border-top: 1px solid #dcdcdc;
+  float: left;
+  box-sizing: border-box;
+}
+
+.shadow .tipBox2 .okBtn {
+  border-right: 1px solid #dcdcdc;
+}
+
+.shadow .tipBox2::after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+.signIn{
+  width: 100%;
+  text-align: center;
+  color: #949494;
+}
+
+#checkNum{
+  width: 3rem;
+  height: 0.88rem;
+  line-height: 0.88rem;
+  border-radius: 5px;
+  text-align: center;
+  box-sizing: border-box;
+  color: #fff;
+  position: absolute;
+  right:0.2rem;
+  top:0;
+  bottom:0;
+  margin:auto;
+  outline: none;
+  border-top-style: none;
+  border-right-style: none;
+  border-bottom-style: none;
+  border-left-style: none;
+}
+
+.disabled{
+  background: #dcdcdc;
+}
+
+.able{
+  background: #ff8b02;
+}

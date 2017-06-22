@@ -44,16 +44,13 @@ class ReplyController extends Controller
     {
         $search = $this->filterEmptyValue(Input::get('reply'));
         $replies = Reply::visible()->search($search)->with('thread', 'user', 'lastOpUser', 'thread.node')->orderBy('last_op_time', 'desc')->paginate(20);
-        $replyAll = Reply::visible()->get()->toArray();
-        $threadIds = array_unique(array_column($replyAll, 'thread_id'));
-        $userIds = array_unique(array_column($replyAll, 'user_id'));
 
         return View::make('dashboard.replies.index')
             ->withPageTitle(trans('dashboard.replies.replies').' - '.trans('dashboard.dashboard'))
             ->withReplies($replies)
             ->withCurrentMenu('index')
-            ->withThreads(Thread::find($threadIds))
-            ->withUsers(User::find($userIds));
+            ->withThreads([])
+            ->withUsers([]);
     }
 
     /**
