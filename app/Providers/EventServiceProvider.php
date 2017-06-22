@@ -165,6 +165,23 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Chat\NewChatMessageHandler::class,
         ],
 
+        //帖子审核通过
+        \Hifone\Events\Thread\ThreadWasAuditedEvent::class => [
+            \Hifone\Handlers\Listeners\Stats\UpdateDailyStatsHandler::class,
+        ],
+        //回复审核通过
+        \Hifone\Events\Reply\ReplyWasAuditedEvent::class => [
+            \Hifone\Handlers\Listeners\Stats\UpdateDailyStatsHandler::class,
+        ],
+        //帖子移入垃圾箱
+        \Hifone\Events\Thread\ThreadWasTrashedEvent::class => [
+            \Hifone\Handlers\Listeners\Stats\UpdateDailyStatsHandler::class,
+        ],
+        //回复移入垃圾箱
+        \Hifone\Events\Reply\ReplyWasTrashedEvent::class => [
+            \Hifone\Handlers\Listeners\Stats\UpdateDailyStatsHandler::class,
+        ],
+
     ];
 
     /**
