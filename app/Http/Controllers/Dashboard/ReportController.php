@@ -12,6 +12,7 @@
 namespace Hifone\Http\Controllers\Dashboard;
 
 use AltThree\Validator\ValidationException;
+use Hifone\Events\Report\ReportWasPassedEvent;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Report;
 use Hifone\Models\Role;
@@ -78,6 +79,7 @@ class ReportController extends Controller
         $report->status = Report::DELETE;
         $this->updateOpLog($report, '处理举报', trim(request('reason')));
 
+        event(new ReportWasPassedEvent($report));
         return Redirect::back()->withSuccess('删除成功');
     }
 
