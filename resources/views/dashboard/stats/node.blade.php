@@ -7,32 +7,29 @@
     <div class="content-wrapper">
         <div class="header sub-header">
             <span class="uppercase">
-                 <i class="fa fa-calendar"></i> 操作日志
+                 <i class="fa fa-calendar"></i> 版块数据统计
             </span>
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <div class="toolbar">
-                    <form class="form-inline pull-right">
-                        <div class="form-group">
-                            <input type="text" name="query[type]" class="form-control" value="" placeholder="类型">
-                        </div>
-                        <button class="btn btn-default">搜索</button>
-                    </form>
-                </div>
+                
 
                 @include('partials.errors')
                 <table class="table table-bordered table-striped table-condensed">
                     <tr class="head">
-                        <td>编号</td>
-                        <td style="width:20%">操作人</td>
-                        <td>操作对象</td>
-                        <td>操作对象ID</td>
-                        <td>操作类型</td>
-                        <td>原因</td>
-                        <td>操作时间</td>
+                        <td>版块</td>
+                        <td>帖子数量</td>
+                        <td>回帖数量</td>
+                        <td>详情</td>
                     </tr>
-
+                    @foreach ($nodes as $node)
+                        <tr>
+                            <td>{{ $node->name }}</td>
+                            <td>{{ $node->thread_count }}</td>
+                            <td>{{ $node->reply_count }}</td>
+                            <td><a href="/dashboard/stat/node/{{ $node->id }}">详情</a></td>
+                        </tr>
+                    @endforeach
                 </table>
 
             </div>

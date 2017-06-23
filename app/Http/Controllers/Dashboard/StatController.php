@@ -10,7 +10,7 @@ namespace Hifone\Http\Controllers\Dashboard;
 
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Carousel;
-
+use Hifone\Models\Node;
 
 class StatController extends Controller
 {
@@ -27,7 +27,15 @@ class StatController extends Controller
 
     public function node()
     {
-        return view('dashboard.stats.node')->withCurrentMenu('node');
+        $nodes = Node::orderBy('order')->get();
+        return view('dashboard.stats.node')->withCurrentMenu('node')->withNodes($nodes);
+    }
+
+    public function node_detail(Node $node)
+    {
+        $dailyStats = $node->dailyStats()->recent()->paginate(2);
+//        dd($dailyStats);
+        return view('dashboard.stats.node_detail')->withCurrentMenu('node_detail')->withDailyStats($dailyStats);
     }
 
     public function banner_detail(Carousel $carousel)
