@@ -17,7 +17,6 @@ use Hifone\Composers\Dashboard\AdvertisementMenuComposer;
 use Hifone\Composers\Dashboard\ContentMenuComposer;
 use Hifone\Composers\Dashboard\NodeMenuComposer;
 use Hifone\Composers\Dashboard\ReplyMenuComposer;
-use Hifone\Composers\Dashboard\ReportMenuComposer;
 use Hifone\Composers\Dashboard\RoleMenuComposer;
 use Hifone\Composers\Dashboard\SettingMenuComposer;
 use Hifone\Composers\Dashboard\StatMenuComposer;
@@ -51,7 +50,6 @@ class ComposerServiceProvider extends ServiceProvider
         $factory->composer(['dashboard.replies.*',], ReplyMenuComposer::class);
         $factory->composer(['dashboard.photos.*', 'dashboard.pages.*', ], ContentMenuComposer::class);
         $factory->composer(['dashboard.nodes.*', 'dashboard.sections.*'], NodeMenuComposer::class);
-        $factory->composer(['dashboard.reports.*'], ReportMenuComposer::class);
         $factory->composer(['dashboard.groups.*'], RoleMenuComposer::class);
         $factory->composer(['dashboard.stats.*'], StatMenuComposer::class);
         $factory->composer(['dashboard.tips.*', 'dashboard.links.*', 'dashboard.locations.*', 'dashboard.settings.*', ], SettingMenuComposer::class);

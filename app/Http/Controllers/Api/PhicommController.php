@@ -49,7 +49,6 @@ class PhicommController extends ApiController
         $phone = request('phone');
         $password = strtoupper(md5(request('password')));
         $phicommId = $this->phicommBll->login($phone, $password);
-        $commonBll->login();
 
         $user = User::findUserByPhicommId($phicommId);
         if ($user) {
@@ -57,6 +56,7 @@ class PhicommController extends ApiController
                 return response('对不起，你已被管理员禁止登录', 403);
             }
             Auth::login($user);
+            $commonBll->login();
             $cloudUser = $this->phicommBll->userInfo();
             if ($cloudUser['img'] && $user->avatar_url != $cloudUser['img']) {
                 $user->avatar_url = $cloudUser['img'];

@@ -8,9 +8,6 @@
             </span>
             <div class="clearfix"></div>
         </div>
-        @if(isset($sub_menu))
-            @include('dashboard.partials.sub-nav')
-        @endif
         <div class="row">
             <div class="col-sm-12">
                 @include('partials.errors')
