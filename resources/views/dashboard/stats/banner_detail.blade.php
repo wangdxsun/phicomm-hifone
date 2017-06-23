@@ -12,18 +12,6 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <div class="toolbar">
-                    <form class="form-inline pull-right">
-                        <div class="form-group">
-                            <input type="date" name="begin_day" class="form-control" value="" placeholder="开始时间">
-                        </div>
-                        <div class="form-group">
-                            <input type="date" name="end_day" class="form-control" value="" placeholder="结束时间">
-                        </div>
-                        <button class="btn btn-default">搜索</button>
-                    </form>
-                </div>
-
                 @include('partials.errors')
                 <table class="table table-bordered table-striped table-condensed">
                     <tr class="head">
