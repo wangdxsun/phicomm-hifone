@@ -14,15 +14,16 @@ namespace Hifone\Handlers\Listeners\Stats;
 use Cache;
 use Carbon\Carbon;
 use Hifone\Events\EventInterface;
-use Hifone\Events\Reply\ReplyWasAddedEvent;
-use Hifone\Events\Thread\ThreadWasAddedEvent;
-use Hifone\Models\Stats;
+use Hifone\Events\Thread\ThreadWasAuditedEvent;
+use Hifone\Events\Thread\ThreadWasTrashedEvent;
+use Hifone\Events\Reply\ReplyWasAuditedEvent;
+use Hifone\Events\Reply\ReplyWasTrashedEvent;
 
 class UpdateDailyStatsHandler
 {
     public function handle(EventInterface $event)
     {
-        $today = Carbon::now()->toDateString();
+        $today = Carbon::today()->toDateString();
         if ($event instanceof ThreadWasAuditedEvent) {//新增帖子（审核通过时）
             $node = $event->thread->node;
             if (0 == $node->dailyStats()->Where('date', $today)->count()) {
@@ -48,6 +49,5 @@ class UpdateDailyStatsHandler
             }
             $node->dailyStats()->Where('date', $today)->decrement('reply_count', 1);
         }
-
     }
 }

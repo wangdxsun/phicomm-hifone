@@ -28,6 +28,8 @@ use Redirect;
 use View;
 use Input;
 use Hifone\Events\Thread\ThreadWasPinnedEvent;
+use Hifone\Events\Thread\ThreadWasAuditedEvent;
+use Hifone\Events\Thread\ThreadWasTrashedEvent;
 
 class ThreadController extends Controller
 {

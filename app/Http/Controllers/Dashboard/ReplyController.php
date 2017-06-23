@@ -25,6 +25,8 @@ use Hifone\Services\Parsers\Markdown;
 use View;
 use Input;
 use Redirect;
+use Hifone\Events\Reply\ReplyWasAuditedEvent;
+use Hifone\Events\Reply\ReplyWasTrashedEvent;
 
 class ReplyController extends Controller
 {
