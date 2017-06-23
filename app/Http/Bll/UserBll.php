@@ -38,4 +38,9 @@ class UserBll extends BaseBll
 
         return $replies;
     }
+
+    public function search()
+    {
+        return [];
+    }
 }

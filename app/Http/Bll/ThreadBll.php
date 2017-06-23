@@ -33,6 +33,13 @@ class ThreadBll extends BaseBll
         return $threads;
     }
 
+    public function search()
+    {
+        $threads = Thread::visible()->title(request('q'))->with('user')->recent()->paginate();
+
+        return $threads;
+    }
+
     public function createThread()
     {
         $threadData = Input::get('thread');
