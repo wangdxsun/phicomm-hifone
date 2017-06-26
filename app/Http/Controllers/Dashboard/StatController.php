@@ -34,13 +34,12 @@ class StatController extends Controller
     public function node_detail(Node $node)
     {
         $dailyStats = $node->dailyStats()->recent()->paginate(2);
-//        dd($dailyStats);
-        return view('dashboard.stats.node_detail')->withCurrentMenu('node_detail')->withDailyStats($dailyStats);
+        return view('dashboard.stats.node_detail')->withCurrentMenu('node')->withDailyStats($dailyStats);
     }
 
     public function banner_detail(Carousel $carousel)
     {
         $dailyStats = $carousel->dailyStats()->recent()->paginate(10);
-        return view('dashboard.stats.banner_detail')->withCurrentMenu('banner_detail')->withDailyStats($dailyStats);
+        return view('dashboard.stats.banner_detail')->withCurrentMenu('banner')->withDailyStats($dailyStats);
     }
 }
