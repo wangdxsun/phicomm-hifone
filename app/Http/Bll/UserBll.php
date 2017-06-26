@@ -32,9 +32,12 @@ class UserBll extends BaseBll
 
     public function getReplies()
     {
-        $replies = Auth::user()->replies()->visible()->with(['thread' => function ($query) {
-            return $query->where('status', 0);
-        }])->recent()->paginate();
+        $replies = Auth::user()->replies()->visible()->with(['thread'])->recent()->get();
+        foreach ($replies as $key => $reply) {
+            if ($reply->thread->status < 0) {
+                unset($replies[$key]);
+            }
+        }
 
         return $replies;
     }
