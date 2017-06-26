@@ -38,7 +38,7 @@ class StatMenuComposer
                 'active' => false,
             ],
             'node' => [
-                'title'  => '板块统计',
+                'title'  => '版块统计',
                 'url'    => route('dashboard.stat.node'),
                 'icon'   => 'fa fa-sitemap',
                 'active' => false,
