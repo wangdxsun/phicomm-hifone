@@ -60,6 +60,10 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         'password' => 'required|string|min:6',
     ];
 
+    public $validationMessages = [
+        'username.regex' => '用户名含有非法字符'
+    ];
+
     protected $searchable = [
         'username',
     ];
