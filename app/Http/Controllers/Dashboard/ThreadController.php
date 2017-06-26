@@ -29,6 +29,8 @@ use Redirect;
 use View;
 use Input;
 use Hifone\Events\Thread\ThreadWasPinnedEvent;
+use Hifone\Events\Thread\ThreadWasAuditedEvent;
+use Hifone\Events\Thread\ThreadWasTrashedEvent;
 
 class ThreadController extends Controller
 {
@@ -184,7 +186,6 @@ class ThreadController extends Controller
     public function postAudit(Thread $thread)
     {
         event(new ThreadWasAddedEvent($thread));
-
         return $this->passAudit($thread);
     }
 
@@ -203,6 +204,7 @@ class ThreadController extends Controller
             $thread->user->increment('thread_count', 1);
             $thread->status = 0;
             $this->updateOpLog($thread, '审核通过');
+            event(new ThreadWasAuditedEvent($thread));
             DB::commit();
         } catch (ValidationException $e) {
             DB::rollBack();
@@ -239,6 +241,7 @@ class ThreadController extends Controller
             $thread->node->decrement('thread_count', 1);
             $thread->user->decrement('thread_count', 1);
             $this->trash($thread);
+            event(new ThreadWasTrashedEvent($thread));
             DB::commit();
         } catch (ValidationException $e) {
             DB::rollBack();
