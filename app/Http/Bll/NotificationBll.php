@@ -17,11 +17,13 @@ class NotificationBll extends BaseBll
     {
         Auth::user()->notification_follow_count = 0;
         Auth::user()->save();
-        $notifications = Notification::forUser(Auth::id())->watch()->recent()->with(['object' => function ($query) {
-            return $query->where('status', 0);
-        }, 'author'])->get();
-        foreach ($notifications as &$notification) {
-            $notification->object->node;
+        $notifications = Notification::forUser(Auth::id())->watch()->recent()->with(['object', 'author'])->get();
+        foreach ($notifications as $key => &$notification) {
+            if ($notification->object->status < 0) {
+                unset($notifications[$key]);
+            } else {
+                $notification->object->node;
+            }
         }
 
         return $notifications;
@@ -44,9 +46,9 @@ class NotificationBll extends BaseBll
     public function at()
     {
         $notifications = Notification::forUser(Auth::id())->at()->recent()->with(['author'])->get();
-        foreach ($notifications as &$notification) {
+        foreach ($notifications as $key => &$notification) {
             if ($notification->object->status < 0 || $notification->object->thread->status < 0) {
-                $notification->object->thread;
+                unset($notifications[$key]);
             }
         }
         Auth::user()->notification_at_count = 0;
