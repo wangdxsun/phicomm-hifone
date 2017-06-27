@@ -16,19 +16,12 @@
             @include('partials.errors')
             <div class="toolbar">
                 <form class="form-inline">
-                    <select class="form-control selectpicker" name="thread[id]">
-                        <option value="" selected>全部帖子ID</option>
-                        @foreach ($thread_all as $thread)
-                            <option value="{{ $thread->id }}">{{ $thread->id }}</option>
-                        @endforeach
-                    </select>
-                    <select class="form-control selectpicker" name="thread[title]" style="max-width: 300px">
-                        <option value="" selected>全部帖子标题</option>
-                        @foreach ($thread_all as $thread)
-                            <option value="{{ $thread->title }}">{{ $thread->title }}</option>
-                        @endforeach
-                    </select>
-                    <select class="form-control selectpicker" name="thread[node_id]">
+                    <div class="form-group">
+                        <input type="text" name="thread[id]" class="form-control" value="" placeholder="帖子ID">
+                        <input type="text" name="thread[title]" class="form-control" value="" placeholder="帖子标题">
+                        <input type="text" name="thread[user_id]" class="form-control" value="" placeholder="发帖人">
+                    </div>
+                    <select class="form-control" name="thread[node_id]">
                         <option value="" selected>全部节点</option>
                         @foreach ($sections as $section)
                             <optgroup label="{{ $section->name }}">
@@ -38,12 +31,6 @@
                                     @endforeach
                                 @endif
                             </optgroup>
-                        @endforeach
-                    </select>
-                    <select class="form-control selectpicker" name="thread[user_id]">
-                        <option value="" selected>全部发帖人</option>
-                        @foreach ($users as $user)
-                            <option value="{{ $user->id }}">{{ $user->username }}</option>
                         @endforeach
                     </select>
                     <input name="thread[date_start]" size="10" type="text" class="form_date form-control" data-date-format="yyyy-mm-dd" placeholder="开始时间">

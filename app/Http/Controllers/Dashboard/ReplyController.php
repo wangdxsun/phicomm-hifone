@@ -45,8 +45,8 @@ class ReplyController extends Controller
     public function index()
     {
         $search = $this->filterEmptyValue(Input::get('reply'));
-        $replies = Reply::visible()->search($search)->with('thread', 'user', 'lastOpUser', 'thread.node')->orderBy('last_op_time', 'desc')->paginate(20);
-
+        $replies = Reply::visible()->search($search)->with('thread', 'user', 'lastOpUser', 'thread.node')
+            ->orderBy('last_op_time', 'desc')->paginate(20);
         return View::make('dashboard.replies.index')
             ->withPageTitle(trans('dashboard.replies.replies').' - '.trans('dashboard.dashboard'))
             ->withReplies($replies)

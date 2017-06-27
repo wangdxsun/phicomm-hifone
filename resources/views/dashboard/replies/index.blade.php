@@ -16,20 +16,10 @@
                 @include('partials.errors')
                 <div class="toolbar">
                     <form class="form-inline">
-                        <select class="form-control selectpicker" name="reply[thread_id]" style="max-width: 300px">
-                            <option value="" selected>全部帖子标题</option>
-                            @foreach ($threads as $thread)
-                                <option value="{{ $thread->id }}">{{ $thread->title }}</option>
-                            @endforeach
-                        </select>
-                        <select class="form-control selectpicker" name="reply[user_id]">
-                            <option value="" selected>全部回帖人</option>
-                            @foreach ($users as $user)
-                                <option value="{{ $user->id }}">{{ $user->username }}</option>
-                            @endforeach
-                        </select>
                         <div class="form-group">
-                            <input type="text" name="reply[body]" class="form-control" value="" placeholder="回帖内容">
+                            <input type="text" name="reply[body]" class="form-control" value="" placeholder="回复内容">
+                            <input type="text" name="reply[thread_title]" class="form-control" value="" placeholder="帖子标题">
+                            <input type="text" name="reply[username]" class="form-control" value="" placeholder="回帖人">
                         </div>
                         <input name="reply[date_start]" size="10" type="text" class="form_date form-control" data-date-format="yyyy-mm-dd" placeholder="开始时间">
                         <input name="reply[date_end]" size="10" type="text" class="form_date form-control" data-date-format="yyyy-mm-dd" placeholder="结束时间">
