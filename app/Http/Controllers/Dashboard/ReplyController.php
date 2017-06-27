@@ -51,9 +51,7 @@ class ReplyController extends Controller
         return View::make('dashboard.replies.index')
             ->withPageTitle(trans('dashboard.replies.replies').' - '.trans('dashboard.dashboard'))
             ->withReplies($replies)
-            ->withCurrentMenu('index')
-            ->withThreads([])
-            ->withUsers([]);
+            ->withCurrentMenu('index');
     }
 
     /**

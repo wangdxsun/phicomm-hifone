@@ -274,7 +274,8 @@ class Thread extends BaseModel implements TaggableInterface
         $this->order > 0 && $icons[] = 'fa fa-thumb-tack text-danger';
         return $icons;
     }
-    public function scopeSearch($query,$searches = [])
+
+    public function scopeSearch($query, $searches = [])
     {
         foreach ($searches as $key => $value) {
             if ($key == 'user_id') {
