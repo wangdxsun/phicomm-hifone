@@ -13,6 +13,8 @@ namespace Hifone\Http\Controllers\Dashboard;
 
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Log;
+use Hifone\Models\User;
+use Illuminate\Support\Facades\Input;
 use View;
 
 class LogController extends Controller
@@ -36,8 +38,17 @@ class LogController extends Controller
      */
     public function index()
     {
-        $logs = Log::with(['user'])->recent()->paginate(20);
-        return view('dashboard.logs.index')->withLogs($logs);
+        $logableTypes = Log::$logableType;//操作对象
+        $operations = Log::distinct()->get(['operation']);//操作类型
+        $userIds = Log::distinct()->get(['user_id'])->toArray();//用户id
+        $search = $this->filterEmptyValue(Input::get('log'));
+
+        $logs = Log::with(['user'])->search($search)->orderBy('created_at')->paginate(20);
+        return view('dashboard.logs.index')
+            ->withLogs($logs)
+            ->withLogableTypes($logableTypes)
+            ->withOperations($operations)
+            ->withUsers(User::find($userIds));
     }
 
 }
