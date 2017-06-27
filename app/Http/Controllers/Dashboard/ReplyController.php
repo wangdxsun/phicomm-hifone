@@ -22,6 +22,7 @@ use Hifone\Models\Reply;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
 use Hifone\Services\Parsers\Markdown;
+use Illuminate\Support\Facades\DB;
 use View;
 use Input;
 use Redirect;
@@ -170,6 +171,7 @@ class ReplyController extends Controller
 
     public function passAudit($reply)
     {
+        DB::beginTransaction();
         try {
             $reply->thread->node->increment('reply_count', 1);//版块回帖数+1
             $reply->thread->increment('reply_count', 1);
@@ -179,23 +181,27 @@ class ReplyController extends Controller
             $this->updateOpLog($reply, '审核通过');
 
             event(new ReplyWasAuditedEvent($reply));
+            DB::commit();
         } catch (ValidationException $e) {
+            DB::rollback();
             return Redirect::back()->withErrors($e->getMessageBag());
         }
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
-    //从审核通过删除回复，需要将回复数-1
+    //从审核通过删除回复，需要将回帖数-1
     public function indexToTrash(Reply $reply)
     {
+        DB::beginTransaction();
         try {
             $reply->thread->node->decrement('reply_count', 1);//版块回帖数-1
             $reply->thread->decrement('reply_count', 1);
             $reply->user->decrement('reply_count', 1);
             $this->trash($reply);
-
             event(new ReplyWasTrashedEvent($reply));
+            DB::commit();
         } catch (\Exception $e) {
+            DB::rollback();
             return Redirect::back()->withErrors($e->getMessageBag());
         }
         return Redirect::back()->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));

@@ -195,7 +195,7 @@ class ThreadController extends Controller
         return $this->passAudit($thread);
     }
 
-    //将帖子状态修改为审核通过
+    //将帖子状态修改为审核通过,需要将帖子数加1
     public function passAudit($thread)
     {
         DB::beginTransaction();
