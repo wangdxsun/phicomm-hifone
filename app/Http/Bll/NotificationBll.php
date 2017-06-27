@@ -31,7 +31,7 @@ class NotificationBll extends BaseBll
 
     public function reply()
     {
-        $notifications = Notification::forUser(Auth::id())->ofType('thread_new_reply')->recent()->with(['author'])->get();
+        $notifications = Notification::forUser(Auth::id())->ofType('thread_new_reply')->recent()->with(['object', 'author'])->get();
         foreach ($notifications as $key => &$notification) {
             if ($notification->object->status < 0 || $notification->object->thread->status < 0) {
                 unset($notifications[$key]);
@@ -45,7 +45,7 @@ class NotificationBll extends BaseBll
 
     public function at()
     {
-        $notifications = Notification::forUser(Auth::id())->at()->recent()->with(['author'])->get();
+        $notifications = Notification::forUser(Auth::id())->at()->recent()->with(['object', 'author'])->get();
         foreach ($notifications as $key => &$notification) {
             if ($notification->object->status < 0 || $notification->object->thread->status < 0) {
                 unset($notifications[$key]);

@@ -25,14 +25,14 @@ class UserBll extends BaseBll
 
     public function getThreads(User $user)
     {
-        $threads = $user->threads()->with(['user', 'node'])->visible()->recent()->get();
+        $threads = $user->threads()->visible()->with(['user', 'node'])->recent()->get();
 
         return $threads;
     }
 
-    public function getReplies()
+    public function getReplies(User $user)
     {
-        $replies = Auth::user()->replies()->visible()->with(['thread'])->recent()->get();
+        $replies = $user->replies()->visible()->with(['thread'])->recent()->get();
         foreach ($replies as $key => $reply) {
             if ($reply->thread->status < 0) {
                 unset($replies[$key]);
