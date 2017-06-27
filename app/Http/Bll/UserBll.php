@@ -16,7 +16,9 @@ class UserBll extends BaseBll
 {
     public function getCredits()
     {
-        $credits = Auth::user()->credits()->with('rule')->recent()->paginate(Config::get('setting.per_page'));
+        $credits = Auth::user()->credits()->with(['rule' => function ($query) {
+            $query->where('reward', '<>', 0);
+        }])->recent()->paginate();
 
         return $credits;
     }
@@ -30,10 +32,18 @@ class UserBll extends BaseBll
 
     public function getReplies()
     {
-        $replies = Auth::user()->replies()->visible()->with(['thread' => function ($query) {
-            return $query->where('status', 0);
-        }])->recent()->paginate();
+        $replies = Auth::user()->replies()->visible()->with(['thread'])->recent()->get();
+        foreach ($replies as $key => $reply) {
+            if ($reply->thread->status < 0) {
+                unset($replies[$key]);
+            }
+        }
 
         return $replies;
+    }
+
+    public function search()
+    {
+        return [];
     }
 }

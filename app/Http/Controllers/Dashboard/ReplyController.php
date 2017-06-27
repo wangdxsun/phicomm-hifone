@@ -25,6 +25,8 @@ use Hifone\Services\Parsers\Markdown;
 use View;
 use Input;
 use Redirect;
+use Hifone\Events\Reply\ReplyWasAuditedEvent;
+use Hifone\Events\Reply\ReplyWasTrashedEvent;
 
 class ReplyController extends Controller
 {
@@ -169,30 +171,37 @@ class ReplyController extends Controller
     public function passAudit($reply)
     {
         try {
+            $reply->thread->node->increment('reply_count', 1);//版块回帖数+1
             $reply->thread->increment('reply_count', 1);
             $reply->user->increment('reply_count', 1);
 
             $reply->status = 0;
             $this->updateOpLog($reply, '审核通过');
 
+            event(new ReplyWasAuditedEvent($reply));
         } catch (ValidationException $e) {
             return Redirect::back()->withErrors($e->getMessageBag());
         }
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
+    //从审核通过删除回复，需要将回复数-1
     public function indexToTrash(Reply $reply)
     {
         try {
+            $reply->thread->node->decrement('reply_count', 1);//版块回帖数-1
             $reply->thread->decrement('reply_count', 1);
             $reply->user->decrement('reply_count', 1);
             $this->trash($reply);
+
+            event(new ReplyWasTrashedEvent($reply));
         } catch (\Exception $e) {
             return Redirect::back()->withErrors($e->getMessageBag());
         }
         return Redirect::back()->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
     }
 
+    //从待审核删除回复
     public function auditToTrash(Reply $reply)
     {
         try {

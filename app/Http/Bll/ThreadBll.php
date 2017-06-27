@@ -33,6 +33,13 @@ class ThreadBll extends BaseBll
         return $threads;
     }
 
+    public function search()
+    {
+        $threads = Thread::visible()->title(request('q'))->with('user')->recent()->paginate();
+
+        return $threads;
+    }
+
     public function createThread()
     {
         $threadData = Input::get('thread');
@@ -49,6 +56,7 @@ class ThreadBll extends BaseBll
 
         //base64上传
         if (Input::has('images')) {
+            $threadData['body'] = "<p> ".$threadData['body']." </p>";
             foreach ($images = Input::get('images') as $image) {
                 $upload = dispatch(new UploadBase64ImageCommand($image));
                 $threadData['body'] .= "<img src='{$upload["filename"]}'/>";

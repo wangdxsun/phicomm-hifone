@@ -20,6 +20,7 @@ use Hifone\Events\Image\ImageWasUploadedEvent;
 use Hifone\Events\Like\LikeWasRemovedEvent;
 use Hifone\Events\Reply\ReplyWasAddedEvent;
 use Hifone\Events\Reply\RepliedWasAddedEvent;
+use Hifone\Events\Report\ReportWasPassedEvent;
 use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Events\User\UserWasAddedEvent;
 use Hifone\Events\User\UserWasLoggedinEvent;
@@ -140,6 +141,9 @@ class AddCreditHandler
         } elseif ($event instanceof AvatarWasUploadedEvent) {
             $action = 'upload_avatar';
             $user = $event->target;
+        } elseif ($event instanceof ReportWasPassedEvent) {//举报成功加积分
+            $action = 'report';
+            $user = $event->report->user;
         }
 
         $this->apply($event, $action, $user);

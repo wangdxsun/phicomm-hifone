@@ -89,6 +89,12 @@ class EventServiceProvider extends ServiceProvider
         \Hifone\Events\Like\LikedWasRemovedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
+
+        //举报加积分
+        \Hifone\Events\Report\ReportWasPassedEvent::class => [
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+        ],
+
         // Links
         \Hifone\Events\Link\LinkWasUpdatedEvent::class => [
             \Hifone\Handlers\Listeners\Link\RemoveLinkCacheHandler::class,
@@ -163,6 +169,23 @@ class EventServiceProvider extends ServiceProvider
 
         \Hifone\Events\Chat\NewChatMessageEvent::class => [
             \Hifone\Handlers\Listeners\Chat\NewChatMessageHandler::class,
+        ],
+
+        //帖子审核通过
+        \Hifone\Events\Thread\ThreadWasAuditedEvent::class => [
+            \Hifone\Handlers\Listeners\Stats\UpdateDailyStatsHandler::class,
+        ],
+        //回复审核通过
+        \Hifone\Events\Reply\ReplyWasAuditedEvent::class => [
+            \Hifone\Handlers\Listeners\Stats\UpdateDailyStatsHandler::class,
+        ],
+        //帖子移入垃圾箱
+        \Hifone\Events\Thread\ThreadWasTrashedEvent::class => [
+            \Hifone\Handlers\Listeners\Stats\UpdateDailyStatsHandler::class,
+        ],
+        //回复移入垃圾箱
+        \Hifone\Events\Reply\ReplyWasTrashedEvent::class => [
+            \Hifone\Handlers\Listeners\Stats\UpdateDailyStatsHandler::class,
         ],
 
     ];

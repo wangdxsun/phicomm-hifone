@@ -10,7 +10,7 @@
  */
 
 namespace Hifone\Handlers\Listeners\Banner;
-
+use Carbon\Carbon;
 use Hifone\Events\Banner\BannerWasViewedEvent;
 
 class UpdateBannerViewCountHandler
@@ -20,12 +20,22 @@ class UpdateBannerViewCountHandler
     public function handle(BannerWasViewedEvent $event)
     {
         $banner = $event->carousel;
+        if ($banner->dailyStats()->where('date', Carbon::today()->toDateString())->count() == 0) {
+            $data = [
+                'date' => Carbon::today()->toDateString(),
+            ];
+            $dailyStat = $banner->dailyStats()->create($data);
+        } else{
+            $dailyStat = $banner->dailyStats()->where('date', Carbon::today()->toDateString());
+        }
 
         if (!$this->hasViewedBanner($banner)) {
             $banner->increment('view_count', 1);
+            $dailyStat->increment('view_count', 1);
             $this->storeViewedBanner($banner);
         }
         $banner->increment('click_count', 1);
+        $dailyStat->increment('click_count', 1);
     }
 
     protected function hasViewedBanner($banner)
@@ -44,4 +54,5 @@ class UpdateBannerViewCountHandler
 
         app('session')->put($key, time());
     }
+
 }

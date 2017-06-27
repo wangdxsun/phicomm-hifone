@@ -26,6 +26,10 @@ class Carousel extends BaseModel
     {
         return $this->belongsTo(User::class);
     }
+    public function dailyStats()
+    {
+        return $this->morphMany(DailyStat::class,'object');
+    }
 
     public function scopeVisible($query)
     {

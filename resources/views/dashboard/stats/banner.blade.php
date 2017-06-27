@@ -7,32 +7,28 @@
     <div class="content-wrapper">
         <div class="header sub-header">
             <span class="uppercase">
-                 <i class="fa fa-calendar"></i> 操作日志
+                 <i class="fa fa-calendar"></i> banner数据统计
             </span>
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <div class="toolbar">
-                    <form class="form-inline pull-right">
-                        <div class="form-group">
-                            <input type="text" name="query[type]" class="form-control" value="" placeholder="类型">
-                        </div>
-                        <button class="btn btn-default">搜索</button>
-                    </form>
-                </div>
 
                 @include('partials.errors')
                 <table class="table table-bordered table-striped table-condensed">
                     <tr class="head">
-                        <td>编号</td>
-                        <td style="width:20%">操作人</td>
-                        <td>操作对象</td>
-                        <td>操作对象ID</td>
-                        <td>操作类型</td>
-                        <td>原因</td>
-                        <td>操作时间</td>
+                        <td>banner图片</td>
+                        <td>累计消息数量</td>
+                        <td>累计独立用户数</td>
+                        <td>查看</td>
                     </tr>
-
+                    @foreach ($carousels as $carousel)
+                        <tr>
+                            <td><a href="{{ $carousel->url }}" target="_blank"><img src="{{ $carousel->image }}" style="max-width: 200px; max-height: 50px;"></a></td>
+                            <td>{{ $carousel->click_count }}</td>
+                            <td>{{ $carousel->view_count }}</td>
+                            <td><a href="/dashboard/stat/banner/{{ $carousel->id }}">详情</a></td>
+                        </tr>
+                    @endforeach
                 </table>
 
             </div>
