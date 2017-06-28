@@ -100,7 +100,7 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
     /**
      * Users can have many threads.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\hasMany
      */
     public function threads()
     {
@@ -110,7 +110,7 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
     /**
      * Users can have many replies.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\hasMany
      */
     public function replies()
     {
@@ -120,7 +120,7 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
     /**
      * Users can have many credits.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\hasMany
      */
     public function credits()
     {
