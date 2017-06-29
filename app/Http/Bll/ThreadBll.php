@@ -35,7 +35,7 @@ class ThreadBll extends BaseBll
 
     public function search()
     {
-        $threads = Thread::visible()->title(request('q'))->with('user')->recent()->paginate();
+        $threads = Thread::visible()->title(request('q'))->with(['user', 'node'])->recent()->paginate();
 
         return $threads;
     }
