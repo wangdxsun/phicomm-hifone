@@ -68,8 +68,8 @@ class ReportController extends Controller
         $target->status = Thread::TRASH;
         if ($target instanceof Thread) {
             $operation = '删除帖子';
-            $target->user->decrement('thread_count', 1);
-            $target->node->decrement('thread_count', 1);
+            $target->node->update(['thread_count' => $target->node->threads()->visible()->count()]);
+            $target->user->update(['thread_count' => $target->user->threads()->visible()->count()]);
         } else {
             $operation = '删除回复';
             $target->user->decrement('reply_count', 1);

@@ -200,9 +200,9 @@ class ThreadController extends Controller
     {
         DB::beginTransaction();
         try {
-            $thread->node->increment('thread_count', 1);
-            $thread->user->increment('thread_count', 1);
             $thread->status = 0;
+            $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
+            $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
             $this->updateOpLog($thread, '审核通过');
             event(new ThreadWasAuditedEvent($thread));
             DB::commit();
@@ -238,9 +238,9 @@ class ThreadController extends Controller
     {
         DB::beginTransaction();
         try {
-            $thread->node->decrement('thread_count', 1);
-            $thread->user->decrement('thread_count', 1);
             $this->trash($thread);
+            $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
+            $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
             event(new ThreadWasTrashedEvent($thread));
             DB::commit();
         } catch (ValidationException $e) {
