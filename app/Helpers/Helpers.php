@@ -270,3 +270,21 @@ if (!function_exists('curl_form_post')) {
         return $output;
     }
 }
+
+function correct_image_orientation($target) {
+    $exif = @exif_read_data($target);
+    if($exif && isset($exif['Orientation']) && $exif['Orientation'] != 1) {
+        switch ($exif['Orientation']) {
+            case 3: $deg = 180; break;
+            case 6: $deg = 270; break;
+            case 8: $deg = 90; break;
+            default: $deg = 0;
+        }
+        if ($deg > 0) {
+            $img = imagecreatefromjpeg($target);
+            ini_set('memory_limit', '256M');
+            $img = imagerotate($img, $deg, 0);
+            imagejpeg($img, $target);
+        }
+    }
+}

@@ -16,23 +16,21 @@ class UserBll extends BaseBll
 {
     public function getCredits()
     {
-        $credits = Auth::user()->credits()->with(['rule' => function ($query) {
-            $query->where('reward', '<>', 0);
-        }])->recent()->paginate();
+        $credits = Auth::user()->credits()->where('body', '<>', '0')->with(['rule'])->recent()->paginate();
 
         return $credits;
     }
 
     public function getThreads(User $user)
     {
-        $threads = $user->threads()->with(['user', 'node'])->visible()->recent()->get();
+        $threads = $user->threads()->visible()->with(['user', 'node'])->recent()->get();
 
         return $threads;
     }
 
-    public function getReplies()
+    public function getReplies(User $user)
     {
-        $replies = Auth::user()->replies()->visible()->with(['thread'])->recent()->get();
+        $replies = $user->replies()->visible()->with(['thread'])->recent()->get();
         foreach ($replies as $key => $reply) {
             if ($reply->thread->status < 0) {
                 unset($replies[$key]);

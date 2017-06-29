@@ -82,9 +82,9 @@ class UserController extends ApiController
         return $credits;
     }
 
-    public function replies(UserBll $userBll)
+    public function replies(User $user, UserBll $userBll)
     {
-        $replies = $userBll->getReplies();
+        $replies = $userBll->getReplies($user);
 
         return $replies;
     }

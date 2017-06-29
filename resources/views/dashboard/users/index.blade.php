@@ -46,8 +46,12 @@
                     <td>用户名</td>
                     <td>用户组</td>
                     <td>发帖数</td>
+                    <td>回帖数</td>
+                    <td>关注数</td>
+                    <td>粉丝数</td>
                     <td>经验值</td>
                     <td>注册时间</td>
+                    <td>上次登录时间</td>
                     <td>注册IP</td>
                     <td>操作人</td>
                     <td>操作时间</td>
@@ -60,8 +64,12 @@
                         <td><a href="{{ route('user.show',['id'=>$user->id]) }}" target="_blank">{{ $user->username }}</a></td>
                         <td>{{ $user->role }}</td>
                         <td>{{ $user->thread_count }}</td>
+                        <td>{{ $user->reply_count }}</td>
+                        <td>{{ $user->follow_count }}</td>
+                        <td>{{ $user->follower_count }}</td>
                         <td>{{ $user->score }}</td>
                         <td>{{ $user->created_at }}</td>
+                        <td>{{ $user->last_visit_time }}</td>
                         <td>{{ $user->regip }}</td>
                         <td>{{ $user->lastOpUser->username }}</td>
                         <td>{{ $user->last_op_time }}</td>

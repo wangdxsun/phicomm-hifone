@@ -25,8 +25,8 @@ class UploadBase64ImageCommandHandler
         $allowed_extensions = ['png', 'jpg', 'jpeg', 'gif'];
         if(preg_match('/^(data:\s*image\/(\w+);base64,)/', $file, $result)){
             $extension = $result[2];
-            if(!in_array($extension, $allowed_extensions)){
-                return ['error' => 'You may only upload png, jpg or gif.'];
+            if (!in_array($extension, $allowed_extensions)) {
+                throw new \Exception('只支持 png, jpg, jpeg 和 gif');
             }
             $folderName = '/uploads/images/'.date('Ym', time()).'/'.date('d', time()).'/'.Auth::user()->id;
             $destinationPath = public_path().'/'.$folderName;
@@ -34,12 +34,14 @@ class UploadBase64ImageCommandHandler
             $safeName = str_random(10).'.'.$extension;
             $newFile = $destinationPath.'/'.$safeName;
             file_put_contents($newFile, base64_decode(str_replace($result[1], '', $file)));
+            correct_image_orientation($newFile);//IOS拍照直接上传的图片需要旋转90度
+
             $data['filename'] = request()->getSchemeAndHttpHost().'/'.$folderName.'/'.$safeName;
             $data['localFile'] = $newFile;
             event(new ImageWasUploadedEvent($data));
 
             return $data;
-        }else{
+        } else {
             throw new \Exception('文件错误');
         }
     }
