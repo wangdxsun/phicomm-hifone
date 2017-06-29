@@ -78,7 +78,7 @@
                 </a>
             </li>
             <li {!! set_active('dashboard/report*') !!}>
-                <a href="{{ route('dashboard.report.index') }}">
+                <a href="{{ route('dashboard.report.audit') }}">
                     <i class="fa fa-hand-stop-o"></i>
                     <span>举报管理</span>
                 </a>
