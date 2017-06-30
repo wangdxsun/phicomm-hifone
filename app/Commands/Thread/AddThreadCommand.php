@@ -23,6 +23,8 @@ final class AddThreadCommand
 
     public $tags;
 
+    public $images;
+
     /**
      * The validation rules.
      *
@@ -40,12 +42,13 @@ final class AddThreadCommand
      *
      * @param string $body
      */
-    public function __construct($title, $body, $user_id, $node_id, $tags)
+    public function __construct($title, $body, $user_id, $node_id, $tags, $images = '')
     {
         $this->title = $title;
         $this->body = $body;
         $this->user_id = $user_id;
         $this->node_id = $node_id;
         $this->tags = $tags;
+        $this->images = $images;
     }
 }
