@@ -26,28 +26,30 @@ class UpdateDailyStatsHandler
         $today = Carbon::today()->toDateString();
         if ($event instanceof ThreadWasAuditedEvent) {//新增帖子（审核通过时）
             $node = $event->thread->node;
-            if (0 == $node->dailyStats()->Where('date', $today)->count()) {
+            if (0 == $node->dailyStats()->where('date', $today)->count()) {
                 $node->dailyStats()->create(['date' => $today]);
             }
-            $node->dailyStats()->Where('date', $today)->increment('thread_count', 1);
+            $node->dailyStats()->where('date', $today)->increment('thread_count', 1);
         } else if ($event instanceof ReplyWasAuditedEvent) {//新增回复（审核通过时）
             $node = $event->reply->thread->node;
-            if (0 == $node->dailyStats()->Where('date', $today)->count()) {
+            if (0 == $node->dailyStats()->where('date', $today)->count()) {
                 $node->dailyStats()->create(['date' => $today]);
             }
-            $node->dailyStats()->Where('date', $today)->increment('reply_count', 1);
+            $node->dailyStats()->where('date', $today)->increment('reply_count', 1);
         } else if ($event instanceof ThreadWasTrashedEvent) {//删除帖子（移入垃圾箱）
             $node = $event->thread->node;
-            if (0 == $node->dailyStats()->Where('date', $today)->count()) {
+            if (0 == $node->dailyStats()->where('date', $today)->count()) {
                 $node->dailyStats()->create(['date' => $today]);
+            } elseif ($node->dailyStats()->where('date', $today)->first()->thread_count > 0){//新建记录不会执行减操作
+                $node->dailyStats()->where('date', $today)->decrement('thread_count', 1);
             }
-            $node->dailyStats()->Where('date', $today)->decrement('thread_count', 1);
         } else if ($event instanceof ReplyWasTrashedEvent) {//删除回复（移入垃圾箱）
             $node = $event->reply->thread->node;
-            if (0 == $node->dailyStats()->Where('date', $today)->count()) {
+            if (0 == $node->dailyStats()->where('date', $today)->count()) {
                 $node->dailyStats()->create(['date' => $today]);
+            } elseif ($node->dailyStats()->where('date', $today)->first()->reply_count > 0){//新建记录不会执行减操作
+                $node->dailyStats()->where('date', $today)->decrement('reply_count', 1);
             }
-            $node->dailyStats()->Where('date', $today)->decrement('reply_count', 1);
         }
     }
 }

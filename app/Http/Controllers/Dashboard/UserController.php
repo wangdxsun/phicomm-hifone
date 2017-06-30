@@ -40,9 +40,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $search = array_filter(Input::get('user', []), function($value) {
-            return !empty($value);
-        });
+        $search = $this->filterEmptyValue(Input::get('user'));
         $users = User::search($search)->with('roles', 'lastOpUser')->paginate(20);
         $roles = Role::all();
 

@@ -26,6 +26,15 @@ class Log extends BaseModel
         'reason',
     ];
 
+    public static $logableType = [
+        'Hifone\Models\Thread' => '帖子',
+        'Hifone\Models\Reply' => '回帖',
+        'Hifone\Models\Node' => '版块',
+        'Hifone\Models\User' => '用户',
+        'Hifone\Models\Carousel' => 'banner',
+        'Hifone\Models\Report' => '举报',
+    ];
+
     /**
      * The validation rules.
      *

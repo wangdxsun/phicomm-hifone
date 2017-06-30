@@ -274,4 +274,23 @@ class Thread extends BaseModel implements TaggableInterface
         $this->order > 0 && $icons[] = 'fa fa-thumb-tack text-danger';
         return $icons;
     }
+
+    public function scopeSearch($query, $searches = [])
+    {
+        foreach ($searches as $key => $value) {
+            if ($key == 'user_id') {
+                $query->whereHas('user', function ($query) use ($value){
+                    $query->where('username', $value);
+                });
+            } else if ($key == 'body') {
+                $query->where('body', 'LIKE', "%$value%");
+            } else if ($key == 'date_start') {
+                $query->where('created_at', '>=', $value);
+            } else if ($key == 'date_end') {
+                $query->where('created_at', '<=', $value);
+            }else {
+                $query->where($key, $value);
+            }
+        }
+    }
 }

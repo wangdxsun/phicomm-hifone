@@ -110,4 +110,25 @@ class Reply extends BaseModel
     {
         return $this->like_count > 0 ? 'highlight' : null;
     }
+
+    public function scopeSearch($query,$searches = [])
+    {
+        foreach ($searches as $key => $value) {
+            if ($key == 'thread_title') {
+                $query->whereHas('thread', function ($query) use ($value){
+                    $query->where('title', 'like', "%$value%");
+                });
+            } elseif ($key == 'username') {
+                $query->whereHas('user', function ($query) use ($value){
+                    $query->where('username', $value);
+                });
+            } elseif ($key == 'body') {
+                $query->where('body', 'LIKE', "%$value%");
+            } else if ($key == 'date_start') {
+                $query->where('created_at', '>=', $value);
+            } else if ($key == 'date_end') {
+                $query->where('created_at', '<=', $value);
+            }
+        }
+    }
 }

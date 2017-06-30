@@ -12,18 +12,16 @@ trait SearchTrait
 {
     public function scopeSearch($query, $searches = [])
     {
-        $res = null;
         foreach ($searches as $key => $value) {
             if ($key == 'date_start') {
-                $res = $query->where('created_at', '>=', $value);
+                $query->where('created_at', '>=', $value);
             } elseif ($key == 'date_end') {
-                $res = $query->where('created_at', '<=', $value);
+                $query->where('created_at', '<=', $value);
             } elseif ($key == 'body') {
-                $res = $query->where('body', 'LIKE', "%$value%");
+                $query->where('body', 'LIKE', "%$value%");
             } else {
-                $res = $query->where($key, $value);
+                $query->where($key, $value);
             }
         }
-        return $res;
     }
 }

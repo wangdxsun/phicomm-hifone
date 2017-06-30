@@ -15,24 +15,11 @@
             <div class="col-sm-12">
             <div class="toolbar">
                 <form class="form-inline">
-                    <select class="form-control selectpicker" name="user[id]">
-                        <option value="" selected>用户ID</option>
-                        @foreach ($all_users as $user)
-                            <option value="{{ $user->id }}">{{ $user->id }}</option>
-                        @endforeach
-                    </select>
-                    <select class="form-control selectpicker" name="user[username]">
-                        <option value="" selected>用户名</option>
-                        @foreach ($all_users as $user)
-                            <option value="{{ $user->username }}">{{ $user->username }}</option>
-                        @endforeach
-                    </select>
-                    <select class="form-control selectpicker" name="user[regip]">
-                        <option value="" selected>注册IP</option>
-                        @foreach ($all_users as $user)
-                            <option value="{{ $user->regip }}">{{ $user->regip }}</option>
-                        @endforeach
-                    </select>
+                    <div class="form-group">
+                        <input type="text" name="user[id]" class="form-control" value="" placeholder="用户ID">
+                        <input type="text" name="user[username]" class="form-control" value="" placeholder="用户名">
+                        <input type="text" name="user[regip]" class="form-control" value="" placeholder="注册IP">
+                    </div>
                     <button class="btn btn-default">搜索</button>
                 </form>
             </div>
@@ -41,7 +28,7 @@
             <table class="table table-bordered table-striped table-condensed">
                 <tbody>
                 <tr class="head">
-                    <td class="first">#</td>
+                    <td class="first">ID</td>
                     <td>头像</td>
                     <td>用户名</td>
                     <td>用户组</td>

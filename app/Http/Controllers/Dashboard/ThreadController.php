@@ -50,16 +50,12 @@ class ThreadController extends Controller
     {
         $search = $this->filterEmptyValue(Input::get('thread'));
         $threads = Thread::visible()->search($search)->with('node', 'user', 'lastOpUser')->orderBy('last_op_time', 'desc')->paginate(20);
-        $threadAll = Thread::visible()->get();
-        $userIds = array_unique(array_column($threadAll->toArray(), 'user_id'));
         $sections = Section::orderBy('order')->get();
 
         return View::make('dashboard.threads.index')
             ->withThreads($threads)
-            ->withThreadAll($threadAll)
             ->withCurrentMenu('index')
-            ->withSections($sections)
-            ->withUsers(User::find($userIds));
+            ->withSections($sections);
     }
 
     /**
@@ -195,7 +191,7 @@ class ThreadController extends Controller
         return $this->passAudit($thread);
     }
 
-    //将帖子状态修改为审核通过
+    //将帖子状态修改为审核通过,需要将帖子数加1
     public function passAudit($thread)
     {
         DB::beginTransaction();
