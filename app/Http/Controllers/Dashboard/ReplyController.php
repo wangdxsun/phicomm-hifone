@@ -48,9 +48,12 @@ class ReplyController extends Controller
         $search = $this->filterEmptyValue(Input::get('reply'));
         $replies = Reply::visible()->search($search)->with('thread', 'user', 'lastOpUser', 'thread.node')
             ->orderBy('last_op_time', 'desc')->paginate(20);
+        $orderTypes = Reply::$orderTypes;
         return View::make('dashboard.replies.index')
             ->withPageTitle(trans('dashboard.replies.replies').' - '.trans('dashboard.dashboard'))
             ->withReplies($replies)
+            ->with('orderTypes',$orderTypes)
+            ->withSearch($search)
             ->withCurrentMenu('index');
     }
 

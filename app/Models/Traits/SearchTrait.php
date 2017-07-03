@@ -19,6 +19,8 @@ trait SearchTrait
                 $query->where('created_at', '<=', $value);
             } elseif ($key == 'body') {
                 $query->where('body', 'LIKE', "%$value%");
+            } elseif ($key == 'orderType'){
+                $query->orderBy($value,'desc');
             } else {
                 $query->where($key, $value);
             }

@@ -48,13 +48,17 @@ class ThreadController extends Controller
 
     public function index()
     {
+
         $search = $this->filterEmptyValue(Input::get('thread'));
         $threads = Thread::visible()->search($search)->with('node', 'user', 'lastOpUser')->orderBy('last_op_time', 'desc')->paginate(20);
         $sections = Section::orderBy('order')->get();
+        $orderTypes = Thread::$orderTypes;
 
         return View::make('dashboard.threads.index')
             ->withThreads($threads)
+            ->with('orderTypes',$orderTypes)
             ->withCurrentMenu('index')
+            ->withSearch($search)
             ->withSections($sections);
     }
 

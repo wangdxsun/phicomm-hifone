@@ -17,12 +17,33 @@
                 <div class="toolbar">
                     <form class="form-inline">
                         <div class="form-group">
-                            <input type="text" name="reply[body]" class="form-control" value="" placeholder="回复内容">
-                            <input type="text" name="reply[thread_title]" class="form-control" value="" placeholder="帖子标题">
-                            <input type="text" name="reply[username]" class="form-control" value="" placeholder="回帖人">
+                            <input type="text" name="reply[body]" class="form-control" placeholder="回复内容"
+                                   @if (isset($search['body']))
+                                   value="{{ $search['body'] }}"
+                                    @endif >
+                            <input type="text" name="reply[thread_title]" class="form-control" placeholder="帖子标题"
+                                   @if (isset($search['thread_title']))
+                                   value="{{ $search['thread_title'] }}"
+                                    @endif >
+                            <input type="text" name="reply[username]" class="form-control" placeholder="回帖人"
+                                   @if (isset($search['username']))
+                                   value="{{ $search['username'] }}"
+                                    @endif >
                         </div>
-                        <input name="reply[date_start]" size="10" type="text" class="form_date form-control" data-date-format="yyyy-mm-dd" placeholder="开始时间">
-                        <input name="reply[date_end]" size="10" type="text" class="form_date form-control" data-date-format="yyyy-mm-dd" placeholder="结束时间">
+                        <input name="reply[date_start]" size="10" type="text" class="form_date form-control" data-date-format="yyyy-mm-dd" placeholder="开始时间"
+                               @if (isset($search['date_start']))
+                               value="{{ $search['date_start'] }}"
+                                @endif >
+                        <input name="reply[date_end]" size="10" type="text" class="form_date form-control" data-date-format="yyyy-mm-dd" placeholder="结束时间"
+                               @if (isset($search['date_end']))
+                               value="{{ $search['date_end'] }}"
+                                @endif >
+                        <select class="form-control " name="reply[orderType]">
+                            <option value="" selected>排列方式</option>
+                            @foreach ($orderTypes as $key => $orderType)
+                                <option value="{{ $key }}">{{ $orderType }}</option>
+                            @endforeach
+                        </select>
                         <button class="btn btn-default">搜索</button>
                     </form>
                 </div>

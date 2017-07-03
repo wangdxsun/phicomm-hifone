@@ -67,6 +67,11 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
     protected $searchable = [
         'username',
     ];
+    public static $orderTypes = [
+        'id' => '用户ID',
+        'thread_count' => '发帖数',
+        'score'  => '经验值',
+    ];
 
     /**
      * Find by username, or throw an exception.

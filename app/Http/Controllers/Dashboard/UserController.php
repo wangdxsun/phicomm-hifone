@@ -43,11 +43,14 @@ class UserController extends Controller
         $search = $this->filterEmptyValue(Input::get('user'));
         $users = User::search($search)->with('roles', 'lastOpUser')->paginate(20);
         $roles = Role::all();
+        $orderTypes = User::$orderTypes;
 
         return View::make('dashboard.users.index')
             ->withPageTitle(trans('dashboard.users.users').' - '.trans('dashboard.dashboard'))
             ->withUsers($users)
+            ->with('orderTypes',$orderTypes)
             ->withRoles($roles)
+            ->withSearch($search)
             ->withAllUsers([]);
     }
 
