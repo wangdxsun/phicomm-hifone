@@ -12,6 +12,7 @@
 namespace Hifone\Http\Controllers;
 
 use Auth;
+use Carbon\Carbon;
 use Hifone\Models\BaseModel;
 use Hifone\Services\Breadcrumb\Breadcrumb;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -73,7 +74,7 @@ abstract class Controller extends BaseController
     public function updateOpLog(BaseModel $model, $operation, $reason = null)
     {
         $model->last_op_user_id = Auth::id();
-        $model->last_op_time = time();
+        $model->last_op_time = Carbon::now()->toDateTimeString();
         $reason && $model->last_op_reason = $reason;
         $model->save();
         $logData['user_id'] = Auth::id();
