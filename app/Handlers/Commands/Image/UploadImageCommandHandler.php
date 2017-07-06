@@ -74,7 +74,7 @@ class UploadImageCommandHandler
             $img->save();
         }
 
-        $data['filename'] = request()->getSchemeAndHttpHost().'/'.$folderName.'/'.$safeName;
+        $data['filename'] = $folderName.'/'.$safeName;
 
         event(new ImageWasUploadedEvent($data));
 
