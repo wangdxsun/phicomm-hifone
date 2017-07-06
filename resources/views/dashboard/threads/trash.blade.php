@@ -16,40 +16,42 @@
                 @include('partials.errors')
                 <div class="toolbar">
                     <form class="form-inline">
-                        <select class="form-control selectpicker" name="thread[id]" style="max-width: 300px">
-                            <option value="" selected>全部帖子ID</option>
-                            @foreach ($thread_all as $thread)
-                                <option value="{{ $thread->id }}">{{ $thread->id }}</option>
-                            @endforeach
-                        </select>
-                        <select class="form-control selectpicker" name="thread[title]" style="max-width: 300px">
-                            <option value="" selected>全部帖子标题</option>
-                            @foreach ($thread_all as $thread)
-                                <option value="{{ $thread->title }}">{{ $thread->title }}</option>
-                            @endforeach
-                        </select>
-                        <select class="form-control selectpicker" name="thread[node_id]">
-                            <option value="" selected>全部板块</option>
+                        <div class="form-group">
+                            <input type="text" name="thread[id]" class="form-control" placeholder="帖子ID"
+                                   @if (isset($search['id']))
+                                   value="{{ $search['id'] }}"
+                                    @endif >
+                            <input type="text" name="thread[title]" class="form-control" placeholder="帖子标题"
+                                   @if (isset($search['title']))
+                                   value="{{ $search['title'] }}"
+                                    @endif >
+                            <input type="text" name="thread[user_id]" class="form-control" placeholder="发帖人"
+                                   @if (isset($search['user_id']))
+                                   value="{{ $search['user_id'] }}"
+                                    @endif >
+                        </div>
+                        <select class="form-control" name="thread[node_id]">
+                            <option value = "" selected>全部节点</option>
                             @foreach ($sections as $section)
                                 <optgroup label="{{ $section->name }}">
                                     @if(isset($section->nodes))
                                         @foreach ($section->nodes as $node)
-                                            <option value="{{ $node->id }}">{{ $node->name }}</option>
+                                            <option value="{{ $node->id }}" >{{ $node->name }}</option>
                                         @endforeach
                                     @endif
                                 </optgroup>
                             @endforeach
                         </select>
-                        <select class="form-control selectpicker" name="thread[user_id]">
-                            <option value="" selected>全部发帖人</option>
-                            @foreach ($users as $user)
-                                <option value="{{ $user->id }}">{{ $user->username }}</option>
-                            @endforeach
-                        </select>
-                        <select class="form-control selectpicker" name="thread[last_op_user_id]">
+                        <select class="form-control " name="thread[last_op_user_id]">
                             <option value="" selected>全部操作人</option>
                             @foreach ($operators as $operator)
                                 <option value="{{ $operator->id }}">{{ $operator->username }}</option>
+                            @endforeach
+                        </select>
+                        <select class="form-control " name="thread[orderType]">
+                            <option value="" selected>排列方式</option>
+                            @foreach ($orderTypes as $key => $orderType)
+                                <option value="{{ $key }}">{{ $orderType }}</option>
                             @endforeach
                         </select>
                         <button class="btn btn-default">搜索</button>
