@@ -47,6 +47,7 @@ class LogController extends Controller
         return view('dashboard.logs.index')
             ->withLogs($logs)
             ->withLogableTypes($logableTypes)
+            ->withSearch($search)
             ->withOperations($operations)
             ->withUsers(User::find($userIds));
     }

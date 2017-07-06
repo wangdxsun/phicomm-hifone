@@ -45,6 +45,10 @@ class Reply extends BaseModel
         'body'      => 'required|max:1024',
         'user_id'   => 'int',
     ];
+    public static $orderTypes = [
+        'id' => '回复ID',
+        'user_id'  => '回帖人',
+    ];
 
     public function likes()
     {
@@ -128,6 +132,8 @@ class Reply extends BaseModel
                 $query->where('created_at', '>=', $value);
             } else if ($key == 'date_end') {
                 $query->where('created_at', '<=', $value);
+            } elseif ($key == 'orderType'){
+                $query->orderBy($value);
             }
         }
     }

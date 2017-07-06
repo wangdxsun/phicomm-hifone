@@ -17,24 +17,46 @@
             <div class="toolbar">
                 <form class="form-inline">
                     <div class="form-group">
-                        <input type="text" name="thread[id]" class="form-control" value="" placeholder="帖子ID">
-                        <input type="text" name="thread[title]" class="form-control" value="" placeholder="帖子标题">
-                        <input type="text" name="thread[user_id]" class="form-control" value="" placeholder="发帖人">
+                        <input type="text" name="thread[id]" class="form-control" placeholder="帖子ID"
+                               @if (isset($search['id']))
+                                  value="{{ $search['id'] }}"
+                               @endif >
+                        <input type="text" name="thread[title]" class="form-control" placeholder="帖子标题"
+                               @if (isset($search['title']))
+                                    value="{{ $search['title'] }}"
+                               @endif >
+                        <input type="text" name="thread[user_id]" class="form-control" placeholder="发帖人"
+                               @if (isset($search['user_id']))
+                                    value="{{ $search['user_id'] }}"
+                               @endif >
                     </div>
                     <select class="form-control" name="thread[node_id]">
-                        <option value="" selected>全部节点</option>
+                        <option value = "" selected>全部节点</option>
                         @foreach ($sections as $section)
                             <optgroup label="{{ $section->name }}">
                                 @if(isset($section->nodes))
                                     @foreach ($section->nodes as $node)
-                                        <option value="{{ $node->id }}">{{ $node->name }}</option>
+                                        <option value="{{ $node->id }}" >{{ $node->name }}</option>
                                     @endforeach
                                 @endif
                             </optgroup>
                         @endforeach
                     </select>
-                    <input name="thread[date_start]" size="10" type="text" class="form_date form-control" data-date-format="yyyy-mm-dd" placeholder="开始时间">
-                    <input name="thread[date_end]" size="10" type="text" class="form_date form-control" data-date-format="yyyy-mm-dd" placeholder="结束时间">
+                    <input name="thread[date_start]" size="10" type="text" class="form_date form-control" data-date-format="yyyy-mm-dd" placeholder="开始时间"
+                           @if (isset($search['date_start']))
+                           value="{{ $search['date_start'] }}"
+                           @endif >
+                    <input name="thread[date_end]" size="10" type="text" class="form_date form-control" data-date-format="yyyy-mm-dd" placeholder="结束时间"
+                           @if (isset($search['date_end']))
+                           value="{{ $search['date_end'] }}"
+                           @endif >
+
+                    <select class="form-control " name="thread[orderType]">
+                        <option value="" selected>排列方式</option>
+                        @foreach ($orderTypes as $key => $orderType)
+                            <option value="{{ $key }}">{{ $orderType }}</option>
+                        @endforeach
+                    </select>
                     <button class="btn btn-default">搜索</button>
                 </form>
             </div>

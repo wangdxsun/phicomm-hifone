@@ -64,6 +64,11 @@ class Thread extends BaseModel implements TaggableInterface
         'node_id' => 'required|int',
         'user_id' => 'required|int',
     ];
+    public static $orderTypes = [
+        'id' => '帖子ID',
+        'node_id' => '帖子节点',
+        'user_id'  => '发帖人',
+    ];
 
     public function likes()
     {
@@ -288,7 +293,9 @@ class Thread extends BaseModel implements TaggableInterface
                 $query->where('created_at', '>=', $value);
             } else if ($key == 'date_end') {
                 $query->where('created_at', '<=', $value);
-            }else {
+            } elseif ($key == 'orderType'){
+                $query->orderBy($value);
+            } else {
                 $query->where($key, $value);
             }
         }

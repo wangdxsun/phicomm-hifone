@@ -24,15 +24,24 @@
                                 <option value="{{ $key }}">{{ $logable_type }}</option>
                             @endforeach
                         </select>
-                        <input type="text" name="log[logable_id]" class="form-control" value="" placeholder="操作对象ID">
+                        <input type="text" name="log[logable_id]" class="form-control" value="" placeholder="操作对象ID"
+                               @if (isset($search['logable_id']))
+                               value="{{ $search['logable_id'] }}"
+                                @endif >
                         <select class="form-control " name="log[operation]">
                             <option value="" selected>全部类型</option>
                             @foreach ($operations as $operation)
                                 <option value="{{ $operation->operation }}">{{ $operation->operation }}</option>
                             @endforeach
                         </select>
-                        <input name="log[date_start]" size="10" type="text" class="form_date form-control" data-date-format="yyyy-mm-dd" placeholder="开始时间">
-                        <input name="log[date_end]" size="10" type="text" class="form_date form-control" data-date-format="yyyy-mm-dd" placeholder="结束时间">
+                        <input name="log[date_start]" size="10" type="text" class="form_date form-control" data-date-format="yyyy-mm-dd" placeholder="开始时间"
+                               @if (isset($search['date_start']))
+                               value="{{ $search['date_start'] }}"
+                                @endif >
+                        <input name="log[date_end]" size="10" type="text" class="form_date form-control" data-date-format="yyyy-mm-dd" placeholder="结束时间"
+                               @if (isset($search['date_end']))
+                        value="{{ $search['date_end'] }}"
+                                @endif >
                         <button class="btn btn-default">搜索</button>
                     </form>
                 </div>
