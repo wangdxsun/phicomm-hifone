@@ -116,7 +116,8 @@ trait ValidatesRequests
      */
     protected function formatValidationErrors(Validator $validator)
     {
-        return $validator->errors()->getMessages();
+        $msg = $validator->errors()->getMessages();
+        return ['msg' => array_first(array_first($msg))];
     }
 
     protected function getTheFirstError(Validator $validator)

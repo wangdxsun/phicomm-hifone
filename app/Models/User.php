@@ -56,12 +56,8 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
      * @var string[]
      */
     public $rules = [
-        'username' => ['required', 'max:15', 'regex:/\A[\x{4e00}-\x{9fa5}A-Za-z0-9\-\_\.]+\z/u'],
+        'username' => ['required'],
         'password' => 'required|string|min:6',
-    ];
-
-    public $validationMessages = [
-        'username.regex' => '用户名含有非法字符'
     ];
 
     protected $searchable = [

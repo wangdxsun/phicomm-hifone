@@ -72,7 +72,9 @@ class PhicommController extends ApiController
     public function bind(PhicommBll $phicommBll)
     {
         $this->validate(request(), [
-            'username' => 'required',
+            'username' => 'required|max:15|regex:/\A[\x{4e00}-\x{9fa5}A-Za-z0-9\-\_\.]+\z/u',
+        ], [
+            'username.regex' => '用户名含有非法字符'
         ]);
         $user = $phicommBll->bind();
 
