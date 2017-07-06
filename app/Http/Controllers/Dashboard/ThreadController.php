@@ -222,13 +222,16 @@ class ThreadController extends Controller
         $userIds = array_unique(array_column($threadAll->toArray(), 'user_id'));
         $operators = array_unique(array_column($threadAll->toArray(), 'last_op_user_id'));
         $sections = Section::orderBy('order')->get();
+        $orderTypes = Thread::$orderTypes;
 
         return view('dashboard.threads.trash')
             ->withPageTitle(trans('dashboard.threads.threads').' - '.trans('dashboard.dashboard'))
             ->withThreads($threads)
             ->withThreadAll($threadAll)
+            ->with('orderTypes',$orderTypes)
             ->withSections($sections)
             ->withCurrentMenu('trash')
+            ->withSearch($search)
             ->withUsers(User::find($userIds))
             ->withOperators(User::find($operators));
     }
