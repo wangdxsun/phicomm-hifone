@@ -14,6 +14,7 @@ namespace Hifone\Http\Controllers;
 use AltThree\Validator\ValidationException;
 use Auth;
 use Hash;
+use Hifone\Hashing\PasswordHasher;
 use Hifone\Http\Bll\FollowBll;
 use Hifone\Http\Bll\UserBll;
 use Hifone\Models\Follow;
@@ -30,8 +31,11 @@ use Redirect;
 
 class UserController extends Controller
 {
-    public function __construct()
+    protected $hasher;
+
+    public function __construct(PasswordHasher $hasher)
     {
+        $this->hasher = $hasher;
         $this->middleware('auth', ['only' => ['edit', 'update', 'destroy', 'unbind']]);
     }
 
@@ -213,29 +217,38 @@ class UserController extends Controller
             ->withSuccess(trans('hifone.users.avatar_upload_success'));
     }
 
+    /**
+     * hash user's raw password.
+     *
+     * @param string $password plain text form of user's password
+     * @param string $salt     salt
+     *
+     * @return string hashed password
+     */
+    private function hashPassword($password, $salt)
+    {
+        return $this->hasher->make($password, ['salt' => $salt]);
+    }
+
     protected function resetPassword()
     {
         $user = Auth::user();
+        if ($this->hashPassword(Input::get('old_password'),$user->salt) == $user->password) {
+            $password = Input::get('password');
 
-        if (Hash::check(Input::only('old_password')['old_password'], $user->password)) {
-            $password = Input::only('password')['password'];
-
-            $password_confirmation = Input::only('password_confirmation')['password_confirmation'];
-
+            $password_confirmation = Input::get('password_confirmation');
             if (!($password == $password_confirmation)) {
                 return Redirect::back()
-                    ->withInfo('当前输入新密码与错密码不一致, 请重新输入.');
+                    ->withInfo('当前输入新密码与确认密码不一致, 请重新输入.');
             } else {
-                $user->password = Hash::make(Input::only('password')['password']);
-
+                $user->password = $this->hashPassword($password,$user->salt);
                 $user->save();
-
                 return Redirect::back()
-                    ->withSuccess('密码修改成功!');
+                    ->withInfo('密码修改成功!');
             }
         } else {
             return Redirect::back()
-                ->withError('输入当前密码输入错误, 请重新输入.');
+                ->withInfo('当前密码输入错误, 请重新输入.');
         }
     }
 }
