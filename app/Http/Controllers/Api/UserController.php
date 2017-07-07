@@ -15,6 +15,7 @@ use Hifone\Http\Bll\PhicommBll;
 use Hifone\Http\Bll\UserBll;
 use Hifone\Models\User;
 use Illuminate\Http\JsonResponse;
+use Str;
 
 class UserController extends ApiController
 {
@@ -26,7 +27,7 @@ class UserController extends ApiController
         }
         if (! is_null($user)) {
             $cloudUser = $phicommBll->userInfo();
-            if ($cloudUser['img'] && $user->avatar_url != $cloudUser['img']) {
+            if ($cloudUser['img'] && $user->avatar_url != $cloudUser['img'] && !Str::startsWith($cloudUser['img'], 'Uploads')) {
                 $user->avatar_url = $cloudUser['img'];
                 $user->save();
             }
