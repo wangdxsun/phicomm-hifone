@@ -170,7 +170,7 @@ class PhicommBll extends BaseBll
             'phicomm_id' => Session::get('phicommId') ?: Auth::phicommId(),
             'username' => request('username'),
             'password' => str_random(32),
-            'regip' => request()->getClientIp(),
+            'regip' => getClientIp(),
         ];
         if (User::where('username', request('username'))->count() > 0) {
             throw new \Exception('该用户名已被使用');
