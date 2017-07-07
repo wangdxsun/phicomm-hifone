@@ -36,7 +36,7 @@ class UploadBase64ImageCommandHandler
             file_put_contents($newFile, base64_decode(str_replace($result[1], '', $file)));
             //correct_image_orientation($newFile);//IOS拍照直接上传的图片需要旋转90度
 
-            $data['filename'] = $folderName.'/'.$safeName;
+            $data['filename'] = request()->getSchemeAndHttpHost().$folderName.'/'.$safeName;
             $data['localFile'] = $newFile;
             event(new ImageWasUploadedEvent($data));
 
