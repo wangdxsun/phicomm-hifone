@@ -201,9 +201,9 @@ class ThreadController extends Controller
         DB::beginTransaction();
         try {
             $thread->status = 0;
+            $this->updateOpLog($thread, '审核通过');
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
             $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
-            $this->updateOpLog($thread, '审核通过');
             event(new ThreadWasAuditedEvent($thread));
             DB::commit();
         } catch (ValidationException $e) {
