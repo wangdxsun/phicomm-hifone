@@ -275,9 +275,9 @@ class ThreadController extends Controller
 
         DB::beginTransaction();
         try {
-            $thread->node->decrement('thread_count', 1);
-            $thread->user->decrement('thread_count', 1);
             $thread->status = -1;
+            $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
+            $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
             $this->updateOpLog($thread, '删除帖子', trim(request('reason')));
             DB::commit();
         } catch (ValidationException $e) {

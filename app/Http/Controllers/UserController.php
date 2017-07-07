@@ -16,8 +16,6 @@ use Auth;
 use Hash;
 use Hifone\Hashing\PasswordHasher;
 use Hifone\Http\Bll\FollowBll;
-use Hifone\Http\Bll\UserBll;
-use Hifone\Models\Follow;
 use Hifone\Models\Identity;
 use Hifone\Models\Location;
 use Hifone\Models\Provider;
@@ -117,9 +115,9 @@ class UserController extends Controller
             ->withReplies($replies);
     }
 
-    public function threads(User $user, UserBll $userBll)
+    public function threads(User $user)
     {
-        $threads = $userBll->getThreads($user);
+        $threads = Thread::visible()->forUser($user->id)->recent()->paginate(15);
 
         return $this->view('users.threads')
             ->withUser($user)

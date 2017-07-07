@@ -35,7 +35,7 @@ class ThreadBll extends BaseBll
 
     public function search()
     {
-        $threads = Thread::visible()->title(request('q'))->with('user')->recent()->paginate();
+        $threads = Thread::visible()->title(request('q'))->with(['user', 'node'])->recent()->paginate();
 
         return $threads;
     }
@@ -45,6 +45,7 @@ class ThreadBll extends BaseBll
         $threadData = Input::get('thread');
         $node_id = isset($threadData['node_id']) ? $threadData['node_id'] : null;
         $tags = isset($threadData['tags']) ? $threadData['tags'] : '';
+        $images = '';
 
         //如果有单独上传图片，将图片拼接到正文后面
 //        if (Input::hasFile('images')) {
@@ -56,10 +57,9 @@ class ThreadBll extends BaseBll
 
         //base64上传
         if (Input::has('images')) {
-            $threadData['body'] = "<p> ".$threadData['body']." </p>";
-            foreach ($images = Input::get('images') as $image) {
+            foreach (Input::get('images') as $image) {
                 $upload = dispatch(new UploadBase64ImageCommand($image));
-                $threadData['body'] .= "<img src='{$upload["filename"]}'/>";
+                $images .= "<img src='{$upload["filename"]}'/>";
             }
         }
 
@@ -68,7 +68,8 @@ class ThreadBll extends BaseBll
             $threadData['body'],
             Auth::id(),
             $node_id,
-            $tags
+            $tags,
+            $images
         ));
     }
 

@@ -33,7 +33,7 @@ return [
     'whoops'              => 'Ohoh... ',
     'success'             => 'Der Vorgang war erfolgreich!',
     'failure'             => 'Der Vorgang ist fehlgeschlagen!',
-    'powered_by'          => 'Copyright &copy; 2015-2016 <a href="http://hifone.com">Hifone</a> ',
+    'powered_by'          => 'Copyright &copy; 2015-2016 <a href="http://phiwifi.cn">Hifone</a> ',
     'feed'                => 'Feed',
     'registered_users'    => 'Schon registriert?',
     'ranking'             => 'Platzierung',

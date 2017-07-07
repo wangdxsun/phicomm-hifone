@@ -200,9 +200,9 @@ class ThreadController extends Controller
     {
         DB::beginTransaction();
         try {
-            $thread->node->increment('thread_count', 1);
-            $thread->user->increment('thread_count', 1);
             $thread->status = 0;
+            $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
+            $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
             $this->updateOpLog($thread, '审核通过');
             event(new ThreadWasAuditedEvent($thread));
             DB::commit();
@@ -222,13 +222,16 @@ class ThreadController extends Controller
         $userIds = array_unique(array_column($threadAll->toArray(), 'user_id'));
         $operators = array_unique(array_column($threadAll->toArray(), 'last_op_user_id'));
         $sections = Section::orderBy('order')->get();
+        $orderTypes = Thread::$orderTypes;
 
         return view('dashboard.threads.trash')
             ->withPageTitle(trans('dashboard.threads.threads').' - '.trans('dashboard.dashboard'))
             ->withThreads($threads)
             ->withThreadAll($threadAll)
+            ->with('orderTypes',$orderTypes)
             ->withSections($sections)
             ->withCurrentMenu('trash')
+            ->withSearch($search)
             ->withUsers(User::find($userIds))
             ->withOperators(User::find($operators));
     }
@@ -238,9 +241,9 @@ class ThreadController extends Controller
     {
         DB::beginTransaction();
         try {
-            $thread->node->decrement('thread_count', 1);
-            $thread->user->decrement('thread_count', 1);
             $this->trash($thread);
+            $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
+            $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
             event(new ThreadWasTrashedEvent($thread));
             DB::commit();
         } catch (ValidationException $e) {

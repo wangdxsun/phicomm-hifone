@@ -47,12 +47,14 @@ class AddThreadCommandHandler
      */
     public function handle(AddThreadCommand $command)
     {
+        $body = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse($command->body));
+        $body = "<p>$body</p>".$command->images;
         $data = [
             'user_id'       => $command->user_id,
             'title'         => $command->title,
             'excerpt'       => Thread::makeExcerpt($command->body),
             'node_id'       => $command->node_id,
-            'body'          => app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse($command->body)),
+            'body'          => $body,
             'body_original' => $command->body,
             'created_at'    => Carbon::now()->toDateTimeString(),
             'updated_at'    => Carbon::now()->toDateTimeString(),
