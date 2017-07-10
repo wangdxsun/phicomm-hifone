@@ -12,6 +12,7 @@
 namespace Hifone\Http\Controllers\Dashboard;
 
 use AltThree\Validator\ValidationException;
+use Hifone\Hashing\PasswordHasher;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Role;
 use Hifone\Models\User;
@@ -21,13 +22,17 @@ use Input;
 
 class UserController extends Controller
 {
+    protected $hasher;
+
     /**
      * Creates a new node controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(PasswordHasher $hasher)
     {
+        $this->hasher = $hasher;
+
         View::share([
             'current_menu'  => 'users',
         ]);
@@ -81,6 +86,12 @@ class UserController extends Controller
         }
         try {
             \DB::transaction(function () use ($userData, $roleId) {
+                //创建用户密码
+                if (array_get($userData, 'password')) {
+                    $userData['salt'] = str_random(8);
+                    $userData['password'] = $this->hashPassword($userData['password'], $userData['salt']);
+                }
+
                 $user = User::create($userData);
                 $user->role_id = $roleId;
                 $this->updateOpLog($user, '创建用户');
@@ -108,13 +119,18 @@ class UserController extends Controller
     public function update(User $user)
     {
         $userData = Input::get('user');
+
         $roleId = Input::get('roleId');
-        if (array_get($userData, 'password')) {
-            $userData['salt'] = str_random(6);
-            $userData['password'] = $this->hasher->make($userData['password'], ['salt' => $userData['salt']]);
-        }
         try {
             \DB::transaction(function () use ($user, $userData, $roleId) {
+                //修改用户密码，如果未设置则跳过
+                if (array_get($userData, 'password')) {
+                    $userData['salt'] = $user->salt;
+                    $userData['password'] = $this->hashPassword($userData['password'], $userData['salt']);
+                } else {
+                    unset($userData['password']);
+                }
+
                 $user->update($userData);
                 $user->role_id = $roleId;
                 $this->updateOpLog($user, '修改用户信息');
@@ -152,5 +168,18 @@ class UserController extends Controller
         $user->role_id = ($user->role_id == Role::NO_LOGIN) ? Role::REGISTER_USER : Role::NO_LOGIN;
         $this->updateOpLog($user, $user->role_id ? '取消禁止登录' : '禁止登录');
         return Redirect::back()->withSuccess('修改成功');
+    }
+
+    /**
+     * hash user's raw password.
+     *
+     * @param string $password plain text form of user's password
+     * @param string $salt     salt
+     *
+     * @return string hashed password
+     */
+    private function hashPassword($password, $salt)
+    {
+        return $this->hasher->make($password, ['salt' => $salt]);
     }
 }

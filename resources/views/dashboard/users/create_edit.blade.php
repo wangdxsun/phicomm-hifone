@@ -43,12 +43,10 @@
                             <label for="user-credit">用户经验值</label>
                             <input type="number" class="form-control" name="user[score]" value="{{ isset($user) ? $user->score : 0 }}" min=0>
                         </div>
-                        @if (!isset($user))
                         <div class="form-group">
                             <label for="user-password">{{ trans('dashboard.users.password') }}</label>
                             <input type="password" name="user[password]" class="form-control" min="6" id="user-password">
                         </div>
-                        @endif
                     </fieldset>
                     <div class='form-group'>
                         <div class='btn-group'>
