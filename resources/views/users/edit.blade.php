@@ -20,7 +20,7 @@
         <ul class="nav nav-tabs" role="tablist">
           <li @if(!$tab) class="active" @endif><a href="{{ route('user.edit',['id'=>$user->id]) }}">{{ trans('hifone.users.info') }}</a></li>
           <li @if($tab=='avatar') class="active" @endif><a href="{{ route('user.edit',['id'=>$user->id,'tab'=>'avatar']) }}">{{ trans('hifone.users.avatar') }}</a></li>
-          <li @if($tab=='password') class="active" @endif><a href="{{ route('user.edit',['id'=>$user->id,'tab'=>'password']) }}">{{ trans('hifone.users.password') }}</a></li>
+          {{--<li @if($tab=='password') class="active" @endif><a href="{{ route('user.edit',['id'=>$user->id,'tab'=>'password']) }}">{{ trans('hifone.users.password') }}</a></li>--}}
         </ul>
         @if($tab == 'avatar')
         <form class="form-horizontal" method="post" action="/settings/update-avatar" enctype="multipart/form-data" id="avatar-form">
