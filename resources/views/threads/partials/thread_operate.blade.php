@@ -69,10 +69,10 @@
             {{--</a>--}}
         @endif
 
-        @if ( Auth::user() && (Auth::user()->can("manage_threads") || Auth::user()->id == $thread->user_id) )
-            <a id="thread-append-button" href="javascript:void(0);" title="{{ trans('hifone.appends.appends') }}" class="admin" data-toggle="modal" data-target="#exampleModal">
-                <i class="fa fa-plus"></i>
-            </a>
+        @if ( Auth::user() && (Auth::user()->can("manage_threads")))
+            {{--<a id="thread-append-button" href="javascript:void(0);" title="{{ trans('hifone.appends.appends') }}" class="admin" data-toggle="modal" data-target="#exampleModal">--}}
+                {{--<i class="fa fa-plus"></i>--}}
+            {{--</a>--}}
 
             <a id="thread-edit-button" href="{{ route('thread.edit', [$thread->id]) }}" title="{{ trans('forms.edit') }}" class="admin">
                 <i class="fa fa-pencil-square-o"></i>
