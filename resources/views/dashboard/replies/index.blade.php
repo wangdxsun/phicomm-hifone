@@ -50,13 +50,13 @@
                 <table class="table table-bordered table-striped table-condensed">
                     <tbody>
                     <tr class="head">
-                        <td class="first">#</td>
+                        <td style="width: 80px;">#</td>
                         <td>回帖内容</td>
-                        <td style="width: 250px">话题</td>
+                        <td style="width: 250px">帖子标题</td>
                         <td style="width: 70px;">板块</td>
                         <td style="width: 100px">回帖人</td>
                         <td style="width: 90px">回帖时间</td>
-                        <td>操作人</td>
+                        <td style="width: 100px">操作人</td>
                         <td style="width: 90px">操作时间</td>
                         <td style="width: 70px">操作</td>
                     </tr>
@@ -64,8 +64,10 @@
                         <tr>
                             <td>{{ $reply->id }}</td>
                             <td>
-                                {{ Str::substr($reply->body, 0, 100) }}
-                                @if(Str::length($reply->body) > 100)
+                                <div class="replyContent" >
+                                    {!! $reply->body!!}
+                                </div>
+                                @if(Str::length($reply->body) > 50 || Str::contains($reply->body,['<img']))
                                     <a data-toggle="collapse" href="#thread{{ $reply->id }}" aria-expanded="false">查看更多</a>
                                     <div class="collapse well" id="thread{{ $reply->id }}">{!! $reply->body !!}</div>
                                 @endif

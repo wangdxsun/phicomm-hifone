@@ -17,7 +17,7 @@
                 <table class="table table-bordered table-striped table-condensed">
                     <tbody>
                     <tr class="head">
-                        <td style="width: 30px;">#</td>
+                        <td style="width: 70px;">#</td>
                         <td style="width: 250px;">标题</td>
                         <td >帖子内容</td>
                         <td style="width: 70px;">节点</td>
@@ -30,8 +30,10 @@
                             <td>{{ $thread->id }}</td>
                             <td><a target="_blank" href="{{ $thread->url }}"><i class="{{ $thread->icon }}"></i> {{ $thread->title }}</a></td>
                             <td>
-                                {{ Str::substr($thread->body, 0, 100) }}
-                                @if(Str::length($thread->body) > 100)
+                                <div class="replyContent">
+                                    {!! $thread->body !!}
+                                </div>
+                                @if(Str::length($thread->body) > 50 || Str::contains($thread->body,['<img']))
                                     <a data-toggle="collapse" href="#thread{{ $thread->id }}" aria-expanded="false">查看更多</a>
                                     <div class="collapse well" id="thread{{ $thread->id }}">{!! $thread->body !!}</div>
                                 @endif

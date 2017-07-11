@@ -16,19 +16,17 @@
                 @include('partials.errors')
                 <div class="toolbar">
                     <form class="form-inline">
-                        <select class="form-control selectpicker" name="reply[thread_id]" style="max-width: 300px">
-                            <option value="" selected>全部帖子标题</option>
-                            @foreach ($threads as $thread)
-                                <option value="{{ $thread->id }}">{{ $thread->title }}</option>
-                            @endforeach
-                        </select>
-                        <select class="form-control selectpicker" name="reply[user_id]">
-                            <option value="" selected>全部回帖人</option>
-                            @foreach ($users as $user)
-                                <option value="{{ $user->id }}">{{ $user->username }}</option>
-                            @endforeach
-                        </select>
-                        <select class="form-control selectpicker" name="reply[last_op_user_id]">
+                        <div class="form-group">
+                            <input type="text" name="reply[thread_title]" class="form-control" placeholder="帖子标题"
+                                   @if (isset($search['thread_title']))
+                                   value="{{ $search['thread_title'] }}"
+                                    @endif >
+                            <input type="text" name="reply[username]" class="form-control" placeholder="回帖人"
+                                   @if (isset($search['username']))
+                                   value="{{ $search['username'] }}"
+                                    @endif >
+                        </div>
+                        <select class="form-control " name="reply[last_op_user_id]">
                             <option value="" selected>全部操作人</option>
                             @foreach ($operators as $operator)
                                 <option value="{{ $operator->id }}">{{ $operator->username }}</option>
@@ -37,18 +35,24 @@
                         <div class="form-group">
                             <input type="text" name="reply[body]" class="form-control" placeholder="回帖内容">
                         </div>
+                        <select class="form-control " name="reply[orderType]">
+                            <option value="" selected>排列方式</option>
+                            @foreach ($orderTypes as $key => $orderType)
+                                <option value="{{ $key }}">{{ $orderType }}</option>
+                            @endforeach
+                        </select>
                         <button class="btn btn-default">搜索</button>
                     </form>
                 </div>
                 <table class="table table-bordered table-striped table-condensed">
                     <tbody>
                     <tr class="head">
-                        <td class="first">#</td>
+                        <td style="width:80px">#</td>
                         <td >回帖内容</td>
-                        <td style="width:200px">话题</td>
-                        <td style="min-width: 100px">回帖人</td>
+                        <td style="width:200px">帖子标题</td>
+                        <td style="width: 100px">回帖人</td>
                         <td style="width: 90px">回帖时间</td>
-                        <td>操作人</td>
+                        <td style="width: 100px">操作人</td>
                         <td style="width: 100px">操作原因</td>
                         <td style="width: 90px">操作时间</td>
                         <td style="width: 50px">操作</td>
@@ -57,8 +61,10 @@
                         <tr>
                             <td>{{ $reply->id }}</td>
                             <td>
-                                {{ Str::substr($reply->body, 0, 100) }}
-                                @if(Str::length($reply->body) > 100)
+                                <div class="replyContent">
+                                    {!! $reply->body !!}
+                                </div>
+                                @if(Str::length($reply->body) > 50 || Str::contains($reply->body,['<img']))
                                     <a data-toggle="collapse" href="#thread{{ $reply->id }}" aria-expanded="false">查看更多</a>
                                     <div class="collapse well" id="thread{{ $reply->id }}">{!! $reply->body !!}</div>
                                 @endif

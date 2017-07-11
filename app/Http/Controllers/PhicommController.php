@@ -8,7 +8,9 @@
 
 namespace Hifone\Http\Controllers;
 
+use Carbon\Carbon;
 use Hifone\Events\User\UserWasAddedEvent;
+use Hifone\Events\User\UserWasLoggedinEvent;
 use Hifone\Http\Bll\PhicommBll;
 use Hifone\Models\Provider;
 use Hifone\Models\User;
@@ -96,6 +98,7 @@ class PhicommController extends Controller
                     ->withError('您已被系统管理员禁止登录');
             }
             Auth::loginUsingId($user->id);
+            event(new UserWasLoggedinEvent(Auth::user()));
             return Redirect::intended('/')
                 ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.login.success')));
         } else {
