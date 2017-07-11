@@ -46,7 +46,7 @@ class Reply extends BaseModel
         'user_id'   => 'int',
     ];
     public static $orderTypes = [
-        'id' => '回复ID',
+        'id' => '回复时间',
         'user_id'  => '回帖人',
     ];
 
@@ -124,13 +124,13 @@ class Reply extends BaseModel
                 });
             } elseif ($key == 'username') {
                 $query->whereHas('user', function ($query) use ($value){
-                    $query->where('username', $value);
+                    $query->where('username','like',"%$value%");
                 });
             } elseif ($key == 'body') {
                 $query->where('body', 'LIKE', "%$value%");
-            } else if ($key == 'date_start') {
+            } elseif ($key == 'date_start') {
                 $query->where('created_at', '>=', $value);
-            } else if ($key == 'date_end') {
+            } elseif ($key == 'date_end') {
                 $query->where('created_at', '<=', $value);
             } elseif ($key == 'orderType'){
                 $query->orderBy($value,'desc');

@@ -147,6 +147,7 @@ class ReplyController extends Controller
         $operators = array_unique(array_column($replyAll, 'last_op_user_id'));
         $orderTypes = Reply::$orderTypes;
 
+
         return View::make('dashboard.replies.trash')
             ->withPageTitle('回复回收站')
             ->with('orderTypes',$orderTypes)
@@ -157,11 +158,13 @@ class ReplyController extends Controller
             ->withOperators(User::find($operators));
     }
 
+    //从待审核列表审核通过回复
     public function postAudit(Reply $reply)
     {
         $thread = $reply->thread;
         $thread->last_reply_user_id = $reply->user_id;
-        $thread->updated_at = Carbon::now()->toDateTimeString();
+        //审核通过操作时不再更新帖子的修改时间，取最近一次审核通过回复的创建时间
+//        $thread->updated_at = Carbon::now()->toDateTimeString();
         $thread->save();
         event(new ReplyWasAddedEvent($reply));
         event(new RepliedWasAddedEvent($reply->user, $thread->user));
@@ -169,11 +172,13 @@ class ReplyController extends Controller
         return $this->passAudit($reply);
     }
 
+    //从回收站恢复回复
     public function recycle($reply)
     {
         return $this->passAudit($reply);
     }
 
+    //将回复状态修改为审核通过，回复所属帖子修改时间将被更新
     public function passAudit($reply)
     {
         DB::beginTransaction();
@@ -184,6 +189,13 @@ class ReplyController extends Controller
 
             $reply->status = 0;
             $this->updateOpLog($reply, '审核通过');
+
+            //把当前回复的创建时间和回复所属的帖子的修改时间进行比对
+            //如果回复创建时间更新，则替换到帖子修改时间。否则，什么也不做。
+            if ($reply->created_at > $reply->thread->updated_at) {
+                $reply->thread->updated_at = $reply->created_at;
+                $reply->thread->save();
+            }
 
             event(new ReplyWasAuditedEvent($reply));
             DB::commit();
@@ -223,6 +235,7 @@ class ReplyController extends Controller
         return Redirect::back()->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
     }
 
+    //将回复放到回收站
     public function trash(Reply $reply)
     {
         $reply->status = Reply::TRASH;

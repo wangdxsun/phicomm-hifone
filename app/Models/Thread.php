@@ -65,8 +65,8 @@ class Thread extends BaseModel implements TaggableInterface
         'user_id' => 'required|int',
     ];
     public static $orderTypes = [
-        'id' => '帖子ID',
-        'node_id' => '帖子节点',
+        'id' => '发帖时间',
+        'node_id' => '帖子板块',
         'user_id'  => '发帖人',
     ];
 
@@ -132,7 +132,7 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function generateLastReplyUserInfo()
     {
-        $lastReply = $this->replies()->recent()->first();
+        $lastReply = $this->replies()->visible()->recent()->first();
 
         $this->last_reply_user_id = $lastReply ? $lastReply->user_id : 0;
         $this->updated_at = $lastReply->created_time;
@@ -285,13 +285,15 @@ class Thread extends BaseModel implements TaggableInterface
         foreach ($searches as $key => $value) {
             if ($key == 'user_id') {
                 $query->whereHas('user', function ($query) use ($value){
-                    $query->where('username', $value);
+                    $query->where('username', 'like',"%$value%");
                 });
-            } else if ($key == 'body') {
+            } elseif ($key == 'body') {
                 $query->where('body', 'LIKE', "%$value%");
-            } else if ($key == 'date_start') {
+            } elseif ($key == 'title') {
+                $query->where('title', 'LIKE', "%$value%");
+            } elseif ($key == 'date_start') {
                 $query->where('created_at', '>=', $value);
-            } else if ($key == 'date_end') {
+            } elseif ($key == 'date_end') {
                 $query->where('created_at', '<=', $value);
             } elseif ($key == 'orderType'){
                 $query->orderBy($value,'desc');

@@ -22,7 +22,7 @@
                         <td >帖子内容</td>
                         <td style="width: 70px;">节点</td>
                         <td style="width: 50px;">发帖人</td>
-                        <td style="width: 90px;">时间</td>
+                        <td style="width: 90px;">发贴时间</td>
                         <td style="width: 70px;">操作</td>
                     </tr>
                     @foreach($threads as $thread)
