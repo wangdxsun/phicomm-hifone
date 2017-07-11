@@ -147,6 +147,7 @@ class ReplyController extends Controller
         $operators = array_unique(array_column($replyAll, 'last_op_user_id'));
         $orderTypes = Reply::$orderTypes;
 
+
         return View::make('dashboard.replies.trash')
             ->withPageTitle('回复回收站')
             ->with('orderTypes',$orderTypes)

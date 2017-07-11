@@ -65,8 +65,8 @@ class Thread extends BaseModel implements TaggableInterface
         'user_id' => 'required|int',
     ];
     public static $orderTypes = [
-        'id' => '帖子ID',
-        'node_id' => '帖子节点',
+        'id' => '发帖时间',
+        'node_id' => '帖子板块',
         'user_id'  => '发帖人',
     ];
 
@@ -285,10 +285,12 @@ class Thread extends BaseModel implements TaggableInterface
         foreach ($searches as $key => $value) {
             if ($key == 'user_id') {
                 $query->whereHas('user', function ($query) use ($value){
-                    $query->where('username', $value);
+                    $query->where('username', 'like',"%$value%");
                 });
             } else if ($key == 'body') {
                 $query->where('body', 'LIKE', "%$value%");
+            } else if ($key == 'title') {
+                $query->where('title', 'LIKE', "%$value%");
             } else if ($key == 'date_start') {
                 $query->where('created_at', '>=', $value);
             } else if ($key == 'date_end') {
