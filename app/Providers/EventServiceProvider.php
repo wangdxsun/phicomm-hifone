@@ -158,6 +158,7 @@ class EventServiceProvider extends ServiceProvider
 
         \Hifone\Events\User\UserWasLoggedinEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+            \Hifone\Handlers\Listeners\User\UserWasLoggedInHandler::class,
         ],
 
         \SocialiteProviders\Manager\SocialiteWasCalled::class => [

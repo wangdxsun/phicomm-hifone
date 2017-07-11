@@ -23,6 +23,7 @@ use Hifone\Models\Thread;
 use Hifone\Models\User;
 use Hifone\Services\Parsers\Markdown;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use View;
 use Input;
 use Redirect;
@@ -144,9 +145,12 @@ class ReplyController extends Controller
         $threadIds = array_unique(array_column($replyAll, 'thread_id'));
         $userIds = array_unique(array_column($replyAll, 'user_id'));
         $operators = array_unique(array_column($replyAll, 'last_op_user_id'));
+        $orderTypes = Reply::$orderTypes;
 
         return View::make('dashboard.replies.trash')
             ->withPageTitle('回复回收站')
+            ->with('orderTypes',$orderTypes)
+            ->withSearch($search)
             ->withReplies($replies)->withCurrentMenu('trash')
             ->withThreads(Thread::find($threadIds))
             ->withUsers(User::find($userIds))

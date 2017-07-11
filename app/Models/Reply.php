@@ -133,8 +133,9 @@ class Reply extends BaseModel
             } else if ($key == 'date_end') {
                 $query->where('created_at', '<=', $value);
             } elseif ($key == 'orderType'){
-                $query->orderBy($value);
+                $query->orderBy($value,'desc');
             }
         }
     }
+
 }

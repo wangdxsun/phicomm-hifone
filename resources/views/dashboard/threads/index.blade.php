@@ -63,16 +63,16 @@
             <table class="table table-bordered table-striped table-condensed">
             <tbody>
                 <tr class="head">
-                    <td class="first">#</td>
+                    <td style="width: 70px;">#</td>
                     <td>标题</td>
-                    <td>节点</td>
-                    <td>发帖人</td>
-                    <td>回帖</td>
-                    <td>查看</td>
-                    <td style="width: 150px">发帖时间</td>
-                    <td>操作人</td>
-                    <td style="width: 150px">操作时间</td>
-                    <td style="width: 110px">操作</td>
+                    <td style="width: 80px;">节点</td>
+                    <td style="width: 120px;">发帖人</td>
+                    <td style="width: 50px;">回帖</td>
+                    <td style="width: 50px;">查看</td>
+                    <td style="width: 150px;">发帖时间</td>
+                    <td style="width: 120px;">操作人</td>
+                    <td style="width: 150px;">操作时间</td>
+                    <td style="width: 110px;">操作</td>
                 </tr>
                 @foreach($threads as $thread)
                 <tr>
