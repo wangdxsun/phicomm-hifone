@@ -128,9 +128,9 @@ class Reply extends BaseModel
                 });
             } elseif ($key == 'body') {
                 $query->where('body', 'LIKE', "%$value%");
-            } else if ($key == 'date_start') {
+            } elseif ($key == 'date_start') {
                 $query->where('created_at', '>=', $value);
-            } else if ($key == 'date_end') {
+            } elseif ($key == 'date_end') {
                 $query->where('created_at', '<=', $value);
             } elseif ($key == 'orderType'){
                 $query->orderBy($value,'desc');

@@ -287,13 +287,13 @@ class Thread extends BaseModel implements TaggableInterface
                 $query->whereHas('user', function ($query) use ($value){
                     $query->where('username', 'like',"%$value%");
                 });
-            } else if ($key == 'body') {
+            } elseif ($key == 'body') {
                 $query->where('body', 'LIKE', "%$value%");
-            } else if ($key == 'title') {
+            } elseif ($key == 'title') {
                 $query->where('title', 'LIKE', "%$value%");
-            } else if ($key == 'date_start') {
+            } elseif ($key == 'date_start') {
                 $query->where('created_at', '>=', $value);
-            } else if ($key == 'date_end') {
+            } elseif ($key == 'date_end') {
                 $query->where('created_at', '<=', $value);
             } elseif ($key == 'orderType'){
                 $query->orderBy($value,'desc');
