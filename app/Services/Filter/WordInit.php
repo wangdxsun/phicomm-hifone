@@ -14,6 +14,7 @@ use DB;
 class WordInit
 {
     private $trie_tree;
+
     public function __construct() {
         $this->trie_tree = new TrieTree();
     }
@@ -23,7 +24,6 @@ class WordInit
         return $trie_data;
     }
     public function isContainBadWords($post){
-
         $flag = $this->trie_tree->contain($post, 0);
 
 		return $flag;

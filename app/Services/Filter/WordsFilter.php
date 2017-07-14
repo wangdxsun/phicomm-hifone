@@ -7,9 +7,11 @@ use DB;
 class WordsFilter
 {
     private $words_init;
+
     public function __construct() {
         $this->words_init = new WordInit();
     }
+
     public function wordsFilter($post){
         $words_banned=DB::table('words')->where('replacement','=','{BANNED}')->pluck('find');
         //$words_banned=DB::table('words')->where('replacement','=','禁止关键词')->pluck('find');
