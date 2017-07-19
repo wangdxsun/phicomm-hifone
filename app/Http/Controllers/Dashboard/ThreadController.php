@@ -184,6 +184,7 @@ class ThreadController extends Controller
 
     //批量审核通过帖子
     public function postPatchAudit() {
+        $count = 0;
         $thread_ids = Input::get('patch');
         if ($thread_ids != null) {
             DB::beginTransaction();
@@ -191,6 +192,7 @@ class ThreadController extends Controller
                 foreach ($thread_ids as $id) {
                     if (Thread::find($id)){
                         self::postAudit(Thread::find($id));
+                        $count++;
                     }
                 }
                 DB::commit();
@@ -198,7 +200,7 @@ class ThreadController extends Controller
                 DB::rollBack();
                 return Redirect::back()->withErrors($e->getMessageBag());
             }
-            return Redirect::back()->withSuccess('恭喜，批量操作成功！');
+            return Redirect::back()->withSuccess('恭喜，批量操作成功！'.'共'.$count.'条');
         } else {
             return Redirect::back()->withErrors('您未选中任何记录！');
         }
