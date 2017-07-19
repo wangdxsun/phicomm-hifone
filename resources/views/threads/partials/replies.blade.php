@@ -14,7 +14,7 @@
                     <span class="opts pull-right">
                         <span class="hideable">
                             {{--@if (Auth::user() && (Auth::user()->can("manage_threads") || Auth::user()->id == $reply->user_id) )--}}
-                                {{--<a class="fa fa-trash-o" id="reply-delete-{!! $reply->id !!}" data-method="delete"  href="javascript:void(0);" data-url="{!! route('reply.destroy', [$reply->id]) !!}" title="{!! trans('forms.delete') !!}"></a>--}}
+                            {{--<a class="fa fa-trash-o" id="reply-delete-{!! $reply->id !!}" data-method="delete"  href="javascript:void(0);" data-url="{!! route('reply.destroy', [$reply->id]) !!}" title="{!! trans('forms.delete') !!}"></a>--}}
                             {{--@endif--}}
                             <a class="fa fa-reply btn-reply2reply" data-floor={{ $index + 1 }} data-username="{{ $reply->user->username }}" href="#" title="回复 {!! $reply->user->username !!}"></a>
                         </span>

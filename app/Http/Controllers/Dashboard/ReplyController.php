@@ -158,6 +158,31 @@ class ReplyController extends Controller
             ->withOperators(User::find($operators));
     }
 
+
+    //批量审核通过回帖
+    public function postPatchAudit() {
+        $count = 0;
+        $reply_ids = Input::get('patch');
+        if ($reply_ids != null) {
+            DB::beginTransaction();
+            try {
+                foreach ($reply_ids as $id) {
+                    if (Reply::find($id)){
+                        self::postAudit(Reply::find($id));
+                        $count++;
+                    }
+                }
+                DB::commit();
+            } catch (ValidationException $e) {
+                DB::rollBack();
+                return Redirect::back()->withErrors($e->getMessageBag());
+            }
+            return Redirect::back()->withSuccess('恭喜，批量操作成功！'.'共'.$count.'条');
+        } else {
+            return Redirect::back()->withErrors('您未选中任何记录！');
+        }
+    }
+
     //从待审核列表审核通过回复
     public function postAudit(Reply $reply)
     {
