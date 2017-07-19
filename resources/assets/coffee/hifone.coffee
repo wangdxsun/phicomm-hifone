@@ -155,5 +155,25 @@ window.Hifone =
         ' '
       ]
 
+  selectAll : ->
+    $('#selectAll').click ->
+      selectAll = document.getElementById('selectAll')
+      cells = document.getElementsByName('patch[]')
+      if selectAll.checked
+        cell.checked = true for cell in cells
+      else
+        cell.checked = false for cell in cells
+
+  checkAll : ->
+    $('.checkAll').click ->
+      selectAll = document.getElementById('selectAll')
+      cells= document.getElementsByName("patch[]")
+      for cell in cells
+        if (!cell.checked)
+          selectAll.checked = false
+          break
+        selectAll.checked = true
+
+
 $ ->
   window._hifoneView = new HifoneView()

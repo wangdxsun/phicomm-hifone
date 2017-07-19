@@ -49,6 +49,9 @@ return [
             'title'   => '编辑话题',
             'success' => '话题更新成功.',
         ],
+        'patch' => [
+            'audit'   => '批量审核通过',
+        ],
     ],
     'replies' => [
         'replies' => '回帖',

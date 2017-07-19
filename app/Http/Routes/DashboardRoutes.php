@@ -45,6 +45,7 @@ class DashboardRoutes
             $router->get('reply/trash', 'ReplyController@trashView')->name('reply.trash');
             $router->get('report/audit', 'ReportController@audit')->name('report.audit');
             $router->post('thread/{thread}/audit', 'ThreadController@postAudit');
+            $router->post('thread/patchAudit', 'ThreadController@postPatchAudit');//patch audit
             $router->post('thread/{thread}/index/to/trash', 'ThreadController@indexToTrash');
             $router->post('thread/{thread}/audit/to/trash', 'ThreadController@auditToTrash');
             $router->post('reply/{reply}/audit', 'ReplyController@postAudit');

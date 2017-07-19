@@ -8,7 +8,7 @@
           {!! $reply->thread->title !!}
       </a>
       <span class="meta">
-         at <span class="timeago" title="{!! $reply->created_at !!}">{!! $reply->created_at !!}</span>
+         发表于 <span class="timeago" title="{!! $reply->created_at !!}">{!! $reply->created_at !!}</span>
       </span>
       <div class="reply-body markdown-reply content-body">
 {!! $reply->body !!}
