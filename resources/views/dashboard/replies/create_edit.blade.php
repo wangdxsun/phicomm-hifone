@@ -1,6 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('content')
+    @include('vendor.ueditor.assets')
 <div class="content-wrapper">
     <div class="header sub-header" id="general">
         <span class="uppercase">
@@ -22,10 +23,14 @@
                 <fieldset>
                     <div class="form-group">
                         <label>{{ trans('hifone.replies.body') }}</label>
-                        <div class='markdown-control'>
-                            <textarea name="reply[body]" class="form-control" rows="10">{{ isset($reply) ? $reply->body_original : null }}</textarea>
-                        </div>
+                        <script id="container" name="reply[body]" type="text/plain">{!!  isset($reply) ? $reply->body_original : null !!}</script>
                     </div>
+                    {{--<div class="form-group">--}}
+                        {{--<label>{{ trans('hifone.replies.body') }}</label>--}}
+                        {{--<div class='markdown-control'>--}}
+                            {{--<textarea name="reply[body]" class="form-control" rows="10">{{ isset($reply) ? $reply->body_original : null }}</textarea>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
                 </fieldset>
 
                 <div class='form-group'>
@@ -38,4 +43,22 @@
         </div>
     </div>
 </div>
+<!-- 实例化编辑器 -->
+<script type="text/javascript">
+    var ue = UE.getEditor('container',{
+        toolbars: [
+            ['bold', 'italic', 'underline', 'strikethrough', 'blockquote', 'insertunorderedlist', 'insertorderedlist', 'justifyleft','justifycenter', 'justifyright',  'link', 'insertimage', 'attachment','fullscreen']
+        ],
+        elementPathEnabled: false,
+        enableContextMenu: false,
+        autoClearEmptyNode:true,
+        wordCount:false,
+        imagePopup:false,
+        initialFrameHeight:500,
+        autotypeset:{ indent: true,imageBlockLine: 'center' }
+    });
+    ue.ready(function() {
+        ue.execCommand('serverparam', '_token', '{{ csrf_token() }}'); // 设置 CSRF token.
+    });
+</script>
 @stop

@@ -189,6 +189,7 @@ return [
         Hifone\Providers\RouteServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Barryvdh\Cors\ServiceProvider::class,
+        Overtrue\LaravelUEditor\UEditorServiceProvider::class,
     ],
 
     /*

@@ -15,6 +15,7 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
         'bd9634f2d41831496de0d3dfe4c94881' => __DIR__ . '/..' . '/symfony/polyfill-php56/bootstrap.php',
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
+        '841780ea2e1d6545ea3a253239d59c05' => __DIR__ . '/..' . '/qiniu/php-sdk/src/Qiniu/functions.php',
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
         'e7223560d890eab89cda23685e711e2c' => __DIR__ . '/..' . '/psy/psysh/src/Psy/functions.php',
         '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
@@ -76,6 +77,10 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
             'SocialiteProviders\\Manager\\' => 27,
             'SocialiteProviders\\GitLab\\' => 26,
         ),
+        'Q' => 
+        array (
+            'Qiniu\\' => 6,
+        ),
         'P' => 
         array (
             'Psy\\' => 4,
@@ -83,6 +88,12 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
             'Psr\\Http\\Message\\' => 17,
             'Predis\\' => 7,
             'PhpParser\\' => 10,
+        ),
+        'O' => 
+        array (
+            'Overtrue\\LaravelUEditor\\' => 24,
+            'Overtrue\\LaravelFilesystem\\Qiniu\\' => 33,
+            'Overtrue\\Flysystem\\Qiniu\\' => 25,
         ),
         'M' => 
         array (
@@ -284,6 +295,10 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
         array (
             0 => __DIR__ . '/..' . '/socialiteproviders/gitlab/src',
         ),
+        'Qiniu\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/qiniu/php-sdk/src/Qiniu',
+        ),
         'Psy\\' => 
         array (
             0 => __DIR__ . '/..' . '/psy/psysh/src/Psy',
@@ -303,6 +318,18 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
         'PhpParser\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
+        ),
+        'Overtrue\\LaravelUEditor\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/overtrue/laravel-ueditor/src',
+        ),
+        'Overtrue\\LaravelFilesystem\\Qiniu\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/overtrue/laravel-filesystem-qiniu/src',
+        ),
+        'Overtrue\\Flysystem\\Qiniu\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/overtrue/flysystem-qiniu/src',
         ),
         'Monolog\\' => 
         array (
@@ -593,7 +620,7 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
         'CreateLocationsTable' => __DIR__ . '/../..' . '/database/migrations/2016_06_01_233353_create_locations_table.php',
         'CreateMessagesTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_28_175710_create_messages_table.php',
         'CreateMessengerThreadsTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_28_175635_create_messenger_threads_table.php',
-        'CreateNodeBannersTable' => __DIR__ . '/../..',
+        'CreateNodeBannersTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_15_132624_create_daily_stats_table.php',
         'CreateNodesTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_29_013301_create_nodes_table.php',
         'CreateNotificationsTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_29_013615_create_notifications_table.php',
         'CreatePagesTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_23_153224_create_pages_table.php',
