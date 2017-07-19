@@ -58,6 +58,9 @@ return [
         'edit'    => [
             'title' => '编辑回贴',
         ],
+        'patch' => [
+            'audit'   => '批量审核通过',
+        ],
     ],
 
     'sections' => [

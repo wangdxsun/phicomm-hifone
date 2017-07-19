@@ -155,6 +155,7 @@ window.Hifone =
         ' '
       ]
 
+  # 批量操作，全选
   selectAll : ->
     $('#selectAll').click ->
       selectAll = document.getElementById('selectAll')
@@ -164,6 +165,7 @@ window.Hifone =
       else
         cell.checked = false for cell in cells
 
+  # 批量操作，验证全选
   checkAll : ->
     $('.checkAll').click ->
       selectAll = document.getElementById('selectAll')
