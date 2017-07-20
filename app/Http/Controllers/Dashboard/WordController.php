@@ -41,12 +41,17 @@ class WordController extends Controller
      */
     public function index()
     {
-        $search = array_filter(Input::get('query', []), function($value) {
+        $search = array_filter(Input::get('word', []), function($value) {
             return !empty($value);
         });
+        $types = Word::$types;
+        $statuses = Word::$statuses;
         $words = Word::orderBy('created_at', 'desc')->search($search)->paginate(20);
         return View::make('dashboard.words.index')
             ->withPageTitle(trans('dashboard.words.word'))
+            ->with('statuses',$statuses)
+            ->withTypes($types)
+            ->withSearch($search)
             ->withWords($words);
     }
 

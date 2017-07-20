@@ -44,8 +44,23 @@
                     </a>
                     <form class="form-inline pull-right">
                         <div class="form-group">
-                            <input type="text" name="query[type]" class="form-control" value="" placeholder="类型">
+                            <input type="text" name="word[word]" class="form-control" placeholder="敏感词汇"
+                                   @if (isset($search['word']))
+                                   value="{{ $search['word'] }}"
+                                    @endif >
                         </div>
+                        <select class="form-control " name="word[status]" style="width: 200px">
+                            <option value="" selected>过滤状态</option>
+                            @foreach ($statuses as $status)
+                                <option value="{{ $status }}">{{ $status }}</option>
+                            @endforeach
+                        </select>
+                        <select class="form-control " name="word[type]" style="width: 200px">
+                            <option value="" selected>词语分类</option>
+                            @foreach ($types as $type)
+                                <option value="{{ $type }}">{{ $type }}</option>
+                            @endforeach
+                        </select>
                         <button class="btn btn-default">搜索</button>
                     </form>
                 </div>
@@ -68,11 +83,11 @@
                         <tr>
                             <td>□</td>
                             <td>{{ $word->id }}</td>
-                            <td>{{ $word->find }}</td>
+                            <td>{{ $word->word }}</td>
+                            <td>{{ $word->status }}</td>
                             <td>{{ $word->replacement }}</td>
-                            <td>{{ $word->substitute }}</td>
                             <td>{{$word->type}}</td>
-                            <td>{{ $word->admin }}</td>
+                            <td>{{ $word->last_op_user_id }}</td>
                             <td style="width:15%">{{ $word->created_at }}</td>
                             <td style="width:10%">
                                 <span class="modify_info" data-name="{{$word->id}},{{$word->find}},{{$word->substitute}}"><i class="fa fa-pencil"></i></span>
