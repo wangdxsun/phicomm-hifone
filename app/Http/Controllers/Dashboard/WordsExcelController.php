@@ -10,6 +10,7 @@ use Input;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Redirect;
 use Hifone\Models\Word;
+use Illuminate\Support\Facades\Cache;
 
 class WordsExcelController extends  Controller
 {
@@ -25,6 +26,7 @@ class WordsExcelController extends  Controller
         })->export('xls');
 
     }
+
     public function import()
     {
         if(Input::hasFile('import_file')){
@@ -38,7 +40,20 @@ class WordsExcelController extends  Controller
             if(strtolower($file_type =='xls') || strtolower($file_type =='xlsx') ){
                 $data = Excel::load($path, function($reader) {})->all();
                 if(!empty($data) && $data->count()){
+                    $insert=[];
+                    //放入缓存
+                    $words = Word::all()->pluck('word');
+                    foreach ($words as $key => $value) {
+                        Cache::put($value, $value, 1);
+                    }
                     foreach ($data as $key => $value) {
+                        //删除重复敏感词数据库记录
+                        if (Cache::has($value->word)) {
+                            Word::where('word',$value->word)->delete();
+                            Cache::pull($value->word);
+                        }
+//                        dd(Word::limit(5)->get()->pluck('word'));//pluck返回集合
+//                        && !array_search($value->word, $insert)
                         if(!empty($value->word)){
                             $insert[] = [
                                 'last_op_user_id' => $value->last_op_user_id,
@@ -51,9 +66,7 @@ class WordsExcelController extends  Controller
                             ];
                         }
                     }
-                    foreach ($insert as $key =>$value){
-                        Word::create($value);
-                    }
+                    Word::insert($insert);//批量创建
                     return Redirect::route('dashboard.word.index')
                         ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), '导入成功'));
 

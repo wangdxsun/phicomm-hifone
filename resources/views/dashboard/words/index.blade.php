@@ -1,10 +1,11 @@
 @extends('layouts.dashboard')
 
 @section('content')
-    <div class="header fixed">
-        <span class="uppercase">
-             <i class="fa fa-filter"></i>{{ trans('dashboard.words.word') }}
-        </span>
+    <div class="content-wrapper">
+        <div class="header sub-header">
+             <i class="fa fa-filter pull-left"></i>{{ trans('dashboard.words.word') }}
+        </div>
+
         <a class="btn btn-sm btn-success pull-right" style="margin-left: 15px;" href="{{ route('dashboard.check.check') }}">
             敏感词检测
         </a>
@@ -25,11 +26,8 @@
             </div>
         </form>
 
-        <div class="clearfix"></div>
-    </div>
-    <div class="content-wrapper header-fixed">
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-12 toolbar">
                 <div>
                     <form class="form-inline pull-right">
                         {!! csrf_field() !!}
@@ -59,6 +57,10 @@
                     <div class="btn btn-danger btn-confirm-action">
                         {{ trans('dashboard.words.edit.batch_del') }}
                     </div>
+                    @if (isset($word_count))
+                        <label>{!! '共计'.$word_count.'条' !!}</label>
+                    @endif
+
                     @include('partials.errors')
                     <table class="table table-bordered table-striped table-condensed">
                     <tbody>
