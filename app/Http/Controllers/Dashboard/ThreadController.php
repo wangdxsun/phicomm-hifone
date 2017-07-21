@@ -62,22 +62,16 @@ class ThreadController extends Controller
             ->withSections($sections);
     }
 
-    /**
-     * Shows the edit thread view.
-     *
-     * @param int $id
-     *
-     * @return \Illuminate\View\View
-     */
     public function edit(Thread $thread)
     {
         $sections = Section::orderBy('order')->get();
 
+        $menu = $thread->status == 0 ? 'index' : 'audit';
         return View::make('dashboard.threads.create_edit')
             ->withNode($thread->node)
             ->withSections($sections)
             ->withThread($thread)
-            ->withCurrentMenu('index');
+            ->withCurrentMenu($menu);
     }
 
     /**

@@ -34,8 +34,23 @@
                     <form class="form-inline pull-right">
                         {!! csrf_field() !!}
                         <div class="form-group">
-                            <input type="text" name="query[type]" class="form-control" value="" placeholder="词语分类">
+                            <input type="text" name="word[word]" class="form-control" placeholder="敏感词汇"
+                                   @if (isset($search['word']))
+                                   value="{{ $search['word'] }}"
+                                    @endif >
                         </div>
+                        <select class="form-control " name="word[status]" style="width: 200px">
+                            <option value="" selected>过滤状态</option>
+                            @foreach ($statuses as $status)
+                                <option value="{{ $status }}">{{ $status }}</option>
+                            @endforeach
+                        </select>
+                        <select class="form-control " name="word[type]" style="width: 200px">
+                            <option value="" selected>词语分类</option>
+                            @foreach ($types as $type)
+                                <option value="{{ $type }}">{{ $type }}</option>
+                            @endforeach
+                        </select>
                         <button class="btn btn-default">搜索</button>
                     </form>
                 </div>
