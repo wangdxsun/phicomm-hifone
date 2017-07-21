@@ -160,9 +160,9 @@ class ReplyController extends Controller
 
 
     //批量审核通过回帖
-    public function postPatchAudit() {
+    public function postBatchAudit() {
         $count = 0;
-        $reply_ids = Input::get('patch');
+        $reply_ids = Input::get('batch');
         if ($reply_ids != null) {
             DB::beginTransaction();
             try {

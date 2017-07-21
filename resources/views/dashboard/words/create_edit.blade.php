@@ -29,17 +29,17 @@
                     </div>
                     <div class="form-group">
                         <label>{{ trans('dashboard.words.content') }}</label>
-                        {!! Form::text('word[find]', isset($word) ? $word->find : null, ['class' => 'form-control', 'id' => 'word-find', 'placeholder' => '']) !!}
+                        {!! Form::text('word[word]', isset($word) ? $word->word : null, ['class' => 'form-control', 'id' => 'word-find', 'placeholder' => '']) !!}
                     </div>
                     <div class="form-group">
                         <label>{{ trans('dashboard.words.action.title') }}</label>
-                        {!!  Form::select('word[replacement]', ['审核关键词' => trans('dashboard.words.action.type_1'),'禁止关键词' => trans('dashboard.words.action.type_2'),
+                        {!!  Form::select('word[status]', ['审核关键词' => trans('dashboard.words.action.type_1'),'禁止关键词' => trans('dashboard.words.action.type_2'),
                              '替换关键词' =>trans('dashboard.words.action.type_3')], null,
-                             ['class' => 'form-control', 'id' => 'word-replacement', 'placeholder' => isset($word) ? $word-> replacement: '—过滤状态—'])!!}
+                             ['class' => 'form-control', 'id' => 'word-replacement', 'placeholder' => isset($word) ? $word-> status: '—过滤状态—'])!!}
                     </div>
                     <div class="form-group">
-                        <label>{{ trans('dashboard.words.substitute') }}</label>
-                        {!! Form::text('word[substitute]', isset($word) ? $word->substitute : null, ['class' => 'form-control', 'id' => 'word-substitute', 'placeholder' => '']) !!}
+                        <label>{{ trans('dashboard.words.replacement') }}</label>
+                        {!! Form::text('word[replacement]', isset($word) ? $word->replacement : null, ['class' => 'form-control', 'id' => 'word-substitute', 'placeholder' => '']) !!}
                     </div>
                 </fieldset>
                 <div class="row">

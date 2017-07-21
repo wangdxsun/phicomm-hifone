@@ -13,12 +13,12 @@
         @endif
         <div class="row">
             <div class="col-sm-12">
-                <form class="form-inline" method="post" action="/dashboard/thread/patchAudit">
+                <form class="form-inline" method="post" action="/dashboard/thread/batchAudit">
                 {!! csrf_field() !!}
                 @include('partials.errors')
                 <table class="table table-bordered table-striped table-condensed">
                     <button class="btn btn-default">
-                        {{trans('dashboard.threads.patch.audit')}}</button>
+                        {{trans('dashboard.threads.batch.audit')}}</button>
                     <tbody>
                     <tr class="head">
                         <td style="width: 30px;"><input id="selectAll" type="checkbox"></td>
@@ -32,7 +32,7 @@
                     </tr>
                     @foreach($threads as $thread)
                         <tr>
-                            <td><input class="checkAll" type="checkbox" name="patch[]" value="{{ $thread->id }}"></td>
+                            <td><input class="checkAll" type="checkbox" name="batch[]" value="{{ $thread->id }}"></td>
                             <td>{{ $thread->id }}</td>
                             <td><a target="_blank" href="{{ $thread->url }}"><i class="{{ $thread->icon }}"></i> {{ $thread->title }}</a></td>
                             <td>

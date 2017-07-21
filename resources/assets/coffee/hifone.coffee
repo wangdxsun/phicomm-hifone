@@ -159,7 +159,7 @@ window.Hifone =
   selectAll : ->
     $('#selectAll').click ->
       selectAll = document.getElementById('selectAll')
-      cells = document.getElementsByName('patch[]')
+      cells = document.getElementsByName('batch[]')
       if selectAll.checked
         cell.checked = true for cell in cells
       else
@@ -169,7 +169,7 @@ window.Hifone =
   checkAll : ->
     $('.checkAll').click ->
       selectAll = document.getElementById('selectAll')
-      cells= document.getElementsByName("patch[]")
+      cells= document.getElementsByName("batch[]")
       for cell in cells
         if (!cell.checked)
           selectAll.checked = false

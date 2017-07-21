@@ -45,11 +45,11 @@ class DashboardRoutes
             $router->get('reply/trash', 'ReplyController@trashView')->name('reply.trash');
             $router->get('report/audit', 'ReportController@audit')->name('report.audit');
             $router->post('thread/{thread}/audit', 'ThreadController@postAudit');
-            $router->post('thread/patchAudit', 'ThreadController@postPatchAudit');//patch audit thread
+            $router->post('thread/batchAudit', 'ThreadController@postBatchAudit');//batch audit thread
             $router->post('thread/{thread}/index/to/trash', 'ThreadController@indexToTrash');
             $router->post('thread/{thread}/audit/to/trash', 'ThreadController@auditToTrash');
             $router->post('reply/{reply}/audit', 'ReplyController@postAudit');
-            $router->post('reply/patchAudit', 'ReplyController@postPatchAudit');//patch audit reply
+            $router->post('reply/batchAudit', 'ReplyController@postBatchAudit');//batch audit reply
             $router->post('reply/{reply}/audit/to/trash', 'ReplyController@auditToTrash');
             $router->post('reply/{reply}/index/to/trash', 'ReplyController@indexToTrash');
             $router->post('reply/{reply}/pin', 'ReplyController@pin');
@@ -70,6 +70,7 @@ class DashboardRoutes
             $router->get('wordsExcel/export','WordsExcelController@export')->name('wordsExcel.export');
             $router->post('wordsExcel/import','WordsExcelController@import');
             $router->post('word/editInfo', 'WordController@editInfo');
+            $router->post('word/batchDestroy', 'WordController@batchDestroy');
             $router->get('check/check', 'CheckController@check')->name('check.check');
 
             // Settings

@@ -69,10 +69,10 @@ class WordController extends Controller
     public function store()
     {
         $wordData = Request::get('word');
-        $wordData['admin'] = '管理员';
         $wordData['created_at'] = date('Y-m-d H:i:s');
         try {
-            Word::create($wordData);
+            $word = Word::create($wordData);
+            $this ->updateOpLog($word, "添加敏感词");
         } catch (ValidationException $e) {
 
             return Redirect::route('dashboard.word.create')
@@ -108,12 +108,38 @@ class WordController extends Controller
         }
     }
 
-
     public function update(Word $word)
     {
     }
+
+    //批量删除敏感词
+    public function batchDestroy(){
+        $count = 0;
+        $word_ids = Input::get('batch');
+        if ($word_ids != null) {
+            DB::beginTransaction();
+            try {
+                foreach ($word_ids as $id) {
+                    if (Word::find($id)){
+                        self::destroy(Word::find($id));
+                        $count++;
+                    }
+                }
+                DB::commit();
+            } catch (ValidationException $e) {
+                DB::rollBack();
+                return Redirect::back()->withErrors($e->getMessageBag());
+            }
+            return Redirect::back()->withSuccess('恭喜，批量删除成功！'.'共'.$count.'条');
+        } else {
+            return Redirect::back()->withErrors('您未选中任何记录！');
+        }
+
+    }
+
     public function destroy(Word $word)
     {
+        $this->updateOpLog($word,"删除敏感词");
         $word->delete();
         return Redirect::route('dashboard.word.index')
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));

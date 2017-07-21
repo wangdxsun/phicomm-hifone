@@ -33,6 +33,7 @@ class Log extends BaseModel
         'Hifone\Models\User' => '用户',
         'Hifone\Models\Carousel' => 'banner',
         'Hifone\Models\Report' => '举报',
+        'Hifone\Models\Word' => '敏感词',
     ];
 
     /**
@@ -70,6 +71,8 @@ class Log extends BaseModel
                 return 'banner';
             case Node::class:
                 return '板块';
+            case Word::class:
+                return '敏感词';
             default:
                 return $this->logable_type;
         }

@@ -19,14 +19,14 @@ class Word extends BaseModel
      * @var string[]
      */
     protected $fillable = [
-        'admin',
+        'last_op_user_id',
         'type',
-        'find',
+        'word',
+        'status',
         'replacement',
-        'substitute',
-        'extra',
         'created_at',
         /*'updated_at'*/
+        'last_op_time',
     ];
 
     /**
@@ -36,8 +36,13 @@ class Word extends BaseModel
      */
     public $rules = [
         'type'       => 'required',
-        'find'       => 'required|min:1',
-        'replacement'=> 'required|min:1'
+        'word'       => 'required|min:1',
+        'status'     => 'required|min:1'
     ];
+
+    public function lastOpUser()
+    {
+        return $this->belongsTo(User::class, 'last_op_user_id');
+    }
 
 }
