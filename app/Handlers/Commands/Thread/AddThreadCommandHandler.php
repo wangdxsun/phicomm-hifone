@@ -47,8 +47,10 @@ class AddThreadCommandHandler
      */
     public function handle(AddThreadCommand $command)
     {
+
         $body = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse($command->body));
-        $body = "<p>$body</p>".$command->images;
+        $body = app('parser.markdown')->convertMarkdownToHtml(app('parser.emotion')->parse($body));
+        $body = "$body".$command->images;
         $data = [
             'user_id'       => $command->user_id,
             'title'         => $command->title,
