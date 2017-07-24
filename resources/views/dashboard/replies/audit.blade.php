@@ -13,12 +13,12 @@
 @endif
 <div class="row">
     <div class="col-sm-12">
-        <form class="form-inline" method="post" action="/dashboard/reply/patchAudit">
+        <form class="form-inline" method="post" action="/dashboard/reply/batchAudit">
         {!! csrf_field() !!}
         @include('partials.errors')
         <table class="table table-bordered table-striped table-condensed">
             <button class="btn btn-default">
-                {{trans('dashboard.replies.patch.audit')}}</button>
+                {{trans('dashboard.replies.batch.audit')}}</button>
         <tbody>
             <tr class="head">
                 <td style="width: 30px;"><input id="selectAll" type="checkbox"></td>
@@ -31,7 +31,7 @@
             </tr>
             @foreach($replies as $reply)
             <tr>
-                <td><input class="checkAll" type="checkbox" name="patch[]" value="{{ $reply->id }}"></td>
+                <td><input class="checkAll" type="checkbox" name="batch[]" value="{{ $reply->id }}"></td>
                 <td id="taId">{{ $reply->id }}</td>
                 <td>
                     <div class="replyContent" >

@@ -175,9 +175,9 @@ class ThreadController extends Controller
     }
 
     //批量审核通过帖子
-    public function postPatchAudit() {
+    public function postBatchAudit() {
         $count = 0;
-        $thread_ids = Input::get('patch');
+        $thread_ids = Input::get('batch');
         if ($thread_ids != null) {
             DB::beginTransaction();
             try {

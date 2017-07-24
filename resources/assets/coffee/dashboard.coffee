@@ -19,6 +19,7 @@ window.DashboardView = Backbone.View.extend
     self.initSortable()
     self.initSidebarToggle()
     self.initUploadImage()
+    self.initDeleteWarn()
 
   initSidebarToggle: ->
     $('.sidebar-toggler').click (e) ->
@@ -74,3 +75,19 @@ window.DashboardView = Backbone.View.extend
           $('.btn-upload').removeAttr 'disabled'
       }, 'json'
       false
+
+  initDeleteWarn: ->
+    $('.btn-confirm-action').click ->
+      $form = $('#batchForm')
+      $title = 'Confirm your action'
+      $text = 'Are you sure you want to do this?'
+      if $(this).hasClass('btn-confirm-action')
+        swal {
+          type: 'warning'
+          title: $title
+          text: $text
+          confirmButtonColor: '#FF6F6F'
+          showCancelButton: true
+        }, ->
+          $form.submit()
+

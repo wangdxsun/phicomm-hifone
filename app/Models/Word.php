@@ -22,10 +22,11 @@ class Word extends BaseModel
         'last_op_user_id',
         'type',
         'word',
-        'replacement',
         'status',
+        'replacement',
         'created_at',
         /*'updated_at'*/
+        'last_op_time',
     ];
 
     /**
@@ -36,8 +37,13 @@ class Word extends BaseModel
     public $rules = [
         'type'       => 'required',
         'word'       => 'required|min:1',
-        'status'=> 'required|min:1'
+        'status'     => 'required|min:1'
     ];
+
+    public function lastOpUser()
+    {
+        return $this->belongsTo(User::class, 'last_op_user_id');
+    }
 
     public static $statuses = [
         '替换关键词',
