@@ -36,10 +36,12 @@ body.dashboard {
                     display: block;
                 }
             }
-            img {
-                //max-width: 650px;
-                //max-height: 700px;
-                width: 100%;
+            .collapse {
+                img {
+                    max-width: 650px;
+                    //max-height: 700px;
+                    //width: 100%;
+                }
             }
         }
         .header {

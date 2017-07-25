@@ -24,7 +24,6 @@ class ParseAt
     public function parse($body)
     {
         $this->body_original = $body;
-
         $this->usernames = $this->getUsernames();
 
         count($this->usernames) > 0 && $this->users = User::whereIn('username', $this->usernames)->get();
@@ -50,11 +49,11 @@ class ParseAt
 
     protected function getUsernames()
     {
-        preg_match_all("/(\S*)\@([^\r\n\s]*)/i", $this->body_original, $atlist_tmp);
+        preg_match_all("/\@([^@<\r\n\s]*)/i", $this->body_original, $atlist_tmp);
         $usernames = [];
 
-        foreach ($atlist_tmp[2] as $k => $v) {
-            if ($atlist_tmp[1][$k] || strlen($v) > 25) {
+        foreach ($atlist_tmp[1] as $k => $v) {
+            if (strlen($v) > 25) {
                 continue;
             }
             $usernames[] = $v;

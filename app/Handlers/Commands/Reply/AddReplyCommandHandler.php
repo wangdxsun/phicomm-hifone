@@ -47,10 +47,12 @@ class AddReplyCommandHandler
      */
     public function handle(AddReplyCommand $command)
     {
+        $body = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse($command->body));
+        $body = app('parser.markdown')->convertMarkdownToHtml(app('parser.emotion')->parse($body));
         $data = [
             'user_id'       => $command->user_id,
             'thread_id'     => $command->thread_id,
-            'body'          => app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse($command->body)),
+            'body'          => $body,
             'body_original' => $command->body,
             'created_at'    => Carbon::now()->toDateTimeString(),
             'updated_at'    => Carbon::now()->toDateTimeString(),

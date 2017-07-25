@@ -1,22 +1,23 @@
 @extends('layouts.dashboard')
 
 @section('content')
-    <div class="header fixed">
-        <div class="sidebar-toggler visible-xs">
-            <i class="fa fa-navicon"></i>
+    <div class="content-wrapper">
+        <div class="header sub-header">
+             <i class="fa fa-filter pull-left"></i>{{ trans('dashboard.words.word') }}
         </div>
-        <span class="uppercase">
-             <i class="fa fa-filter"></i>  {{ trans('dashboard.words.word') }}
-        </span>
+
         <a class="btn btn-sm btn-success pull-right" style="margin-left: 15px;" href="{{ route('dashboard.check.check') }}">
             敏感词检测
         </a>
-
         <a class="btn btn-sm btn-success pull-right" style="margin-left: 15px;" href="{{ route('dashboard.word.create') }}">
             {{trans('dashboard.words.add.title') }}
         </a>
+        <a class="btn btn-sm btn-success pull-right" style="margin-left: 15px;" href="{{ route('dashboard.wordsExcel.export') }}">
+            {{trans('dashboard.words.edit.batch_out') }}
+        </a>
         <form action="{{ URL('dashboard/wordsExcel/import')}}"  id="importExcel" method="POST" class="form-inline pull-right"
               enctype='multipart/form-data'>
+            {!! csrf_field() !!}
             <div class="">
                 <div class="btn btn-sm btn-success head_portrait">
                     <span>批量导入</span>
@@ -24,58 +25,68 @@
                 <input type="file" name="import_file" id="import" onChange="commitForm()" class="hide"/>
             </div>
         </form>
-        <div class="clearfix"></div>
-    </div>
-    <div class="content-wrapper header-fixed">
+
         <div class="row">
-            <div class="col-sm-12">
-                <div class="toolbar">
-                    <span class="" style="margin-left: 6px;" href="">
-                        □
-                    </span>
-                    <span class="" href="">
-                        全选
-                    </span>
-                    <a class="" style="margin-left: 20px;" href="{{ route('dashboard.wordsExcel.export') }}">
-                        {{trans('dashboard.words.edit.batch_out') }}
-                    </a>
-                    <a class="" style="margin-left: 20px;" href="">
-                        {{ trans('dashboard.words.edit.batch_del') }}
-                    </a>
+            <div class="col-sm-12 toolbar">
+                <div>
                     <form class="form-inline pull-right">
+                        {!! csrf_field() !!}
                         <div class="form-group">
-                            <input type="text" name="query[type]" class="form-control" value="" placeholder="类型">
+                            <input type="text" name="word[word]" class="form-control" placeholder="敏感词汇"
+                                   @if (isset($search['word']))
+                                   value="{{ $search['word'] }}"
+                                    @endif >
                         </div>
+                        <select class="form-control " name="word[status]" style="width: 200px">
+                            <option value="" selected>过滤状态</option>
+                            @foreach ($statuses as $status)
+                                <option value="{{ $status }}">{{ $status }}</option>
+                            @endforeach
+                        </select>
+                        <select class="form-control " name="word[type]" style="width: 200px">
+                            <option value="" selected>词语分类</option>
+                            @foreach ($types as $type)
+                                <option value="{{ $type }}">{{ $type }}</option>
+                            @endforeach
+                        </select>
                         <button class="btn btn-default">搜索</button>
                     </form>
                 </div>
+                <form class="form-inline" method="post" action="/dashboard/word/batchDestroy" id="batchForm">
+                    {!! csrf_field() !!}
+                    <div class="btn btn-danger btn-confirm-action">
+                        {{ trans('dashboard.words.edit.batch_del') }}
+                    </div>
+                    @if (isset($word_count))
+                        <label>{!! '共计'.$word_count.'条' !!}</label>
+                    @endif
 
-                @include('partials.errors')
-                <table class="table table-bordered table-striped table-condensed">
+                    @include('partials.errors')
+                    <table class="table table-bordered table-striped table-condensed">
                     <tbody>
                     <tr class="head">
-                        <td class="first">□</td>
+                        <td style="width: 30px;"><input id="selectAll" type="checkbox"></td>
                         <td>编号</td>
                         <td style="width:20%">敏感词汇</td>
                         <td>过滤状态</td>
                         <td>替换后的词语</td>
                         <td>词语分类</td>
                         <td>操作人</td>
-                        <td>时间</td>
-                        <td>操作</td>
+                        <td style="width:15%">时间</td>
+                        <td style="width:5%">操作</td>
                     </tr>
                     @foreach($words as $word)
                         <tr>
-                            <td>□</td>
+                            <td><input class="checkAll" type="checkbox" name="batch[]" value="{{ $word->id }}"></td>
                             <td>{{ $word->id }}</td>
-                            <td>{{ $word->find }}</td>
+                            <td>{{ $word->word }}</td>
+                            <td>{{ $word->status }}</td>
                             <td>{{ $word->replacement }}</td>
-                            <td>{{ $word->substitute }}</td>
-                            <td>{{$word->type}}</td>
-                            <td>{{ $word->admin }}</td>
-                            <td style="width:15%">{{ $word->created_at }}</td>
-                            <td style="width:10%">
-                                <span class="modify_info" data-name="{{$word->id}},{{$word->find}},{{$word->substitute}}"><i class="fa fa-pencil"></i></span>
+                            <td>{{ $word->type}}</td>
+                            <td><a href="{{ $word->lastOpUser->url }}" target="_blank">{{ $word->lastOpUser->username }}</a></td>
+                            <td style="width:15%">{{ $word->last_op_time }}</td>
+                            <td style="width:5%">
+                                <span class="modify_info" data-name="{{$word->id}},{{$word->word}},{{$word->replacement}}"><i class="fa fa-pencil"></i></span>
                                 <a data-url="{{ route('dashboard.word.destroy',['id'=>$word->id]) }}" data-method="delete" class="confirm-action"><i class="fa fa-trash"></i></a>
                             </td>
 
@@ -83,7 +94,9 @@
                     @endforeach
                     </tbody>
                 </table>
+                </form>
                 <!-- Modal -->
+                @if(count($words) > 0)
                 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -108,18 +121,18 @@
                                         </div>
                                         <div class="form-group">
                                             <label>{{ trans('dashboard.words.content') }}*</label>
-                                            {!! Form::text('word[find]', $word->find, ['class' => 'form-control', 'id' => 'word-find', 'placeholder' => '']) !!}
+                                            {!! Form::text('word[word]', $word->word, ['class' => 'form-control', 'id' => 'word-find', 'placeholder' => '']) !!}
                                         </div>
                                         <div class="form-group">
                                             <label>{{ trans('dashboard.words.action.title') }}*</label>
-                                            {!!  Form::select('word[replacement]', ['审核关键词' => trans('dashboard.words.action.type_1'),'禁止关键词' => trans('dashboard.words.action.type_2'),
+                                            {!!  Form::select('word[status]', ['审核关键词' => trans('dashboard.words.action.type_1'),'禁止关键词' => trans('dashboard.words.action.type_2'),
                                                  '替换关键词' =>trans('dashboard.words.action.type_3')], null,
                                                  ['class' => 'form-control', 'id' => 'word-replacement', 'placeholder' =>'—过滤状态—'])!!}
 
                                         </div>
                                         <div class="form-group">
-                                            <label>{{ trans('dashboard.words.substitute') }}</label>
-                                            {!! Form::text('word[substitute]', $word->substitute, ['class' => 'form-control', 'id' => 'word-substitute', 'placeholder' => '']) !!}
+                                            <label>{{ trans('dashboard.words.replacement') }}</label>
+                                            {!! Form::text('word[replacement]', $word->replacement, ['class' => 'form-control', 'id' => 'word-substitute', 'placeholder' => '']) !!}
                                         </div>
                                         </fieldset>
                                         <div class="row">
@@ -137,6 +150,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
                 <!-- Modal -->
                 <div class="text-right">
                     <!-- Pager -->

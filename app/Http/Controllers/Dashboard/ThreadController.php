@@ -48,12 +48,10 @@ class ThreadController extends Controller
 
     public function index()
     {
-
         $search = $this->filterEmptyValue(Input::get('thread'));
         $threads = Thread::visible()->search($search)->with('node', 'user', 'lastOpUser')->orderBy('last_op_time', 'desc')->paginate(20);
         $sections = Section::orderBy('order')->get();
         $orderTypes = Thread::$orderTypes;
-
         return View::make('dashboard.threads.index')
             ->withThreads($threads)
             ->with('orderTypes',$orderTypes)
@@ -62,22 +60,16 @@ class ThreadController extends Controller
             ->withSections($sections);
     }
 
-    /**
-     * Shows the edit thread view.
-     *
-     * @param int $id
-     *
-     * @return \Illuminate\View\View
-     */
     public function edit(Thread $thread)
     {
         $sections = Section::orderBy('order')->get();
 
+        $menu = $thread->status == 0 ? 'index' : 'audit';
         return View::make('dashboard.threads.create_edit')
             ->withNode($thread->node)
             ->withSections($sections)
             ->withThread($thread)
-            ->withCurrentMenu('index');
+            ->withCurrentMenu($menu);
     }
 
     /**
@@ -180,6 +172,30 @@ class ThreadController extends Controller
             ->withPageTitle(trans('dashboard.threads.threads').' - '.trans('dashboard.dashboard'))
             ->withThreads($threads)
             ->withCurrentMenu('audit');
+    }
+
+    //批量审核通过帖子
+    public function postBatchAudit() {
+        $count = 0;
+        $thread_ids = Input::get('batch');
+        if ($thread_ids != null) {
+            DB::beginTransaction();
+            try {
+                foreach ($thread_ids as $id) {
+                    if (Thread::find($id)){
+                        self::postAudit(Thread::find($id));
+                        $count++;
+                    }
+                }
+                DB::commit();
+            } catch (ValidationException $e) {
+                DB::rollBack();
+                return Redirect::back()->withErrors($e->getMessageBag());
+            }
+            return Redirect::back()->withSuccess('恭喜，批量操作成功！'.'共'.$count.'条');
+        } else {
+            return Redirect::back()->withErrors('您未选中任何记录！');
+        }
     }
 
     //从待审核列表审核通过帖子

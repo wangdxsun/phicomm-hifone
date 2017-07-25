@@ -13,6 +13,7 @@ namespace Hifone\Providers;
 
 use Hifone\Services\Parsers\Markdown;
 use Hifone\Services\Parsers\ParseAt;
+use Hifone\Services\Parsers\ParseEmotion;
 use Illuminate\Support\ServiceProvider;
 
 class ParserServiceProvider extends ServiceProvider
@@ -48,6 +49,10 @@ class ParserServiceProvider extends ServiceProvider
         $this->app->singleton('parser.at', function ($app) {
             return new ParseAt();
         });
+
+        $this->app->singleton('parser.emotion',function ($app){
+            return new ParseEmotion();
+        });
     }
 
     /**
@@ -60,6 +65,7 @@ class ParserServiceProvider extends ServiceProvider
         return [
             'parser.markdown',
             'parser.at',
+            'parser.emotion',
         ];
     }
 }

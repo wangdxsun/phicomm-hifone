@@ -13,10 +13,15 @@
 @endif
 <div class="row">
     <div class="col-sm-12">
+        <form class="form-inline" method="post" action="/dashboard/reply/batchAudit">
+        {!! csrf_field() !!}
         @include('partials.errors')
         <table class="table table-bordered table-striped table-condensed">
+            <button class="btn btn-default">
+                {{trans('dashboard.replies.batch.audit')}}</button>
         <tbody>
             <tr class="head">
+                <td style="width: 30px;"><input id="selectAll" type="checkbox"></td>
                 <td style="width: 80px">#</td>
                 <td >回帖内容</td>
                 <td style="width: 250px">帖子标题</td>
@@ -26,6 +31,7 @@
             </tr>
             @foreach($replies as $reply)
             <tr>
+                <td><input class="checkAll" type="checkbox" name="batch[]" value="{{ $reply->id }}"></td>
                 <td id="taId">{{ $reply->id }}</td>
                 <td>
                     <div class="replyContent" >
@@ -48,6 +54,7 @@
             @endforeach
         </tbody>
         </table>
+        </form>
          <div class="text-right">
         <!-- Pager -->
         {!! $replies->appends(Request::except('page', '_pjax'))->render() !!}
