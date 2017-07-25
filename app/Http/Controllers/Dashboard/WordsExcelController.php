@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use Hifone\Http\Requests;
 use Hifone\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Input;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Redirect;
@@ -18,8 +19,7 @@ class WordsExcelController extends  Controller
     //Excel导出
     public function export()
     {
-
-        $data = Word::get()->toArray();
+        $data = Word::get(['type', 'word', 'status', 'replacement'])->toArray();
         Excel::create('illegal_words',function($excel) use ($data){
             $excel->sheet('words', function($sheet) use ($data){
                 //$sheet->rows($data);  rows()方法不输出字段名，第一行即为数据
@@ -37,7 +37,6 @@ class WordsExcelController extends  Controller
 
             $file_types = explode('.' , $original_name);
             $file_type = $file_types[count($file_types)-1];
-
             //判断是否.xls文件
             if(strtolower($file_type =='xls') || strtolower($file_type =='xlsx') ) {
                 $data = Excel::load($path, function($reader) {})->all();
@@ -52,7 +51,7 @@ class WordsExcelController extends  Controller
                             }
                             if(!empty($value->word)){
                                 $insert[] = [
-                                    'last_op_user_id' => $value->last_op_user_id,
+                                    'last_op_user_id' => Auth::id(),
                                     'type' => $value->type,
                                     'word' => $value->word,
                                     'status' => $value->status,
@@ -71,7 +70,7 @@ class WordsExcelController extends  Controller
                         ->withSuccess(sprintf('%s %s', trans('hifone.failure'), '敏感词条目不大于5000条'));
                 }
 
-            }else{
+            } else {
                 return Redirect::route('dashboard.word.index')
                     ->withSuccess(sprintf('%s %s', trans('hifone.failure'), '文件格式不正确'));
             }
