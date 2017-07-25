@@ -32,7 +32,7 @@ class GeneralController extends ApiController
 
     public static function emotion()
     {
-        $emotions = Emotion::pluck('url','emotion');
+        $emotions = Emotion::all(['emotion','url']);
         return  $emotions;
     }
 }
