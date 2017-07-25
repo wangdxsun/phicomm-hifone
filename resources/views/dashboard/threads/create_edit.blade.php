@@ -1,6 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('content')
+    @include('vendor.ueditor.assets')
 <div class="content-wrapper">
     <div class="header sub-header" id="general">
         <span class="uppercase">
@@ -25,22 +26,23 @@
                         <input type="text" class="form-control" name="thread[title]" id="thread-title" required value="{{ isset($thread) ? $thread->title : null }}">
                     </div>
                     <div class="form-group">
-            <select class="selectpicker form-control" name="thread[node_id]" >
-              <option value="" disabled {!! $node ?: 'selected'; !!}>{{ trans('hifone.threads.pick_node') }}</option>
-              @foreach ($sections as $section)
-                <optgroup label="{{{ $section->name }}}">
-                  @foreach ($section->nodes as $snode)
-                    <option value="{{ $snode->id }}" {!! (Input::old('node_id') == $snode->id || (isset($node) && $node->id==$snode->id)) ? 'selected' : ''; !!} > - {{ $snode->name }}</option>
-                  @endforeach
-                </optgroup>
-              @endforeach
-            </select>
-        </div>
+                        <select class="selectpicker form-control" name="thread[node_id]" >
+                          <option value="" disabled {!! $node ?: 'selected'; !!}>{{ trans('hifone.threads.pick_node') }}</option>
+                          @foreach ($sections as $section)
+                            <optgroup label="{{{ $section->name }}}">
+                              @foreach ($section->nodes as $snode)
+                                <option value="{{ $snode->id }}" {!! (Input::old('node_id') == $snode->id || (isset($node) && $node->id==$snode->id)) ? 'selected' : ''; !!} > - {{ $snode->name }}</option>
+                              @endforeach
+                            </optgroup>
+                          @endforeach
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label>{{ trans('hifone.threads.body') }}</label>
-                        <div class='markdown-control'>
-                            <textarea name="thread[body]" class="form-control" rows="10">{{ isset($thread) ? $thread->body_original : null }}</textarea>
-                        </div>
+                        <script id="container" name="thread[body]" type="text/plain">{!!  isset($thread) ? $thread->body : null !!}</script>
+                        {{--<div class='markdown-control'>--}}
+                            {{--<textarea name="c" class="form-control" rows="10">{{ isset($thread) ? $thread->body_original : null }}</textarea>--}}
+                        {{--</div>--}}
                     </div>
                 </fieldset>
 
@@ -54,4 +56,22 @@
         </div>
     </div>
 </div>
+<!-- 实例化编辑器 -->
+<script type="text/javascript">
+    var ue = UE.getEditor('container',{
+        toolbars: [
+            ['bold', 'italic', 'underline', 'strikethrough', 'blockquote', 'insertunorderedlist', 'insertorderedlist', 'justifyleft','justifycenter', 'justifyright',  'link', 'insertimage', 'attachment','fullscreen']
+        ],
+        elementPathEnabled: false,
+        enableContextMenu: false,
+        autoClearEmptyNode:true,
+        wordCount:false,
+        imagePopup:false,
+        initialFrameHeight:500,
+        autotypeset:{ indent: true,imageBlockLine: 'center' }
+    });
+    ue.ready(function() {
+        ue.execCommand('serverparam', '_token', '{{ csrf_token() }}'); // 设置 CSRF token.
+    });
+</script>
 @stop

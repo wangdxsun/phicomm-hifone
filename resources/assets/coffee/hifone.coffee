@@ -155,5 +155,27 @@ window.Hifone =
         ' '
       ]
 
+  # 批量操作，全选
+  selectAll : ->
+    $('#selectAll').click ->
+      selectAll = document.getElementById('selectAll')
+      cells = document.getElementsByName('batch[]')
+      if selectAll.checked
+        cell.checked = true for cell in cells
+      else
+        cell.checked = false for cell in cells
+
+  # 批量操作，验证全选
+  checkAll : ->
+    $('.checkAll').click ->
+      selectAll = document.getElementById('selectAll')
+      cells= document.getElementsByName("batch[]")
+      for cell in cells
+        if (!cell.checked)
+          selectAll.checked = false
+          break
+        selectAll.checked = true
+
+
 $ ->
   window._hifoneView = new HifoneView()

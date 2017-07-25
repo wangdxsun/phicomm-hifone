@@ -49,11 +49,17 @@ return [
             'title'   => '编辑话题',
             'success' => '话题更新成功.',
         ],
+        'batch' => [
+            'audit'   => '批量审核通过',
+        ],
     ],
     'replies' => [
         'replies' => '回帖',
         'edit'    => [
             'title' => '编辑回贴',
+        ],
+        'batch' => [
+            'audit'   => '批量审核通过',
         ],
     ],
 
@@ -98,7 +104,7 @@ return [
     'words' => [
         'word'        => '敏感词过滤',
         'content'     => '敏感词汇',
-        'substitute'  => '替换为',
+        'replacement'  => '替换为',
         'type'=> [
             'title'   => '词语分类',
             'type_0'  => '默认',
@@ -123,8 +129,8 @@ return [
         ],
         'edit'         => [
             'head_title'   => '添加',
-            'title'   => '添加词语',
-            'batch_out'=> '批量导出',
+            'title'   => '编辑词语',
+            'batch_out'=> '全部导出',
             'batch_del'=> '批量删除',
             'success' => '编辑成功.',
             'failure' => '编辑失败',

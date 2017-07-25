@@ -14,6 +14,7 @@ return array(
     '667aeda72477189d0494fecd327c3641' => $vendorDir . '/symfony/var-dumper/Resources/functions/dump.php',
     'bd9634f2d41831496de0d3dfe4c94881' => $vendorDir . '/symfony/polyfill-php56/bootstrap.php',
     '2c102faa651ef8ea5874edb585946bce' => $vendorDir . '/swiftmailer/swiftmailer/lib/swift_required.php',
+    '841780ea2e1d6545ea3a253239d59c05' => $vendorDir . '/qiniu/php-sdk/src/Qiniu/functions.php',
     '5255c38a0faeba867671b61dfda6d864' => $vendorDir . '/paragonie/random_compat/lib/random.php',
     'e7223560d890eab89cda23685e711e2c' => $vendorDir . '/psy/psysh/src/Psy/functions.php',
     '2cffec82183ee1cea088009cef9a6fc3' => $vendorDir . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',

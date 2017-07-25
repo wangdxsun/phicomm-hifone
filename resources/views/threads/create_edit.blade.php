@@ -39,15 +39,22 @@
                             </select>
                         </div>
                         <!-- editor start -->
-                        @include('threads.partials.editor_toolbar')
+                        {{--@include('threads.partials.editor_toolbar')--}}
                     <!-- end -->
-                        <div class="form-group">
-                            {!! Form::textarea('thread[body]', isset($thread) ? $thread->body_original : null, ['class' => 'post-editor form-control',
-                                                              'rows' => 15,
-                                                              'style' => "overflow:hidden",
-                                                              'id' => 'body_field',
-                                                              'placeholder' => trans('hifone.markdown_support')]) !!}
-                        </div>
+                            {{--注释markdown编辑器，修改成新的编辑器用于发帖--}}
+
+                        {{--<div class="form-group">--}}
+                            {{--{!! Form::textarea('thread[body]', isset($thread) ? $thread->body_original : null, ['class' => 'post-editor form-control',--}}
+                                                              {{--'rows' => 15,--}}
+                                                              {{--'style' => "overflow:hidden",--}}
+                                                              {{--'id' => 'body_field',--}}
+                                                              {{--'placeholder' => trans('hifone.markdown_support')]) !!}--}}
+                        {{--</div>--}}
+                            @include('vendor.ueditor.assets')
+                            <div class="form-group">
+                                <label>{{ trans('hifone.threads.body') }}</label>
+                                <script id="container" name="thread[body]" type="text/plain">{!!  isset($thread) ? $thread->body : null !!}</script>
+                            </div>
 
                         <div class="form-group">
                             <select class="form-control js-tag-tokenizer" multiple="multiple" name="thread[tags][]">
@@ -132,5 +139,21 @@
 
         </div>
     </div>
-
+    <script type="text/javascript">
+        var ue = UE.getEditor('container',{
+            toolbars: [
+                ['bold', 'italic', 'underline', 'strikethrough', 'blockquote', 'insertunorderedlist', 'insertorderedlist', 'justifyleft','justifycenter', 'justifyright',  'link', 'insertimage','fullscreen']
+            ],
+            elementPathEnabled: false,
+            enableContextMenu: false,
+            autoClearEmptyNode:true,
+            wordCount:false,
+            imagePopup:false,
+            initialFrameHeight:350,
+            autotypeset:{ indent: true,imageBlockLine: 'center' }
+        });
+        ue.ready(function() {
+            ue.execCommand('serverparam', '_token', '{{ csrf_token() }}'); // 设置 CSRF token.
+        });
+    </script>
 @stop
