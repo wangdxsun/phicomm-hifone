@@ -31,6 +31,7 @@ class ApiRoutes
             $router->get('/', 'HomeController@index');
             $router->get('ping', 'GeneralController@ping');
             $router->get('exception', 'GeneralController@exception');
+            $router->get('emotion', 'GeneralController@emotion');
 
             //内容相关
             $router->get('thread', 'ThreadController@index');
