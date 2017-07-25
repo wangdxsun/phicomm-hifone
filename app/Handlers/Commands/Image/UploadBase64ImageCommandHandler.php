@@ -28,7 +28,7 @@ class UploadBase64ImageCommandHandler
             if (!in_array($extension, $allowed_extensions)) {
                 throw new \Exception('只支持 png, jpg, jpeg 和 gif');
             }
-            $folderName = '/uploads/images/'.date('Ym', time()).'/'.date('d', time()).'/'.Auth::user()->id;
+            $folderName = '/uploads/images/'.date('Y/m/d');
             $destinationPath = public_path().'/'.$folderName;
             is_dir($destinationPath) || mkdir($destinationPath, 0777, true);
             $safeName = str_random(10).'.'.$extension;

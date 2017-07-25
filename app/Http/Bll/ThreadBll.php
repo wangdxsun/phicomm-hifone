@@ -81,15 +81,22 @@ class ThreadBll extends BaseBll
         event(new ThreadWasViewedEvent($thread));
 
         $thread = $thread->load(['user', 'node']);
-        $replies = $thread->replies()->visible()->with(['user'])
-            ->orderBy('order', 'desc')->orderBy('created_at', 'desc')->get();
-        foreach ($replies as &$reply) {
-            $reply['liked'] = Auth::check() ? Auth::user()->hasLikeReply($reply) : false;
-        }
+        $replies = $this->replies($thread);
         $thread['followed'] = User::hasFollowUser($thread->user);
         $thread['liked'] = Auth::check() ? Auth::user()->hasLikeThread($thread) : false;
         $thread['replies'] = $replies;
 
         return $thread;
+    }
+
+    public function replies($thread)
+    {
+        $replies = $thread->replies()->visible()->with(['user'])
+            ->orderBy('order', 'desc')->orderBy('created_at', 'desc')->paginate();
+        foreach ($replies as &$reply) {
+            $reply['liked'] = Auth::check() ? Auth::user()->hasLikeReply($reply) : false;
+        }
+
+        return $replies;
     }
 }

@@ -2,17 +2,8 @@
 
 namespace Hifone\Models;
 
-use AltThree\Validator\ValidatingTrait;
-
 class Word extends BaseModel
 {
-    use ValidatingTrait;
-    // manually maintain
-    public $timestamps = false;
-
-    //use SoftDeletingTrait;
-    protected $dates = ['deleted_at'];
-
     /**
      * The fillable properties.
      *

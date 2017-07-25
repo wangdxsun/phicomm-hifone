@@ -3,42 +3,45 @@
 namespace Hifone\Services\Filter;
 
 use DB;
+use Cache;
+
+use Hifone\Models\Word;
 
 class WordsFilter
 {
-    private $words_init;
+    private $wordInit;
 
-    public function __construct() {
-        $this->words_init = new WordInit();
+    public function __construct(WordInit $wordInit) {
+        $this->wordInit = $wordInit;
     }
 
-    public function wordsFilter($post){
-        $words_banned=DB::table('words')->where('replacement','=','{BANNED}')->pluck('find');
-        //$words_banned=DB::table('words')->where('replacement','=','禁止关键词')->pluck('find');
-        $this->words_init->initKeyWord($words_banned);
-        $res1 = $this->words_init->isContainBadWords($post);
-        if($res1){
-            return 1;
-        }else{
-            $words_check=DB::table('words')->where('replacement','=','{MOD}')->pluck('find');
-            //$words_check=DB::table('words')->where('replacement','=','审核关键词')->pluck('find');
-            $this->words_init->initKeyWord($words_check);
-            $res2 = $this->words_init->isContainBadWords($post);
-            if($res2){
-                return 2;
-            }else{
-                $words_replace=DB::table('words')->where('replacement','=','{REPLACE}')->pluck('find');
-                //$words_replace = DB::table('words')->where('replacement','=','替换关键词')->pluck('find');
-                $this->words_init->initKeyWord($words_replace);
-                $res3 = $this->words_init->isContainBadWords($post);
-
-                if($res3){
-                    $replace_post = $this->words_init->replaceBadWords($post);
-                    return $replace_post;
-                }else{
-                    return 0;
-                }
-            }
+    public function wordsFilter($post) {
+        $cacheTime = 30 * 24 * 60;
+        $tree = Cache::remember('wordsBanned', $cacheTime, function () {
+            $words = Word::where('status', '禁止关键词')->pluck('word');
+            return $this->wordInit->initKeyWord($words);
+        });
+        $res = $this->wordInit->isContainBadWords($post, $tree);
+        if ($res) {
+            return ['type' => '禁止关键词', 'word' => $res];
         }
+        $tree = Cache::remember('wordsCheck', $cacheTime, function () {
+            $words = Word::where('status', '审核关键词')->pluck('word');
+            return $this->wordInit->initKeyWord($words);
+        });
+        $res = $this->wordInit->isContainBadWords($post, $tree);
+        if ($res) {
+            return ['type' => '审核关键词', 'word' => $res];
+        }
+        $tree = Cache::remember('wordsReplace', $cacheTime, function () {
+            $words = Word::where('status', '替换关键词')->pluck('word');
+            return $this->wordInit->initKeyWord($words);
+        });
+        $res = $this->wordInit->isContainBadWords($post, $tree);
+        if ($res) {
+            $replace_post = $this->wordInit->replaceBadWords($post);
+            return ['type' => '替换关键词', 'word' => $replace_post];
+        }
+        return ['type' => '没有敏感词', 'word' => ''];
     }
 }

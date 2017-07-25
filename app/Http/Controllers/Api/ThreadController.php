@@ -50,4 +50,9 @@ class ThreadController extends ApiController
 
         return success('发表成功，待审核');
     }
+
+    public function replies(Thread $thread, ThreadBll $threadBll)
+    {
+        return $threadBll->replies($thread);
+    }
 }
