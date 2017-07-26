@@ -3,44 +3,45 @@ namespace Hifone\Services\Parsers;
 
 use Hifone\Models\Emotion;
 
+
 class ParseEmotion
 {
-    public $body_parsed;
+    public $url_parsed;
     public $emotions = [];
     public $userEmotions;
-    public $body_original;
+    public $url;
 
-    public function parse($body)
+    public function parse($emotion)
     {
-        $this->body_original = $body;
+        $this->url = $emotion;
         $this->userEmotions = $this->getEmotions();
 
-        count($this->userEmotions) > 0 && $this->emotions = Emotion::whereIn('body', $this->userEmotions)->get();
+        count($this->userEmotions) > 0 && $this->emotions = Emotion::whereIn('emotion', $this->userEmotions)->get();
 
         $this->replace();
 
-        return $this->body_parsed;
+        return $this->url_parsed;
     }
 
     protected function replace()
     {
-        $this->body_parsed = $this->body_original;
+        $this->url_parsed = $this->url;
 
         foreach ($this->emotions as $emotion) {
-            $search = '['.$emotion->body.']';
-            $replace = $emotion->body_original;
+            $search = $emotion->emotion;
+            $replace = '<img class="face" src ='.$emotion->url.'>';
 
-            $this->body_parsed = str_replace($search, $replace, $this->body_parsed);
+            $this->url_parsed = str_replace($search, $replace, $this->url_parsed);
         }
     }
 
     protected function getEmotions()
     {
-        preg_match_all("/\[([^]@<\r\n\s]*)\]/i", $this->body_original, $atlist_tmp);
+        preg_match_all("/\[([^]@<\r\n\s]*)\]/i", $this->url, $atlist_tmp);
         $userEmotions = [];
 
         foreach ($atlist_tmp[1] as $k => $v) {
-            $userEmotions[] = $v;
+            $userEmotions[] = '['.$v.']';
         }
 
         return array_unique($userEmotions);
