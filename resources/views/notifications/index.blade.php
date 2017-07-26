@@ -19,18 +19,17 @@
 	<div class="panel-body remove-padding-horizontal notification-index content-body">
 
 		<ul class="list-group row">
-			@foreach ($notifications as $day => $item)
-				<div class="notification-group">
-					<div class="group-title"><i class="fa fa-clock-o"></i> {{ $day }}</div>
-					@foreach($item as $notification)
-						@include('notifications.partials.'.$notification->template)
-					@endforeach
-				</div>
-			@endforeach
+            @foreach ($notifications as $notification)
+                <li class="list-group-item media" style="margin-top: 0px;">
+                <div class="panel-body remove-padding-horizontal">
+                    @include('notifications.partials.'.$notification->template)
+                </div>
+            @endforeach
 		</ul>
 	</div>
 	<div class="panel-footer text-right remove-padding-horizontal pager-footer">
 		<!-- Pager -->
+        {!! $notifications->appends(Request::except('page', '_pjax'))->render() !!}
 	</div>
     @else
 	<div class="panel-body">

@@ -209,7 +209,7 @@ return [
         'thread_follow'               => '关注了你的帖子',
         'thread_like'                 => '赞了你的帖子',
         'thread_mark_excellent'       => '推荐了你的帖子',
-        'thread_move'                 => '移动了你的帖子',
+        'thread_move'                 => '移动了你的帖子:',
         'followed_thread_new_reply'   => '回复了你关注的帖子:',
         'followed_thread_new_append'  => '关注的话题有新备注',
         'followed_user_new_thread'    => '发表了新话题',
