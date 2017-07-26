@@ -4,28 +4,26 @@
     <div class="content-wrapper">
         <div class="header sub-header">
              <i class="fa fa-filter pull-left"></i>{{ trans('dashboard.words.word') }}
-        </div>
-
-        <a class="btn btn-sm btn-success pull-right" style="margin-left: 15px;" href="{{ route('dashboard.check.check') }}">
-            敏感词检测
-        </a>
-        <a class="btn btn-sm btn-success pull-right" style="margin-left: 15px;" href="{{ route('dashboard.word.create') }}">
-            {{trans('dashboard.words.add.title') }}
-        </a>
-        <a class="btn btn-sm btn-success pull-right" style="margin-left: 15px;" href="{{ route('dashboard.wordsExcel.export') }}">
-            {{trans('dashboard.words.edit.batch_out') }}
-        </a>
-        <form action="{{ URL('dashboard/wordsExcel/import')}}"  id="importExcel" method="POST" class="form-inline pull-right"
-              enctype='multipart/form-data'>
-            {!! csrf_field() !!}
-            <div class="">
-                <div class="btn btn-sm btn-success head_portrait">
-                    <span>批量导入</span>
+            <a class="btn btn-sm btn-success pull-right" style="margin-left: 15px;" href="{{ route('dashboard.check.check') }}">
+                敏感词检测
+            </a>
+            <a class="btn btn-sm btn-success pull-right" style="margin-left: 15px;" href="{{ route('dashboard.word.create') }}">
+                {{trans('dashboard.words.add.title') }}
+            </a>
+            <a class="btn btn-sm btn-success pull-right" style="margin-left: 15px;" href="{{ route('dashboard.wordsExcel.export') }}">
+                {{trans('dashboard.words.edit.batch_out') }}
+            </a>
+            <form action="{{ URL('dashboard/wordsExcel/import')}}"  id="importExcel" method="POST" class="form-inline pull-right"
+                  enctype='multipart/form-data'>
+                {!! csrf_field() !!}
+                <div class="">
+                    <div class="btn btn-sm btn-success head_portrait">
+                        <span>批量导入</span>
+                    </div>
+                    <input type="file" name="import_file" id="import" onChange="commitForm()" class="hide"/>
                 </div>
-                <input type="file" name="import_file" id="import" onChange="commitForm()" class="hide"/>
-            </div>
-        </form>
-
+            </form>
+        </div>
         <div class="row">
             <div class="col-sm-12 toolbar">
                 <div>

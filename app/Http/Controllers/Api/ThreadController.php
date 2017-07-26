@@ -20,9 +20,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ThreadController extends ApiController
 {
-    public function index(ThreadBll $threadBll, CommonBll $commonBll)
+    public function index(CommonBll $commonBll)
     {
-        $threads = $threadBll->getThreads();
+        $commonBll->login();
+        $threads = Thread::visible()->with(['user', 'node'])->pinAndRecentReply()->paginate();
 
         return $threads;
     }
