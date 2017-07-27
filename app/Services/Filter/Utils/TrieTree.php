@@ -8,54 +8,40 @@ namespace Hifone\Services\Filter\Utils;
  */
 class TrieTree
 {
+    private $tree = [];
 
-    private $tree = array();
-
-    public function insert($utf8_str)
+    public function insert($word)
     {
-        $chars = get_chars($utf8_str);
-        $chars[] = null;    //串结尾字符
+        $chars = getChars($word);
         $count = count($chars);
         $T = &$this->tree;
-        for ($i = 0; $i < $count-1; $i++) {
+        for ($i = 0; $i < $count; $i++) {
             $c = $chars[$i];
             if (!array_key_exists($c, $T)) {
-                    $T[$c] = array('isEnd' =>0);   //插入新字符，关联数组
+                $T[$c] = ['isEnd' =>0];   //插入新字符，关联数组
             }
-            if($i == $count-2){
+            if($i == $count - 1) {
                 $T[$c]['isEnd'] = 1;
             }
             $T = &$T[$c];
         }
     }
-  /*  public function insert($utf8_str){
-        $chars = get_chars($utf8_str);
-        $chars[] = null;	//串结尾字符
-        $count = count($chars);
-        $T = &$this->tree;
-        for($i = 0;$i < $count;$i++){
-            $c = $chars[$i];
-            if(!array_key_exists($c, $T)){
-                $T[$c] = array();	//插入新字符，关联数组
-            }
-            $T = &$T[$c];
-        }
-    }*/
+
     public function remove($utf8_str)
     {
-        $chars = get_chars($utf8_str);
+        $chars = getChars($utf8_str);
         $chars[] = null;
         if ($this->_find($chars)) {    //先保证此串在树中
             $chars[] = null;
             $count = count($chars);
             $T = &$this->tree;
             for ($i = 0; $i < $count; $i++) {
-                $c = $chars[$i];
-                if (count($T[$c]) == 1) {     //表明仅有此串
-                    unset($T[$c]);
+                $char = $chars[$i];
+                if (count($T[$char]) == 1) {     //表明仅有此串
+                    unset($T[$char]);
                     return;
                 }
-                $T = &$T[$c];
+                $T = &$T[$char];
             }
         }
     }
@@ -74,109 +60,68 @@ class TrieTree
         return true;
     }
 
-    public function find($utf8_str)
+    public function contain($txt, $tree)
     {
-        $chars = get_chars($utf8_str);
-        $chars[] = null;
-        return $this->_find($chars);
-    }
-
-  /*  public function contain($utf8_str, $do_count = 0)
-    {
-        $chars = get_chars($utf8_str);
-        $chars[] = null;
+        $badWords = '';
+        $this->tree = $tree;
+        $chars = getChars($txt);
         $len = count($chars);
-        $Tree = &$this->tree;
-        $count = 0;
+        $T = &$this->tree;
         for ($i = 0; $i < $len; $i++) {
-            $c = $chars[$i];
-            if (array_key_exists($c, $Tree)) {    //起始字符匹配
-                $T = &$Tree[$c];
-                for ($j = $i + 1; $j < $len; $j++) {
-                    $c = $chars[$j];
-                    if (array_key_exists(null, $T)) {
-                        if ($do_count) {
-                            $count++;
-                        } else {
-                            return true;
-                        }
-                    }
-                    if (!array_key_exists($c, $T)) {
-                        break;
-                    }
-                    $T = &$T[$c];
-                }
-            }
-        }
-        if ($do_count) {
-            return $count;
-        } else {
-            return false;
-        }
-    }*/
-    public function contain($txt, $do_count = 0)
-    {
-        $flag = 0;    //敏感词结束标识位：用于敏感词只有1位的情况
-        $chars = get_chars($txt);
-        $len = count($chars);
-        $Tree = &$this->tree;
-        for($i = 0; $i < $len; $i++){
-            $c = $chars[$i];
-            if(array_key_exists($c, $Tree)){
-                //存在，则判断是否为最后一个
-                if($Tree[$c]['isEnd'] == 1){       //如果为最后一个匹配规则,结束循环，返回匹配标识数
-                    $flag = 1;
-                    break;
-                }else{
-                    $T = &$Tree;
-                    for($k = $i+1; $k < $len; $k++){
+            $char = $chars[$i];
+            if (array_key_exists($char, $T)) {//存在，则判断是否为最后一个
+                $badWords .= $char;
+                if ($T[$char]['isEnd'] == 1) {//如果为最后一个匹配规则,结束循环
+                    return $badWords;
+                } else {
+                    for ($k = $i+1; $k < $len; $k++) {
                         $c_k = $chars[$k];
                         $c_i = $chars[$k-1];
-                        if(array_key_exists($c_k, $T[$c_i])){
+                        if (array_key_exists($c_k, $T[$c_i])) {
+                            $badWords .= $c_k;
                             $T = &$T[$c_i];
-                            if($T[$c_k]['isEnd'] == 1) {       //如果为最后一个匹配规则,结束循环，返回匹配标识数
-                                $flag = 1;
-                                $i = $k+1;
-                                break;
+                            if ($T[$c_k]['isEnd'] == 1) {//如果为最后一个匹配规则,结束循环，返回匹配标识数
+                                return $badWords;
                             }
-                        }else{
+                        } else {
+                            $badWords = '';
                             break;
                         }
                     }
                 }
             }
         }
-        return $flag;
+        return false;
     }
+
     public function replace($txt)
     {
         $replace_array = [];
         $R = &$replace_array;
-        $chars = get_chars($txt);
+        $chars = getChars($txt);
         $len = count($chars);
-        $Tree = &$this->tree;
-        for($i = 0; $i < $len; $i++){
+        $T = &$this->tree;
+        for ($i = 0; $i < $len; $i++) {
             $c = $chars[$i];
-            if(array_key_exists($c, $Tree)){     //存在，则判断是否为最后一个
-                if($Tree[$c]['isEnd'] == 1){       //如果为最后一个匹配规则,结束循环，返回匹配标识数
+            if (array_key_exists($c, $T)) {     //存在，则判断是否为最后一个
+                if($T[$c]['isEnd'] == 1) {       //如果为最后一个匹配规则,结束循环，返回匹配标识数
                     $R[$i] = [
                         $i => $i
                     ];
                 }else{
-                    $T = &$Tree;
-                    for($k = $i+1; $k < $len; $k++){
+                    for ($k = $i+1; $k < $len; $k++) {
                         $c_k = $chars[$k];
                         $c_i = $chars[$k-1];
-                        if(array_key_exists($c_k, $T[$c_i])){
+                        if (array_key_exists($c_k, $T[$c_i])) {
                             $T = &$T[$c_i];
-                            if($T[$c_k]['isEnd'] == 1) {       //如果为最后一个匹配规则,结束循环，返回匹配标识数
+                            if ($T[$c_k]['isEnd'] == 1) {       //如果为最后一个匹配规则,结束循环，返回匹配标识数
                                 $R[$i] = [
                                     $i => $k
                                 ];
                                 $i = $k;
                                 break;
                             }
-                        }else{
+                        } else {
                             break;
                         }
                     }
@@ -186,23 +131,11 @@ class TrieTree
         return $replace_array;
     }
 
-    //更新敏感词列表
-    public function export()
-    {
-        return serialize($this->tree);
-    }
-    //初始化敏感词树
-    public function import($str)
-    {
-        $this->tree = unserialize($str);
-    }
-
     //当redis 缓存不存在时,读取数据库中敏感词到字典树和redis缓存中
-    public function  importBadWords($data){
-        $this->tree = array();
-        foreach ($data as $v){
-
-            $this->insert($v);
+    public function importBadWords($words) {
+        $this->tree = [];
+        foreach ($words as $word) {
+            $this->insert($word);
         }
         return $this->tree;
     }

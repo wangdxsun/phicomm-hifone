@@ -1,7 +1,7 @@
 @extends('layouts.default')
 
 @section('title')
-{{ $user->username }}} {{ trans('hifone.users.info') }}_@parent
+{{ $user->username }} {{ trans('hifone.users.info') }}_@parent
 @stop
 
 @section('content')

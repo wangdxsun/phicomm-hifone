@@ -3,40 +3,28 @@
 namespace Hifone\Services\Filter;
 
 use DB;
+use Cache;
+
+use Hifone\Models\Word;
 
 class WordsFilter
 {
-    private $words_init;
-    public function __construct() {
-        $this->words_init = new WordInit();
-    }
-    public function wordsFilter($post){
-        $words_banned=DB::table('words')->where('status','=','{BANNED}')->pluck('word');
-        //$words_banned=DB::table('words')->where('status','=','禁止关键词')->pluck('word');
-        $this->words_init->initKeyWord($words_banned);
-        $res1 = $this->words_init->isContainBadWords($post);
-        if($res1){
-            return 1;
-        }else{
-            $words_check=DB::table('words')->where('status','=','{MOD}')->pluck('word');
-            //$words_check=DB::table('words')->where('status','=','审核关键词')->pluck('word');
-            $this->words_init->initKeyWord($words_check);
-            $res2 = $this->words_init->isContainBadWords($post);
-            if($res2){
-                return 2;
-            }else{
-                $words_replace=DB::table('words')->where('status','=','{REPLACE}')->pluck('word');
-                //$words_replace = DB::table('words')->where('status','=','替换关键词')->pluck('word');
-                $this->words_init->initKeyWord($words_replace);
-                $res3 = $this->words_init->isContainBadWords($post);
+    private $wordInit;
 
-                if($res3){
-                    $replace_post = $this->words_init->replaceBadWords($post);
-                    return $replace_post;
-                }else{
-                    return 0;
-                }
-            }
-        }
+    public function __construct(WordInit $wordInit) {
+        $this->wordInit = $wordInit;
+    }
+
+    public function filter($post) {
+
+        $cacheTime = 30 * 24 * 60; // 单位为分钟
+
+        $tree = Cache::remember('words', $cacheTime, function () {
+            $words = Word::pluck('word');
+            return $this->wordInit->initKeyWord($words);
+        });
+        $res = $this->wordInit->isContainBadWords($post, $tree);
+
+        return $res;
     }
 }

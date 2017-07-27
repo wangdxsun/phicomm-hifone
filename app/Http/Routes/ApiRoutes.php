@@ -37,6 +37,7 @@ class ApiRoutes
             $router->get('thread', 'ThreadController@index');
             $router->get('search', 'CommonController@search');
             $router->get('thread/{thread}', 'ThreadController@show');
+            $router->get('thread/{thread}/replies', 'ThreadController@replies');
             $router->get('node', 'NodeController@index');
             $router->get('banner', 'BannerController@index');
             $router->get('banner/{carousel}', 'BannerController@show')->name('banner.show');

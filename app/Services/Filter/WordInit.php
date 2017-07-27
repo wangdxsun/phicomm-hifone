@@ -2,6 +2,7 @@
 
 namespace Hifone\Services\Filter;
 
+use Hifone\Models\Word;
 use Hifone\Services\Filter\Utils\TrieTree;
 use DB;
 /**
@@ -13,28 +14,26 @@ use DB;
  */
 class WordInit
 {
-    private $trie_tree;
-    public function __construct() {
-        $this->trie_tree = new TrieTree();
+    private $trieTree;
+
+    public function __construct(TrieTree $trieTree) {
+        $this->trieTree = $trieTree;
     }
+
     public function initKeyWord($words){
-        $trie_data = $this->trie_tree->importBadWords($words);
-
-        return $trie_data;
+        return $this->trieTree->importBadWords($words);
     }
-    public function isContainBadWords($post){
 
-        $flag = $this->trie_tree->contain($post, 0);
-
-		return $flag;
+    public function isContainBadWords($post, $tree) {
+        return $this->trieTree->contain($post, $tree);
     }
-    public function replaceBadWords($post){
-        $replace_array = $this->trie_tree->replace($post);
+
+    public function replaceBadWords($post) {
+        $replace_array = $this->trieTree->replace($post);
         $replaced_post = $post;
-        foreach($replace_array as $key => $value)
-        {
+        foreach ($replace_array as $key => $value) {
             $char_fragment = mb_substr($post, $key, $value[$key]-$key+1, 'utf-8');
-            $substitute = DB::table('words')->where('find','=',$char_fragment)->pluck('substitute');
+            $substitute = Word::where('word', $char_fragment)->pluck('replacement');
             $replaced_post = str_replace($char_fragment, $substitute[0], $replaced_post);
         }
         return $replaced_post;

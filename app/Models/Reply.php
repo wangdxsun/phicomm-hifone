@@ -31,6 +31,7 @@ class Reply extends BaseModel
         'user_id',
         'thread_id',
         'body_original',
+        'last_op_reason',
     ];
 
     protected $dates = ['deleted_at', 'last_op_time'];
@@ -42,7 +43,7 @@ class Reply extends BaseModel
      */
     public $rules = [
         'thread_id' => 'required|int',
-        'body'      => 'required|max:1024',
+        'body'      => 'required|max:15000',
         'user_id'   => 'int',
     ];
     public static $orderTypes = [

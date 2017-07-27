@@ -34,6 +34,11 @@ class ForumRoutes
             $router->get('/captcha', 'CaptchaController@index')->name('captcha');
             $router->get('/go/{slug}', 'NodeController@showBySlug')->name('go');
 
+            // 兼容老社区
+            $router->get('forum.php', 'ThreadController@index');
+            $router->get('member.php', 'ThreadController@index');
+            $router->get('home.php', 'ThreadController@index');
+
             $router->group(['middleware' => 'auth'], function (Registrar $router) {
                 $router->get('/notification', 'NotificationController@index')->name('notification.index');
                 $router->post('/notification/clean', 'NotificationController@clean')->name('notification.clean');
