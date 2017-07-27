@@ -31,9 +31,9 @@ class StorageManager extends Manager
     {
         $config = $this->getUploadConfig($request->get('action'));
 
-        if (!$request->hasFile($config['field_name'])) {
-            return $this->error('UPLOAD_ERR_NO_FILE');
-        }
+//        if (!$request->hasFile($config['field_name'])) {
+//            return $this->error('UPLOAD_ERR_NO_FILE');
+//        }
 
         $file = $request->file($config['field_name']);
 
@@ -131,7 +131,7 @@ class StorageManager extends Manager
             $error = 'upload.ERROR_SIZE_EXCEED';
         } elseif (!empty($config['allow_files']) &&
             !in_array('.'.$file->guessExtension(), $config['allow_files'])) {
-            $error = 'ERROR_TYPE_NOT_ALLOWED';
+//            $error = 'ERROR_TYPE_NOT_ALLOWED';
         }
 
         return $error;
