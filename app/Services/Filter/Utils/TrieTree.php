@@ -60,13 +60,6 @@ class TrieTree
         return true;
     }
 
-    public function find($utf8_str)
-    {
-        $chars = getChars($utf8_str);
-        $chars[] = null;
-        return $this->_find($chars);
-    }
-
     public function contain($txt, $tree)
     {
         $badWords = '';
@@ -136,17 +129,6 @@ class TrieTree
             }
         }
         return $replace_array;
-    }
-
-    //更新敏感词列表
-    public function export()
-    {
-        return serialize($this->tree);
-    }
-    //初始化敏感词树
-    public function import($str)
-    {
-        $this->tree = unserialize($str);
     }
 
     //当redis 缓存不存在时,读取数据库中敏感词到字典树和redis缓存中

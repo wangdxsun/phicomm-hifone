@@ -23,7 +23,7 @@ class ThreadController extends ApiController
     public function index(CommonBll $commonBll)
     {
         $commonBll->login();
-        $threads = Thread::visible()->with(['user', 'node'])->pinAndRecentReply()->paginate();
+        $threads = Thread::visible()->with(['user', 'node'])->hot()->paginate();
 
         return $threads;
     }
