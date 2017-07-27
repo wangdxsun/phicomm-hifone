@@ -99,4 +99,5 @@ class Notification extends BaseModel implements HasPresenter
     {
         return NotificationPresenter::class;
     }
+
 }
