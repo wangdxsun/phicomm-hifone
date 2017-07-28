@@ -22,7 +22,7 @@ class NotificationController extends Controller
 {
     public function index()
     {
-        $notifications = Notification::forUser(Auth::user()->id)->recent()->paginate(5);
+        $notifications = Notification::forUser(Auth::user()->id)->recent()->paginate(15);
 //            ->groupBy(function (Notification $notification) {
 //            return app(DateFactory::class)->make($notification->created_time)->toDateString();
 //        });

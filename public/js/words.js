@@ -6,12 +6,16 @@ $(document).ready(function(){
         var info=$(this).data("name");
         var infoArray=info.split(",");
         var id=infoArray[0];
-        var find=infoArray[1];
-        var substitute=infoArray[2];
+        var type=infoArray[1];
+        var word=infoArray[2];
+        var status=infoArray[3];
+        var replacement=infoArray[4];
 
         $("#word-id").val(id);
-        $("#word-find").val(find);
-        $("#word-substitute").val(substitute);
+        $("#word-type").val(type);
+        $("#word-word").val(word);
+        $("#word-status").val(status);
+        $("#word-replacement").val(replacement);
         $("#myModal").modal('show');
     });
 

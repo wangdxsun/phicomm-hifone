@@ -77,6 +77,14 @@ class WordController extends Controller
     {
         $wordData = Request::get('word');
         $wordData['created_at'] = date('Y-m-d H:i:s');
+
+        //判断重复敏感词，转入编辑
+        $oldWord = Word::where('word',$wordData['word'])->first();
+        if ($oldWord) {
+            return Redirect::route('dashboard.word.edit', $oldWord->id)
+                ->withErrors('当前添加的敏感词重复，请重新编辑！');
+        }
+
         try {
             $word = Word::create($wordData);
             $this ->updateOpLog($word, "添加敏感词");
@@ -93,30 +101,27 @@ class WordController extends Controller
 
     public function edit(Word $word)
     {
-
         return View::make('dashboard.words.create_edit')
             ->withPageTitle(trans('dashboard.words.word').' - '.trans('dashboard.words.edit.head_title'))
             ->withWord($word);
     }
-    public function editInfo(Request $request)
-    {
-        $input = Request::all();
-        $word = $input['word'];
 
-        if(!empty($word['find']) && !empty($word['type']) && !empty($word['replacement'])){
-             DB::update('update words set find=?,type=?,replacement=?,substitute=? where id=?', array($word['find'],
-                $word['type'],$word['replacement'],$word['substitute'],$word['id']));
-            return Redirect::back();
-        }else{
-            $errorMsg['content'][0] = '必填项不能为空';
-            return Redirect::back()
-                ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.words.edit.failure')))
-                ->withErrors($errorMsg);
+    public function update()
+    {
+        $wordData = request('word');
+        $word = Word::find($wordData['id']);
+
+        //判断重复敏感词，提示重新编辑
+        $oldWord = Word::where('word',$wordData['word'])->first();
+        if ($oldWord) {
+            return Redirect::back()->withErrors('修改后敏感词重复，请重新编辑！');
         }
-    }
+        unset($wordData['id']);
+        $word->update($wordData);
+        $this->updateOpLog($word, '修改敏感词');
 
-    public function update(Word $word)
-    {
+        return Redirect::route('dashboard.word.index')
+            ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.words.edit.success')));
     }
 
     //批量删除敏感词
