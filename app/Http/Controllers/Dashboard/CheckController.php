@@ -32,7 +32,7 @@ class CheckController extends  Controller
 
         $post = '诱惑';
         $start = microtime(true) * 1000;
-        $res = $wordsFilter->filter($post);
+        $res = $wordsFilter->filterWord($post);
         $end = microtime(true) * 1000;
 
         return [
