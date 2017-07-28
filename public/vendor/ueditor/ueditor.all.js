@@ -24717,9 +24717,11 @@ UE.plugin.register('insertfile', function (){
                 "jpeg":"icon_jpg.gif",
                 "gif":"icon_jpg.gif",
                 "ico":"icon_jpg.gif",
-                "bmp":"icon_jpg.gif"
+                "bmp":"icon_jpg.gif",
+                "apk":"icon_apk.gif",
+                "bin":"icon_bin.ico"
             };
-        return maps[ext] ? maps[ext]:maps['txt'];
+        return maps[ext] ? maps[ext]:maps['bin'];
     }
 
     return {

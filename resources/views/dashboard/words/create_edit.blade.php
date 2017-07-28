@@ -14,6 +14,7 @@
             <div class="col-sm-12">
                 @if(isset($word))
                     {!! Form::model($word, ['route' => ['dashboard.word.update', $word->id], 'id' => 'word-create-form', 'method' => 'patch']) !!}
+                    {!! Form::hidden('word[id]', $word->id, ['class' => 'form-control', 'id' => 'word-id']) !!}
                 @else
                     {!! Form::open(['route' => 'dashboard.word.store','id' => 'word-create-form', 'method' => 'post']) !!}
                 @endif
@@ -21,32 +22,30 @@
                 <fieldset>
                     <div class="form-group">
                         <label>{{ trans('dashboard.words.type.title') }}</label>
-                        {!!  Form::select('word[type]', ['政治' => trans('dashboard.words.type.type_1'),'广告' => trans('dashboard.words.type.type_2'),
-                        trans('dashboard.words.type.type_3') => trans('dashboard.words.type.type_3'),trans('dashboard.words.type.type_4') => trans('dashboard.words.type.type_4'),trans('dashboard.words.type.type_5') => trans('dashboard.words.type.type_5'),
-                        '默认' => trans('dashboard.words.type.type_0'),],
-                        null,
-                        ['class' => 'form-control', 'id' => 'word-type', 'placeholder' => isset($word) ? $word-> type: '—选择类别—'])!!}
+                        {!!  Form::select('word[type]', ['政治' => '政治', '广告' => '广告',
+                        '涉枪涉爆' => '涉枪涉爆', '网络招嫖' => '网络招嫖', '淫秽信息' => '淫秽信息',
+                        '默认' => '默认'], null, ['class' => 'form-control'])!!}
                     </div>
                     <div class="form-group">
                         <label>{{ trans('dashboard.words.content') }}</label>
-                        {!! Form::text('word[word]', isset($word) ? $word->word : null, ['class' => 'form-control', 'id' => 'word-word', 'placeholder' => '']) !!}
+                        {!! Form::text('word[word]', isset($word) ? $word->word : null, ['class' => 'form-control', 'required']) !!}
                     </div>
                     <div class="form-group">
                         <label>{{ trans('dashboard.words.action.title') }}</label>
-                        {!!  Form::select('word[status]', ['审核关键词' => trans('dashboard.words.action.type_1'),'禁止关键词' => trans('dashboard.words.action.type_2'),
-                             '替换关键词' =>trans('dashboard.words.action.type_3')], null,
-                             ['class' => 'form-control', 'id' => 'word-status', 'placeholder' => isset($word) ? $word-> status: '—过滤状态—'])!!}
+                        {!!  Form::select('word[status]', ['审核敏感词' => '审核敏感词','禁止敏感词' => '禁止敏感词',
+                             '替换敏感词' => '替换敏感词'], null,
+                             ['class' => 'form-control'])!!}
                     </div>
                     <div class="form-group">
-                        <label>{{ trans('dashboard.words.substitute') }}</label>
-                        {!! Form::text('word[replacement]', isset($word) ? $word->replacement : null, ['class' => 'form-control', 'id' => 'word-replacement', 'placeholder' => '']) !!}
+                        <label>{{ trans('dashboard.words.replacement') }}</label>
+                        {!! Form::text('word[replacement]', isset($word) ? $word->replacement : null, ['class' => 'form-control']) !!}
                     </div>
                 </fieldset>
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="form-group">
-                            <button type="submit" class="btn btn-success">{{ trans('forms.save') }}</button>
-                            <a class="btn btn-default" href="{{ back_url('dashboard.word.index') }}">{{ trans('forms.cancel') }}</a>
+                            <button type="submit" class="btn btn-success">{{ '保存' }}</button>
+                            <a class="btn btn-default" href="{{ back_url('dashboard.word.index') }}">{{ '取消' }}</a>
                         </div>
                     </div>
                 </div>
