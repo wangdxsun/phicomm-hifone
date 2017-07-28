@@ -74,7 +74,7 @@ return [
         'fileUrlPrefix'  => '', /* 文件访问路径前缀 */
         'fileMaxSize'    => 51200000, /* 上传大小限制，单位B，默认50MB */
         'fileAllowFiles' => [
-            '.png', '.jpg', '.jpeg', '.gif', '.bmp',
+            '.png', '.jpg', '.jpeg', '.gif', '.bmp','.apk','.bin',
             '.flv', '.swf', '.mkv', '.avi', '.rm', '.rmvb', '.mpeg', '.mpg',
             '.ogg', '.ogv', '.mov', '.wmv', '.mp4', '.webm', '.mp3', '.wav', '.mid',
             '.rar', '.zip', '.tar', '.gz', '.7z', '.bz2', '.cab', '.iso',

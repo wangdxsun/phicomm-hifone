@@ -20,6 +20,7 @@
             Hifone.Config = {
                 'locale' : '{{ $user_locale or $site_locale }}',
                 'current_user_id' : '{{ Auth::user() ? Auth::user()->id : 0 }}',
+                'role' : '{{ Auth::user() ? Auth::user()->role : '未登录'}}',
                 'token' : '{{ csrf_token() }}',
                 'emoj_cdn' : '{{ cdn() }}',
                 'uploader_url' : '{{ route('upload_image') }}',

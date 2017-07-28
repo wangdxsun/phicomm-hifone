@@ -485,3 +485,8 @@ ul {
   .ui.yellow.message .header {
     color: #9c6f04;
   }
+
+
+  #emojify img{
+    width:48px;
+  }

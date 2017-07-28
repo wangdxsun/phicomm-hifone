@@ -140,9 +140,14 @@
         </div>
     </div>
     <script type="text/javascript">
+        if (Hifone.Config.role == '创始人' || Hifone.Config.role == '管理员'){
+            var data =['fontsize','forecolor','backcolor','bold', 'italic', 'underline', 'strikethrough', 'blockquote', 'insertunorderedlist', 'insertorderedlist', 'justifyleft','justifycenter', 'justifyright',  'link', 'insertimage','attachment','fullscreen'];
+        }else{
+            var data =['fontsize','forecolor','backcolor','bold', 'italic', 'underline', 'strikethrough', 'blockquote', 'insertunorderedlist', 'insertorderedlist', 'justifyleft','justifycenter', 'justifyright',  'link', 'insertimage','fullscreen'];
+        }
         var ue = UE.getEditor('container',{
             toolbars: [
-                ['bold', 'italic', 'underline', 'strikethrough', 'blockquote', 'insertunorderedlist', 'insertorderedlist', 'justifyleft','justifycenter', 'justifyright',  'link', 'insertimage','fullscreen']
+                data
             ],
             elementPathEnabled: false,
             enableContextMenu: false,
