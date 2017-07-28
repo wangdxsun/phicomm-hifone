@@ -19,6 +19,7 @@ class Word extends BaseModel
      * @var string[]
      */
     protected $fillable = [
+        'id',
         'last_op_user_id',
         'type',
         'word',
@@ -46,9 +47,9 @@ class Word extends BaseModel
     }
 
     public static $statuses = [
-        '替换关键词',
-        '审核关键词',
-        '禁止关键词'
+        '替换敏感词',
+        '审核敏感词',
+        '禁止敏感词'
     ];
 
     public static $types = [

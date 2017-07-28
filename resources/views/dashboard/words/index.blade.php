@@ -86,7 +86,7 @@
                             <td><a href="{{ $word->lastOpUser->url }}" target="_blank">{{ $word->lastOpUser->username }}</a></td>
                             <td style="width:15%">{{ $word->last_op_time }}</td>
                             <td style="width:5%">
-                                <span class="modify_info" data-name="{{$word->id}},{{$word->word}},{{$word->replacement}}"><i class="fa fa-pencil"></i></span>
+                                <span class="modify_info" data-name="{{$word->id}},{{$word->type}},{{$word->word}},{{$word->status}},{{$word->replacement}}"><i class="fa fa-pencil"></i></span>
                                 <a data-url="{{ route('dashboard.word.destroy',['id'=>$word->id]) }}" data-method="delete" class="confirm-action"><i class="fa fa-trash"></i></a>
                             </td>
 
@@ -102,37 +102,34 @@
                         <div class="modal-content">
                             <div class="content-wrapper">
                                 <div class="header sub-header">
-                                            <span class="uppercase">
-                                                 {{ trans('dashboard.words.edit.title') }}
-                                             </span>
+                                    <span class="uppercase">
+                                         {{ trans('dashboard.words.edit.title') }}
+                                    </span>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        {!! Form::open(['url'=>'dashboard/word/editInfo']) !!}
-                                        {!! Form::hidden('word[id]', $word->id, ['class' => 'form-control', 'id' => 'word-id', 'placeholder' => '']) !!}
+                                        {!! Form::open(['route' => ['dashboard.word.update', $word->id], 'method' => 'PUT']) !!}
+                                        {!! Form::hidden('word[id]', $word->id, ['class' => 'form-control', 'id' => 'word-id']) !!}
                                         <fieldset>
                                         <div class="form-group">
                                             <label>{{ trans('dashboard.words.type.title') }}</label><label style="margin-left: 10px;">(*为必填项)</label>
-                                            {!!  Form::select('word[type]', ['政治' => trans('dashboard.words.type.type_1'),'广告' => trans('dashboard.words.type.type_2'),
-                                            trans('dashboard.words.type.type_3') => trans('dashboard.words.type.type_3'),trans('dashboard.words.type.type_4') =>
-                                             trans('dashboard.words.type.type_4'),trans('dashboard.words.type.type_5') => trans('dashboard.words.type.type_5'),
-                                            '默认' => trans('dashboard.words.type.type_0')],null,
-                                            ['class' => 'form-control', 'id' => 'word-type', 'placeholder' =>'—选择类别—'])!!}
+                                            {!!  Form::select('word[type]', ['政治' => '政治', '广告' => '广告',
+                                                '涉枪涉爆' => '涉枪涉爆', '网络招嫖' => '网络招嫖', '淫秽信息' => '淫秽信息',
+                                                '默认' => '默认'], null, ['class' => 'form-control', 'id' => 'word-type'])!!}
                                         </div>
                                         <div class="form-group">
                                             <label>{{ trans('dashboard.words.content') }}*</label>
-                                            {!! Form::text('word[word]', $word->word, ['class' => 'form-control', 'id' => 'word-find', 'placeholder' => '']) !!}
+                                            <input type="text" id="word-word" name="word[word]" class="form-control" value="">
                                         </div>
                                         <div class="form-group">
                                             <label>{{ trans('dashboard.words.action.title') }}*</label>
-                                            {!!  Form::select('word[status]', ['审核关键词' => trans('dashboard.words.action.type_1'),'禁止关键词' => trans('dashboard.words.action.type_2'),
-                                                 '替换关键词' =>trans('dashboard.words.action.type_3')], null,
-                                                 ['class' => 'form-control', 'id' => 'word-replacement', 'placeholder' =>'—过滤状态—'])!!}
-
+                                            {!!  Form::select('word[status]', ['审核敏感词' => '审核敏感词','禁止敏感词' => '禁止敏感词',
+                                                 '替换敏感词' => '替换敏感词'], null,
+                                                 ['class' => 'form-control', 'id' => 'word-status'])!!}
                                         </div>
                                         <div class="form-group">
                                             <label>{{ trans('dashboard.words.replacement') }}</label>
-                                            {!! Form::text('word[replacement]', $word->replacement, ['class' => 'form-control', 'id' => 'word-substitute', 'placeholder' => '']) !!}
+                                            {!! Form::text('word[replacement]', '', ['class' => 'form-control', 'id' => 'word-replacement']) !!}
                                         </div>
                                         </fieldset>
                                         <div class="row">

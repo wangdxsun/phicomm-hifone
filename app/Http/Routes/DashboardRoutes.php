@@ -69,7 +69,6 @@ class DashboardRoutes
 
             $router->get('wordsExcel/export','WordsExcelController@export')->name('wordsExcel.export');
             $router->post('wordsExcel/import','WordsExcelController@import');
-            $router->post('word/editInfo', 'WordController@editInfo');
             $router->post('word/batchDestroy', 'WordController@batchDestroy');
             $router->get('check/check', 'CheckController@check')->name('check.check');
 
