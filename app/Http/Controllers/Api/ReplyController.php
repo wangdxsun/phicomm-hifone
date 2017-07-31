@@ -16,7 +16,6 @@ class ReplyController extends ApiController
     public function store(ReplyBll $replyBll)
     {
         $replyBll->createReply();
-
         return success('发表成功，待审核');
     }
 }
