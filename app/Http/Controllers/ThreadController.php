@@ -14,17 +14,13 @@ namespace Hifone\Http\Controllers;
 use AltThree\Validator\ValidationException;
 use Auth;
 use Hifone\Commands\Append\AddAppendCommand;
-use Hifone\Commands\Thread\AddThreadCommand;
 use Hifone\Commands\Thread\RemoveThreadCommand;
 use Hifone\Commands\Thread\UpdateThreadCommand;
-use Hifone\Events\Thread\ThreadWasAddedEvent;
-use Hifone\Events\Thread\ThreadWasAuditedEvent;
 use Hifone\Events\Thread\ThreadWasViewedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Pin\SinkWasAddedEvent;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Http\Bll\ThreadBll;
-use Hifone\Http\Bll\PhicommBll;
 use Hifone\Models\Node;
 use Hifone\Models\Section;
 use Hifone\Models\Thread;
@@ -32,7 +28,6 @@ use Hifone\Repositories\Criteria\Thread\BelongsToNode;
 use Config;
 use Hifone\Services\Filter\WordsFilter;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Input;
 use Redirect;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -121,27 +116,20 @@ class ThreadController extends Controller
         try {
             $thread = $threadBll->createThread();
             $post = $thread->body . $thread->title;
-            if (Str::contains($post, ['<img']) || Str::contains($post, ['<a'])) {
-                //帖子中包含图片或者链接，都需要审核
+            if ($threadBll->isContainsImageOrUrl($post)) {
                 return Redirect::route('thread.index')
                     ->withSuccess('帖子发表成功，请耐心等待审核');
-            } else if (($wordsFilter->filterWord($post))) {
-                //自动审核未通过，需要人工审核
+            } elseif ($wordsFilter->filterWord($post)) {
                 return Redirect::route('thread.index')
                     ->withSuccess('帖子发表成功，请耐心等待审核');
             } else {
-                //自动审核通过，触发相应的代码逻辑
-                event(new ThreadWasAddedEvent($thread));
+                $threadBll->threadPassAutoAudit($thread);
 
-                $thread->status = 0;
-                $this->updateOpLog($thread, '审核通过');
-                $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
-                $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
-                event(new ThreadWasAuditedEvent($thread));
                 return Redirect::route('thread.index')
                     ->withSuccess('帖子审核通过，发表成功！');
             }
-        }catch (\Exception $e) {
+
+        } catch (\Exception $e) {
                 return Redirect::route('thread.create')
                     ->withInput(Input::all())
                     ->withErrors($e->getMessageBag());
