@@ -14,6 +14,9 @@ namespace Hifone\Http\Controllers\Dashboard;
 use AltThree\Validator\ValidationException;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Word;
+use Hifone\Services\Filter\Utils\TrieTree;
+use Hifone\Services\Filter\WordInit;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Request;
@@ -22,12 +25,15 @@ use DB;
 
 class WordController extends Controller
 {
+    private $wordInit;
+
     /**
      * Creates a new node controller instance.
      *
      */
-    public function __construct()
+    public function __construct(WordInit $wordInit)
     {
+        $this->wordInit = $wordInit;
         View::share([
             'current_menu'  => 'words',
             'sub_title'     => trans_choice('dashboard.words.words', 2),
@@ -87,7 +93,8 @@ class WordController extends Controller
 
         try {
             $word = Word::create($wordData);
-            $this ->updateOpLog($word, "添加敏感词");
+            $this->updateCache($this->wordInit);
+            $this->updateOpLog($word, "添加敏感词");
         } catch (ValidationException $e) {
 
             return Redirect::route('dashboard.word.create')
@@ -112,12 +119,16 @@ class WordController extends Controller
         $word = Word::find($wordData['id']);
 
         //判断重复敏感词，提示重新编辑
-        $oldWord = Word::where('word',$wordData['word'])->first();
-        if ($oldWord) {
-            return Redirect::back()->withErrors('修改后敏感词重复，请重新编辑！');
+        if ($word->word != $wordData['word']) {//修改词语本身
+            $oldWord = Word::where('word',$wordData['word'])->first();
+            if ($oldWord) {
+                return Redirect::back()->withErrors('修改后敏感词重复，请重新编辑！');
+            }
         }
         unset($wordData['id']);
         $word->update($wordData);
+        //更新缓存
+        $this->updateCache($this->wordInit);
         $this->updateOpLog($word, '修改敏感词');
 
         return Redirect::route('dashboard.word.index')
@@ -132,8 +143,9 @@ class WordController extends Controller
             DB::beginTransaction();
             try {
                 foreach ($word_ids as $id) {
-                    if (Word::find($id)){
-                        self::destroy(Word::find($id));
+                    if ($word = Word::find($id)){
+                        $this->updateOpLog($word,"删除敏感词");
+                        $word->delete();
                         $count++;
                     }
                 }
@@ -142,6 +154,7 @@ class WordController extends Controller
                 DB::rollBack();
                 return Redirect::back()->withErrors($e->getMessageBag());
             }
+            $this->updateCache($this->wordInit);
             return Redirect::back()->withSuccess('恭喜，批量删除成功！'.'共'.$count.'条');
         } else {
             return Redirect::back()->withErrors('您未选中任何记录！');
@@ -149,11 +162,21 @@ class WordController extends Controller
 
     }
 
-    public function destroy(Word $word)
+    public function destroy(Word $word, WordInit $wordInit)
     {
         $this->updateOpLog($word,"删除敏感词");
         $word->delete();
+        $this->updateCache($this->wordInit);
         return Redirect::route('dashboard.word.index')
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
     }
+
+    protected function updateCache(WordInit $wordInit)
+    {
+        $cacheTime = 30 * 24 * 60; // 单位为分钟
+        $words = Word::pluck('word');
+        $tree = $wordInit->initKeyWord($words);
+        Cache::put('words', $tree, $cacheTime);
+    }
+
 }

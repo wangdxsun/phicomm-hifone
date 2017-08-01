@@ -45,7 +45,7 @@
                     <div class="col-xs-12">
                         <div class="form-group">
                             <button type="submit" class="btn btn-success">{{ '保存' }}</button>
-                            <a class="btn btn-default" href="{{ back_url('dashboard.word.index') }}">{{ '取消' }}</a>
+                            <a class="btn btn-default" href="{{ route('dashboard.word.index') }}">{{ '取消' }}</a>
                         </div>
                     </div>
                 </div>

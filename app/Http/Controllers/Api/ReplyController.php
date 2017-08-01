@@ -63,5 +63,6 @@ class ReplyController extends Controller
                 'reply' => $reply
             ];
         }
+
     }
 }
