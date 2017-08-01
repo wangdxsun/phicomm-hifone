@@ -62,8 +62,7 @@ class ThreadBll extends BaseBll
                 $images .= "<img src='{$upload["filename"]}'/>";
             }
         }
-
-        dispatch(new AddThreadCommand(
+        $threadTemp = dispatch(new AddThreadCommand(
             $threadData['title'],
             $threadData['body'],
             Auth::id(),
@@ -71,6 +70,8 @@ class ThreadBll extends BaseBll
             $tags,
             $images
         ));
+        $thread = Thread::find($threadTemp->id);
+        return $thread;
     }
 
     public function showThread($thread)
