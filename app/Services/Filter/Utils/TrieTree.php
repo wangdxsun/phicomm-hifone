@@ -8,7 +8,7 @@ namespace Hifone\Services\Filter\Utils;
  */
 class TrieTree
 {
-    private $tree = [];
+    public $tree = [];
 
     public function insert($word)
     {
@@ -16,34 +16,38 @@ class TrieTree
         $count = count($chars);
         $T = &$this->tree;
         for ($i = 0; $i < $count; $i++) {
-            $c = $chars[$i];
-            if (!array_key_exists($c, $T)) {
-                $T[$c] = ['isEnd' =>0];   //插入新字符，关联数组
+            $char = $chars[$i];
+            if (!array_key_exists($char, $T)) {
+                $T[$char] = ['isEnd' =>0];   //插入新字符，关联数组
             }
             if($i == $count - 1) {
-                $T[$c]['isEnd'] = 1;
+                $T[$char]['isEnd'] = 1;
             }
-            $T = &$T[$c];
+            $T = &$T[$char];
         }
+        return $this->tree;
     }
 
-    public function remove($utf8_str)
+    public function remove($word)
     {
-        $chars = getChars($utf8_str);
-        $chars[] = null;
+        $chars = getChars($word);
         if ($this->_find($chars)) {    //先保证此串在树中
-            $chars[] = null;
             $count = count($chars);
             $T = &$this->tree;
             for ($i = 0; $i < $count; $i++) {
                 $char = $chars[$i];
-                if (count($T[$char]) == 1) {     //表明仅有此串
-                    unset($T[$char]);
-                    return;
+                if($i == $count - 1) {
+                    if (count($T[$char]) == 1) {     //表明仅有此串
+                        unset($T[$char]);
+                        break;
+                    } else {   //存在其他节点
+                        $T[$char]['isEnd'] = 0;
+                    }
                 }
                 $T = &$T[$char];
             }
         }
+        return $this->tree;
     }
 
     private function _find(&$chars)
@@ -71,7 +75,7 @@ class TrieTree
             $char = $chars[$i];
             if (array_key_exists($char, $T)) {//存在，则判断是否为最后一个
                 $badWords .= $char;
-                if ($T[$char]['isEnd'] == 1) {//如果为最后一个匹配规则,结束循环
+                if ($T[$char]['isEnd'] == 1 && $i == $len - 1) {//如果为最后一个匹配规则,结束循环
                     return $badWords;
                 } else {
                     for ($k = $i+1; $k < $len; $k++) {

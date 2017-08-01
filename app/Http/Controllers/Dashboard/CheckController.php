@@ -5,6 +5,7 @@ namespace Hifone\Http\Controllers\Dashboard;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
+use Hifone\Services\Filter\Utils\TrieTree;
 use Hifone\Services\Filter\WordsFilter;
 
 class CheckController extends  Controller
@@ -30,14 +31,25 @@ class CheckController extends  Controller
 
 //        return $data;
 
-        $post = '诱惑';
+        $post = '中国梦';
         $start = microtime(true) * 1000;
         $res = $wordsFilter->filterWord($post);
         $end = microtime(true) * 1000;
+//        \Cache::flush();
 
         return [
             'res' => $res,
             'time' => $end - $start,
+            'tree' => \Cache::get('words'),
+            'count' => count(\Cache::get('words')),
         ];
+
+
+//        $oldTree = \Cache::get('words', ['fuck']);
+//        $trieTree->tree = $oldTree;
+//
+//        $newTree = $trieTree->insert('这个肯定不是敏感词');
+//        $newTree2 = $trieTree->remove('fuck');
+//        dd($oldTree, $newTree, $newTree2);
     }
 }

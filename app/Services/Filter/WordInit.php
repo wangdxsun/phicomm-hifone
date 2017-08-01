@@ -20,8 +20,25 @@ class WordInit
         $this->trieTree = $trieTree;
     }
 
+    //多个敏感词刷新字典树
     public function initKeyWord($words){
         return $this->trieTree->importBadWords($words);
+    }
+
+    //插入一个词
+    public function insertWord($word) {
+        return $this->trieTree->insert($word);
+    }
+
+    //替换一个词
+    public function replaceWord($beforeWord, $afterWord) {
+        $this->trieTree->remove($beforeWord);
+        return $this->trieTree->insert($afterWord);
+    }
+
+    //移除一个词
+    public function removeWord($word) {
+        return $this->trieTree->remove($word);
     }
 
     public function isContainBadWords($post, $tree) {

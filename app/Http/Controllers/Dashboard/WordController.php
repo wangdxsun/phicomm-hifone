@@ -25,15 +25,15 @@ use DB;
 
 class WordController extends Controller
 {
-    private $wordInit;
+    private $trieTree;
 
     /**
      * Creates a new node controller instance.
      *
      */
-    public function __construct(WordInit $wordInit)
+    public function __construct(TrieTree $trieTree)
     {
-        $this->wordInit = $wordInit;
+        $this->trieTree = $trieTree;
         View::share([
             'current_menu'  => 'words',
             'sub_title'     => trans_choice('dashboard.words.words', 2),
@@ -90,13 +90,11 @@ class WordController extends Controller
             return Redirect::route('dashboard.word.edit', $oldWord->id)
                 ->withErrors('当前添加的敏感词重复，请重新编辑！');
         }
-
         try {
             $word = Word::create($wordData);
-            $this->updateCache($this->wordInit);
+            $this->cacheInsert($this->trieTree, $word->word);
             $this->updateOpLog($word, "添加敏感词");
         } catch (ValidationException $e) {
-
             return Redirect::route('dashboard.word.create')
                 ->withInput(Request::all())
                 ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.words.add.failure')))
@@ -117,18 +115,21 @@ class WordController extends Controller
     {
         $wordData = request('word');
         $word = Word::find($wordData['id']);
+        $beforeWord = $word->word;
 
         //判断重复敏感词，提示重新编辑
-        if ($word->word != $wordData['word']) {//修改词语本身
-            $oldWord = Word::where('word',$wordData['word'])->first();
-            if ($oldWord) {
+        if ($beforeWord != $wordData['word']) {//修改词语本身
+            $afterWord = Word::where('word',$wordData['word'])->first();
+            if ($afterWord) {
                 return Redirect::back()->withErrors('修改后敏感词重复，请重新编辑！');
             }
         }
         unset($wordData['id']);
         $word->update($wordData);
         //更新缓存
-        $this->updateCache($this->wordInit);
+        if ($beforeWord != $wordData['word']) {
+            $this->cacheReplace($this->trieTree, $beforeWord, $wordData['word']);
+        }
         $this->updateOpLog($word, '修改敏感词');
 
         return Redirect::route('dashboard.word.index')
@@ -154,7 +155,7 @@ class WordController extends Controller
                 DB::rollBack();
                 return Redirect::back()->withErrors($e->getMessageBag());
             }
-            $this->updateCache($this->wordInit);
+            $this->cacheAll($this->trieTree);
             return Redirect::back()->withSuccess('恭喜，批量删除成功！'.'共'.$count.'条');
         } else {
             return Redirect::back()->withErrors('您未选中任何记录！');
@@ -162,21 +163,54 @@ class WordController extends Controller
 
     }
 
-    public function destroy(Word $word, WordInit $wordInit)
+    public function destroy(Word $word)
     {
         $this->updateOpLog($word,"删除敏感词");
+        $this->cacheRemove($this->trieTree, $word->word);
         $word->delete();
-        $this->updateCache($this->wordInit);
         return Redirect::route('dashboard.word.index')
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
     }
 
-    protected function updateCache(WordInit $wordInit)
+    protected function cacheAll(TrieTree $trieTree)
     {
         $cacheTime = 30 * 24 * 60; // 单位为分钟
         $words = Word::pluck('word');
-        $tree = $wordInit->initKeyWord($words);
+        $tree = $trieTree->importBadWords($words);
         Cache::put('words', $tree, $cacheTime);
+    }
+
+    protected function cacheInsert(TrieTree $trieTree, $word)
+    {
+        $this->initTree($trieTree);
+        
+        $cacheTime = 30 * 24 * 60; // 单位为分钟
+        $newTree = $trieTree->insert($word);
+        Cache::put('words', $newTree, $cacheTime);
+    }
+
+    protected function cacheReplace(TrieTree $trieTree, $beforeWord, $afterWord)
+    {
+        $cacheTime = 30 * 24 * 60; // 单位为分钟
+
+        $this->initTree($trieTree);
+        $trieTree->tree = $trieTree->remove($beforeWord);
+        $newTree = $trieTree->insert($afterWord);
+        Cache::put('words', $newTree, $cacheTime);
+    }
+
+    protected function cacheRemove(TrieTree $trieTree, $word)
+    {
+        $cacheTime = 30 * 24 * 60; // 单位为分钟
+
+        $this->initTree($trieTree);
+        $newTree = $trieTree->remove($word);
+        Cache::put('words', $newTree, $cacheTime);
+    }
+
+    protected function initTree(TrieTree $trieTree) {
+        $tree = Cache::get('words', []);
+        $trieTree->tree = $tree;
     }
 
 }

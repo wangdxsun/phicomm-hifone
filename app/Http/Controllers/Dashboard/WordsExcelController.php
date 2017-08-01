@@ -2,6 +2,7 @@
 
 namespace Hifone\Http\Controllers\Dashboard;
 
+use Hifone\Services\Filter\Utils\TrieTree;
 use Hifone\Services\Filter\WordInit;
 use Illuminate\Http\Request;
 
@@ -30,7 +31,7 @@ class WordsExcelController extends  Controller
 
     }
 
-    public function import(WordInit $wordInit)
+    public function import(TrieTree $trieTree)
     {
         if(Input::hasFile('import_file')) {
             $path = Input::file('import_file')->getRealPath();
@@ -63,8 +64,7 @@ class WordsExcelController extends  Controller
                             }
                         }
                         Word::insert($insert);//批量创建
-                        //更新缓存
-                        $this->updateCache($wordInit);
+                        $this->cacheAll($trieTree);//更新缓存
                         return Redirect::route('dashboard.word.index')
                             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), '导入成功'));
                     }
@@ -80,11 +80,11 @@ class WordsExcelController extends  Controller
         }
     }
 
-    protected function updateCache(WordInit $wordInit)
+    protected function cacheAll(TrieTree $trieTree)
     {
         $cacheTime = 30 * 24 * 60; // 单位为分钟
         $words = Word::pluck('word');
-        $tree = $wordInit->initKeyWord($words);
+        $tree = $trieTree->importBadWords($words);
         Cache::put('words', $tree, $cacheTime);
     }
 }
