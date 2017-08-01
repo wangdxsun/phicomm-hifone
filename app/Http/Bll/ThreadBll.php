@@ -62,8 +62,7 @@ class ThreadBll extends BaseBll
                 $images .= "<img src='{$upload["filename"]}'/>";
             }
         }
-
-        dispatch(new AddThreadCommand(
+        $threadTemp = dispatch(new AddThreadCommand(
             $threadData['title'],
             $threadData['body'],
             Auth::id(),
@@ -71,6 +70,9 @@ class ThreadBll extends BaseBll
             $tags,
             $images
         ));
+
+        $thread = Thread::find($threadTemp->id);
+        return $thread;
 
     }
 
@@ -93,7 +95,7 @@ class ThreadBll extends BaseBll
     public function replies($thread)
     {
         $replies = $thread->replies()->visible()->with(['user'])
-            ->orderBy('order', 'desc')->orderBy('created_at', 'desc')->paginate();
+            ->orderBy('order', 'desc')->orderBy('created_at', 'desc')->get();
         foreach ($replies as &$reply) {
             $reply['liked'] = Auth::check() ? Auth::user()->hasLikeReply($reply) : false;
         }

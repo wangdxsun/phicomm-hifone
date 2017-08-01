@@ -13,6 +13,7 @@ use Hifone\Events\User\UserWasAddedEvent;
 use Hifone\Models\Keyword;
 use Hifone\Models\User;
 use Auth;
+use Hifone\Models\Word;
 use Session;
 
 class PhicommBll extends BaseBll
@@ -176,8 +177,14 @@ class PhicommBll extends BaseBll
             throw new \Exception('该用户名已被使用');
         }
         $keywords = Keyword::all();
+        $words = Word::all();
         foreach ($keywords as $keyword) {
             if (strpos(request('username'), $keyword->word) !== false) {
+                throw new \Exception('用户名包含被系统屏蔽字符');
+            }
+        }
+        foreach ($words as $word) {
+            if (strpos(request('username'), $word->word) !== false) {
                 throw new \Exception('用户名包含被系统屏蔽字符');
             }
         }

@@ -29,10 +29,11 @@ class ReplyBll extends BaseBll
                 $replyData['body'] .= "<img src='{$res["filename"]}'/>";
             }
         }
-        dispatch(new AddReplyCommand(
+        $reply = dispatch(new AddReplyCommand(
             $replyData['body'],
             Auth::id(),
             $replyData['thread_id']
         ));
+        return $reply;
     }
 }

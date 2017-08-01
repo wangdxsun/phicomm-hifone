@@ -58,6 +58,7 @@ class AddReplyCommandHandler
             'updated_at'    => Carbon::now()->toDateTimeString(),
         ];
         // Create the reply
-        Reply::create($data);
+        $reply = Reply::create($data);
+        return $reply;
     }
 }
