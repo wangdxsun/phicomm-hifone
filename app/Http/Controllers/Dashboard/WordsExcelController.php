@@ -2,6 +2,7 @@
 
 namespace Hifone\Http\Controllers\Dashboard;
 
+use Hifone\Services\Filter\WordInit;
 use Illuminate\Http\Request;
 
 use Hifone\Http\Requests;
@@ -29,7 +30,7 @@ class WordsExcelController extends  Controller
 
     }
 
-    public function import()
+    public function import(WordInit $wordInit)
     {
         if(Input::hasFile('import_file')) {
             $path = Input::file('import_file')->getRealPath();
@@ -62,6 +63,8 @@ class WordsExcelController extends  Controller
                             }
                         }
                         Word::insert($insert);//批量创建
+                        //更新缓存
+                        $this->updateCache($wordInit);
                         return Redirect::route('dashboard.word.index')
                             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), '导入成功'));
                     }
@@ -75,6 +78,14 @@ class WordsExcelController extends  Controller
                     ->withSuccess(sprintf('%s %s', trans('hifone.failure'), '文件格式不正确'));
             }
         }
+    }
+
+    protected function updateCache(WordInit $wordInit)
+    {
+        $cacheTime = 30 * 24 * 60; // 单位为分钟
+        $words = Word::pluck('word');
+        $tree = $wordInit->initKeyWord($words);
+        Cache::put('words', $tree, $cacheTime);
     }
 }
 

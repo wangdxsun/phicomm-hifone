@@ -71,6 +71,7 @@ class ThreadBll extends BaseBll
             $tags,
             $images
         ));
+
     }
 
     public function showThread($thread)
