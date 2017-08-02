@@ -8,6 +8,7 @@
 
 namespace Hifone\Http\Controllers\Api;
 
+use Config;
 use Hifone\Http\Bll\ReplyBll;
 use Hifone\Services\Filter\WordsFilter;
 
@@ -16,6 +17,10 @@ class ReplyController extends ApiController
     public function store(ReplyBll $replyBll, WordsFilter $wordsFilter)
     {
         $reply = $replyBll->createReply();
+        if (Config::get('settings.auto_audit',0) != 1) {
+            return success('发表成功，待审核');
+        }
+
         if ($replyBll->isContainsImageOrUrl($reply->body)) {
             return success('发表成功，待审核');
         } elseif ($wordsFilter->filterWord($reply->body)) {

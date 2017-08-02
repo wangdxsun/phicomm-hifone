@@ -12,6 +12,7 @@
 namespace Hifone\Http\Controllers\Api;
 
 use Auth;
+use Config;
 use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\ThreadBll;
 use Hifone\Models\Thread;
@@ -48,6 +49,9 @@ class ThreadController extends ApiController
         }
 
         $thread = $threadBll->createThread();
+        if (Config::get('settings.auto_audit',0) != 1) {
+            return success('发表成功，待审核');
+        }
         $post = $thread->body.$thread->title;
         if ($threadBll->isContainsImageOrUrl($post)) {
             return success('发表成功，待审核');
@@ -60,6 +64,7 @@ class ThreadController extends ApiController
                 'thread' => $thread
             ];
         }
+
     }
 
     public function replies(Thread $thread, ThreadBll $threadBll)
