@@ -14,6 +14,7 @@ use Hifone\Models\Keyword;
 use Hifone\Models\User;
 use Auth;
 use Hifone\Models\Word;
+use Hifone\Services\Filter\WordsFilter;
 use Session;
 
 class PhicommBll extends BaseBll
@@ -165,7 +166,7 @@ class PhicommBll extends BaseBll
         }
     }
 
-    public function bind()
+    public function bind(WordsFilter $wordsFilter)
     {
         $userData = [
             'phicomm_id' => Session::get('phicommId') ?: Auth::phicommId(),
@@ -179,17 +180,8 @@ class PhicommBll extends BaseBll
         if (User::where('phicomm_id', $userData['phicomm_id'])->count() > 0) {
             throw new \Exception('请勿重复关联');
         }
-        $keywords = Keyword::all();
-        $words = Word::all();
-        foreach ($keywords as $keyword) {
-            if (strpos(request('username'), $keyword->word) !== false) {
-                throw new \Exception('用户名包含被系统屏蔽字符');
-            }
-        }
-        foreach ($words as $word) {
-            if (strpos(request('username'), $word->word) !== false) {
-                throw new \Exception('用户名包含被系统屏蔽字符');
-            }
+        if ($wordsFilter->filterWord(request('username')) || $wordsFilter->filterKeyWord(request('username'))) {
+            throw new \Exception('用户名包含被系统屏蔽字符');
         }
         $user = User::create($userData);//直接通过create返回的用户信息不全
         $user = User::find($user->id);
