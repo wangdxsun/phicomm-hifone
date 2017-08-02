@@ -176,6 +176,9 @@ class PhicommBll extends BaseBll
         if (User::where('username', request('username'))->count() > 0) {
             throw new \Exception('该用户名已被使用');
         }
+        if (User::where('phicomm_id', $userData['phicomm_id'])->count() > 0) {
+            throw new \Exception('请勿重复关联');
+        }
         $keywords = Keyword::all();
         $words = Word::all();
         foreach ($keywords as $keyword) {
