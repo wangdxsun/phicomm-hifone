@@ -177,7 +177,9 @@ class PhicommBll extends BaseBll
         if (User::where('username', request('username'))->count() > 0) {
             throw new \Exception('该用户名已被使用');
         }
-
+        if (User::where('phicomm_id', $userData['phicomm_id'])->count() > 0) {
+            throw new \Exception('请勿重复关联');
+        }
         if ($wordsFilter->filterWord(request('username')) || $wordsFilter->filterKeyWord(request('username'))) {
             throw new \Exception('用户名包含被系统屏蔽字符');
         }
