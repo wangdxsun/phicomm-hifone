@@ -11,6 +11,7 @@ namespace Hifone\Http\Controllers\Api;
 use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\PhicommBll;
 use Hifone\Models\User;
+use Hifone\Services\Filter\WordsFilter;
 use Illuminate\Http\Request;
 use Auth;
 use Session;
@@ -69,14 +70,14 @@ class PhicommController extends ApiController
         }
     }
 
-    public function bind(PhicommBll $phicommBll)
+    public function bind(PhicommBll $phicommBll, WordsFilter $wordsFilter)
     {
         $this->validate(request(), [
             'username' => 'required|max:15|regex:/\A[\x{4e00}-\x{9fa5}A-Za-z0-9\-\_\.]+\z/u',
         ], [
             'username.regex' => '用户名含有非法字符'
         ]);
-        $user = $phicommBll->bind();
+        $user = $phicommBll->bind($wordsFilter);
 
         return $user;
     }

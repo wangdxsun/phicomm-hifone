@@ -16,58 +16,15 @@
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 @include('partials.errors')
                 <fieldset>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="form-group">
-                                <label>{{ trans('dashboard.settings.general.site_name') }}</label>
-                                <input type="text" class="form-control" name="site_name" value="{{ $site_name }}" required>
+                    <div class="row" >
+                            <div class="col-md-6 col-md-offset-1">
+                                <label>{{ trans('dashboard.settings.general.auto_audit') }}</label>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="form-group">
-                                <label>{{ trans('dashboard.settings.general.site_domain') }}</label>
-                                <input type="text" class="form-control" name="site_domain" value="{{ $site_domain }}" required>
+                            <div class="pull-right col-md-3">
+                                <a data-url="{{ route('dashboard.settings.close') }}" class="btn btn-primary"  data-method="post">{{Config::get('setting.auto_audit') ? '关闭' : '打开'}}</a>
                             </div>
-                        </div>
                     </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="form-group">
-                                <label>{{ trans('dashboard.settings.general.site_logo') }}</label>
-                                <input type="text" class="form-control" name="site_logo" value="{{ $site_logo }}" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="form-group">
-                                <label>{{ trans('dashboard.settings.general.site_cdn') }}</label>
-                                <input type="text" class="form-control" name="site_cdn" value="{{ $site_cdn }}" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="form-group">
-                                <label>{{ trans('dashboard.settings.general.site_about') }}</label>
-                                <div class='markdown-control'>
-                                    <textarea name="site_about" class="form-control autosize" rows="4">{{ $raw_site_about }}</textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
                 </fieldset>
-
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-success">{{ trans('forms.save') }}</button>
-                        </div>
-                    </div>
-                </div>
             </form>
         </div>
     </div>

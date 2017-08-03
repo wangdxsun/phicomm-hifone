@@ -14,6 +14,7 @@ namespace Hifone\Http\Controllers\Dashboard;
 use Exception;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
@@ -121,5 +122,17 @@ class SettingsController extends Controller
 
         return Redirect::to($redirectUrl)
             ->withSuccess(trans('dashboard.settings.edit.success'));
+    }
+
+    public function autoAuditClose()
+    {
+        if (Config::get('setting.auto_audit') != 1) {
+            Config::set('setting.auto_audit',1);
+            DB::table('settings')->where('name','auto_audit')->update(['value'=>1]);
+        } else {
+            Config::set('setting.auto_audit',1);
+            DB::table('settings')->where('name','auto_audit')->update(['value'=>0]);
+        }
+        return Redirect::back()->withSuccess('修改成功！');
     }
 }

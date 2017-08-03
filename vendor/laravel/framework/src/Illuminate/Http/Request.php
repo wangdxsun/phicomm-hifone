@@ -710,7 +710,7 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
 
     public function isApi()
     {
-        return Str::contains($this->requestUri, 'api');
+        return Str::contains($this->requestUri, ['api', 'app']);
     }
 
     /**

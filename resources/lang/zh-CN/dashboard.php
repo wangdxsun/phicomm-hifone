@@ -313,6 +313,7 @@ return [
             'site_about'  => '关于我们',
             'logo'        => 'Logo设置',
             'logo_help'   => '推荐使用90*40大小的logo.',
+            'auto_audit'  => '自动审帖',
         ],
         'localization' => [
             'localization' => '系统语言',

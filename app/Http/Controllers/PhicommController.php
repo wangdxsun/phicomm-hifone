@@ -14,6 +14,7 @@ use Hifone\Events\User\UserWasLoggedinEvent;
 use Hifone\Http\Bll\PhicommBll;
 use Hifone\Models\Provider;
 use Hifone\Models\User;
+use Hifone\Services\Filter\WordsFilter;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\Request;
@@ -111,13 +112,13 @@ class PhicommController extends Controller
         return view('phicomm.create');
     }
 
-    public function postBind(PhicommBll $phicommBll)
+    public function postBind(PhicommBll $phicommBll, WordsFilter $wordsFilter)
     {
         $this->validate(request(), [
             'username' => 'required',
         ]);
         try {
-            $phicommBll->bind();
+            $phicommBll->bind($wordsFilter);
         } catch (\Exception $e) {
             return back()->withInput()->withErrors($e->getMessage());
         }

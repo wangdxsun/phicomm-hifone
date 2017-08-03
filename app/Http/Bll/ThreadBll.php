@@ -10,11 +10,14 @@ namespace Hifone\Http\Bll;
 
 use Hifone\Commands\Image\UploadBase64ImageCommand;
 use Hifone\Commands\Thread\AddThreadCommand;
+use Hifone\Events\Thread\ThreadWasAddedEvent;
+use Hifone\Events\Thread\ThreadWasAuditedEvent;
 use Hifone\Events\Thread\ThreadWasViewedEvent;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
 use Hifone\Repositories\Criteria\Thread\Filter;
 use Hifone\Repositories\Criteria\Thread\Search;
+use Illuminate\Support\Facades\DB;
 use Input;
 use Auth;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -102,4 +105,23 @@ class ThreadBll extends BaseBll
 
         return $replies;
     }
+
+    public function threadPassAutoAudit($thread)
+    {
+        //自动审核通过，触发相应的代码逻辑
+        event(new ThreadWasAddedEvent($thread));
+        DB::beginTransaction();
+        try {
+            $thread->status = 0;
+            $this->updateOpLog($thread, '自动审核通过');
+            $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
+            $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
+            event(new ThreadWasAuditedEvent($thread));
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw new \Exception('系统错误！');
+        }
+    }
+
 }

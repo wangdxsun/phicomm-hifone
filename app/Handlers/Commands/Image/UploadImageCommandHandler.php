@@ -22,14 +22,14 @@ class UploadImageCommandHandler
     {
         $file = $command->file;
 
-        $allowed_extensions = ['png', 'jpg', 'jpeg', 'gif'];
+        $allowed_extensions = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
         if ($file->getClientOriginalExtension() && !in_array($file->getClientOriginalExtension(), $allowed_extensions)) {
             return ['error' => 'You may only upload png, jpg or gif.'];
         }
 
         $fileName = $file->getClientOriginalName();
         $extension = $file->getClientOriginalExtension() ?: 'png';
-        $folderName = '/uploads/images/'.date('Ym', time()).'/'.date('d', time()).'/'.Auth::user()->id;
+        $folderName = '/uploads/images/'.date('Y/m/d');
         $destinationPath = public_path().'/'.$folderName;
         // Create Randomstring for Filename
         $random_string = str_random(10);
@@ -48,7 +48,7 @@ class UploadImageCommandHandler
 
         // If is not gif file, we will try to reduse the file size
         // This is for the Lightbox Version.
-        if ($file->getClientOriginalExtension() != 'gif') {
+        if (!in_array($file->getClientOriginalExtension(), ['gif', 'webp'])) {
             // open an image file
             $imgLb = Image::make($destinationPath.'/'.$safeNameLightbox);
             // prevent possible upsizing
@@ -62,7 +62,7 @@ class UploadImageCommandHandler
 
         // If is not gif file, we will try to reduse the file size
         // This is for the Thread Version
-        if ($file->getClientOriginalExtension() != 'gif') {
+        if (!in_array($file->getClientOriginalExtension(), ['gif', 'webp'])) {
             // open an image file
             $img = Image::make($destinationPath.'/'.$safeName);
             // prevent possible upsizing

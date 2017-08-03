@@ -25,15 +25,15 @@ class LocaleComposer
      */
     public function compose(View $view)
     {
-        $enabledLangs = Config::get('langs');
-        $langs = array_map(function ($lang) use ($enabledLangs) {
-            $locale = basename($lang);
-
-            return [$locale => $enabledLangs[$locale]];
-        }, glob(base_path('resources/lang').'/*'));
-
-        $langs = call_user_func_array('array_merge', $langs);
-
-        $view->withLangs($langs);
+//        $enabledLangs = Config::get('langs');
+//        $langs = array_map(function ($lang) use ($enabledLangs) {
+//            $locale = basename($lang);
+//
+//            return [$locale => $enabledLangs[$locale]];
+//        }, glob(base_path('resources/lang').'/*'));
+//
+//        $langs = call_user_func_array('array_merge', $langs);
+//
+//        $view->withLangs($langs);
     }
 }
