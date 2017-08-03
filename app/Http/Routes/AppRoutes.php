@@ -16,8 +16,10 @@ class AppRoutes
     {
         $router->group(['namespace' => 'App\V1', 'prefix' => 'app/v1', 'middleware' => 'api'], function ($router) {
             $router->get('user/info', 'UserController@show');
+            $router->post('user/bind', 'UserController@bind');
+
             $router->group(['middleware' => 'auth:hifone'], function ($router) {
-                $router->post('user/bind', 'UserController@bind');
+
             });
         });
     }
