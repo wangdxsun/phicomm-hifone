@@ -79,6 +79,8 @@ class DashboardRoutes
                 $router->get('customization', 'SettingsController@showCustomizationView')->name('customization');
                 $router->get('aboutus', 'SettingsController@showAboutusView')->name('aboutus');
                 $router->post('/', 'SettingsController@postSettings');
+                $router->post('close', 'SettingsController@autoAuditClose')->name('close');
+
             });
 
             // Dashboard API
