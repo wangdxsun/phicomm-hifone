@@ -17,6 +17,12 @@
         <span> • </span>
         <span class="timeago">{!! $thread->created_at !!}</span>
 
+        @if($thread->status == -2)
+            <strong class="label-warning-light pull-right">{!! '审核中' !!}</strong>
+        @elseif($thread->status == -1)
+            <strong class="label-warning pull-right" >{!! '审核未通过' !!}</strong>
+        @endif
+
       </span>
 
   </li>

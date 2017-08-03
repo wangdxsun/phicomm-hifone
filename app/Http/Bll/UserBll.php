@@ -23,7 +23,7 @@ class UserBll extends BaseBll
 
     public function getThreads(User $user)
     {
-        //查看自己或管理员查看帖子，包括自己未审核通过的贴子
+        //自己或管理员查看帖子，接口信息包括所有贴子
         if ($user->id == Auth::id() || Auth::user()->role == '创始人' || Auth::user()->role == '管理员') {
             $threads = $user->threads()->with(['user', 'node'])->recent()->get();
         } else {
