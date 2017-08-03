@@ -31,7 +31,7 @@ class CheckController extends  Controller
 
 //        return $data;
 
-        $post = '中国梦';
+        $post = '2016年彩图集合';
         $start = microtime(true) * 1000;
         $res = $wordsFilter->filterWord($post);
         $end = microtime(true) * 1000;
