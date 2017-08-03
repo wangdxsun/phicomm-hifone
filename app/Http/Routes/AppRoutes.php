@@ -15,9 +15,9 @@ class AppRoutes
     public function map(Registrar $router)
     {
         $router->group(['namespace' => 'App\V1', 'prefix' => 'app/v1', 'middleware' => 'api'], function ($router) {
+            $router->get('user/info', 'UserController@show');
             $router->group(['middleware' => 'auth:hifone'], function ($router) {
                 $router->post('user/bind', 'UserController@bind');
-                $router->get('user/info', 'UserController@show');
             });
         });
     }
