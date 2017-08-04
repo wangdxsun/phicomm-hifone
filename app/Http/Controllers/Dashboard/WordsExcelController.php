@@ -95,8 +95,8 @@ class WordsExcelController extends  Controller
                     if ($data) {
                         foreach ($data as $key => $value) {
                             unset($data[$key]['']);
-                            if ($wordsFilter->filterWord($value->word) !== false) {//包含于缓存字典树
-                                $data[$key]['exist'] = '是';
+                            if (($temp = $wordsFilter->filterWord($value->word)) !== false) {//包含于缓存字典树
+                                $data[$key]['exist'] = $temp;
                             } else {
                                 $data[$key]['exist'] = '否';
                             }
@@ -107,6 +107,7 @@ class WordsExcelController extends  Controller
                                 $sheet->fromArray($data);//第一行输出字段名
                             });
                         })->export('xls');
+                        return Redirect::route('dashboard.word.index');
                     }
                 } else {
                     return Redirect::route('dashboard.word.index')
