@@ -18,6 +18,7 @@ use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Models\Thread;
 use Hifone\Services\Dates\DateFactory;
 use Hifone\Services\Tag\AddTag;
+use Illuminate\Support\Str;
 
 class AddThreadCommandHandler
 {
@@ -49,7 +50,8 @@ class AddThreadCommandHandler
     {
 
         $body = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse($command->body));
-        $body = app('parser.markdown')->convertMarkdownToHtml(app('parser.emotion')->parse($body));
+        $command->thumbnails = $this->getFirstImageUrl($body)[0];
+        $body = app('parser.emotion')->parse($body);
         $body = "$body".$command->images;
         $data = [
             'user_id'       => $command->user_id,
@@ -60,6 +62,7 @@ class AddThreadCommandHandler
             'body_original' => $command->body,
             'created_at'    => Carbon::now()->toDateTimeString(),
             'updated_at'    => Carbon::now()->toDateTimeString(),
+            'thumbnails'    => $command->thumbnails,
         ];
         // Create the thread
         $thread = Thread::create($data);
@@ -68,5 +71,15 @@ class AddThreadCommandHandler
         app(AddTag::class)->attach($thread, $command->tags);
 
         return $thread;
+    }
+
+    public function getFirstImageUrl($body){
+        preg_match_all('/src="([^"]*)\"/i', $body, $atlist_tmp);
+        $imgUrls = [];
+
+        foreach ($atlist_tmp[1] as $k => $v) {
+            $imgUrls[] = $v;
+        }
+        return array_unique($imgUrls);
     }
 }

@@ -25,6 +25,8 @@ final class AddThreadCommand
 
     public $images;
 
+    public $thumbnails;
+
     /**
      * The validation rules.
      *
@@ -42,7 +44,7 @@ final class AddThreadCommand
      *
      * @param string $body
      */
-    public function __construct($title, $body, $user_id, $node_id, $tags, $images = '')
+    public function __construct($title, $body, $user_id, $node_id, $tags, $images = '', $thumbnails = '')
     {
         $this->title = $title;
         $this->body = $body;
@@ -50,5 +52,6 @@ final class AddThreadCommand
         $this->node_id = $node_id;
         $this->tags = $tags;
         $this->images = $images;
+        $this->thumbnails = $thumbnails;
     }
 }
