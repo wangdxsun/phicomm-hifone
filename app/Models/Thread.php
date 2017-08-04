@@ -65,6 +65,7 @@ class Thread extends BaseModel implements TaggableInterface
         'node_id' => 'required|int',
         'user_id' => 'required|int',
     ];
+    
     public static $orderTypes = [
         'id' => '发帖时间',
         'node_id' => '帖子板块',
