@@ -61,4 +61,5 @@ class ParseAt
 
         return array_unique($usernames);
     }
+
 }

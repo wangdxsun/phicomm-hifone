@@ -48,7 +48,7 @@ class AddReplyCommandHandler
     public function handle(AddReplyCommand $command)
     {
         $body = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse($command->body));
-        $body = app('parser.markdown')->convertMarkdownToHtml(app('parser.emotion')->parse($body));
+        $body = app('parser.emotion')->parse($body);
         $data = [
             'user_id'       => $command->user_id,
             'thread_id'     => $command->thread_id,

@@ -51,6 +51,7 @@ class Thread extends BaseModel implements TaggableInterface
         'is_excellent',
         'created_at',
         'updated_at',
+        'thumbnails',
     ];
 
     /**
