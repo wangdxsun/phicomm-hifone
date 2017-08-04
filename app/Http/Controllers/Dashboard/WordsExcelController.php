@@ -4,6 +4,7 @@ namespace Hifone\Http\Controllers\Dashboard;
 
 use Hifone\Services\Filter\Utils\TrieTree;
 use Hifone\Services\Filter\WordInit;
+use Hifone\Services\Filter\WordsFilter;
 use Illuminate\Http\Request;
 
 use Hifone\Http\Requests;
@@ -33,6 +34,7 @@ class WordsExcelController extends  Controller
 
     public function import(TrieTree $trieTree)
     {
+        dd('import');
         if(Input::hasFile('import_file')) {
             $path = Input::file('import_file')->getRealPath();
             $original_name = Input::file('import_file')->getClientOriginalName();
@@ -72,7 +74,46 @@ class WordsExcelController extends  Controller
                     return Redirect::route('dashboard.word.index')
                         ->withSuccess(sprintf('%s %s', trans('hifone.failure'), '敏感词条目不大于5000条'));
                 }
+            } else {
+                return Redirect::route('dashboard.word.index')
+                    ->withSuccess(sprintf('%s %s', trans('hifone.failure'), '文件格式不正确'));
+            }
+        }
+    }
 
+    public function check(WordsFilter $wordsFilter)
+    {
+        dd('check');
+        if(Input::hasFile('check_file')) {
+            $path = Input::file('check_file')->getRealPath();
+            $original_name = Input::file('check_file')->getClientOriginalName();
+
+            $file_types = explode('.' , $original_name);
+            $file_type = $file_types[count($file_types)-1];
+            //判断是否.xls文件
+            if(strtolower($file_type =='xls') || strtolower($file_type =='xlsx') ) {
+                $data = Excel::load($path, function($reader) {})->all();
+                if ($data->count() <= 5000) {
+                    if ($data) {
+                        foreach ($data as $key => $value) {
+                            unset($data[$key]['']);
+                            if ($wordsFilter->filterWord($value->word) !== false) {//包含于缓存字典树
+                                $data[$key]['exist'] = '是';
+                            } else {
+                                $data[$key]['exist'] = '否';
+                            }
+                        }
+                        //'word', 'exist'
+                        Excel::create('check_results',function($excel) use ($data){
+                            $excel->sheet('words', function($sheet) use ($data){
+                                $sheet->fromArray($data);//第一行输出字段名
+                            });
+                        })->export('xls');
+                    }
+                } else {
+                    return Redirect::route('dashboard.word.index')
+                        ->withSuccess(sprintf('%s %s', trans('hifone.failure'), '敏感词条目不大于5000条'));
+                }
             } else {
                 return Redirect::route('dashboard.word.index')
                     ->withSuccess(sprintf('%s %s', trans('hifone.failure'), '文件格式不正确'));
