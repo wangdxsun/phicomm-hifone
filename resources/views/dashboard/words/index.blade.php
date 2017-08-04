@@ -16,7 +16,7 @@
             <form action="{{ URL('dashboard/wordsExcel/import')}}"  id="importExcel" method="POST" class="form-inline pull-right"
                   enctype='multipart/form-data'  style="margin-left: 15px;">
                 {!! csrf_field() !!}
-                <div class="btn btn-sm btn-success head_portrait">
+                <div class="btn btn-sm btn-success head_import">
                     <span>批量导入</span>
                 </div>
                 <input type="file" name="import_file" id="import" onChange="commitForm()" class="hide"/>
@@ -24,10 +24,10 @@
             <form action="{{ URL('dashboard/wordsExcel/check')}}"  id="checkExcel" method="POST" class="form-inline pull-right"
                   enctype='multipart/form-data'  style="margin-left: 15px;">
                 {!! csrf_field() !!}
-                <div class="btn btn-sm btn-success head_portrait2">
+                <div class="btn btn-sm btn-success head_check">
                     <span>检查词汇</span>
                 </div>
-                <input type="file" name="check_file" id="import2" onChange="commitCheckForm()" class="hide"/>
+                <input type="file" name="check_file" id="check" onChange="commitCheckForm()" class="hide"/>
             </form>
         </div>
         <div class="row">

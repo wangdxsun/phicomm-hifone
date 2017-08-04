@@ -23,12 +23,12 @@ $(document).ready(function(){
         $("#myModal").modal('hide');
     });
 
-    $(".head_portrait").click(function () {
+    $(".head_import").click(function () {
         $("#import").click();
     });
 
-    $(".head_portrait2").click(function () {
-        $("#import2").click();
+    $(".head_check").click(function () {
+        $("#check").click();
     });
 
 });

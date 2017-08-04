@@ -34,7 +34,6 @@ class WordsExcelController extends  Controller
 
     public function import(TrieTree $trieTree)
     {
-        dd('import');
         if(Input::hasFile('import_file')) {
             $path = Input::file('import_file')->getRealPath();
             $original_name = Input::file('import_file')->getClientOriginalName();
@@ -83,7 +82,6 @@ class WordsExcelController extends  Controller
 
     public function check(WordsFilter $wordsFilter)
     {
-        dd('check');
         if(Input::hasFile('check_file')) {
             $path = Input::file('check_file')->getRealPath();
             $original_name = Input::file('check_file')->getClientOriginalName();
