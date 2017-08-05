@@ -19,14 +19,13 @@ class ReplyController extends ApiController
         $reply = $replyBll->createReply();
         if (Config::get('setting.auto_audit', 0) == 0 || $replyBll->isContainsImageOrUrl($reply->body) || $wordsFilter->filterWord($reply->body)) {
             return [
-                'status' => 'audit',
-                'msg' => '发表成功，待审核'
+                'msg' => '回复已提交，待审核',
+                'reply' => $reply
             ];
         }
         $replyBll->replyPassAutoAudit($reply);
         return [
-            'status' => 'success',
-            'msg' => '发表成功！',
+            'msg' => '回复成功',
             'reply' => $reply
         ];
     }
