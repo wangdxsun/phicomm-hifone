@@ -143,7 +143,7 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function inVisible()
     {
-        return $this->status < 0 && !(\Auth::id() == $this->id || \Auth::user()->can('view_thread'));
+        return $this->status < 0 && !(\Auth::id() == $this->user->id || \Auth::user()->can('view_thread'));
     }
 
     public function scopeVisible($query)
