@@ -39,9 +39,7 @@ class ParseAt
 
         foreach ($this->users as $user) {
             $search = '@'.$user->username;
-            $place = Html::link('u/'.$user->username, $search);
-            //$place = route('users.show', $user->id);
-            //$place = $search.route('users.show', $user->id);
+            $place = "<a href='/u/{$user->id}'>$search</a>";
 
             $this->body_parsed = str_replace($search, $place, $this->body_parsed);
         }
