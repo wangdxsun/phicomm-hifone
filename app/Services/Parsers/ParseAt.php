@@ -39,7 +39,7 @@ class ParseAt
 
         foreach ($this->users as $user) {
             $search = '@'.$user->username;
-            $place = "<a href='/u/{$user->id}'>$search</a>";
+            $place = "<a href='/user/{$user->id}'>$search</a>";
 
             $this->body_parsed = str_replace($search, $place, $this->body_parsed);
         }
