@@ -22,12 +22,21 @@ $(document).ready(function(){
     $(".btn-default").click(function(){
         $("#myModal").modal('hide');
     });
-    $(".head_portrait").click(function () {
+
+    $(".head_import").click(function () {
         $("#import").click();
     });
 
+    $(".head_check").click(function () {
+        $("#check").click();
+    });
 
 });
+
 function  commitForm() {
     $("#importExcel").submit();
+}
+
+function commitCheckForm() {
+    $("#checkExcel").submit();
 }

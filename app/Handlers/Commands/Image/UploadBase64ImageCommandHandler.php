@@ -11,11 +11,8 @@
 
 namespace Hifone\Handlers\Commands\Image;
 
-use Auth;
 use Hifone\Commands\Image\UploadBase64ImageCommand;
-use Hifone\Commands\Image\UploadImageCommand;
 use Hifone\Events\Image\ImageWasUploadedEvent;
-use Intervention\Image\ImageManagerStatic as Image;
 
 class UploadBase64ImageCommandHandler
 {

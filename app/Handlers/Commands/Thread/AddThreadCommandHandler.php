@@ -11,34 +11,13 @@
 
 namespace Hifone\Handlers\Commands\Thread;
 
-use Auth;
 use Carbon\Carbon;
 use Hifone\Commands\Thread\AddThreadCommand;
-use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Models\Thread;
-use Hifone\Services\Dates\DateFactory;
 use Hifone\Services\Tag\AddTag;
-use Illuminate\Support\Str;
 
 class AddThreadCommandHandler
 {
-    /**
-     * The date factory instance.
-     *
-     * @var \Hifone\Services\Dates\DateFactory
-     */
-    protected $dates;
-
-    /**
-     * Create a new report issue command handler instance.
-     *
-     * @param \Hifone\Services\Dates\DateFactory $dates
-     */
-    public function __construct(DateFactory $dates)
-    {
-        $this->dates = $dates;
-    }
-
     /**
      * Handle the report thread command.
      *
@@ -48,9 +27,8 @@ class AddThreadCommandHandler
      */
     public function handle(AddThreadCommand $command)
     {
-
+        $thumbnails = $this->getFirstImageUrl($command->body);
         $body = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse($command->body));
-        $command->thumbnails = $this->getFirstImageUrl($body);
         $body = app('parser.emotion')->parse($body);
         $body = "$body".$command->images;
         $data = [
@@ -62,7 +40,7 @@ class AddThreadCommandHandler
             'body_original' => $command->body,
             'created_at'    => Carbon::now()->toDateTimeString(),
             'updated_at'    => Carbon::now()->toDateTimeString(),
-            'thumbnails'    => $command->thumbnails,
+            'thumbnails'    => $thumbnails,
         ];
         // Create the thread
         $thread = Thread::create($data);
@@ -74,7 +52,7 @@ class AddThreadCommandHandler
     }
 
     public function getFirstImageUrl($body) {
-        preg_match_all('/src="([^"]*)\"/i', $body, $images);
+        preg_match_all('/src=["\']{1}([^"]*)["\']{1}/i', $body, $images);
         $imgUrls = [];
         if (count($images) > 0) {
             foreach ($images[1] as $k => $v) {

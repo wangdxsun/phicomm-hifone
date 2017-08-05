@@ -3,7 +3,7 @@
 @section('content')
     <div class="content-wrapper">
         <div class="header sub-header">
-             <i class="fa fa-filter pull-left"></i>{{ trans('dashboard.words.word') }}
+            <i class="fa fa-filter pull-left"></i>{{ trans('dashboard.words.word') }}
             <a class="btn btn-sm btn-success pull-right" style="margin-left: 15px;" href="{{ route('dashboard.check.check') }}">
                 敏感词检测
             </a>
@@ -14,14 +14,20 @@
                 {{trans('dashboard.words.edit.batch_out') }}
             </a>
             <form action="{{ URL('dashboard/wordsExcel/import')}}"  id="importExcel" method="POST" class="form-inline pull-right"
-                  enctype='multipart/form-data'>
+                  enctype='multipart/form-data'  style="margin-left: 15px;">
                 {!! csrf_field() !!}
-                <div class="">
-                    <div class="btn btn-sm btn-success head_portrait">
-                        <span>批量导入</span>
-                    </div>
-                    <input type="file" name="import_file" id="import" onChange="commitForm()" class="hide"/>
+                <div class="btn btn-sm btn-success head_import">
+                    <span>批量导入</span>
                 </div>
+                <input type="file" name="import_file" id="import" onChange="commitForm()" class="hide"/>
+            </form>
+            <form action="{{ URL('dashboard/wordsExcel/check')}}"  id="checkExcel" method="POST" class="form-inline pull-right"
+                  enctype='multipart/form-data'  style="margin-left: 15px;">
+                {!! csrf_field() !!}
+                <div class="btn btn-sm btn-success head_check">
+                    <span>检查词汇</span>
+                </div>
+                <input type="file" name="check_file" id="check" onChange="commitCheckForm()" class="hide"/>
             </form>
         </div>
         <div class="row">
