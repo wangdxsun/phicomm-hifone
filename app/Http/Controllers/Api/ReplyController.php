@@ -17,21 +17,17 @@ class ReplyController extends ApiController
     public function store(ReplyBll $replyBll, WordsFilter $wordsFilter)
     {
         $reply = $replyBll->createReply();
-        if (Config::get('setting.auto_audit', 0) == 0) {
-            return success('发表成功，待审核');
-        }
-
-        if ($replyBll->isContainsImageOrUrl($reply->body)) {
-            return success('发表成功，待审核');
-        } elseif ($wordsFilter->filterWord($reply->body)) {
-            return success('发表成功，待审核');
-        } else {
-            $replyBll->replyPassAutoAudit($reply);
+        if (Config::get('setting.auto_audit', 0) == 0 || $replyBll->isContainsImageOrUrl($reply->body) || $wordsFilter->filterWord($reply->body)) {
             return [
-                'msg' => '发表成功！',
-                'reply' => $reply
+                'status' => 'audit',
+                'msg' => '发表成功，待审核'
             ];
         }
-
+        $replyBll->replyPassAutoAudit($reply);
+        return [
+            'status' => 'success',
+            'msg' => '发表成功！',
+            'reply' => $reply
+        ];
     }
 }
