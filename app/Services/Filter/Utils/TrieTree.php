@@ -75,17 +75,35 @@ class TrieTree
             $char = $chars[$i];
             if (array_key_exists($char, $T)) {//存在，则判断是否为最后一个
                 $badWords .= $char;
-                if ($T[$char]['isEnd'] == 1 && $i == $len - 1) {//如果为最后一个匹配规则,结束循环
+                if ($T[$char]['isEnd'] == 1) {//如果为最后一个匹配规则,结束循环
                     return $badWords;
                 } else {
                     for ($k = $i+1; $k < $len; $k++) {
-                        $c_k = $chars[$k];
-                        $c_i = $chars[$k-1];
+                        $c_k = $chars[$k];//娘
+                        $c_i = $chars[$k-1];//骂
                         if (array_key_exists($c_k, $T[$c_i])) {
                             $badWords .= $c_k;
                             $T = &$T[$c_i];
                             if ($T[$c_k]['isEnd'] == 1) {//如果为最后一个匹配规则,结束循环，返回匹配标识数
                                 return $badWords;
+                            }
+                        } elseif (array_key_exists('*', $T[$c_i])) {
+                            $S = &$T[$c_i];
+                            for ($j = 0; $j < 5; $j ++) {
+                                if ($S['*']['isEnd'] == 1) {
+                                    return $badWords;
+                                }
+                                if (array_key_exists($c_k, $S['*'])) {
+                                    $badWords .= $c_k;
+                                    $S = &$S['*'];
+                                    if ($S[$c_k]['isEnd'] == 1) {
+                                        return $badWords;
+                                    }
+                                } elseif (array_key_exists('*', $S['*'])) {
+                                    $S = &$S['*'];
+                                } else {
+                                    break;
+                                }
                             }
                         } else {
                             $badWords = '';

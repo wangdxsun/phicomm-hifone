@@ -17,7 +17,7 @@ class ReplyController extends ApiController
     public function store(ReplyBll $replyBll, WordsFilter $wordsFilter)
     {
         $reply = $replyBll->createReply();
-        if (Config::get('settings.auto_audit',0) != 1) {
+        if (Config::get('setting.auto_audit', 0) == 0) {
             return success('发表成功，待审核');
         }
 

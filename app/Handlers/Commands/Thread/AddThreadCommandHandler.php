@@ -50,7 +50,7 @@ class AddThreadCommandHandler
     {
 
         $body = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse($command->body));
-        $command->thumbnails = $this->getFirstImageUrl($body)[0];
+        $command->thumbnails = $this->getFirstImageUrl($body);
         $body = app('parser.emotion')->parse($body);
         $body = "$body".$command->images;
         $data = [
@@ -73,13 +73,14 @@ class AddThreadCommandHandler
         return $thread;
     }
 
-    public function getFirstImageUrl($body){
-        preg_match_all('/src="([^"]*)\"/i', $body, $atlist_tmp);
+    public function getFirstImageUrl($body) {
+        preg_match_all('/src="([^"]*)\"/i', $body, $images);
         $imgUrls = [];
-
-        foreach ($atlist_tmp[1] as $k => $v) {
-            $imgUrls[] = $v;
+        if (count($images) > 0) {
+            foreach ($images[1] as $k => $v) {
+                $imgUrls[] = $v;
+            }
         }
-        return array_unique($imgUrls);
+        return array_first($imgUrls);
     }
 }

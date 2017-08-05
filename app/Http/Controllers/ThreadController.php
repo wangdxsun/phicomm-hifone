@@ -115,7 +115,7 @@ class ThreadController extends Controller
         }
         try {
             $thread = $threadBll->createThread();
-            if (Config::get('settings.auto_audit',0) != 1) {
+            if (Config::get('setting.auto_audit',0) != 1) {
                 return Redirect::route('thread.index')
                     ->withSuccess('帖子发表成功，请耐心等待审核');
             }

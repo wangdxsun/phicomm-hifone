@@ -192,7 +192,7 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function scopeHot($query)
     {
-        $days = Config::get('settings.hot_thread', 14);
+        $days = Config::get('setting.hot_thread', 14);
         return $query->whereRaw("(`created_at` > '" . Carbon::today()->subDays($days)->toDateString() . "' or (`order` > 0) )")
             ->orderBy('order', 'desc')
             ->orderBy('updated_at', 'desc');
