@@ -13,6 +13,7 @@ class ParseEmotion
     public function parse($post)
     {
         $this->post= $post;
+
         $this->userEmotions = $this->getEmotions();
 
         count($this->userEmotions) > 0 && $this->emotions = Emotion::whereIn('emotion', $this->userEmotions)->get();
@@ -26,7 +27,7 @@ class ParseEmotion
     {
         foreach ($this->emotions as $emotion) {
             $search = $emotion->emotion;
-            $replace = '<img class="face" src ='.$emotion->url.'>';
+            $replace = '<img class="face" src ='.request()->getSchemeAndHttpHost().$emotion->url.'>';
 
             $this->post = str_replace($search, $replace, $this->post);
         }
