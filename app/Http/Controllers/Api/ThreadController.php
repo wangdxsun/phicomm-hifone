@@ -42,7 +42,7 @@ class ThreadController extends ApiController
         return $thread;
     }
 
-    public function store(ThreadBll $threadBll,WordsFilter $wordsFilter)
+    public function store(ThreadBll $threadBll, WordsFilter $wordsFilter)
     {
         if (Auth::user()->hasRole('NoComment')) {
             throw new \Exception('对不起，你已被管理员禁止发言');

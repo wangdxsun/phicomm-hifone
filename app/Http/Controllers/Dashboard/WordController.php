@@ -15,7 +15,6 @@ use AltThree\Validator\ValidationException;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Word;
 use Hifone\Services\Filter\Utils\TrieTree;
-use Hifone\Services\Filter\WordInit;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;

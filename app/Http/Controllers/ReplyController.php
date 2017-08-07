@@ -31,21 +31,15 @@ class ReplyController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(ReplyBll $replyBll,WordsFilter $wordsFilter)
+    public function store(ReplyBll $replyBll, WordsFilter $wordsFilter)
     {
         try{
             $reply = $replyBll->createReply();
-            if (Config::get('setting.auto_audit', 0) == 0) {
+            if (Config::get('setting.auto_audit', 0) == 0 || $replyBll->isContainsImageOrUrl($reply->body) || $wordsFilter->filterWord($reply->body)) {
                 return Redirect::back()->withSuccess('回复发表成功，请耐心等待审核');
             }
-            if ($replyBll->isContainsImageOrUrl($reply->body)) {
-                return Redirect::back()->withSuccess('回复发表成功，请耐心等待审核');
-            } elseif ($wordsFilter->filterWord($reply->body)) {
-                return Redirect::back()->withSuccess('回复发表成功，请耐心等待审核');
-            } else {
-                $replyBll->replyPassAutoAudit($reply);
-                return Redirect::back()->withSuccess('审核通过，发表成功！');
-            }
+            $replyBll->replyPassAutoAudit($reply);
+            return Redirect::back()->withSuccess('审核通过，发表成功！');
 
         } catch (\Exception $e) {
             return Redirect::back()

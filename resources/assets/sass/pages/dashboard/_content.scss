@@ -38,9 +38,14 @@ body.dashboard {
             }
             .collapse {
                 img {
-                    max-width: 650px;
+                    max-width: 500px;
                     //max-height: 700px;
                     //width: 100%;
+                }
+            }
+            .replyImg {
+                img {
+                    max-width: 350px;
                 }
             }
         }

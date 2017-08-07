@@ -69,7 +69,7 @@
                                 </div>
                                 @if(Str::length($reply->body) > 50 || Str::contains($reply->body,['<img']))
                                     <a data-toggle="collapse" href="#thread{{ $reply->id }}" aria-expanded="false">查看更多</a>
-                                    <div class="collapse well" id="thread{{ $reply->id }}">{!! $reply->body !!}</div>
+                                    <div class="collapse replyImg" id="thread{{ $reply->id }}">{!! $reply->body !!}</div>
                                 @endif
                             </td>
                             <td><a href="{{ $reply->thread->url }}" target="_blank" >{{ $reply->thread->title }}</a></td>

@@ -16,38 +16,35 @@ use Html;
 
 class ParseAt
 {
-    public $body_parsed;
     public $users = [];
     public $usernames;
-    public $body_original;
+    public $body;
 
     public function parse($body)
     {
-        $this->body_original = $body;
+        $this->body = $body;
         $this->usernames = $this->getUsernames();
 
         count($this->usernames) > 0 && $this->users = User::whereIn('username', $this->usernames)->get();
 
         $this->replace();
 
-        return $this->body_parsed;
+        return $this->body;
     }
 
     protected function replace()
     {
-        $this->body_parsed = $this->body_original;
-
         foreach ($this->users as $user) {
             $search = '@'.$user->username;
             $place = "<a href='/user/{$user->id}'>$search</a>";
 
-            $this->body_parsed = str_replace($search, $place, $this->body_parsed);
+            $this->body = str_replace($search, $place, $this->body);
         }
     }
 
     protected function getUsernames()
     {
-        preg_match_all("/\@([^@<\r\n\s]*)/i", $this->body_original, $atlist_tmp);
+        preg_match_all("/\@([^@<\r\n\s]*)/i", $this->body, $atlist_tmp);
         $usernames = [];
 
         foreach ($atlist_tmp[1] as $k => $v) {

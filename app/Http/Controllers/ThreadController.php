@@ -108,7 +108,7 @@ class ThreadController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(ThreadBll $threadBll,WordsFilter $wordsFilter)
+    public function store(ThreadBll $threadBll, WordsFilter $wordsFilter)
     {
         if (Auth::user()->hasRole('NoComment')) {
             return Redirect::back()->withErrors('您已被系统管理员禁言');
@@ -122,7 +122,7 @@ class ThreadController extends Controller
             }
 
             $threadBll->threadPassAutoAudit($thread);
-            return Redirect::route('thread.show', ['thread', $thread->id])
+            return Redirect::route('thread.show', ['thread' => $thread->id])
                 ->withSuccess('帖子审核通过，发表成功！');
 
         } catch (\Exception $e) {
