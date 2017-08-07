@@ -87,24 +87,6 @@ class TrieTree
                             if ($T[$c_k]['isEnd'] == 1) {//如果为最后一个匹配规则,结束循环，返回匹配标识数
                                 return $badWords;
                             }
-                        } elseif (array_key_exists('*', $T[$c_i])) {
-                            $S = &$T[$c_i];
-                            for ($j = 0; $j < 5; $j ++) {
-                                if ($S['*']['isEnd'] == 1) {
-                                    return $badWords;
-                                }
-                                if (array_key_exists($c_k, $S['*'])) {
-                                    $badWords .= $c_k;
-                                    $S = &$S['*'];
-                                    if ($S[$c_k]['isEnd'] == 1) {
-                                        return $badWords;
-                                    }
-                                } elseif (array_key_exists('*', $S['*'])) {
-                                    $S = &$S['*'];
-                                } else {
-                                    break;
-                                }
-                            }
                         } else {
                             $badWords = '';
                             break;
