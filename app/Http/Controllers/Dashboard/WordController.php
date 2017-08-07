@@ -88,7 +88,7 @@ class WordController extends Controller
         $oldWord = Word::where('word',$wordData['word'])->first();
         if ($oldWord) {
             return Redirect::route('dashboard.word.edit', $oldWord->id)
-                ->withErrors('当前添加的敏感词重复，请重新编辑！');
+                ->withErrors('当前添加敏感词重复,\\n将进入编辑页面');
         }
         try {
             $word = Word::create($wordData);
