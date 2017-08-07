@@ -49,22 +49,18 @@ class ThreadController extends ApiController
         }
 
         $thread = $threadBll->createThread();
-        if (Config::get('settings.auto_audit',0) != 1) {
-            return success('发表成功，待审核');
-        }
         $post = $thread->body.$thread->title;
-        if ($threadBll->isContainsImageOrUrl($post)) {
-            return success('发表成功，待审核');
-        } elseif ($wordsFilter->filterWord($post)) {
-            return success('发表成功，待审核');
-        } else {
-            $threadBll->threadPassAutoAudit($thread);
+        if (Config::get('setting.auto_audit', 0) == 0 || $threadBll->isContainsImageOrUrl($post) || $wordsFilter->filterWord($post)) {
             return [
-                'msg' => '发表成功',
+                'msg' => '帖子已提交，待审核',
                 'thread' => $thread
             ];
         }
-
+        $threadBll->threadPassAutoAudit($thread);
+        return [
+            'msg' => '发布成功',
+            'thread' => $thread
+        ];
     }
 
     public function replies(Thread $thread, ThreadBll $threadBll)

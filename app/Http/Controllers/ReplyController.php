@@ -35,7 +35,7 @@ class ReplyController extends Controller
     {
         try{
             $reply = $replyBll->createReply();
-            if (Config::get('settings.auto_audit',0) != 1) {
+            if (Config::get('setting.auto_audit', 0) == 0) {
                 return Redirect::back()->withSuccess('回复发表成功，请耐心等待审核');
             }
             if ($replyBll->isContainsImageOrUrl($reply->body)) {

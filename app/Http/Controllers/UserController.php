@@ -120,7 +120,7 @@ class UserController extends Controller
 //        $threads = Thread::visible()->forUser($user->id)->recent()->paginate(15);
 
         //web端查看自己或管理员查看帖子，包括自己未审核通过的贴子
-        if (Auth::id() && ($user->id == Auth::id() || Auth::user()->role == '创始人' || Auth::user()->role == '管理员')) {
+        if ($user->id == Auth::id() || Auth::user()->can('view_thread')) {
             $threads = $user->threads()->recent()->paginate(15);
         } else {
             $threads = $user->threads()->visible()->recent()->paginate(15);

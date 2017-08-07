@@ -11,15 +11,14 @@ namespace Hifone\Http\Bll;
 use Carbon\Carbon;
 use Hifone\Models\BaseModel;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 
 class BaseBll
 {
     public function isContainsImageOrUrl($str)
     {
-        if (Str::contains($str,['<a'])) {
+        if (substr_count($str,'<a') > 0 && (substr_count($str,'<a') != substr_count($str, '@'))) {
             return true;
-        } elseif ( substr_count($str,'class="face"') != substr_count($str,'<img')) {
+        } elseif (substr_count($str,'class="face"') != substr_count($str,'<img')) {
             return true;
         } else {
             return false;

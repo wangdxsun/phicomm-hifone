@@ -75,12 +75,12 @@ class TrieTree
             $char = $chars[$i];
             if (array_key_exists($char, $T)) {//存在，则判断是否为最后一个
                 $badWords .= $char;
-                if ($T[$char]['isEnd'] == 1 && $i == $len - 1) {//如果为最后一个匹配规则,结束循环
+                if ($T[$char]['isEnd'] == 1) {//如果为最后一个匹配规则,结束循环
                     return $badWords;
                 } else {
                     for ($k = $i+1; $k < $len; $k++) {
-                        $c_k = $chars[$k];
-                        $c_i = $chars[$k-1];
+                        $c_k = $chars[$k];//娘
+                        $c_i = $chars[$k-1];//骂
                         if (array_key_exists($c_k, $T[$c_i])) {
                             $badWords .= $c_k;
                             $T = &$T[$c_i];

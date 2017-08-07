@@ -115,23 +115,15 @@ class ThreadController extends Controller
         }
         try {
             $thread = $threadBll->createThread();
-            if (Config::get('settings.auto_audit',0) != 1) {
-                return Redirect::route('thread.index')
-                    ->withSuccess('帖子发表成功，请耐心等待审核');
-            }
             $post = $thread->body . $thread->title;
-            if ($threadBll->isContainsImageOrUrl($post)) {
+            if (Config::get('setting.auto_audit', 0) == 0 || $threadBll->isContainsImageOrUrl($post) || $wordsFilter->filterWord($post)) {
                 return Redirect::route('thread.index')
                     ->withSuccess('帖子发表成功，请耐心等待审核');
-            } elseif ($wordsFilter->filterWord($post)) {
-                return Redirect::route('thread.index')
-                    ->withSuccess('帖子发表成功，请耐心等待审核');
-            } else {
-                $threadBll->threadPassAutoAudit($thread);
-
-                return Redirect::route('thread.index')
-                    ->withSuccess('帖子审核通过，发表成功！');
             }
+
+            $threadBll->threadPassAutoAudit($thread);
+            return Redirect::route('thread.show', ['thread', $thread->id])
+                ->withSuccess('帖子审核通过，发表成功！');
 
         } catch (\Exception $e) {
                 return Redirect::route('thread.create')

@@ -11,34 +11,13 @@
 
 namespace Hifone\Handlers\Commands\Thread;
 
-use Auth;
 use Carbon\Carbon;
 use Hifone\Commands\Thread\AddThreadCommand;
-use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Models\Thread;
-use Hifone\Services\Dates\DateFactory;
 use Hifone\Services\Tag\AddTag;
-use Illuminate\Support\Str;
 
 class AddThreadCommandHandler
 {
-    /**
-     * The date factory instance.
-     *
-     * @var \Hifone\Services\Dates\DateFactory
-     */
-    protected $dates;
-
-    /**
-     * Create a new report issue command handler instance.
-     *
-     * @param \Hifone\Services\Dates\DateFactory $dates
-     */
-    public function __construct(DateFactory $dates)
-    {
-        $this->dates = $dates;
-    }
-
     /**
      * Handle the report thread command.
      *
@@ -48,11 +27,8 @@ class AddThreadCommandHandler
      */
     public function handle(AddThreadCommand $command)
     {
-
+        $thumbnails = $this->getFirstImageUrl($command->body);
         $body = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse($command->body));
-        if (null == $command->thumbnails) {
-            $command->thumbnails = $this->getFirstImageUrl($body)[0];
-        }
         $body = app('parser.emotion')->parse($body);
         $body = "$body".$command->images;
         $data = [
@@ -64,7 +40,7 @@ class AddThreadCommandHandler
             'body_original' => $command->body,
             'created_at'    => Carbon::now()->toDateTimeString(),
             'updated_at'    => Carbon::now()->toDateTimeString(),
-            'thumbnails'    => $command->thumbnails,
+            'thumbnails'    => $thumbnails,
         ];
         // Create the thread
         $thread = Thread::create($data);
@@ -75,13 +51,14 @@ class AddThreadCommandHandler
         return $thread;
     }
 
-    public function getFirstImageUrl($body){
-        preg_match_all('/src=["\']{1}([^"]*)["\']{1}/i', $body, $atlist_tmp);
+    public function getFirstImageUrl($body) {
+        preg_match_all('/src=["\']{1}([^"]*)["\']{1}/i', $body, $images);
         $imgUrls = [];
-
-        foreach ($atlist_tmp[1] as $k => $v) {
-            $imgUrls[] = $v;
+        if (count($images) > 0) {
+            foreach ($images[1] as $k => $v) {
+                $imgUrls[] = $v;
+            }
         }
-        return array_unique($imgUrls);
+        return array_first($imgUrls);
     }
 }
