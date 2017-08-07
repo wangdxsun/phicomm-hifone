@@ -6,38 +6,35 @@ use Hifone\Models\Emotion;
 
 class ParseEmotion
 {
-    public $url_parsed;
     public $emotions = [];
     public $userEmotions;
-    public $url;
+    public $post;
 
-    public function parse($emotion)
+    public function parse($post)
     {
-        $this->url = $emotion;
+        $this->post = $post;
         $this->userEmotions = $this->getEmotions();
 
         count($this->userEmotions) > 0 && $this->emotions = Emotion::whereIn('emotion', $this->userEmotions)->get();
 
         $this->replace();
 
-        return $this->url_parsed;
+        return $this->post;
     }
 
     protected function replace()
     {
-        $this->url_parsed = $this->url;
-
         foreach ($this->emotions as $emotion) {
             $search = $emotion->emotion;
-            $replace = '<img class="face" src ='.$emotion->url.'>';
+            $replace = '<img class="face" src ='.request()->getSchemeAndHttpHost().$emotion->url.'>';
 
-            $this->url_parsed = str_replace($search, $replace, $this->url_parsed);
+            $this->post = str_replace($search, $replace, $this->post);
         }
     }
 
     protected function getEmotions()
     {
-        preg_match_all("/\[([^]@<\r\n\s]*)\]/i", $this->url, $atlist_tmp);
+        preg_match_all("/\[([^]@<\r\n\s]*)\]/i", $this->post, $atlist_tmp);
         $userEmotions = [];
 
         foreach ($atlist_tmp[1] as $k => $v) {
