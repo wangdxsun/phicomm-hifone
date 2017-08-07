@@ -3,9 +3,6 @@
 namespace Hifone\Http\Controllers\Dashboard;
 
 use Hifone\Services\Filter\Utils\TrieTree;
-use Hifone\Services\Filter\WordInit;
-use Hifone\Services\Filter\WordsFilter;
-use Illuminate\Http\Request;
 
 use Hifone\Http\Requests;
 use Hifone\Http\Controllers\Controller;
@@ -15,7 +12,6 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Redirect;
 use Hifone\Models\Word;
 use Illuminate\Support\Facades\Cache;
-use Mockery\Exception;
 
 class WordsExcelController extends  Controller
 {
@@ -80,7 +76,7 @@ class WordsExcelController extends  Controller
         }
     }
 
-    public function check(WordsFilter $wordsFilter)
+    public function check(TrieTree $trieTree)
     {
         if(Input::hasFile('check_file')) {
             $path = Input::file('check_file')->getRealPath();
@@ -93,9 +89,14 @@ class WordsExcelController extends  Controller
                 $data = Excel::load($path, function($reader) {})->all();
                 if ($data->count() <= 5000) {
                     if ($data) {
+                        $cacheTime = 30 * 24 * 60; // 单位为分钟
+                        $tree = Cache::remember('words', $cacheTime, function () use ($trieTree){
+                            $words = Word::pluck('word');
+                            return $trieTree->importBadWords($words);
+                        });
                         foreach ($data as $key => $value) {
                             unset($data[$key]['']);
-                            if (($temp = $wordsFilter->filterWord($value->word)) !== false) {//包含于缓存字典树
+                            if (($temp = $trieTree->contain($value->word, $tree)) !== false) {//包含于缓存字典树
                                 $data[$key]['exist'] = $temp;
                             } else {
                                 $data[$key]['exist'] = '否';
