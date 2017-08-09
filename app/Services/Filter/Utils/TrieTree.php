@@ -77,11 +77,13 @@ class TrieTree
             }
         } else {
             $badWords = '';
+            $this->findChar(array_slice($chars, 1), $this->tree, $badWords);
         }
     }
 
     public function contain($txt, $tree)
     {
+        $this->tree = $tree;
         $badWords = '';
         $this->findChar(getChars($txt), $tree, $badWords);
         return $badWords;

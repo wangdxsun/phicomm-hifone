@@ -49,7 +49,7 @@ class ThreadController extends ApiController
         }
 
         $thread = $threadBll->createThread();
-        $post = $thread->body.$thread->title;
+        $post = $thread->title.$thread->body;
         if (Config::get('setting.auto_audit', 0) == 0 || $threadBll->isContainsImageOrUrl($post) || $wordsFilter->filterWord($post)) {
             return [
                 'msg' => '帖子已提交，待审核',

@@ -31,7 +31,7 @@ class CheckController extends  Controller
 
 //        return $data;
 
-        $post = '2016年彩图集合';
+        $post = '<p>无辜的帖子</p>我是一个色色的帖子';
         $start = microtime(true) * 1000;
         $res = $wordsFilter->filterWord($post);
         $end = microtime(true) * 1000;
@@ -40,8 +40,8 @@ class CheckController extends  Controller
         return [
             'res' => $res,
             'time' => $end - $start,
-            'tree' => \Cache::get('words'),
-            'count' => count(\Cache::get('words')),
+//            'tree' => \Cache::get('words'),
+//            'count' => count(\Cache::get('words')),
         ];
 
 
