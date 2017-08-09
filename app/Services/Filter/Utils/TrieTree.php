@@ -64,38 +64,27 @@ class TrieTree
         return true;
     }
 
+    public function findChar($chars, $tree, &$badWords)
+    {
+        if ((count($chars) == 0 && array_get($tree, 'isEnd') == 0) || count($tree) == 0) {
+            $badWords = '';
+            return;
+        }
+        if (array_key_exists($chars[0], $tree)) {
+            $badWords .= $chars[0];
+            if ($tree[$chars[0]]['isEnd'] == 0) {
+                $this->findChar(array_slice($chars, 1), $tree[$chars[0]], $badWords);
+            }
+        } else {
+            $badWords = '';
+        }
+    }
+
     public function contain($txt, $tree)
     {
         $badWords = '';
-        $this->tree = $tree;
-        $chars = getChars($txt);
-        $len = count($chars);
-        $T = &$this->tree;
-        for ($i = 0; $i < $len; $i++) {
-            $char = $chars[$i];
-            if (array_key_exists($char, $T)) {//存在，则判断是否为最后一个
-                $badWords .= $char;
-                if ($T[$char]['isEnd'] == 1) {//如果为最后一个匹配规则,结束循环
-                    return $badWords;
-                } else {
-                    for ($k = $i+1; $k < $len; $k++) {
-                        $c_k = $chars[$k];//娘
-                        $c_i = $chars[$k-1];//骂
-                        if (array_key_exists($c_k, $T[$c_i])) {
-                            $badWords .= $c_k;
-                            $T = &$T[$c_i];
-                            if ($T[$c_k]['isEnd'] == 1) {//如果为最后一个匹配规则,结束循环，返回匹配标识数
-                                return $badWords;
-                            }
-                        } else {
-                            $badWords = '';
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
+        $this->findChar(getChars($txt), $tree, $badWords);
+        return $badWords;
     }
 
     public function replace($txt)
