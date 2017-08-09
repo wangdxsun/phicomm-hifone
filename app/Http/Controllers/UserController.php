@@ -81,15 +81,8 @@ class UserController extends Controller
     public function update(User $user)
     {
         $this->needAuthorOrAdminPermission($user->id);
-        $data = Input::only('nickname', 'location', 'company', 'website', 'signature', 'bio', 'locale');
+        $data = Input::only('nickname', 'company', 'website', 'signature', 'bio', 'locale');
         try {
-            if ($data['location']) {
-                $location = Location::where('name', $data['location'])->first();
-                if (!is_null($location)) {
-                    $data['location_id'] = $location->id;
-                }
-            }
-
             $user->update($data);
         } catch (ValidationException $e) {
             return Redirect::route('user.edit')

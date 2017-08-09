@@ -21,8 +21,6 @@ use Hifone\Composers\Dashboard\RoleMenuComposer;
 use Hifone\Composers\Dashboard\SettingMenuComposer;
 use Hifone\Composers\Dashboard\StatMenuComposer;
 use Hifone\Composers\Dashboard\ThreadMenuComposer;
-use Hifone\Composers\Dashboard\UserMenuComposer;
-use Hifone\Composers\LocaleComposer;
 use Hifone\Composers\SidebarComposer;
 use Hifone\Composers\TimezoneComposer;
 use Illuminate\Contracts\View\Factory;
@@ -43,7 +41,6 @@ class ComposerServiceProvider extends ServiceProvider
         $factory->composer('*', AppComposer::class);
         $factory->composer('*', CurrentUserComposer::class);
         $factory->composer('partials.sidebar', SidebarComposer::class);
-        $factory->composer(['dashboard.settings.*', 'users.edit'], LocaleComposer::class);
         $factory->composer(['install.*', ], TimezoneComposer::class);
         $factory->composer(['dashboard.adblocks.*', 'dashboard.advertisements.*', 'dashboard.adspaces.*', ], AdvertisementMenuComposer::class);
         $factory->composer(['dashboard.threads.*',], ThreadMenuComposer::class);

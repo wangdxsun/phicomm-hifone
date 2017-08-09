@@ -86,23 +86,10 @@
             {!! Form::text('website', null, ['class' => 'form-control', 'placeholder' => trans('hifone.users.website')]) !!}
           </div>
           <div class="form-group">
-            {!! Form::textarea('signature', null, ['class' => 'form-control',
-                                              'rows' => 3,
-                                              'placeholder' => trans('hifone.users.signature')]) !!}
+            {!! Form::textarea('signature', null, ['class' => 'form-control', 'rows' => 3, 'placeholder' => trans('hifone.users.signature')]) !!}
           </div>
           <div class="form-group">
-            {!! Form::textarea('bio', null, ['class' => 'form-control',
-                                              'rows' => 3,
-                                              'placeholder' => trans('hifone.users.bio')]) !!}
-          </div>
-          <div class="form-group">
-              <label>{{ trans('hifone.users.locale') }}</label>
-              <select name="locale" class="form-control" required>
-                  <option value="">{{ trans('hifone.users.select_language') }}</option>
-                  @foreach($langs as $key => $lang)
-                      <option value="{{ $key }}" {{ $user->locale == $key ? "selected" : null }}>{{ $lang }}</option>
-                  @endforeach
-              </select>
+            {!! Form::textarea('bio', null, ['class' => 'form-control', 'rows' => 3, 'placeholder' => trans('hifone.users.bio')]) !!}
           </div>
           <div class="form-group status-post-submit">
             {!! Form::submit(trans('forms.update'), ['class' => 'btn btn-primary', 'id' => 'user-edit-submit']) !!}
