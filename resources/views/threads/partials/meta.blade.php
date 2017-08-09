@@ -5,11 +5,11 @@
   </a>
   •
   <a href="{{ route('user.home', $thread->user->username) }}">
-    @if($thread->user->nickname)
-      {{ $thread->user->nickname }}
-    @else
+    {{--@if($thread->user->nickname)--}}
+      {{--{{ $thread->user->nickname }}--}}
+    {{--@else--}}
       {{ $thread->user->username }}
-    @endif
+    {{--@endif--}}
   </a>
 
   @if ($thread->user->hasBadge)
@@ -22,11 +22,11 @@
   @if (count($thread->lastReplyUser))
     {{ trans('hifone.threads.last_reply_by') }}
       <a href="{{ route('user.home', [$thread->lastReplyUser->username]) }}">
-        @if($thread->lastReplyUser->nickname)
-          {{ $thread->lastReplyUser->nickname }}
-        @else
+        {{--@if($thread->lastReplyUser->nickname)--}}
+          {{--{{ $thread->lastReplyUser->nickname }}--}}
+        {{--@else--}}
           {{ $thread->lastReplyUser->username }}
-        @endif
+        {{--@endif--}}
       </a>
      {{ trans('hifone.at') }} <abbr title="{{ $thread->updated_time }}">{{ $thread->updated_at }}</abbr>
     •

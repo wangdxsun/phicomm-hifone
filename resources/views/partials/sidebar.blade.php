@@ -74,11 +74,11 @@
                                     <a href="{{ route('user.home',$user->username) }}"><img class="media-object img-thumbnail avatar-32" src="{{ $user->avatar }}"></a>
                                 </div></td>
                             <td style="vertical-align: middle; font-size: 80%;">
-                                @if($user->nickname)
-                                    <a href="{{ route('user.home',$user->username) }}">{{ $user->nickname }}</a>
-                                @else
+                                {{--@if($user->nickname)--}}
+                                    {{--<a href="{{ route('user.home',$user->username) }}">{{ $user->nickname }}</a>--}}
+                                {{--@else--}}
                                     <a href="{{ route('user.home',$user->username) }}">{{ $user->username }}</a>
-                            @endif
+                               {{--@endif--}}
                             <td>
                             <td style="vertical-align: middle;"><small data-toggle="tooltip" data-placement="top" title="{{ $user->score }}">{!! $user->score !!}</small></td>
                         </tr>

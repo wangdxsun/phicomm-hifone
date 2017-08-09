@@ -72,9 +72,7 @@
       @else
       {!! Form::model($user, ['route' => ['user.update', $user->id], 'method' => 'patch']) !!}
           <h5><i class="fa fa-tasks"></i>&nbsp;&nbsp;{{ trans('hifone.users.info') }}</h5>
-          <div class="form-group">
-            {!! Form::text('nickname', null, ['class' => 'form-control', 'placeholder' => trans('hifone.users.nickname')]) !!}
-          </div>
+
           <div class="form-group">
             {!! Form::text('location', null, ['class' => 'form-control', 'placeholder' => trans('hifone.users.location')]) !!}
             <div class="help-block">{{ trans('hifone.users.location_help') }}</div>
