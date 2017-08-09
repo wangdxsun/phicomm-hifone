@@ -11,8 +11,6 @@
 
 namespace Hifone\Models;
 
-use Hifone\Presenters\NodePresenter;
-
 class Chat extends BaseModel
 {
     /**
