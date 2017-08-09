@@ -33,6 +33,9 @@ class GeneralController extends ApiController
     public static function emotion()
     {
         $emotions = Emotion::all(['emotion','url']);
+        foreach ($emotions as $emotion) {
+            $emotion->url = request()->getSchemeAndHttpHost().$emotion->url;
+        }
         return  $emotions;
     }
 }
