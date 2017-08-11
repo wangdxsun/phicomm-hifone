@@ -64,7 +64,20 @@ class TrieTree
         return true;
     }
 
-    public function findChar($chars, $tree, &$badWords)
+    public function contain($txt, $tree)
+    {
+        $this->tree = $tree;
+        $badWords = '';
+        $isEnd = false;
+        $chars = getChars($txt);
+        for($offset = 0; $offset < count($chars); $offset++){
+            $this->findChar(array_slice($chars, $offset), $tree, $badWords, $isEnd);
+            if ($isEnd) break;
+        }
+        return $badWords;
+    }
+
+    public function findChar($chars, $tree, &$badWords,&$isEnd)
     {
         if ((count($chars) == 0 && array_get($tree, 'isEnd') == 0) || count($tree) == 0) {
             $badWords = '';
@@ -73,20 +86,13 @@ class TrieTree
         if (array_key_exists($chars[0], $tree)) {
             $badWords .= $chars[0];
             if ($tree[$chars[0]]['isEnd'] == 0) {
-                $this->findChar(array_slice($chars, 1), $tree[$chars[0]], $badWords);
+                $this->findChar(array_slice($chars, 1), $tree[$chars[0]], $badWords, $isEnd);
+            } else {
+                $isEnd = true;
             }
         } else {
             $badWords = '';
-            $this->findChar(array_slice($chars, 1), $this->tree, $badWords);
         }
-    }
-
-    public function contain($txt, $tree)
-    {
-        $this->tree = $tree;
-        $badWords = '';
-        $this->findChar(getChars($txt), $tree, $badWords);
-        return $badWords;
     }
 
     public function replace($txt)

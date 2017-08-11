@@ -17,7 +17,11 @@ class ReplyController extends ApiController
     public function store(ReplyBll $replyBll, WordsFilter $wordsFilter)
     {
         $reply = $replyBll->createReply();
-        if (Config::get('setting.auto_audit', 0) == 0 || $replyBll->isContainsImageOrUrl($reply->body) || $wordsFilter->filterWord($reply->body)) {
+        if (Config::get('setting.auto_audit', 0) == 0 || $replyBll->isContainsImageOrUrl($reply->body) || $badWord = $wordsFilter->filterWord($reply->body)) {
+            if (isset($badWord)) {
+                $reply->bad_word = $badWord;
+                $reply->save();
+            }
             return [
                 'msg' => '回复已提交，待审核',
                 'reply' => $reply

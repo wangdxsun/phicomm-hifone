@@ -24,6 +24,7 @@
                 <td style="width: 30px;"><input id="selectAll" type="checkbox"></td>
                 <td style="width: 80px">#</td>
                 <td >回帖内容</td>
+                <td style="width: 80px">敏感词</td>
                 <td style="width: 250px">帖子标题</td>
                 <td style="width: 80px;">回帖人</td>
                 <td style="width: 90px">回帖时间</td>
@@ -42,6 +43,7 @@
                         <div class="collapse well" id="thread{{ $reply->id }}">{!! $reply->body !!}</div>
                     @endif
                 </td>
+                <td>{{ $reply->bad_word }}</td>
                 <td><a href="{{ $reply->thread->url }}" target="_blank" >{{ $reply->thread->title }}</a></td>
                 <td><a data-name="{{ $reply->user->username }}" href="{{ $reply->user->url }}">{{ $reply->user->username }}</a></td>
                 <td>{{ $reply->created_at }}</td>

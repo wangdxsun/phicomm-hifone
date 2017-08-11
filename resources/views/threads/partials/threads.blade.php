@@ -48,13 +48,13 @@
             </span>
             @endif
             @if ($thread->reply_count == 0)
-                @if($thread->user->nickname)
-                    <a href="{{ $thread->user->url }}" title="{{ $thread->user->nickname }}">{{ $thread->user->nickname }}
-                    </a>
-                @else
+                {{--@if($thread->user->nickname)--}}
+                    {{--<a href="{{ $thread->user->url }}" title="{{ $thread->user->nickname }}">{{ $thread->user->nickname }}--}}
+                    {{--</a>--}}
+                {{--@else--}}
                     <a href="{{ $thread->user->url }}" title="{{ $thread->user->username }}">{{ $thread->user->username }}
                     </a>
-                @endif
+                {{--@endif--}}
                 <span> • </span>
                 <span class="{{ $thread->highlight }}" data-toggle="tooltip" data-placement="top" title="{{ $thread->created_time }}">{{ $thread->created_at }}</span>
             @endif

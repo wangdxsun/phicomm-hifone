@@ -25,6 +25,7 @@
                         <td style="width: 70px;">#</td>
                         <td style="width: 250px;">标题</td>
                         <td >帖子内容</td>
+                        <td style="width: 70px;">敏感词</td>
                         <td style="width: 70px;">节点</td>
                         <td style="width: 50px;">发帖人</td>
                         <td style="width: 90px;">发贴时间</td>
@@ -44,6 +45,7 @@
                                     <div class="collapse well" id="thread{{ $thread->id }}">{!! $thread->body !!}</div>
                                 @endif
                             </td>
+                            <td>{{ $thread->bad_word }}</td>
                             <td><a href="{{ $thread->node->url }}" target="_blank">{{ $thread->node->name }}</a></td>
                             <td><a href="{{ $thread->user->url }}" target="_blank">{{ $thread->user->username }}</a></td>
                             <td>{{ $thread->created_time }}</td>
