@@ -19,7 +19,7 @@
                 <div class="btn btn-sm btn-success head_import">
                     <span>批量导入</span>
                 </div>
-                <input type="file" name="import_file" id="import" onChange="commitForm()" class="hide"/>
+                <input type="file" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" name="import_file" id="import" onChange="commitForm()" class="hide"/>
             </form>
             <form action="{{ URL('dashboard/wordsExcel/check')}}"  id="checkExcel" method="POST" class="form-inline pull-right"
                   enctype='multipart/form-data'  style="margin-left: 15px;">
