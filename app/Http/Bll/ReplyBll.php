@@ -25,14 +25,7 @@ class ReplyBll extends BaseBll
             throw new \Exception('对不起，你已被管理员禁止发言');
         }
         $replyData = request('reply');
-        //如果有单独上传图片，将图片拼接到正文后面
-        if (Input::has('images')) {
-            $replyData['body'] = "<p> ".$replyData['body']." </p>";
-            foreach ($images = Input::get('images') as $image) {
-                $res = dispatch(new UploadBase64ImageCommand($image));
-                $replyData['body'] .= "<img src='{$res["filename"]}'/>";
-            }
-        }
+
         $reply = dispatch(new AddReplyCommand(
             $replyData['body'],
             Auth::id(),
