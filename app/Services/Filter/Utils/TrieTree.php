@@ -12,7 +12,8 @@ class TrieTree
 
     public function insert($word)
     {
-        $chars = getChars($word);
+        $lower = strtolower($word);
+        $chars = getChars($lower);
         $count = count($chars);
         $T = &$this->tree;
         for ($i = 0; $i < $count; $i++) {
@@ -30,7 +31,8 @@ class TrieTree
 
     public function remove($word)
     {
-        $chars = getChars($word);
+        $lower = strtolower($word);
+        $chars = getChars($lower);
         if ($this->_find($chars)) {    //先保证此串在树中
             $count = count($chars);
             $T = &$this->tree;
@@ -69,7 +71,8 @@ class TrieTree
         $this->tree = $tree;
         $badWords = '';
         $isEnd = false;
-        $chars = getChars($txt);
+        $lower = strtolower($txt);
+        $chars = getChars($lower);
         for($offset = 0; $offset < count($chars); $offset++){
             $this->findChar(array_slice($chars, $offset), $tree, $badWords, $isEnd);
             if ($isEnd) break;
@@ -99,6 +102,7 @@ class TrieTree
     {
         $replace_array = [];
         $R = &$replace_array;
+        //TODO 转小写处理
         $chars = getChars($txt);
         $len = count($chars);
         $T = &$this->tree;
