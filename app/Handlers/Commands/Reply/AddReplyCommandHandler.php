@@ -12,12 +12,11 @@
 namespace Hifone\Handlers\Commands\Reply;
 
 use Carbon\Carbon;
+use Hifone\Commands\Image\UploadBase64ImageCommand;
 use Hifone\Commands\Reply\AddReplyCommand;
-use Hifone\Events\Reply\ReplyWasAddedEvent;
-use Hifone\Events\Reply\RepliedWasAddedEvent;
 use Hifone\Models\Reply;
 use Hifone\Services\Dates\DateFactory;
-use Hifone\Models\Thread;
+use Input;
 
 class AddReplyCommandHandler
 {
@@ -47,8 +46,16 @@ class AddReplyCommandHandler
      */
     public function handle(AddReplyCommand $command)
     {
-        $body = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse($command->body));
+        $body = app('parser.at')->parse($command->body);
+        $body = app('parser.markdown')->convertMarkdownToHtml($body);
         $body = app('parser.emotion')->parse($body);
+        //如果有单独上传图片，将图片拼接到正文后面
+        if (Input::has('images')) {
+            foreach ($images = Input::get('images') as $image) {
+                $res = dispatch(new UploadBase64ImageCommand($image));
+                $body .= "<img src='{$res["filename"]}'/>";
+            }
+        }
         $data = [
             'user_id'       => $command->user_id,
             'thread_id'     => $command->thread_id,
