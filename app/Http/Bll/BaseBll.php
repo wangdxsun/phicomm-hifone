@@ -27,7 +27,7 @@ class BaseBll
 
     public function updateOpLog(BaseModel $model, $operation, $reason = null)
     {
-        $model->last_op_user_id = Auth::id();
+        $model->last_op_user_id = $operation == '自动审核通过' ? 0 : Auth::id();
         $model->last_op_time = Carbon::now()->toDateTimeString();
         $reason && $model->last_op_reason = $reason;
         $model->save();
