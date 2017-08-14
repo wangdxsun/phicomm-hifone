@@ -47,10 +47,11 @@
                 <table class="table table-bordered table-striped table-condensed">
                     <tbody>
                     <tr class="head">
-                        <td style="width:80px">#</td>
+                        <td style="width:60px">#</td>
                         <td >回帖内容</td>
                         <td style="width:200px">帖子标题</td>
                         <td style="width: 100px">回帖人</td>
+                        <td style="width: 110px">IP地址</td>
                         <td style="width: 90px">回帖时间</td>
                         <td style="width: 100px">操作人</td>
                         <td style="width: 100px">操作原因</td>
@@ -71,6 +72,7 @@
                             </td>
                             <td><a href="{{ $reply->thread->url }}" target="_blank" >{{ $reply->thread->title }}</a></td>
                             <td><a href="{{ $reply->user->url }}">{{ $reply->user->username }}</a></td>
+                            <td>{{ $reply->ip }}</td>
                             <td>{{ $reply->created_at }}</td>
                             <td>{{ $reply->lastOpUser->username }}</td>
                             <td>{{ $reply->last_op_reason }}</td>

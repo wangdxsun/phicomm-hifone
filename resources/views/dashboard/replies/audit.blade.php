@@ -22,11 +22,12 @@
         <tbody>
             <tr class="head">
                 <td style="width: 30px;"><input id="selectAll" type="checkbox"></td>
-                <td style="width: 80px">#</td>
+                <td style="width: 60px">#</td>
                 <td >回帖内容</td>
                 <td style="width: 80px">敏感词</td>
                 <td style="width: 250px">帖子标题</td>
                 <td style="width: 80px;">回帖人</td>
+                <td style="width: 110px">IP地址</td>
                 <td style="width: 90px">回帖时间</td>
                 <td style="width: 80px">操作</td>
             </tr>
@@ -46,6 +47,7 @@
                 <td>{{ $reply->bad_word }}</td>
                 <td><a href="{{ $reply->thread->url }}" target="_blank" >{{ $reply->thread->title }}</a></td>
                 <td><a data-name="{{ $reply->user->username }}" href="{{ $reply->user->url }}">{{ $reply->user->username }}</a></td>
+                <td>{{ $reply->ip }}</td>
                 <td>{{ $reply->created_at }}</td>
                 <td>
                     <a data-url="/dashboard/reply/{{$reply->id}}/audit" data-method="post"><i class="fa fa-check"></i></a>

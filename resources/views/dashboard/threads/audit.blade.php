@@ -27,7 +27,8 @@
                         <td >帖子内容</td>
                         <td style="width: 70px;">敏感词</td>
                         <td style="width: 70px;">节点</td>
-                        <td style="width: 50px;">发帖人</td>
+                        <td style="width: 100px;">发帖人</td>
+                        <td style="width: 100px;">Ip地址</td>
                         <td style="width: 90px;">发贴时间</td>
                         <td style="width: 70px;">操作</td>
                     </tr>
@@ -48,6 +49,7 @@
                             <td>{{ $thread->bad_word }}</td>
                             <td><a href="{{ $thread->node->url }}" target="_blank">{{ $thread->node->name }}</a></td>
                             <td><a href="{{ $thread->user->url }}" target="_blank">{{ $thread->user->username }}</a></td>
+                            <td>{{ $thread->ip }}</td>
                             <td>{{ $thread->created_time }}</td>
                             <td>
                                 <a data-url="/dashboard/thread/{{$thread->id}}/audit" data-method="post"><i class="fa fa-check"></i></a>

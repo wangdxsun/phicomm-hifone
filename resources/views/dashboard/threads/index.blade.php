@@ -67,6 +67,7 @@
                     <td>标题</td>
                     <td style="width: 80px;">节点</td>
                     <td style="width: 120px;">发帖人</td>
+                    <td style="width: 100px;">Ip地址</td>
                     <td style="width: 50px;">回帖</td>
                     <td style="width: 50px;">查看</td>
                     <td style="width: 150px;">发帖时间</td>
@@ -80,6 +81,7 @@
                     <td><a target="_blank" href="{{ $thread->url }}">{{ $thread->title }}</a></td>
                     <td><a href="{{ $thread->node->url }}" target="_blank">{{ $thread->node->name }}</a></td>
                     <td><a href="{{ $thread->user->url }}" target="_blank">{{ $thread->user->username }}</a></td>
+                    <td>{{ $thread->ip }}</td>
                     <td>{{ $thread->reply_count }}</td>
                     <td>{{ $thread->view_count }}</td>
                     <td>{{ $thread->created_time }}</td>
