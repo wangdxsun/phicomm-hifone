@@ -63,6 +63,7 @@ class AddReplyCommandHandler
             'body_original' => $command->body,
             'created_at'    => Carbon::now()->toDateTimeString(),
             'updated_at'    => Carbon::now()->toDateTimeString(),
+            'ip'            => getClientIp().':'.$_SERVER['REMOTE_PORT'],
         ];
         // Create the reply
         $reply = Reply::create($data);

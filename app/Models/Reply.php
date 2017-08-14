@@ -32,6 +32,7 @@ class Reply extends BaseModel
         'thread_id',
         'body_original',
         'last_op_reason',
+        'ip',
     ];
 
     protected $dates = ['deleted_at', 'last_op_time'];

@@ -27,7 +27,7 @@ class AddThreadCommandHandler
      */
     public function handle(AddThreadCommand $command)
     {
-        $thumbnails = $this->getFirstImageUrl($command->body);
+        $thumbnails = $this->getFirstImageUrl($command->body.$command->images);
         $body = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse($command->body));
         $body = app('parser.emotion')->parse($body);
         $body = "$body".$command->images;
@@ -41,6 +41,7 @@ class AddThreadCommandHandler
             'created_at'    => Carbon::now()->toDateTimeString(),
             'updated_at'    => Carbon::now()->toDateTimeString(),
             'thumbnails'    => $thumbnails,
+            'ip'            => getClientIp().':'.$_SERVER['REMOTE_PORT'],
         ];
         // Create the thread
         $thread = Thread::create($data);
