@@ -17,19 +17,27 @@
                 <table class="table table-bordered table-striped table-condensed">
                     <tbody>
                     <tr class="head">
-                        <td style="width: 30px;">#</td>
-                        <td>举报类型</td>
+                        <td style="width: 50px;">#</td>
+                        <td style="width: 100px;">举报类型</td>
                         <td >帖子标题或回帖内容</td>
-                        <td >举报人</td>
-                        <td >举报原因</td>
-                        <td >举报时间</td>
+                        <td style="width: 100px;">举报人</td>
+                        <td style="width: 100px;">举报原因</td>
+                        <td style="width: 150px;">举报时间</td>
                         <td style="width: 70px;">操作</td>
                     </tr>
                     @foreach($reports as $report)
                         <tr>
                             <td>{{ $report->id }}</td>
                             <td>{{ $report->type }}</td>
-                            <td><a href="{{ $report->reportable->url }}" target="_blank">{{ $report->reportable->report }}</a></td>
+                            <td>
+                                <div class="replyContent">
+                                    <a href="{{ $report->reportable->url }}" target="_blank">{!! $report->reportable->report !!} </a>
+                                </div>
+                                @if(Str::length($report->reportable->report) > 50 || Str::contains($report->reportable->report, ['<img']))
+                                    <a data-toggle="collapse" href="#report{{ $report->id }}" aria-expanded="false">查看更多</a>
+                                    <div class="collapse well" id="report{{ $report->id }}">{!! $report->reportable->report !!}</div>
+                                @endif
+                            </td>
                             <td><a href="{{ $report->user->url }}">{{ $report->user->username }}</a></td>
                             <td>{{ $report->reason }}</td>
                             <td>{{ $report->created_at }}</td>

@@ -17,6 +17,10 @@ body.dashboard {
     }
     .page-content {
         width: 100%;
+        .face {
+            width: 26px;
+            height: 26px;
+        }
         .content-wrapper {
             padding-top: 20px;
             padding-left: 40px;
