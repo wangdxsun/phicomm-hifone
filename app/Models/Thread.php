@@ -304,4 +304,14 @@ class Thread extends BaseModel implements TaggableInterface
             }
         }
     }
+
+    public function getExcerptAttribute($value)
+    {
+        return $value ?: '点击查看更多';
+    }
+
+    public function getThumbnailsAttribute($value)
+    {
+        return $value ?: request()->getSchemeAndHttpHost().'/images/share.png';
+    }
 }
