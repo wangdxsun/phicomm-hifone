@@ -116,11 +116,18 @@ class ThreadController extends Controller
         try {
             $thread = $threadBll->createThread();
             $post = $thread->body . $thread->title;
-            if (Config::get('setting.auto_audit', 0) == 0 || $threadBll->isContainsImageOrUrl($post) || $wordsFilter->filterWord($post)) {
+            if (Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($post)) || $threadBll->isContainsImageOrUrl($post)) {
+                if (isset($badWord)) {
+                    $thread->bad_word = $badWord;
+                    $thread->save();
+                }
+                $thread->body = app('parser.emotion')->parse($thread->body);
+                $thread->save();
                 return Redirect::route('thread.index')
                     ->withSuccess('帖子发表成功，请耐心等待审核');
             }
-
+            $thread->body = app('parser.emotion')->parse($thread->body);
+            $thread->save();
             $threadBll->threadPassAutoAudit($thread);
             return Redirect::route('thread.show', ['thread' => $thread->id])
                 ->withSuccess('帖子审核通过，发表成功！');
