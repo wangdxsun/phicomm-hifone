@@ -30,7 +30,7 @@
                                     <optgroup label="{{ $section->name }}">
                                         @if(isset($section->nodes))
                                             @foreach ($section->nodes as $item)
-                                                <option value="{{ $item->id }}" {!! (Input::old('node_id') == $item->id || (isset($node) && $node->id==$item->id)) ? 'selected' : ''; !!} >
+                                                <option value="{{ $item->id }}" {!! (Input::old('node_id') == $item->id || (isset($node) && $node->id==$item->id)) ? 'selected' : '' !!} >
                                                     - {{ $item->name }}</option>
                                             @endforeach
                                         @endif
@@ -53,7 +53,7 @@
                             @include('vendor.ueditor.assets')
                             <div class="form-group">
                                 <label>{{ trans('hifone.threads.body') }}</label>
-                                <script id="container" name="thread[body]" type="text/plain">{!!  isset($thread) ? $thread->body : null !!}</script>
+                                <script id="container" name="thread[body]" type="text/plain">{!! isset($thread) ? $thread->body : null !!}</script>
                             </div>
 
                         <div class="form-group">
