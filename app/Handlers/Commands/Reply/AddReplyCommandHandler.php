@@ -54,6 +54,7 @@ class AddReplyCommandHandler
             foreach ($images = Input::get('images') as $image) {
                 $res = dispatch(new UploadBase64ImageCommand($image));
                 $body .= "<img src='{$res["filename"]}'/>";
+                $command->body .= "<img src='{$res["filename"]}'/>";
             }
         }
         $data = [
