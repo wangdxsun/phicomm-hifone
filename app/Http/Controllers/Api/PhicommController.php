@@ -87,7 +87,7 @@ class PhicommController extends ApiController
         $this->validate(request(), [
             'phone' => 'required|phone',
             'password' => 'required|string|min:6',
-            'verify' => 'required|size:6',
+            'verify' => 'required',
         ]);
         $password = strtoupper(md5(request('password')));
         $this->phicommBll->reset(request('phone'), $password, request('verify'));
