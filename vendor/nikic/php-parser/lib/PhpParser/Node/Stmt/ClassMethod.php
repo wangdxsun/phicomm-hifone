@@ -25,7 +25,7 @@ class ClassMethod extends Node\Stmt implements FunctionLike
      * Constructs a class method node.
      *
      * @param string      $name       Name
-     * @param array       $subNodes   Array of the following optional subnodes:
+     * @param array       $subNodes   Array of the following optional subNodes:
      *                                'type'       => MODIFIER_PUBLIC: Type
      *                                'byRef'      => false          : Whether to return by reference
      *                                'params'     => array()        : Parameters

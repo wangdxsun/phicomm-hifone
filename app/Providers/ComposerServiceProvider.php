@@ -46,7 +46,7 @@ class ComposerServiceProvider extends ServiceProvider
         $factory->composer(['dashboard.threads.*',], ThreadMenuComposer::class);
         $factory->composer(['dashboard.replies.*',], ReplyMenuComposer::class);
         $factory->composer(['dashboard.photos.*', 'dashboard.pages.*', ], ContentMenuComposer::class);
-        $factory->composer(['dashboard.nodes.*', 'dashboard.sections.*'], NodeMenuComposer::class);
+        $factory->composer(['dashboard.nodes.*', 'dashboard.sections.*', 'dashboard.subNodes.*'], NodeMenuComposer::class);
         $factory->composer(['dashboard.groups.*'], RoleMenuComposer::class);
         $factory->composer(['dashboard.stats.*'], StatMenuComposer::class);
         $factory->composer(['dashboard.tips.*', 'dashboard.links.*', 'dashboard.locations.*', 'dashboard.settings.*', ], SettingMenuComposer::class);

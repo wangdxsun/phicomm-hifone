@@ -109,6 +109,7 @@ class DashboardRoutes
             $router->resource('page', 'PageController');
             $router->resource('section', 'SectionController');
             $router->resource('node', 'NodeController');
+            $router->resource('subNode', 'SubNodeController');
             $router->resource('thread', 'ThreadController');
             $router->resource('reply', 'ReplyController');
             $router->resource('tip', 'TipController');

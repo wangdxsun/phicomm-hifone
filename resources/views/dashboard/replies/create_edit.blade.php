@@ -23,7 +23,7 @@
                 <fieldset>
                     <div class="form-group">
                         <label>{{ trans('hifone.replies.body') }}</label>
-                        <script id="container" name="reply[body]" type="text/plain">{!!  isset($reply) ? $reply->body_original : null !!}</script>
+                        <script id="container" name="reply[body]" type="text/plain">{!!  isset($reply) ? $reply->body : null !!}</script>
                     </div>
                     {{--<div class="form-group">--}}
                         {{--<label>{{ trans('hifone.replies.body') }}</label>--}}

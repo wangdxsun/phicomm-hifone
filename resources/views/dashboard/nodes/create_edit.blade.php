@@ -7,7 +7,7 @@
 <div class="content-wrapper">
     <div class="header sub-header" id="nodes">
         <span class="uppercase">
-            {{ trans(isset($node) ? 'dashboard.nodes.edit.title' : 'dashboard.nodes.add.title') }}
+            {{ trans(isset($node) ? 'dashboard.nodes.edit.sub_title' : 'dashboard.nodes.add.sub_title') }}
         </span>
     </div>
     <div class="row">

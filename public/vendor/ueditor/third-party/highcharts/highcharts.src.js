@@ -2150,7 +2150,7 @@ SVGElement.prototype = {
 						doTransform = true;
 						skipAttr = true;
 
-					// apply opacity as subnode (required by legacy WebKit and Batik)
+					// apply opacity as subNode (required by legacy WebKit and Batik)
 					} else if (key === 'stroke') {
 						value = renderer.color(value, element, key);
 
@@ -2189,7 +2189,7 @@ SVGElement.prototype = {
 						key = 'text-anchor';
 						value = { left: 'start', center: 'middle', right: 'end' }[value];
 
-					// Title requires a subnode, #431
+					// Title requires a subNode, #431
 					} else if (key === 'title') {
 						titleNode = element.getElementsByTagName('title')[0];
 						if (!titleNode) {
@@ -5237,7 +5237,7 @@ var VMLRendererExtension = { // inherit SVGRenderer
 				lastStop,
 				colors = [],
 				addFillNode = function () {
-					// Add the fill subnode. When colors attribute is used, the meanings of opacity and o:opacity2
+					// Add the fill subNode. When colors attribute is used, the meanings of opacity and o:opacity2
 					// are reversed.
 					markup = ['<fill colors="' + colors.join(',') + '" opacity="', opacity2, '" o:opacity2="', opacity1,
 						'" type="', fillType, '" ', fillAttr, 'focus="100%" method="any" />'];

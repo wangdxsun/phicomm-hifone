@@ -97,7 +97,7 @@ class NodeAbstractTest extends \PHPUnit_Framework_TestCase
      */
     public function testIteration(array $attributes, Node $node) {
         // Iteration is simple object iteration over properties,
-        // not over subnodes
+        // not over subNodes
         $i = 0;
         foreach ($node as $key => $value) {
             if ($i === 0) {

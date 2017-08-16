@@ -67,9 +67,10 @@ class ReplyController extends Controller
      */
     public function edit(Reply $reply)
     {
+        $menu = $reply->status == 0 ? 'index' : 'audit';
         return View::make('dashboard.replies.create_edit')
             ->withPageTitle(trans('dashboard.replies.edit.title').' - '.trans('dashboard.dashboard'))
-            ->withReply($reply)->withCurrentMenu('index');
+            ->withReply($reply)->withCurrentMenu($menu);
     }
 
     /**

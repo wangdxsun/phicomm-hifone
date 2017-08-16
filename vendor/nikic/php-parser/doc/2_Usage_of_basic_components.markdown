@@ -116,8 +116,8 @@ with them easier they are grouped into three categories:
 Some node class names have a trailing `_`. This is used whenever the class name would otherwise clash
 with a PHP keyword.
 
-Every node has a (possibly zero) number of subnodes. You can access subnodes by writing
-`$node->subNodeName`. The `Stmt\Echo_` node has only one subnode `exprs`. So in order to access it
+Every node has a (possibly zero) number of subNodes. You can access subNodes by writing
+`$node->subNodeName`. The `Stmt\Echo_` node has only one subNode `exprs`. So in order to access it
 in the above example you would write `$stmts[0]->exprs`. If you wanted to access the name of the function
 call, you would write `$stmts[0]->exprs[1]->name`.
 
@@ -261,7 +261,7 @@ The `afterTraverse()` method is similar to the `beforeTraverse()` method, with t
 it is called once after the traversal.
 
 The `enterNode()` and `leaveNode()` methods are called on every node, the former when it is entered,
-i.e. before its subnodes are traversed, the latter when it is left.
+i.e. before its subNodes are traversed, the latter when it is left.
 
 All four methods can either return the changed node or not return at all (i.e. `null`) in which
 case the current node is not changed.
@@ -297,7 +297,7 @@ unqualified function and constant names. These are resolved at runtime and thus 
 know which function they are referring to. In most cases this is a non-issue as the global functions
 are meant.
 
-Also the `NameResolver` adds a `namespacedName` subnode to class, function and constant declarations
+Also the `NameResolver` adds a `namespacedName` subNode to class, function and constant declarations
 that contains the namespaced name instead of only the shortname that is available via `name`.
 
 Example: Converting namespaced code to pseudo namespaces

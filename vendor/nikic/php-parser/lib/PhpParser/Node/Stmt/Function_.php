@@ -22,7 +22,7 @@ class Function_ extends Node\Stmt implements FunctionLike
      * Constructs a function node.
      *
      * @param string $name       Name
-     * @param array  $subNodes   Array of the following optional subnodes:
+     * @param array  $subNodes   Array of the following optional subNodes:
      *                           'byRef'      => false  : Whether to return by reference
      *                           'params'     => array(): Parameters
      *                           'returnType' => null   : Return type

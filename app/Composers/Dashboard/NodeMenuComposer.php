@@ -37,6 +37,12 @@ class NodeMenuComposer
                 'icon'   => 'fa fa-sitemap',
                 'active' => false,
             ],
+            'subNodes' => [
+                'title'  => trans('dashboard.nodes.sub_nodes'),
+                'url'    => route('dashboard.subNode.index'),
+                'icon'   => 'fa fa-sitemap',
+                'active' => false,
+            ],
         ];
 
         $view->withSubMenu($subMenu);

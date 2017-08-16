@@ -1156,7 +1156,7 @@ class Crawler implements \Countable, \IteratorAggregate
     }
 
     /**
-     * Creates a crawler for some subnodes.
+     * Creates a crawler for some subNodes.
      *
      * @param \DOMElement|\DOMElement[]|\DOMNodeList|null $nodes
      *
