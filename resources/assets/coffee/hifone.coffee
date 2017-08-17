@@ -147,7 +147,7 @@ window.Hifone =
               return false
             else if inputValue.trim() == ""
               return false
-            $form.attr('action', $form.attr('action') + '?heat_offset=' + inputValue)
+            $form.attr('action', $form.attr('action') + '?value=' + inputValue)
             $form.submit()
         )
       else if $(this).hasClass('confirm-action')

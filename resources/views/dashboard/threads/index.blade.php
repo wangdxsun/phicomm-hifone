@@ -92,10 +92,10 @@
                     <td>
                         <a data-url="/dashboard/thread/{{$thread->id}}/excellent" data-method="post" title="精华"><i class="{{ $thread->excellent }}"></i></a>
                         <a data-url="/dashboard/thread/{{$thread->id}}/pin" data-method="post" title="置顶"><i class="{{ $thread->pin }}"></i></a>
-                        <a data-url="/dashboard/thread/{{ $thread->id }}/heat_offset" get-url="/dashboard/thread/{{ $thread->id }}/heat_offset" data-method="post" class="getAndSet" title="提升"><i class="fa fa-level-up"></i></a>
+                        <a data-url="/dashboard/thread/{{ $thread->id }}/heat_offset" get-url="/dashboard/thread/{{ $thread->id }}/heat_offset" data-title="修改热度值偏移" data-method="post" class="getAndSet" title="提升"><i class="fa fa-level-up"></i></a>
                         <a data-url="/dashboard/thread/{{$thread->id}}/sink" data-method="post" title="下沉"><i class="{{ $thread->sink }}"></i></a>
                         <a href="/dashboard/thread/{{ $thread->id }}/edit"><i class="fa fa-pencil" title="编辑"></i></a>
-                        <a data-url="/dashboard/thread/{{ $thread->id }}/index/to/trash" data-method="post" class="need-reason" title="删除"><i class="fa fa-trash"></i></a>
+                        <a data-url="/dashboard/thread/{{ $thread->id }}/index/to/trash" data-title="帖子移入垃圾站" data-method="post" class="need-reason" title="删除"><i class="fa fa-trash"></i></a>
                     </td>
                 </tr>
                 @endforeach

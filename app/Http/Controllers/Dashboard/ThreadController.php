@@ -299,7 +299,7 @@ class ThreadController extends Controller
 
     public function setHeatOffset(Thread $thread)
     {
-        $heatOffset = request('heat_offset');
+        $heatOffset = request('value');
         try {
             $thread->heat_offset = $heatOffset;
             $thread->save();
