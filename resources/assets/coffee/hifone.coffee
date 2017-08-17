@@ -104,7 +104,7 @@ window.Hifone =
       $form = $(this)
       $form.find(':submit').prop 'disabled', true
 
-  initDeleteForm: ->
+  initInlineForm: ->
     $('[data-method]').append(->
       $url = $(this).attr('data-url')
       $method = $(this).attr('data-method')
