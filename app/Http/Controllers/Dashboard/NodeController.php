@@ -30,7 +30,7 @@ class NodeController extends Controller
     {
         View::share([
             'current_menu'  => 'nodes',
-            'sub_title'     => '板块管理',
+            'sub_title'     => '主板块管理',
         ]);
     }
 
@@ -44,7 +44,7 @@ class NodeController extends Controller
         $nodes = Node::orderBy('order')->get();
 
         return View::make('dashboard.nodes.index')
-        ->withPageTitle('板块管理')
+        ->withPageTitle('主板块管理')
         ->withNodes($nodes);
     }
 
@@ -57,7 +57,7 @@ class NodeController extends Controller
     {
         return View::make('dashboard.nodes.create_edit')
             ->withSections(Section::orderBy('order')->get())
-            ->withPageTitle('添加板块');
+            ->withPageTitle('添加主板块');
     }
 
     /**
@@ -71,7 +71,7 @@ class NodeController extends Controller
 
         try {
             $node = Node::create($nodeData);
-            $this->updateOpLog($node, '新增板块');
+            $this->updateOpLog($node, '新增主板块');
         } catch (ValidationException $e) {
             return Redirect::route('dashboard.node.create')
                 ->withInput(Request::all())

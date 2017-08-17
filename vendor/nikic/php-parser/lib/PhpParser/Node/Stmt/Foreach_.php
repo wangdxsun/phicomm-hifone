@@ -22,7 +22,7 @@ class Foreach_ extends Node\Stmt
      *
      * @param Node\Expr $expr       Expression to iterate
      * @param Node\Expr $valueVar   Variable to assign value to
-     * @param array     $subNodes   Array of the following optional subnodes:
+     * @param array     $subNodes   Array of the following optional subNodes:
      *                              'keyVar' => null   : Variable to assign key to
      *                              'byRef'  => false  : Whether to assign value by reference
      *                              'stmts'  => array(): Statements

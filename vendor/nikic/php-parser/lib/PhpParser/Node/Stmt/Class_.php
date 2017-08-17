@@ -33,7 +33,7 @@ class Class_ extends ClassLike
      * Constructs a class node.
      *
      * @param string|null $name       Name
-     * @param array       $subNodes   Array of the following optional subnodes:
+     * @param array       $subNodes   Array of the following optional subNodes:
      *                                'type'       => 0      : Type
      *                                'extends'    => null   : Name of extended class
      *                                'implements' => array(): Names of implemented interfaces

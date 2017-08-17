@@ -137,8 +137,10 @@ return [
         ],
     ],
     'nodes' => [
-        'nodes'        => '板块管理',
-        'name'         => '名称',
+        'nodes'        => '主板块管理',
+        'sub_nodes'    => '子板块管理',
+        'name'         => '主板块名称',
+        'sub_name'     => '子板块名称',
         'parent'       => '所属板块',
         'root'         => '根板块',
         'status_name'  => '状态',
@@ -147,14 +149,16 @@ return [
         'slug'         => 'Slug',
         'slug_help'    => '快捷路径',
         'add'          => [
-            'title'   => '添加板块',
-            'success' => '板块添加成功。',
-            'failure' => '板块添加失败！',
+            'title'    => '添加主板块',
+            'sub_title'=> '添加子板块',
+            'success'  => '板块添加成功。',
+            'failure'  => '板块添加失败！',
         ],
         'edit' => [
-            'title'   => '编辑板块',
-            'success' => '板块信息更新成功。',
-            'failure' => '板块更新失败！',
+            'title'     => '编辑板块',
+            'sub_title' => '编辑子板块',
+            'success'   => '板块信息更新成功。',
+            'failure'   => '板块更新失败！',
         ],
 
         'status'       => [

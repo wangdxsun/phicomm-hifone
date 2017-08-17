@@ -18,7 +18,7 @@ class For_ extends Node\Stmt
     /**
      * Constructs a for loop node.
      *
-     * @param array $subNodes   Array of the following optional subnodes:
+     * @param array $subNodes   Array of the following optional subNodes:
      *                          'init'  => array(): Init expressions
      *                          'cond'  => array(): Loop conditions
      *                          'loop'  => array(): Loop expressions

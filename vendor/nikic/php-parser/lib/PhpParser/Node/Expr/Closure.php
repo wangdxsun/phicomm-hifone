@@ -24,7 +24,7 @@ class Closure extends Expr implements FunctionLike
     /**
      * Constructs a lambda function node.
      *
-     * @param array $subNodes   Array of the following optional subnodes:
+     * @param array $subNodes   Array of the following optional subNodes:
      *                          'static'     => false  : Whether the closure is static
      *                          'byRef'      => false  : Whether to return by reference
      *                          'params'     => array(): Parameters

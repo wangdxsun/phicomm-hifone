@@ -4412,7 +4412,7 @@ window.CodeMirror = (function() {
   }
 
   function removeChildren(e) {
-    // IE will break all parent-child relations in subnodes when setting innerHTML
+    // IE will break all parent-child relations in subNodes when setting innerHTML
     if (!ie) e.innerHTML = "";
     else while (e.firstChild) e.removeChild(e.firstChild);
     return e;
