@@ -65,15 +65,16 @@
                 <tr class="head">
                     <td style="width: 70px;">#</td>
                     <td>标题</td>
-                    <td style="width: 80px;">节点</td>
+                    <td style="width: 80px;">版块</td>
                     <td style="width: 120px;">发帖人</td>
-                    <td style="width: 100px;">Ip地址</td>
+                    <td style="width: 100px;">IP地址</td>
+                    <td style="width: 60px;">热度值</td>
                     <td style="width: 50px;">回帖</td>
                     <td style="width: 50px;">查看</td>
                     <td style="width: 150px;">发帖时间</td>
-                    <td style="width: 120px;">操作人</td>
+                    <td style="width: 100px;">操作人</td>
                     <td style="width: 150px;">操作时间</td>
-                    <td style="width: 110px;">操作</td>
+                    <td style="width: 120px;">操作</td>
                 </tr>
                 @foreach($threads as $thread)
                 <tr>
@@ -82,6 +83,7 @@
                     <td><a href="{{ $thread->node->url }}" target="_blank">{{ $thread->node->name }}</a></td>
                     <td><a href="{{ $thread->user->url }}" target="_blank">{{ $thread->user->username }}</a></td>
                     <td>{{ $thread->ip }}</td>
+                    <td>{{ $thread->heat }}</td>
                     <td>{{ $thread->reply_count }}</td>
                     <td>{{ $thread->view_count }}</td>
                     <td>{{ $thread->created_time }}</td>
@@ -90,6 +92,7 @@
                     <td>
                         <a data-url="/dashboard/thread/{{$thread->id}}/excellent" data-method="post" title="精华"><i class="{{ $thread->excellent }}"></i></a>
                         <a data-url="/dashboard/thread/{{$thread->id}}/pin" data-method="post" title="置顶"><i class="{{ $thread->pin }}"></i></a>
+                        <a data-url="/dashboard/thread/{{ $thread->id }}/heat_offset" get-url="/dashboard/thread/{{ $thread->id }}/heat_offset" data-method="post" class="getAndSet" title="提升"><i class="fa fa-level-up"></i></a>
                         <a data-url="/dashboard/thread/{{$thread->id}}/sink" data-method="post" title="下沉"><i class="{{ $thread->sink }}"></i></a>
                         <a href="/dashboard/thread/{{ $thread->id }}/edit"><i class="fa fa-pencil" title="编辑"></i></a>
                         <a data-url="/dashboard/thread/{{ $thread->id }}/index/to/trash" data-method="post" class="need-reason" title="删除"><i class="fa fa-trash"></i></a>

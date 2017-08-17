@@ -65,12 +65,14 @@ class Thread extends BaseModel implements TaggableInterface
         'body'    => 'required',
         'node_id' => 'required|int',
         'user_id' => 'required|int',
+        'heat_offset' => 'int',
     ];
     
     public static $orderTypes = [
         'id' => '发帖时间',
         'node_id' => '帖子板块',
         'user_id'  => '发帖人',
+        'heat'  => '热度值',
     ];
 
     public function likes()
@@ -299,7 +301,12 @@ class Thread extends BaseModel implements TaggableInterface
             } elseif ($key == 'date_end') {
                 $query->where('created_at', '<=', $value);
             } elseif ($key == 'orderType'){
-                $query->orderBy($value,'desc');
+//                dd($value);
+//                if ($value != 'heat') {
+                    $query->orderBy($value,'desc');
+//                } else {
+////                    $query->
+//                }
             } else {
                 $query->where($key, $value);
             }
@@ -314,5 +321,32 @@ class Thread extends BaseModel implements TaggableInterface
     public function getThumbnailsAttribute($value)
     {
         return $value ?: request()->getSchemeAndHttpHost().'/images/share.png';
+    }
+
+    //动态计算热度值
+    public function getHeatAttribute()
+    {
+        $view_score = 1;
+        $like_score = 20;
+        $reply_score = 10;
+        $time_score = 1000;
+        $excellent = $this->is_excellent != 0 ? 500 : 0;
+
+        $createAt = new Carbon($this['attributes']['created_at']);
+        $now = Carbon::now();
+        $timeAlive = $now->diffInSeconds($createAt);
+        $heat = $this->view_count * $view_score + $this->like_count * $like_score + $this->reply_count * $reply_score + $excellent
+            + $this->heatCoolingValue($timeAlive, $time_score) + $this->heat_offset;
+        return round($heat, 2, PHP_ROUND_HALF_DOWN);
+    }
+
+    private function heatCoolingValue($timeAlive, $time_score)
+    {
+        //72小时后逐渐降低，72小时为中点
+        if ($timeAlive <= 72 * 2 * 60 * 60) {
+            return $time_score * cos($timeAlive * PI() / (60 * 60 * 72 * 2)) + 100;
+        } else {
+            return ($score = $timeAlive * (-1) + 60 * 60 * 72 * 2 - 900) > -100000 ? $score : -100000;
+        }
     }
 }
