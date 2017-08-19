@@ -47,7 +47,6 @@ class Notifier
 
     public function batchNotify($type, User $author, $users, $object, $content = null)
     {
-        \Log::info('notifying');
         $nowTimestamp = Carbon::now()->toDateTimeString();
 
         foreach ($users as $follower) {
@@ -66,11 +65,7 @@ class Notifier
                 'updated_at'    => $nowTimestamp,
             ];
 
-            if (count($data)) {
-                $object->notifications()->create($data);
-                \Log::info('create', $data);
-            }
-
+            $object->notifications()->create($data);
             $toUser->increment('notification_count', 1);
         }
     }
