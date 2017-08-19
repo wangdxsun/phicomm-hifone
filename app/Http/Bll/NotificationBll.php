@@ -17,7 +17,7 @@ class NotificationBll extends BaseBll
     {
         Auth::user()->notification_follow_count = 0;
         Auth::user()->save();
-        $notifications = Notification::forUser(Auth::id())->watch()->recent()->with(['object'])->paginate();
+        $notifications = Notification::forUser(Auth::id())->watch()->recent()->with(['object'])->get();
         foreach ($notifications as $key => &$notification) {
             if ($notification->object->status < 0) {
                 unset($notifications[$key]);
