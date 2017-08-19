@@ -38,7 +38,7 @@ class PhicommController extends ApiController
         $phicommId = $this->phicommBll->login($request->phone, $password);
         Session::set('phicommId', $phicommId);
 
-        return success('云账号注册成功');
+        return response(['user' => 'Unbind']);
     }
 
     public function login(CommonBll $commonBll)
