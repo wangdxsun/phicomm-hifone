@@ -101,7 +101,7 @@ class PhicommController extends Controller
             return Redirect::intended('/')
                 ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.login.success')));
         } else {
-            return view('phicomm.bind');
+            return Redirect::to('/phicomm/bind');
         }
     }
 
