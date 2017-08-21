@@ -50,6 +50,7 @@ class ThreadController extends Controller
     {
         $search = $this->filterEmptyValue(Input::get('thread'));
         $threads = Thread::visible()->search($search)->with('node', 'user', 'lastOpUser')->orderBy('last_op_time', 'desc')->paginate(20);
+//        dd($threads, $threads->toArray());
         $sections = Section::orderBy('order')->get();
         $orderTypes = Thread::$orderTypes;
         return View::make('dashboard.threads.index')
@@ -95,7 +96,6 @@ class ThreadController extends Controller
                 ->withInput($threadData)
                 ->withErrors($e->getMessageBag());
         }
-
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
@@ -287,5 +287,25 @@ class ThreadController extends Controller
     {
         $thread->status = Thread::TRASH;
         $this->updateOpLog($thread, '删除帖子', trim(request('reason')));
+    }
+
+    public function getHeatOffset(Thread $thread)
+    {
+        if ($thread->heat_offset != null) {
+            return $thread->heat_offset;
+        }
+        return 0;
+    }
+
+    public function setHeatOffset(Thread $thread)
+    {
+        $heatOffset = request('value');
+        try {
+            $thread->heat_offset = $heatOffset;
+            $thread->save();
+        } catch (ValidationException $e) {
+            return Redirect::back()->withErrors($e->getMessageBag());
+        }
+        return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 }

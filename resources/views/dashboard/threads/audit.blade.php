@@ -28,7 +28,7 @@
                         <td style="width: 70px;">敏感词</td>
                         <td style="width: 70px;">节点</td>
                         <td style="width: 100px;">发帖人</td>
-                        <td style="width: 100px;">Ip地址</td>
+                        <td style="width: 100px;">IP地址</td>
                         <td style="width: 90px;">发贴时间</td>
                         <td style="width: 70px;">操作</td>
                     </tr>

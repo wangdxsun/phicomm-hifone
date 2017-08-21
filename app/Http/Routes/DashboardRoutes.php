@@ -11,6 +11,7 @@
 
 namespace Hifone\Http\Routes;
 
+use Hifone\Http\Controllers\Dashboard\ThreadController;
 use Illuminate\Contracts\Routing\Registrar;
 
 /**
@@ -73,6 +74,8 @@ class DashboardRoutes
             $router->post('wordsExcel/check','WordsExcelController@check');
             $router->post('word/batchDestroy', 'WordController@batchDestroy');
             $router->get('check/check', 'CheckController@check')->name('check.check');
+            $router->get('thread/{thread}/heat_offset','ThreadController@getHeatOffset');
+            $router->post('thread/{thread}/heat_offset','ThreadController@setHeatOffset');
 
             // Settings
             $router->group(['as' => 'settings.', 'prefix' => 'settings'], function (Registrar $router) {

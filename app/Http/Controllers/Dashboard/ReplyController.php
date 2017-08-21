@@ -189,7 +189,7 @@ class ReplyController extends Controller
     {
         $thread = $reply->thread;
         $thread->last_reply_user_id = $reply->user_id;
-        //审核通过操作时不再更新帖子的修改时间，取最近一次审核通过回复的创建时间
+        //审核通过时不再更新帖子的修改时间，取最近一次审核通过回复的创建时间
 //        $thread->updated_at = Carbon::now()->toDateTimeString();
         $thread->save();
         event(new ReplyWasAddedEvent($reply));

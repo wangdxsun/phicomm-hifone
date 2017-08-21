@@ -11,7 +11,7 @@ window.DashboardView = Backbone.View.extend
 
     Hifone.initAjax()
     Hifone.initTextareaAutoResize()
-    Hifone.initDeleteForm()
+    Hifone.initInlineForm()
     Hifone.initSelect2()
     Hifone.selectAll()
     Hifone.checkAll()

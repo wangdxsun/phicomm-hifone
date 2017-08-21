@@ -2,6 +2,7 @@
 
 namespace Hifone\Http\Controllers\Dashboard;
 
+use Carbon\Carbon;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
@@ -38,15 +39,17 @@ class CheckController extends  Controller
 
         //测试用例1 全缓存匹配post
 //        $post = '<p> <img class="face" src="http://hifone1.wdx.dev.phiwifi.com:1885/images/emotion/face-dweiqu.png"><img class="face" src="http://hifone1.wdx.dev.phiwifi.com:1885/images/emotion/face-dwu.png"><img class="face" src="http://hifone1.wdx.dev.phiwifi.com:1885/images/emotion/face-dxiaoku.png"><img class="face" src="http://hifone1.wdx.dev.phiwifi.com:1885/images/emotion/face-dxingxingyan.png"><img class="face" src="http://hifone1.wdx.dev.phiwifi.com:1885/images/emotion/face-dxixi.png"><img class="face" src="http://hifone1.wdx.dev.phiwifi.com:1885/images/emotion/face-dxu.png"><img class="face" src="http://hifone1.wdx.dev.phiwifi.com:1885/images/emotion/face-dyinxian.png"><img class="face" src="http://hifone1.wdx.dev.phiwifi.com:1885/images/emotion/face-dyiwen.png"> </p>';
-        $post = 'Fuck';
-        $res = $wordsFilter->filterWord($post);
-
+//        $post = '一只粉红色的猪';
+//        $res = $wordsFilter->filterKeyWord($post);
 
         //测试用例2 局部新建字典树匹配post
 //        $post = 'abcdefghijk';
 //        $tree = $trieTree->importBadWords(['abcf', 'bcd', 'd', 'g']);
 //        $res = $trieTree->contain($post, $tree);
 
+        //Carbon计算时间差
+        $thread = Thread::find(1043);
+        dd($thread->heat);
 
         return [
             'res' => $res,
