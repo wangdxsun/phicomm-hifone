@@ -356,6 +356,7 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         return $this->hasMany(Report::class);
     }
 
+
     public function getNotificationCountAttribute()
     {
         return $this->attributes['notification_reply_count'] + $this->attributes['notification_at_count'] +

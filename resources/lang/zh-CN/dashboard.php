@@ -64,7 +64,7 @@ return [
     ],
 
     'sections' => [
-        'sections'     => '分类',
+        'sections'     => '所属分类',
         'name'         => '名称',
         'order'        => '排序',
         'add'          => [
@@ -144,7 +144,7 @@ return [
         'parent'       => '所属板块',
         'root'         => '根板块',
         'status_name'  => '状态',
-        'description'  => '描述',
+        'description'  => '板块描述',
         'icon'         => '板块图标',
         'slug'         => 'Slug',
         'slug_help'    => '快捷路径',
@@ -153,6 +153,11 @@ return [
             'sub_title'=> '添加子板块',
             'success'  => '板块添加成功。',
             'failure'  => '板块添加失败！',
+        ],
+        'moderator' => [
+            'add'      =>  '添加版主',
+            'type'     =>  '所属版主类别',
+            'list'     =>  '版主列表',
         ],
         'edit' => [
             'title'     => '编辑板块',

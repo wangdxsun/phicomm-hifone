@@ -23,7 +23,7 @@
                     <div class="col-xs-1">
                         <span class="drag-handle"><i class="fa fa-navicon"></i></span>
                     </div>
-                    <div class="col-xs-2 drag-handle">
+                    <div class="col-xs-2 drag-handle" >
                         {!! $subNode->name!!}
                     </div>
                     <div class="col-xs-2 drag-handle">

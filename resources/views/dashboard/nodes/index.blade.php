@@ -20,17 +20,22 @@
                 <div class="col-xs-1">
                     <span class="drag-handle"><i class="fa fa-navicon"></i></span>
                 </div>
-                <div class="col-xs-2 drag-handle">
+                <div class="col-xs-1 drag-handle">
                     <img src="{{ $node->icon }}" alt="" style="max-width: 200px; max-height: 50px;">
                 </div>
                 <div class="col-xs-2 drag-handle">
-                    {!! $node->name.'<br>'.$node->slug !!}
+                    <a href="/dashboard/node/{{ $node->id }}">{!! $node->name !!}</a>
+                </div>
+                <div class="col-xs-2 drag-handle" >
+                    <a href="/dashboard/section/{{ $node->section->id }}">{{ $node->section->name }}</a>
                 </div>
                 <div class="col-xs-2 drag-handle">
-                    {{ $node->section->name }}
-                </div>
-                <div class="col-xs-3 drag-handle">
                     {{ $node->description }}
+                </div>
+                <div class="col-xs-2 drag-handle">
+                    @foreach($node->moderators as $moderator)
+                        <a data-name="{{ $moderator->user->username }}" href="{{ $moderator->user->url }}">{{ $moderator->user->username . ' ' }}</a>
+                    @endforeach
                 </div>
                 <div class="col-xs-2 text-right">
                     <a href="{{ route('dashboard.node.edit',['id'=>$node->id]) }}" class="btn btn-default btn-sm">{{ trans('forms.edit') }}</a>
