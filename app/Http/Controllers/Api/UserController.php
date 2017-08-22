@@ -27,7 +27,7 @@ class UserController extends ApiController
         }
         if (! is_null($user)) {
             $cloudUser = $phicommBll->userInfo();
-            if ($cloudUser['img'] && $user->avatar_url != $cloudUser['img']) {
+            if ($cloudUser['img'] && $user->avatar_url != $cloudUser['img'] && $cloudUser['img'] != 'Uploads/default/default.jpg') {
                 $user->avatar_url = $cloudUser['img'];
                 $user->save();
             }

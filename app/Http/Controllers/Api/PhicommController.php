@@ -58,11 +58,6 @@ class PhicommController extends ApiController
             }
             Auth::login($user);
             $commonBll->login();
-            $cloudUser = $this->phicommBll->userInfo();
-            if ($cloudUser['img'] && $user->avatar_url != $cloudUser['img']) {
-                $user->avatar_url = $cloudUser['img'];
-                $user->save();
-            }
             return $user;
         } else {
             Session::set('phicommId', $phicommId);
