@@ -17,14 +17,15 @@ use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\ThreadBll;
 use Hifone\Models\Thread;
 use Hifone\Services\Filter\WordsFilter;
+use Illuminate\Support\Facades\DB;
 
 class ThreadController extends ApiController
 {
     public function index(CommonBll $commonBll)
     {
         $commonBll->login();
-        $threads = Thread::visible()->with(['user', 'node'])->hot()->paginate();
-
+        //置顶优先，再按热度值倒序排序
+        $threads = Thread::visible()->with(['user', 'node'])->orderBy('order', 'DESC')->orderBy('heat', 'DESC')->paginate();
         return $threads;
     }
 

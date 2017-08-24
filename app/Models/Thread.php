@@ -301,12 +301,7 @@ class Thread extends BaseModel implements TaggableInterface
             } elseif ($key == 'date_end') {
                 $query->where('created_at', '<=', $value);
             } elseif ($key == 'orderType'){
-//                dd($value);
-//                if ($value != 'heat') {
-                    $query->orderBy($value,'desc');
-//                } else {
-////                    $query->
-//                }
+                $query->orderBy($value,'desc');
             } else {
                 $query->where($key, $value);
             }

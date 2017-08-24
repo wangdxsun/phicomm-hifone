@@ -50,7 +50,6 @@ class ThreadController extends Controller
     {
         $search = $this->filterEmptyValue(Input::get('thread'));
         $threads = Thread::visible()->search($search)->with('node', 'user', 'lastOpUser')->orderBy('last_op_time', 'desc')->paginate(20);
-//        dd($threads, $threads->toArray());
         $sections = Section::orderBy('order')->get();
         $orderTypes = Thread::$orderTypes;
         return View::make('dashboard.threads.index')
@@ -217,6 +216,8 @@ class ThreadController extends Controller
         DB::beginTransaction();
         try {
             $thread->status = 0;
+            //更新热度值
+            $thread->heat = $thread->heat;
             $this->updateOpLog($thread, '审核通过');
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
             $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
@@ -302,6 +303,8 @@ class ThreadController extends Controller
         $heatOffset = request('value');
         try {
             $thread->heat_offset = $heatOffset;
+            //更新热度值
+            $thread->heat = $thread->heat;
             $thread->save();
         } catch (ValidationException $e) {
             return Redirect::back()->withErrors($e->getMessageBag());
