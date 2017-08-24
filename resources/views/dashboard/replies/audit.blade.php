@@ -39,7 +39,7 @@
                     <div class="replyContent" >
                         {!! $reply->body !!}
                     </div>
-                    @if(Str::length($reply->body) > 50 || Str::contains($reply->body,['<img']))
+                    @if(Str::length($reply->body) > 35 || Str::contains($reply->body,['<img']))
                         <a data-toggle="collapse" href="#thread{{ $reply->id }}" aria-expanded="false">查看更多</a>
                         <div class="collapse well" id="thread{{ $reply->id }}">{!! $reply->body !!}</div>
                     @endif
