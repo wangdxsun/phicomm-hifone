@@ -7,7 +7,7 @@
 <div class="content-wrapper">
     <div class="header sub-header" id="nodes">
         <span class="uppercase">
-            {{ trans(isset($node) ? 'dashboard.nodes.edit.sub_title' : 'dashboard.nodes.add.sub_title') }}
+            {{ trans(isset($node) ? 'dashboard.nodes.edit.title' : 'dashboard.nodes.add.title') }}
         </span>
     </div>
     <div class="row">
@@ -31,10 +31,10 @@
                     <label>{{ trans('dashboard.nodes.name') }}</label>
                      {!! Form::text('node[name]', isset($node) ? $node->name : null, ['class' => 'form-control']) !!}
                 </div>
-                <div class="form-group">
-                    <label>{{ trans('dashboard.nodes.slug') }}</label>
-                    {!! Form::text('node[slug]', isset($node) ? $node->slug : null, ['class' => 'form-control']) !!}
-                </div>
+                {{--<div class="form-group">--}}
+                    {{--<label>{{ trans('dashboard.nodes.slug') }}</label>--}}
+                    {{--{!! Form::text('node[slug]', isset($node) ? $node->slug : null, ['class' => 'form-control']) !!}--}}
+                {{--</div>--}}
                 @if($sections->count() > 0)
                 <div class="form-group">
                     <label>{{ trans('dashboard.sections.sections') }}</label>
@@ -51,6 +51,45 @@
                 <label>{{ trans('dashboard.nodes.description') }}</label>
                 {!! Form::textarea('node[description]', isset($node) ? $node->description : null , ['class' => 'form-control', 'rows' => 5]) !!}
                 </div>
+                <div clas="form-group">
+                    <label >{{ trans('dashboard.nodes.moderator.add') }}</label>
+                    <input type="text" name="user[name]" class="form-control"
+                           @if (isset($user['name']))
+                           value="{{ $user['name'] }}"
+                            @endif >
+                </div>
+                <div class="form-group">
+                    <label>{{ trans('dashboard.nodes.moderator.type') }}</label>
+                    <select name="moderator[role]" class="form-control" >
+                            <option value="3">版主</option>
+                            <option value="12">实习版主</option>
+                    </select>
+                </div>
+                @if(isset($node))
+                    <div>
+                        <label>{{ trans('dashboard.nodes.moderator.list') }}</label>
+                        <table class="table table-bordered table-striped table-condensed">
+                            <tbody>
+                            <tr class="head">
+                                <td>版主用户名</td>
+                                <td>所在组别</td>
+                                <td>操作</td>
+                            </tr>
+                            @foreach($node->moderators as $moderator)
+                                <tr>
+                                    <td>{{ $moderator->user->username }}</td>
+                                    <td>{{ $moderator->user->role }}</td>
+                                    <td>
+                                        <a data-url="/dashboard/node/{{ $moderator->id }}/audit/to/trash" data-method="post" class="need-reason" title="删除"><i class="fa fa-trash"></i></a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+
+                        </table>
+                    </div>
+                @endif
+
                 </fieldset>
 
                 <div class="row">

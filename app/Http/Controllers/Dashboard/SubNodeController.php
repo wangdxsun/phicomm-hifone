@@ -80,14 +80,15 @@ class SubNodeController extends Controller
                 ->withErrors($e->getMessageBag());
         }
 
-        return Redirect::route('dashboard.node.index')
+        return Redirect::route('dashboard.subNode.index')
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.nodes.add.success')));
     }
 
     public function destroy(SubNode $subNode)
     {
-        if ($subNode->thread_count > 0) {
-            return back()->withErrors('该板块下存在帖子，无法删除');
+        //dd($subNode->threads);
+        if ($subNode->threads()->count()> 0) {
+            return back()->withErrors('该子板块下存在帖子，无法删除');
         }
         $this->updateOpLog($subNode, '删除板块');
         $subNode->delete();

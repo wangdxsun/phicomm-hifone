@@ -49,6 +49,7 @@ class DashboardRoutes
             $router->post('thread/batchAudit', 'ThreadController@postBatchAudit');//batch audit thread
             $router->post('thread/{thread}/index/to/trash', 'ThreadController@indexToTrash');
             $router->post('thread/{thread}/audit/to/trash', 'ThreadController@auditToTrash');
+            $router->post('node/{moderator}/audit/to/trash', 'NodeController@auditToTrash');
             $router->post('reply/{reply}/audit', 'ReplyController@postAudit');
             $router->post('reply/batchAudit', 'ReplyController@postBatchAudit');//batch audit reply
             $router->post('reply/{reply}/audit/to/trash', 'ReplyController@auditToTrash');

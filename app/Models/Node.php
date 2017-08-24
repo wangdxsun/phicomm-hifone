@@ -21,6 +21,7 @@ class Node extends BaseModel implements HasPresenter
      *
      * @var mixed[]
      */
+
     protected $attributes = [
         'section_id' => 0,
     ];
@@ -49,9 +50,10 @@ class Node extends BaseModel implements HasPresenter
      * @var string[]
      */
     public $rules = [
-        'name'      => 'required|string',
-        'order'     => 'int',
-        'status'    => 'int',
+        'name'        => 'required|string|min:2|max:50',
+        'order'       => 'int',
+        'status'      => 'int',
+        'description' => 'required|string|min:2|max:100',
     ];
 
     /**
@@ -102,5 +104,15 @@ class Node extends BaseModel implements HasPresenter
     public function dailyStats()
     {
         return $this->morphMany(DailyStat::class,'object');
+    }
+
+    public function subNodes()
+    {
+        return $this->hasMany(SubNode::class);
+    }
+
+    public function moderators()
+    {
+        return $this->hasMany(Moderator::class);
     }
 }
