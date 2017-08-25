@@ -143,7 +143,7 @@
         if (Hifone.Config.role == '创始人' || Hifone.Config.role == '管理员'){
             var data =['fontsize','forecolor','backcolor','bold', 'italic', 'underline', 'strikethrough', 'blockquote', 'insertunorderedlist', 'insertorderedlist', 'justifyleft','justifycenter', 'justifyright',  'link', 'insertimage','attachment','fullscreen'];
         }else{
-            var data =['fontsize','forecolor','backcolor','bold', 'italic', 'underline', 'strikethrough', 'blockquote', 'insertunorderedlist', 'insertorderedlist', 'justifyleft','justifycenter', 'justifyright',  'link', 'insertimage','fullscreen'];
+            var data =['fontsize','bold', 'italic', 'underline', 'strikethrough', 'blockquote', 'insertunorderedlist', 'insertorderedlist', 'justifyleft','justifycenter', 'justifyright',  'link', 'insertimage','fullscreen'];
         }
         var ue = UE.getEditor('container',{
             toolbars: [
