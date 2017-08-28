@@ -48,7 +48,8 @@ class CheckController extends  Controller
 //        $res = $trieTree->contain($post, $tree);
 
         //Carbon计算时间差
-        $thread = Thread::find(1062);
+        $thread = Thread::find(566);
+        dd($thread['heat']);
 
         //定时脚本
 //        $threads = Thread::visible()->get();
