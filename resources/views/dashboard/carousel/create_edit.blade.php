@@ -25,6 +25,10 @@
                         <input id="imageUrl" type="hidden" class="form-control" name="carousel[image]" value="{{ $carousel->image or null }}">
                     </div>
                     <div class="form-group">
+                        <label>类型</label>
+                        {!!  Form::select('carousel[type]', [0 => 'web url',1 => '帖子详情'], $carousel->type,['class' => 'form-control'])!!}
+                    </div>
+                    <div class="form-group">
                         <label>链接</label>
                         {!! Form::url('carousel[url]', isset($carousel) ? $carousel->jump_url : null, ['class' => 'form-control']) !!}
                     </div>

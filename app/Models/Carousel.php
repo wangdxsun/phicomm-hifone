@@ -6,6 +6,7 @@ class Carousel extends BaseModel
 {
     protected $fillable = [
         'image',
+        'type',
         'url',
         'order',
         'description',

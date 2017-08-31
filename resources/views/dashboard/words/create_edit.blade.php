@@ -24,7 +24,7 @@
                         <label>{{ trans('dashboard.words.type.title') }}</label>
                         {!!  Form::select('word[type]', ['政治' => '政治', '广告' => '广告',
                         '涉枪涉爆' => '涉枪涉爆', '网络招嫖' => '网络招嫖', '淫秽信息' => '淫秽信息',
-                        '默认' => '默认'], null, ['class' => 'form-control'])!!}
+                        '默认' => '默认'], isset($word) ? $word->type : null, ['class' => 'form-control'])!!}
                     </div>
                     <div class="form-group">
                         <label>{{ trans('dashboard.words.content') }}</label>
@@ -33,7 +33,7 @@
                     <div class="form-group">
                         <label>{{ trans('dashboard.words.action.title') }}</label>
                         {!!  Form::select('word[status]', ['审核敏感词' => '审核敏感词','禁止敏感词' => '禁止敏感词',
-                             '替换敏感词' => '替换敏感词'], null,
+                             '替换敏感词' => '替换敏感词'], isset($word) ? $word->status : null,
                              ['class' => 'form-control'])!!}
                     </div>
                     <div class="form-group">

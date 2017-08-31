@@ -108,7 +108,7 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function user()
     {
-        return $this->belongsTo(User::class)->select(['id', 'username', 'avatar_url']);
+        return $this->belongsTo(User::class)->select(['id', 'username', 'avatar_url', 'role']);
     }
 
     public function lastOpUser()
