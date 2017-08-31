@@ -19,6 +19,7 @@ window.DashboardView = Backbone.View.extend
     self.initSortable()
     self.initSidebarToggle()
     self.initUploadImage()
+    self.initUploadListImage()
     self.initDeleteWarn()
 
   initSidebarToggle: ->
@@ -73,6 +74,35 @@ window.DashboardView = Backbone.View.extend
           $.notifier.notify 'File upload failed', 'error'
         complete: ->
           $('.btn-upload').removeAttr 'disabled'
+      }, 'json'
+      false
+
+  initUploadListImage: ->
+    $('.btn-upload-list').click ->
+      $('.input-file-icon-list').click()
+    $('.input-file-icon-list').change ->
+      $form = $('.create_form')
+      formData = new FormData($form[0])
+      imageListUrl = $('#imageListUrl')
+      imagePreviewBoxList = $('.ImagePreviewBoxList')
+      $.ajax {
+        url: '/upload_image'
+        type: 'POST'
+        data: {
+          file: $('')
+        }
+        cache: false
+        contentType: false
+        processData: false
+        beforeSend: ->
+          $('.btn-upload-list').attr 'disabled', 'disabled'
+        success: (result) ->
+          imageListUrl.val result.filename
+          imagePreviewBoxList.attr('src', result.filename)
+        error: (err) ->
+          $.notifier.notify 'File upload failed', 'error'
+        complete: ->
+          $('.btn-upload-list').removeAttr 'disabled'
       }, 'json'
       false
 

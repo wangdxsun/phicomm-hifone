@@ -46,8 +46,7 @@ class AddReplyCommandHandler
      */
     public function handle(AddReplyCommand $command)
     {
-        $body = app('parser.at')->parse($command->body);
-        $body = app('parser.markdown')->convertMarkdownToHtml($body);
+        $body = app('parser.markdown')->convertMarkdownToHtml($command->body);
         //如果有单独上传图片，将图片拼接到正文后面
         if (Input::has('images')) {
             foreach ($images = Input::get('images') as $image) {

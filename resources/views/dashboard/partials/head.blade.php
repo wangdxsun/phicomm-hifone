@@ -17,11 +17,14 @@
     <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-touch-icon-120x120.png">
     <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-touch-icon-144x144.png">
     <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-touch-icon-152x152.png">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-default/index.css">
 
     <title>{{ $sub_header or $site_title }}</title>
 
     <link rel="stylesheet" href="{{ elixir('dist/css/all.css') }}">
     <script src="{{ elixir('dist/js/all.js') }}"></script>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
     <script type="text/javascript">
         var Global = {};
         Global.locale = 'zh-CN';

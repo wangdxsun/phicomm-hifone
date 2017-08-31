@@ -145,7 +145,11 @@ return [
         'root'         => '根板块',
         'status_name'  => '状态',
         'description'  => '板块描述',
-        'icon'         => '板块图标',
+        'icon'         => [
+            'hot'      => '首页热门板块图片',
+            'list'     => '板块列表图片',
+            'detail'   => '板块详情页图片',
+        ],
         'slug'         => 'Slug',
         'slug_help'    => '快捷路径',
         'add'          => [
@@ -160,7 +164,7 @@ return [
             'list'     =>  '版主列表',
         ],
         'edit' => [
-            'title'     => '编辑板块',
+            'title'     => '编辑主板块',
             'sub_title' => '编辑子板块',
             'success'   => '板块信息更新成功。',
             'failure'   => '板块更新失败！',

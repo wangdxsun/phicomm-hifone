@@ -36,6 +36,8 @@ class Node extends BaseModel implements HasPresenter
         'slug',
         'order',
         'icon',
+        'icon_list',
+        'icon_detail',
         'description',
         'thread_count',
         'reply_count',

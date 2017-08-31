@@ -138,16 +138,19 @@ class NodeController extends Controller
         $nodeData = Request::get('node');
         $moderatorData = Request::get('moderator');
         $userData = Request::get('user');
-        $user = User::findByUsernameOrFail($userData['name']);
-        $user->role_id = $moderatorData['role'];
+        if ('' != $userData['name']) {
+            $user = User::findByUsernameOrFail($userData['name']);
+            $user->role_id = $moderatorData['role'];
+            $moderatorData['user_id'] = $user->id;
+        }
         $moderatorData['node_id'] = $node->id;
-        $moderatorData['user_id'] = $user->id;
-
         try {
             $node->update($nodeData);
-            $moderator = Moderator::create($moderatorData);
+            if ('' != $userData['name']) {
+                $moderator = Moderator::create($moderatorData);
+                $this->updateOpLog($moderator, '新增版主');
+            }
             $this->updateOpLog($node, '修改板块');
-            $this->updateOpLog($moderator, '新增版主');
         } catch (ValidationException $e) {
             return Redirect::route('dashboard.node.edit', ['id' => $node->id])
                 ->withInput(Request::all())

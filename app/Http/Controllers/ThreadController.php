@@ -23,6 +23,7 @@ use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Http\Bll\ThreadBll;
 use Hifone\Models\Node;
 use Hifone\Models\Section;
+use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
 use Hifone\Repositories\Criteria\Thread\BelongsToNode;
 use Config;
@@ -93,14 +94,14 @@ class ThreadController extends Controller
      */
     public function create()
     {
-        $node = Node::find(Input::query('node_id'));
         $sections = Section::orderBy('order')->get();
+        $subNodes = SubNode::find(Input::query('sub_node_id'));
 
         $this->breadcrumb->push(trans('hifone.threads.add'), route('thread.create'));
 
         return $this->view('threads.create_edit')
             ->withSections($sections)
-            ->withNode($node);
+            ->with('subNodes',$subNodes);
     }
 
     /**
@@ -121,11 +122,13 @@ class ThreadController extends Controller
                     $thread->bad_word = $badWord;
                     $thread->save();
                 }
+                $thread->body = app('parser.at')->parse($thread->body);
                 $thread->body = app('parser.emotion')->parse($thread->body);
                 $thread->save();
                 return Redirect::route('thread.index')
                     ->withSuccess('帖子发表成功，请耐心等待审核');
             }
+            $thread->body = app('parser.at')->parse($thread->body);
             $thread->body = app('parser.emotion')->parse($thread->body);
             $thread->save();
             $threadBll->threadPassAutoAudit($thread);
