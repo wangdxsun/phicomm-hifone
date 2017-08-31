@@ -49,7 +49,9 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
      *
      * @var string[]
      */
-    protected $hidden = ['password', 'remember_token'];
+    protected $hidden = ['password', 'remember_token', 'salt', 'remember_token', 'is_banned', 'image_url', 'location', 'location_id', 'bio',
+        'website', 'company', 'signature', 'locale', 'regip', 'last_op_user_id', 'last_op_time', 'last_op_reason', 'last_visit_time',
+        'created_at', 'updated_at', 'deleted_at', 'nickname', 'email', 'phicomm_id'];
     /**
      * The validation rules.
      *

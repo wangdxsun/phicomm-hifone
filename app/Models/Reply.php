@@ -35,6 +35,9 @@ class Reply extends BaseModel
         'ip',
     ];
 
+    protected $hidden = ['body_original', 'bad_word', 'thread_id', 'is_block', 'ip', 'last_op_user_id', 'last_op_time', 'last_op_reason',
+        'created_at', 'updated_at', 'deleted_at'];
+
     protected $dates = ['deleted_at', 'last_op_time'];
 
     /**
@@ -64,7 +67,7 @@ class Reply extends BaseModel
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->select(['id', 'username', 'avatar_url']);
     }
 
     public function lastOpUser()
