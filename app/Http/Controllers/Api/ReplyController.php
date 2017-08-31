@@ -22,6 +22,7 @@ class ReplyController extends ApiController
                 $reply->bad_word = $badWord;
                 $reply->save();
             }
+            $reply->body = app('parser.at')->parse($reply->body);
             $reply->body = app('parser.emotion')->parse($reply->body);
             $reply->save();
             return [
@@ -29,6 +30,7 @@ class ReplyController extends ApiController
                 'reply' => $reply
             ];
         }
+        $reply->body = app('parser.at')->parse($reply->body);
         $reply->body = app('parser.emotion')->parse($reply->body);
         $reply->save();
         $replyBll->replyPassAutoAudit($reply);

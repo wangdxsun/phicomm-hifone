@@ -55,6 +55,7 @@ class ThreadController extends ApiController
                 $thread->bad_word = $badWord;
                 $thread->save();
             }
+            $thread->bdoy = app('parser.at')->parse($thread->bdoy);
             $thread->body = app('parser.emotion')->parse($thread->body);
             $thread->save();
             return [
@@ -62,6 +63,7 @@ class ThreadController extends ApiController
                 'thread' => $thread
             ];
         }
+        $thread->bdoy = app('parser.at')->parse($thread->bdoy);
         $thread->body = app('parser.emotion')->parse($thread->body);
         $thread->save();
         $threadBll->threadPassAutoAudit($thread);
