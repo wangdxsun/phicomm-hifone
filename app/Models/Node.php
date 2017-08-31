@@ -46,6 +46,8 @@ class Node extends BaseModel implements HasPresenter
         'updated_at',
     ];
 
+    protected $hidden = ['status', 'last_op_user_id', 'last_op_time', 'created_at', 'updated_at', 'order', 'slug', 'section_id', 'reply_count'];
+
     /**
      * The validation rules.
      *
@@ -65,7 +67,7 @@ class Node extends BaseModel implements HasPresenter
      */
     public function section()
     {
-        return $this->belongsTo(Section::class);
+        return $this->belongsTo(Section::class)->select(['id', 'name']);
     }
 
     /**

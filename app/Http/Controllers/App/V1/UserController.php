@@ -33,6 +33,6 @@ class UserController extends AppController
         if (!$user) {
             throw new \Exception('请先关联社区账号');
         }
-        return ['username' => $user->username];
+        return $user;
     }
 }
