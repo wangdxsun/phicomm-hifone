@@ -11,6 +11,7 @@
 
 namespace Hifone\Console;
 
+use Hifone\Console\Commands\UpdateHeat;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Hifone\Console\Commands\SendMessage;
@@ -25,6 +26,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         // Commands\Inspire::class,
         SendMessage::class,
+        UpdateHeat::class,
     ];
 
     /**
@@ -37,5 +39,6 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('queue:work --sleep=3 --tries=3')->everyMinute();
+        $schedule->command('heat:update')->everyMinute();
     }
 }

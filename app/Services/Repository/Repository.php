@@ -49,6 +49,7 @@ class Repository extends BaseRepository
         $limit = $limit ?: Config::get('setting.threads_per_page', 15);
         $this->applyCriteria();
 
-        return $this->model->visible()->with('user', 'node', 'lastReplyUser')->paginate($limit);
+        $threads = $this->model->visible()->with('user', 'node', 'lastReplyUser')->paginate($limit);
+        return $threads;
     }
 }
