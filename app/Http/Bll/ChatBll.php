@@ -33,13 +33,12 @@ class ChatBll extends BaseBll
     public function newMessage(User $to)
     {
         $from = \Auth::user();
-        //图片消息
         if (Input::has('image')) {
             $image = Input::get('image');
             $res = dispatch(new UploadBase64ImageCommand($image));
             $message = "<img src='{$res["filename"]}' data-preview-src=\"\" data-preview-group=\"1\"/>";
             event(new NewChatMessageEvent($from, $to, $message));
-        } else {//文字消息
+        } else {
             $message = Input::get('message');
 //        $message = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse(request('message')));
             event(new NewChatMessageEvent($from, $to, $message));
