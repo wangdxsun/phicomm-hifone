@@ -4,7 +4,7 @@
 @if(isset($sub_menu))
 @include('dashboard.partials.sub-sidebar')
 @endif
-<div class="content-wrapper">
+<div class="content-wrapper" id="app">
     <div class="header sub-header" id="nodes">
         <span class="uppercase">
             {{ trans(isset($node) ? 'dashboard.nodes.edit.title' : 'dashboard.nodes.add.title') }}
@@ -20,12 +20,44 @@
             @include('partials.errors')
                 <fieldset>
                 <div class="form-group">
-                    <label>icon</label><br>
-                    <a href="javascript:void(0);" class="btn-upload">
-                        <img src="{{ isset($node) ? $node->icon : '/images/blank.png' }}" class="ImagePreviewBox" style="max-height: 200px; max-width: 300px; cursor: pointer;">
-                    </a>
-                    <input type="file" name="file" class="input-file hide">
-                    <input id="imageUrl" type="hidden" class="form-control" name="node[icon]" value="{{ $node->icon or null }}">
+                    <div class="col-xs-4">
+                        <label>{{ trans('dashboard.nodes.icon.hot') }}</label><br>
+                        <el-upload
+                                class="avatar-uploader"
+                                action="/upload_image"
+                                :show-file-list="false"
+                                :on-success="handleAvatarSuccess1">
+                            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                        </el-upload>
+                        <el-input v-model="imageUrl" type="hidden" placeholder="请输入内容" name="node[icon]" value="{{ $node->icon or null }}"></el-input>
+                    </div>
+
+                    <div class="col-xs-4">
+                        <label>{{ trans('dashboard.nodes.icon.list') }}</label><br>
+                        <el-upload
+                                class="avatar-uploader"
+                                action="/upload_image"
+                                :show-file-list="false"
+                                :on-success="handleAvatarSuccess2">
+                            <img v-if="imageListUrl" :src="imageListUrl" class="avatar">
+                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                        </el-upload>
+                        <el-input  v-model="imageListUrl" placeholder="请输入内容" type="hidden" name="node[icon_list]" value="{{ $node->icon_list or null }}"></el-input>
+                    </div>
+
+                    <div class="col-xs-4">
+                        <label>{{ trans('dashboard.nodes.icon.detail') }}</label><br>
+                        <el-upload
+                                class="avatar-uploader"
+                                action="/upload_image"
+                                :show-file-list="false"
+                                :on-success="handleAvatarSuccess3">
+                            <img v-if="imageDetailUrl" :src="imageDetailUrl" class="avatar">
+                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                        </el-upload>
+                        <el-input  v-model="imageDetailUrl" placeholder="请输入内容" type="hidden" name="node[icon_detail]" value="{{ $node->icon_detail or null }}"></el-input>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>{{ trans('dashboard.nodes.name') }}</label>
@@ -104,4 +136,60 @@
         </div>
     </div>
 </div>
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                imageUrl: '',
+                imageListUrl: '',
+                imageDetailUrl: ''
+            };
+        },
+        methods: {
+            handleAvatarSuccess1: function (res) {
+                this.imageUrl = res.filename;
+            },
+            handleAvatarSuccess2: function (res) {
+                this.imageListUrl = res.filename;
+            },
+            handleAvatarSuccess3: function (res) {
+                this.imageDetailUrl = res.filename;
+            },
+        },
+        mounted: function () {
+            this.imageUrl = "{{ $node->icon }}"
+            this.imageListUrl = "{{ $node->icon_list }}"
+            this.imageDetailUrl = "{{ $node->icon_detail }}"
+        }
+    })
+</script>
+<style>
+    .avatar-uploader .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    .avatar-uploader .el-upload:hover {
+        border-color: #20a0ff;
+    }
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 178px;
+        height: 178px;
+        line-height: 178px;
+        text-align: center;
+    }
+    .avatar {
+        width: 178px;
+        height: 178px;
+        display: block;
+    }
+    .el-upload__input {
+        display: none!important;
+    }
+</style>
 @stop

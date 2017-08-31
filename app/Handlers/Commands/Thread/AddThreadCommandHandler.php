@@ -28,13 +28,14 @@ class AddThreadCommandHandler
     public function handle(AddThreadCommand $command)
     {
         $thumbnails = $this->getFirstImageUrl($command->body.$command->images);
-        $body = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse($command->body));
+        $body = app('parser.markdown')->convertMarkdownToHtml($command->body);
         $body = "$body".$command->images;
         $data = [
             'user_id'       => $command->user_id,
             'title'         => $command->title,
             'excerpt'       => Thread::makeExcerpt($command->body),
             'node_id'       => $command->node_id,
+            'sub_node_id'   => $command->sub_node_id,
             'body'          => $body,
             'body_original' => $command->body,
             'created_at'    => Carbon::now()->toDateTimeString(),

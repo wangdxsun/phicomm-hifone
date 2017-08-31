@@ -48,6 +48,7 @@ class Thread extends BaseModel implements TaggableInterface
         'body_original',
         'user_id',
         'node_id',
+        'sub_node_id',
         'is_excellent',
         'created_at',
         'updated_at',
@@ -64,6 +65,7 @@ class Thread extends BaseModel implements TaggableInterface
         'title'   => 'required|min:1|max:80',
         'body'    => 'required',
         'node_id' => 'required|int',
+        'sub_node_id' => 'required|int',
         'user_id' => 'required|int',
         'heat_offset' => 'int',
     ];

@@ -40,10 +40,12 @@ class ReplyController extends Controller
                     $reply->bad_word = $badWord;
                     $reply->save();
                 }
+                $reply->body = app('parser.at')->parse($reply->body);
                 $reply->body = app('parser.emotion')->parse($reply->body);
                 $reply->save();
                 return Redirect::back()->withSuccess('回复发表成功，请耐心等待审核');
             }
+            $reply->body = app('parser.at')->parse($reply->body);
             $reply->body = app('parser.emotion')->parse($reply->body);
             $reply->save();
             $replyBll->replyPassAutoAudit($reply);

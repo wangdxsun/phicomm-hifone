@@ -13,6 +13,7 @@ use Hifone\Commands\Thread\AddThreadCommand;
 use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasAuditedEvent;
 use Hifone\Events\Thread\ThreadWasViewedEvent;
+use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
 use Hifone\Repositories\Criteria\Thread\Filter;
@@ -45,7 +46,10 @@ class ThreadBll extends BaseBll
     public function createThread()
     {
         $threadData = Input::get('thread');
-        $node_id = isset($threadData['node_id']) ? $threadData['node_id'] : null;
+        $sub_node_id = isset($threadData['sub_node_id']) ? $threadData['sub_node_id'] : null;
+        $node_id = SubNode::find($sub_node_id)->node_id;
+
+
         $tags = isset($threadData['tags']) ? $threadData['tags'] : '';
         $images = '';
 
@@ -70,6 +74,7 @@ class ThreadBll extends BaseBll
             $threadData['body'],
             Auth::id(),
             $node_id,
+            $sub_node_id,
             $tags,
             $images
         ));
