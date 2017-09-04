@@ -20,8 +20,11 @@ class BannerController extends ApiController
 
     public function show(Carousel $carousel)
     {
+        //统计Banner次数
         event(new BannerWasViewedEvent($carousel));
-
-        return redirect($carousel->jump_url);
+        return [
+            "type" => $carousel->type,
+            "url" => $carousel->jump_url
+            ];
     }
 }

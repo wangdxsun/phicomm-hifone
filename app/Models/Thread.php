@@ -325,7 +325,7 @@ class Thread extends BaseModel implements TaggableInterface
     {
         $view_score = 1;
         $like_score = 20;
-        $reply_score = 10;
+        $reply_score = 50;
         $time_score = 1000;
         $excellent = $this->is_excellent != 0 ? 500 : 0;
 

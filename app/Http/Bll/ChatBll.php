@@ -37,13 +37,11 @@ class ChatBll extends BaseBll
             $image = Input::get('image');
             $res = dispatch(new UploadBase64ImageCommand($image));
             $message = "<img src='{$res["filename"]}' data-preview-src=\"\" data-preview-group=\"1\"/>";
-            event(new NewChatMessageEvent($from, $to, $message));
         } else {
             $message = Input::get('message');
 //        $message = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse(request('message')));
-            event(new NewChatMessageEvent($from, $to, $message));
         }
-
+        event(new NewChatMessageEvent($from, $to, $message));
         $to->increment('notification_chat_count', 1);
         $to->increment('notification_count', 1);
         return [

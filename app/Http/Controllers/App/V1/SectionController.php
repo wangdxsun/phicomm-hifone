@@ -15,6 +15,16 @@ class SectionController extends AppController
 {
     public function index()
     {
+        $sections = Section::orderBy('order')->get();
+        foreach ($sections as $section) {
+            $nodes = $section->nodes;
+            foreach ($nodes as $node) {
+                $subNodes = $node->subNodes()->orderBy('order')->get();
+                $node['subNodes'] = $subNodes;
+            }
+            $sections['nodes'] = $nodes;
+        }
+        dd($sections->toArray());
         return Section::with('nodes')->get();
     }
 }

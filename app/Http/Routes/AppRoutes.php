@@ -19,7 +19,8 @@ class AppRoutes
             $router->post('user/bind', 'UserController@bind');
 
             $router->get('nodes', 'NodeController@index');
-            $router->get('nodes/{node}', 'NodeController@show');
+            $router->get('nodes/sectionsWithNodes', 'NodeController@sectionsWithNodes');
+            $router->get('nodes/{node}', 'NodeController@subNodes');
             $router->get('banners', 'BannerController@index');
             $router->get('banners/{carousel}', 'BannerController@show');
             $router->get('sections', 'SectionController@index');

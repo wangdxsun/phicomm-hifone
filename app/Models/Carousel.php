@@ -16,7 +16,7 @@ class Carousel extends BaseModel
         'updated_at',
     ];
 
-    protected $hidden = ['id', 'order', 'description', 'user_id', 'visible', 'last_op_user_id', 'last_op_time', 'view_count', 'click_count', 'created_at', 'updated_at'];
+    protected $hidden = ['id', 'order', 'type', 'description', 'user_id', 'visible', 'last_op_user_id', 'last_op_time', 'view_count', 'click_count', 'created_at', 'updated_at'];
 
     public $rules = [
         'image'   => 'string|required',
