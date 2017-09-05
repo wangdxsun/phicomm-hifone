@@ -59,7 +59,6 @@ class AddCreditCommandHandler
         ];
         // Create the credit
         $credit = Credit::create($data);
-
         $command->user->update(['score' => $credit->balance]);
 
         return $credit;

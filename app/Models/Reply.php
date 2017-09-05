@@ -67,7 +67,7 @@ class Reply extends BaseModel
 
     public function user()
     {
-        return $this->belongsTo(User::class)->select(['id', 'username', 'avatar_url']);
+        return $this->belongsTo(User::class)->select(['id', 'username', 'avatar_url','password']);
     }
 
     public function lastOpUser()

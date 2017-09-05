@@ -51,7 +51,7 @@ class Thread extends BaseModel implements TaggableInterface
         'ip',
     ];
 
-    protected $hidden = ['body_original', 'bad_word', 'is_blocked', 'heat_offset', 'body', 'follower_count', 'ip', 'last_reply_user_id',
+    protected $hidden = ['body_original', 'bad_word', 'is_blocked', 'heat_offset', 'follower_count', 'ip', 'last_reply_user_id',
         'last_op_user_id', 'last_op_reason', 'last_op_time', 'deleted_at'];
 
     /**
@@ -97,7 +97,7 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function node()
     {
-        return $this->belongsTo(Node::class)->select(['id', 'name']);
+        return $this->belongsTo(Node::class)->select(['id', 'name','thread_count','description']);
     }
 
     public function subNode()
@@ -112,7 +112,7 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function user()
     {
-        return $this->belongsTo(User::class)->select(['id', 'username', 'avatar_url', 'role']);
+        return $this->belongsTo(User::class)->select(['id', 'username', 'avatar_url', 'role','score','password','thread_count']);
     }
 
     public function lastOpUser()

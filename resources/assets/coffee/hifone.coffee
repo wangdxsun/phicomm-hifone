@@ -112,6 +112,7 @@ window.Hifone =
     ).attr('style', 'cursor:pointer;').removeAttr('href').click ->
       $form = $(this).find('form')
       $title = if $(this).attr('data-title') then $(this).attr('data-title') else 'Confirm your action'
+      $text = if $(this).attr('data-text') then $(this).attr('data-text') else 'Are you sure you want to do this?'
       if $(this).hasClass('need-reason')
         swal {
           title: $title

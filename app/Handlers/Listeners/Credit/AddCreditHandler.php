@@ -154,7 +154,6 @@ class AddCreditHandler
         if (!$action) {
             return;
         }
-
         $credit = dispatch(new AddCreditCommand($action, $user));
 
         if (!$credit) {
