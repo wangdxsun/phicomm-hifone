@@ -2,16 +2,17 @@
 /**
  * Created by PhpStorm.
  * User: qiuling.jiang
- * Date: 2017/4/25
- * Time: 13:49
+ * Date: 2017/8/25
+ * Time: 15:42
  */
 
-namespace Hifone\Http\Controllers\Api;
+namespace Hifone\Http\Controllers\App\V1;
 
 use Hifone\Events\Banner\BannerWasViewedEvent;
+use Hifone\Http\Controllers\App\AppController;
 use Hifone\Models\Carousel;
 
-class BannerController extends ApiController
+class BannerController extends AppController
 {
     public function index()
     {
@@ -20,11 +21,6 @@ class BannerController extends ApiController
 
     public function show(Carousel $carousel)
     {
-        //统计Banner次数
         event(new BannerWasViewedEvent($carousel));
-        return [
-            "type" => $carousel->type,
-            "url" => $carousel->jump_url
-            ];
     }
 }

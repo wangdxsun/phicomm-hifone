@@ -71,7 +71,7 @@ class ThreadController extends Controller
             $thread->title      => $thread->url,
         ]);
 
-        $replies = $thread->replies()->visible()
+        $replies = $thread->replies()->visible()->with(['user'])
             ->orderBy('order', 'desc')->orderBy('id', 'asc')
             ->paginate(Config::get('setting.replies_per_page', 30));
 

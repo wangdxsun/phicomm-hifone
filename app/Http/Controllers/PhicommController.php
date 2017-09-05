@@ -8,8 +8,6 @@
 
 namespace Hifone\Http\Controllers;
 
-use Carbon\Carbon;
-use Hifone\Events\User\UserWasAddedEvent;
 use Hifone\Events\User\UserWasLoggedinEvent;
 use Hifone\Http\Bll\PhicommBll;
 use Hifone\Models\Provider;
@@ -58,11 +56,11 @@ class PhicommController extends Controller
             $this->phicomm->checkPhoneAvailable($request->phone);
             $this->phicomm->register($request->phone, $password, $request->verifyCode);
             $phicommId = $this->phicomm->login($request->phone, $password);
-
+            Session::set('phicommId', $phicommId);
         } catch (\Exception $e) {
             return Redirect::back()->withInput(Input::except('password'))->withErrors($e->getMessage());
         }
-        return view('phicomm.bind')->withPhicommId($phicommId);
+        return Redirect::to('/phicomm/bind');
     }
 
     public function getLogin()
@@ -103,7 +101,7 @@ class PhicommController extends Controller
             return Redirect::intended('/')
                 ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.login.success')));
         } else {
-            return view('phicomm.bind');
+            return Redirect::to('/phicomm/bind');
         }
     }
 
@@ -112,10 +110,15 @@ class PhicommController extends Controller
         return view('phicomm.create');
     }
 
+    public function getBind()
+    {
+        return view('phicomm.bind');
+    }
+
     public function postBind(PhicommBll $phicommBll, WordsFilter $wordsFilter)
     {
         $this->validate(request(), [
-            'username' => 'required',
+            'username' => 'required|between:2,13',
         ]);
         try {
             $phicommBll->bind($wordsFilter);

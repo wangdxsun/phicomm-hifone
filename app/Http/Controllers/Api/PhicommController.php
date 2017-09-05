@@ -38,7 +38,7 @@ class PhicommController extends ApiController
         $phicommId = $this->phicommBll->login($request->phone, $password);
         Session::set('phicommId', $phicommId);
 
-        return success('云账号注册成功');
+        return response(['user' => 'Unbind']);
     }
 
     public function login(CommonBll $commonBll)
@@ -58,11 +58,6 @@ class PhicommController extends ApiController
             }
             Auth::login($user);
             $commonBll->login();
-            $cloudUser = $this->phicommBll->userInfo();
-            if ($cloudUser['img'] && $user->avatar_url != $cloudUser['img']) {
-                $user->avatar_url = $cloudUser['img'];
-                $user->save();
-            }
             return $user;
         } else {
             Session::set('phicommId', $phicommId);
@@ -87,7 +82,7 @@ class PhicommController extends ApiController
         $this->validate(request(), [
             'phone' => 'required|phone',
             'password' => 'required|string|min:6',
-            'verify' => 'required|size:6',
+            'verify' => 'required',
         ]);
         $password = strtoupper(md5(request('password')));
         $this->phicommBll->reset(request('phone'), $password, request('verify'));

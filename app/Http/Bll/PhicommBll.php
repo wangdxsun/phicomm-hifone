@@ -169,7 +169,7 @@ class PhicommBll extends BaseBll
     public function bind(WordsFilter $wordsFilter)
     {
         $userData = [
-            'phicomm_id' => Session::get('phicommId') ?: Auth::phicommId(),
+            'phicomm_id' => Auth::phicommId(),
             'username' => request('username'),
             'password' => str_random(32),
             'regip' => getClientIp(),

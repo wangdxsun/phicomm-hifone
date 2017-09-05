@@ -18,8 +18,19 @@ class AppRoutes
             $router->get('user/info', 'UserController@show');
             $router->post('user/bind', 'UserController@bind');
 
-            $router->group(['middleware' => 'auth:hifone'], function ($router) {
+            $router->get('nodes', 'NodeController@index');
+            $router->get('nodes/sectionsWithNodes', 'NodeController@sectionsWithNodes');
+            $router->get('nodes/{node}', 'NodeController@subNodes');
+            $router->get('banners', 'BannerController@index');
+            $router->get('banners/{carousel}', 'BannerController@show');
+            $router->get('sections', 'SectionController@index');
+            $router->get('threads', 'ThreadController@index');
+            $router->get('threads/{thread}', 'ThreadController@show');
+            $router->get('threads/{thread}/replies', 'ThreadController@replies');
 
+            $router->group(['middleware' => 'auth:hifone'], function ($router) {
+                $router->post('upload', 'CommonController@upload');
+                $router->post('threads', 'ThreadController@store');
             });
         });
     }

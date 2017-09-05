@@ -8,9 +8,11 @@
 
 namespace Hifone\Http\Bll;
 
+use Hifone\Commands\Image\UploadBase64ImageCommand;
 use Hifone\Events\Chat\NewChatMessageEvent;
 use Hifone\Models\Chat;
 use Hifone\Models\User;
+use Input;
 
 class ChatBll extends BaseBll
 {
@@ -31,9 +33,14 @@ class ChatBll extends BaseBll
     public function newMessage(User $to)
     {
         $from = \Auth::user();
-        $message = request('message');
+        if (Input::has('image')) {
+            $image = Input::get('image');
+            $res = dispatch(new UploadBase64ImageCommand($image));
+            $message = "<img src='{$res["filename"]}' data-preview-src=\"\" data-preview-group=\"1\"/>";
+        } else {
+            $message = Input::get('message');
 //        $message = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse(request('message')));
-
+        }
         event(new NewChatMessageEvent($from, $to, $message));
         $to->increment('notification_chat_count', 1);
         $to->increment('notification_count', 1);
