@@ -7,72 +7,25 @@
 </head>
 <body>
 <div id="app">
-    <el-upload
-            class="avatar-uploader"
-            action="/upload_image"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess1">
-        <img v-if="imageUrl1" :src="imageUrl1" class="avatar">
-        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-    </el-upload>
-    <el-input type="hidden" v-model="imageUrl1" placeholder="请输入内容"></el-input>
-    <el-upload
-            class="avatar-uploader"
-            action="/upload_image"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess2">
-        <img v-if="imageUrl2" :src="imageUrl2" class="avatar">
-        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-    </el-upload>
-    <el-input v-model="imageUrl2" placeholder="请输入内容"></el-input>
+    <el-button type="success" size="mini" @click="visible = true" >按钮</el-button>
+    <el-dialog v-model="visible" title="Hello world">
+        <p>欢迎使用 Element</p>
+    </el-dialog>
 </div>
 </body>
 <!-- 先引入 Vue -->
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
 <!-- 引入组件库 -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
 <script>
     new Vue({
         el: '#app',
-        data: function () {
+        data: function() {
             return {
-                imageUrl1: '',
-                imageUrl2: ''
+                visible: false
             };
-        },
-        methods: {
-            handleAvatarSuccess1: function (res) {
-                this.imageUrl1 = res.filename;
-            },
-            handleAvatarSuccess2: function (res) {
-                this.imageUrl2 = res.filename;
-            }
         }
     })
 </script>
-<style>
-    .avatar-uploader .el-upload {
-        border: 1px dashed #d9d9d9;
-        border-radius: 6px;
-        cursor: pointer;
-        position: relative;
-        overflow: hidden;
-    }
-    .avatar-uploader .el-upload:hover {
-        border-color: #20a0ff;
-    }
-    .avatar-uploader-icon {
-        font-size: 28px;
-        color: #8c939d;
-        width: 178px;
-        height: 178px;
-        line-height: 178px;
-        text-align: center;
-    }
-    .avatar {
-        width: 178px;
-        height: 178px;
-        display: block;
-    }
-</style>
 </html>
