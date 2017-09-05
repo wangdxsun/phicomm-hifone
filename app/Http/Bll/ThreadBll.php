@@ -50,7 +50,6 @@ class ThreadBll extends BaseBll
         $sub_node_id = isset($threadData['sub_node_id']) ? $threadData['sub_node_id'] : null;
         $node_id = SubNode::find($sub_node_id)->node_id;
 
-
         $tags = isset($threadData['tags']) ? $threadData['tags'] : '';
         $images = '';
 

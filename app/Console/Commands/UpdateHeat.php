@@ -40,8 +40,10 @@ class UpdateHeat extends Command
     {
         $threads = Thread::visible()->get();
         foreach ($threads as $thread) {
-            $thread->heat = $thread->heat;
-            $thread->save();
+            if ($thread->heat > -50000 || empty($thread->heat)) {
+                $thread->heat = $thread->heat_compute;
+                $thread->save();
+            }
         }
     }
 }

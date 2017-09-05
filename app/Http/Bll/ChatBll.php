@@ -36,7 +36,7 @@ class ChatBll extends BaseBll
         if (Input::has('image')) {
             $image = Input::get('image');
             $res = dispatch(new UploadBase64ImageCommand($image));
-            $message = "<img src='{$res["filename"]}' data-preview-src=\"\" data-preview-group=\"1\"/>";
+            $message = "<img src='{$res["filename"]}' class=\"message_image\" v-preview='{$res["filename"]}'/>";
         } else {
             $message = Input::get('message');
 //        $message = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse(request('message')));
