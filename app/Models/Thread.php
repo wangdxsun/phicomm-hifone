@@ -51,7 +51,7 @@ class Thread extends BaseModel implements TaggableInterface
         'ip',
     ];
 
-    protected $hidden = ['body_original', 'bad_word', 'is_blocked', 'heat_offset', 'follower_count', 'ip', 'last_reply_user_id',
+    protected $hidden = ['body_original', 'bad_word', 'is_blocked', 'heat_offset', 'heat', 'follower_count', 'ip', 'last_reply_user_id',
         'last_op_user_id', 'last_op_reason', 'last_op_time', 'deleted_at'];
 
     /**
