@@ -56,7 +56,7 @@ class Thread extends BaseModel implements TaggableInterface
         'ip',
     ];
 
-    protected $hidden = ['body_original', 'bad_word', 'is_blocked', 'heat_offset', 'heat', 'follower_count', 'ip', 'last_reply_user_id',
+    protected $hidden = ['body_original', 'bad_word', 'is_blocked', 'heat_offset', 'body', 'follower_count', 'ip', 'last_reply_user_id',
         'last_op_user_id', 'last_op_reason', 'last_op_time', 'deleted_at'];
 
     /**
@@ -321,29 +321,33 @@ class Thread extends BaseModel implements TaggableInterface
     }
 
     //动态计算热度值
-    public function getHeatAttribute()
+    public function getHeatComputeAttribute()
     {
         $view_score = 1;
         $like_score = 20;
         $reply_score = 50;
         $time_score = 1000;
-        $excellent = $this->is_excellent != 0 ? 500 : 0;
+        $excellent = $this->is_excellent != 0 ? 10000 : 0;
 
         $createAt = new Carbon($this['attributes']['created_at']);
         $now = Carbon::now();
         $timeAlive = $now->diffInSeconds($createAt);
         $heat = $this->view_count * $view_score + $this->like_count * $like_score + $this->reply_count * $reply_score + $excellent
             + $this->heatCoolingValue($timeAlive, $time_score) + $this->heat_offset;
+        $heat = ($heat > -100000) ? $heat : -100000;
         return round($heat, 2, PHP_ROUND_HALF_DOWN);
     }
 
-    private function heatCoolingValue($timeAlive, $time_score)
+    private function heatCoolingValue($timeAlive, $timeScore)
     {
         //72小时后逐渐降低，72小时为中点
-        if ($timeAlive <= 72 * 2 * 60 * 60) {
-            return $time_score * cos($timeAlive * PI() / (60 * 60 * 72 * 2)) + 100;
+        if ($timeAlive <= 72 * 60 * 60) {
+            return $timeScore * cos($timeAlive * PI() / (60 * 60 * 72 * 2));
+        } elseif ($timeAlive <= 72 * 2 * 60 * 60) {
+            return 5 * $timeScore * cos($timeAlive * PI() / (60 * 60 * 72 * 2));
         } else {
-            return ($score = $timeAlive * (-1) + 60 * 60 * 72 * 2 - 900) > -100000 ? $score : -100000;
+            $score = ($timeAlive - 60 * 60 * 72 * 2) * (-0.1) - 5 * $timeScore;
+            return $score > -300000 ? $score : -300000;
         }
     }
 }
