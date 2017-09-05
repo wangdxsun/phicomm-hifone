@@ -3,7 +3,7 @@
     @if(isset($sub_menu))
         @include('dashboard.partials.sub-sidebar')
     @endif
-    <div class="content-wrapper">
+    <div class="content-wrapper" id="app">
         <div class="header sub-header" id="nodes">
         <span class="uppercase">
             {{ trans(isset($subNode) ? 'dashboard.nodes.edit.sub_title' : 'dashboard.nodes.add.sub_title') }}
@@ -38,6 +38,24 @@
                         <label>{{ trans('dashboard.nodes.description') }}</label>
                         {!! Form::textarea('node[description]', isset($subNode) ? $subNode->description : null , ['class' => 'form-control', 'rows' => 5]) !!}
                     </div>
+                    <div class="form-group">
+                        <label>{{ trans('dashboard.nodes.prompt.subNode') }}</label>
+                        <el-tooltip :content="'子版块: ' + valuePrompt" placement="top" >
+                            <el-switch
+                                v-model="valuePrompt"
+                                on-color="#13ce66"
+                                off-color="#ff4949"
+                                on-value="打开"
+                                off-value="关闭">
+                            </el-switch>
+                        </el-tooltip>
+                        <el-input  v-model="valuePrompt" placeholder="请输入内容" type="hidden" name="subNode[is_prompt]" value="{{ $subNode->prompt or null }}"></el-input>
+                    </div>
+
+                    <div class="form-group">
+                        <label>{{ trans('dashboard.nodes.prompt.subNodeDetail') }}</label>
+                        {!! Form::textarea('subNode[prompt]', isset($subNode) ? $subNode->prompt : null , ['class' => 'form-control', 'rows' => 3]) !!}
+                    </div>
                 </fieldset>
 
                 <div class="row">
@@ -52,4 +70,14 @@
             </div>
         </div>
     </div>
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                valuePrompt:'打开',
+            };
+        }
+    })
+</script>
 @stop

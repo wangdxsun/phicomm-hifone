@@ -27,7 +27,7 @@
                                 action="/upload_image"
                                 :show-file-list="false"
                                 :on-success="handleAvatarSuccess1">
-                            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                            <img v-if="imageUrl" :src="imageUrl" class="el-avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
                         <el-input v-model="imageUrl" type="hidden" placeholder="请输入内容" name="node[icon]" value="{{ $node->icon or null }}"></el-input>
@@ -40,7 +40,7 @@
                                 action="/upload_image"
                                 :show-file-list="false"
                                 :on-success="handleAvatarSuccess2">
-                            <img v-if="imageListUrl" :src="imageListUrl" class="avatar">
+                            <img v-if="imageListUrl" :src="imageListUrl" class="el-avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
                         <el-input  v-model="imageListUrl" placeholder="请输入内容" type="hidden" name="node[icon_list]" value="{{ $node->icon_list or null }}"></el-input>
@@ -53,7 +53,7 @@
                                 action="/upload_image"
                                 :show-file-list="false"
                                 :on-success="handleAvatarSuccess3">
-                            <img v-if="imageDetailUrl" :src="imageDetailUrl" class="avatar">
+                            <img v-if="imageDetailUrl" :src="imageDetailUrl" class="el-avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
                         <el-input  v-model="imageDetailUrl" placeholder="请输入内容" type="hidden" name="node[icon_detail]" value="{{ $node->icon_detail or null }}"></el-input>
@@ -63,25 +63,22 @@
                     <label>{{ trans('dashboard.nodes.name') }}</label>
                      {!! Form::text('node[name]', isset($node) ? $node->name : null, ['class' => 'form-control']) !!}
                 </div>
-                {{--<div class="form-group">--}}
-                    {{--<label>{{ trans('dashboard.nodes.slug') }}</label>--}}
-                    {{--{!! Form::text('node[slug]', isset($node) ? $node->slug : null, ['class' => 'form-control']) !!}--}}
-                {{--</div>--}}
+
                 @if($sections->count() > 0)
-                <div class="form-group">
-                    <label>{{ trans('dashboard.sections.sections') }}</label>
-                    <select name="node[section_id]" class="form-control">
-                        @foreach($sections as $section)
-                        <option value="{{ $section->id }}" {{ option_is_selected([$section, 'section_id', isset($node) ? $node : null]) }}>{{ $section->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
+                    <div class="form-group">
+                        <label>{{ trans('dashboard.sections.sections') }}</label>
+                        <select name="node[section_id]" class="form-control">
+                            @foreach($sections as $section)
+                            <option value="{{ $section->id }}" {{ option_is_selected([$section, 'section_id', isset($node) ? $node : null]) }}>{{ $section->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 @else
-                <input type="hidden" name="node[section_id]" value="0">
+                    <input type="hidden" name="node[section_id]" value="0">
                 @endif
                 <div class="form-group">
-                <label>{{ trans('dashboard.nodes.description') }}</label>
-                {!! Form::textarea('node[description]', isset($node) ? $node->description : null , ['class' => 'form-control', 'rows' => 5]) !!}
+                    <label>{{ trans('dashboard.nodes.description') }}</label>
+                    {!! Form::textarea('node[description]', isset($node) ? $node->description : null , ['class' => 'form-control', 'rows' => 5]) !!}
                 </div>
                 <div clas="form-group">
                     <label >{{ trans('dashboard.nodes.moderator.add') }}</label>
@@ -96,6 +93,24 @@
                             <option value="3">版主</option>
                             <option value="12">实习版主</option>
                     </select>
+                </div>
+
+                <div class="form-group">
+                    <label>{{ trans('dashboard.nodes.prompt.node') }}</label>
+                    <el-tooltip :content="'Switch value: ' + valuePrompt" placement="top" >
+                        <el-switch
+                                v-model="valuePrompt"
+                                on-color="#13ce66"
+                                off-color="#ff4949"
+                                on-value="打开"
+                                off-value="关闭">
+                        </el-switch>
+                    </el-tooltip>
+                    <el-input  v-model="valuePrompt" placeholder="请输入内容" type="hidden" name="node[is_prompt]" value="{{ $node->prompt or null }}"></el-input>
+                </div>
+                <div class="form-group">
+                    <label>{{ trans('dashboard.nodes.prompt.nodeDetail') }}</label>
+                    {!! Form::textarea('node[prompt]', isset($node) ? $node->prompt : null , ['class' => 'form-control', 'rows' => 3]) !!}
                 </div>
                 @if(isset($node))
                     <div>
@@ -143,7 +158,8 @@
             return {
                 imageUrl: '',
                 imageListUrl: '',
-                imageDetailUrl: ''
+                imageDetailUrl: '',
+                valuePrompt:'打开',
             };
         },
         methods: {
@@ -158,9 +174,9 @@
             },
         },
         mounted: function () {
-            this.imageUrl = "{{ $node->icon }}"
-            this.imageListUrl = "{{ $node->icon_list }}"
-            this.imageDetailUrl = "{{ $node->icon_detail }}"
+            this.imageUrl = "{{ $node->icon or null }}"
+            this.imageListUrl = "{{ $node->icon_list or null }}"
+            this.imageDetailUrl = "{{ $node->icon_detail or null }}"
         }
     })
 </script>
@@ -183,7 +199,7 @@
         line-height: 178px;
         text-align: center;
     }
-    .avatar {
+    .el-avatar {
         width: 178px;
         height: 178px;
         display: block;
@@ -192,4 +208,5 @@
         display: none!important;
     }
 </style>
+
 @stop

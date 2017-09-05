@@ -44,6 +44,14 @@ class Node extends BaseModel implements HasPresenter
         'status',
         'created_at',
         'updated_at',
+        'is_prompt',
+        'prompt',
+    ];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'slug',
     ];
 
     /**
@@ -56,6 +64,7 @@ class Node extends BaseModel implements HasPresenter
         'order'       => 'int',
         'status'      => 'int',
         'description' => 'required|string|min:2|max:100',
+        'prompt'      => 'string|min:10|max:40',
     ];
 
     /**
@@ -110,7 +119,7 @@ class Node extends BaseModel implements HasPresenter
 
     public function subNodes()
     {
-        return $this->hasMany(SubNode::class);
+        return $this->hasMany(SubNode::class)->orderBy('order');
     }
 
     public function moderators()

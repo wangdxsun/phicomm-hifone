@@ -220,6 +220,7 @@ class ThreadController extends Controller
             $thread->heat = $thread->heat;
             $this->updateOpLog($thread, '审核通过');
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
+            $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);
             $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
             event(new ThreadWasAuditedEvent($thread));
             DB::commit();
@@ -260,6 +261,7 @@ class ThreadController extends Controller
         try {
             $this->trash($thread);
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
+            $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);
             $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
             event(new ThreadWasTrashedEvent($thread));
             DB::commit();

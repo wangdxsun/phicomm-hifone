@@ -193,4 +193,5 @@ class NodeController extends Controller
         }
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
+
 }

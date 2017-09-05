@@ -24,12 +24,19 @@ class SubNode extends BaseModel
         'reply_count',
         'created_at',
         'updated_at',
+        'is_prompt',
+        'prompt',
+    ];
+    protected $hidden = [
+        'created_at',
+        'updated_at',
     ];
 
     public $rules = [
         'name'  => 'required|string',
         'order'     => 'int',
         'status'    => 'int',
+        'prompt'    => 'string|min:10|max:40',
     ];
 
     public function node(){

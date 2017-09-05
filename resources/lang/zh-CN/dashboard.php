@@ -163,6 +163,12 @@ return [
             'type'     =>  '所属版主类别',
             'list'     =>  '版主列表',
         ],
+        'prompt'       => [
+            'node'          => '主板块提示',
+            'subNode'       => '子版块提示',
+            'nodeDetail'    => '主板块提示内容',
+            'subNodeDetail' =>'子版块提示内容',
+        ],
         'edit' => [
             'title'     => '编辑主板块',
             'sub_title' => '编辑子板块',
