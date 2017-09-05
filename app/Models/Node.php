@@ -49,12 +49,16 @@ class Node extends BaseModel implements HasPresenter
     ];
 
     protected $hidden = [
+        'status',
+        'last_op_user_id',
+        'last_op_time',
         'created_at',
         'updated_at',
+        'order',
         'slug',
+        'section_id',
+        'reply_count'
     ];
-
-    protected $hidden = ['status', 'last_op_user_id', 'last_op_time', 'created_at', 'updated_at', 'order', 'slug', 'section_id', 'reply_count'];
 
     /**
      * The validation rules.

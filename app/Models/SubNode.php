@@ -27,19 +27,11 @@ class SubNode extends BaseModel
         'is_prompt',
         'prompt',
     ];
-    protected $hidden = [
-        'created_at',
-        'updated_at',
-    ];
 
     protected $hidden = [
-        'prompt',
-        'is_prompt',
         'node_id',
-        'description',
         'order',
         'stats',
-        'thread_count',
         'reply_count',
         'last_op_user_id',
         'last_op_time',

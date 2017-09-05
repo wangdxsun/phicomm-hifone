@@ -35,7 +35,7 @@ class DashboardRoutes
             'as' => 'dashboard.'
         ], function (Registrar $router) {
             $router->get('/', 'DashboardController@index')->name('index');
-            $router->get('test', 'DashboardControllerF@test');
+            $router->get('test', 'DashboardController@test');
             $router->get('markdown', 'DashboardController@markdown')->name('markdown');
             $router->post('user/{user}/avatar', 'UserController@avatar');
             $router->post('user/{user}/comment', 'UserController@comment');
