@@ -58,13 +58,14 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
      * @var string[]
      */
     public $rules = [
-        'username' => ['required'],
+        'username' => 'required',
         'password' => 'required|string|min:6',
     ];
 
     protected $searchable = [
         'username',
     ];
+
     public static $orderTypes = [
         'id' => '用户ID',
         'thread_count' => '发帖数',
