@@ -21,15 +21,7 @@ class NodeController extends ApiController
 
     public function sections()
     {
-        $sections = Section::orderBy('order')->get();
-        foreach ($sections as $section) {
-            $nodes = $section->nodes;
-            foreach ($nodes as $node) {
-                $subNodes = $node->subNodes()->orderBy('order')->get();
-                $node['subNodes'] = $subNodes;
-            }
-            $sections['nodes'] = $nodes;
-        }
+        $sections = Section::orderBy('order')->with(['nodes.subNodes'])->get();
         return $sections;
     }
 

@@ -4282,12 +4282,12 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
      * 更新range的collapse状态
      * @param  {Range}   range    range对象
      */
-    function updateCollapse(range) {
-        range.collapsed =
-            range.startContainer && range.endContainer &&
-                range.startContainer === range.endContainer &&
-                range.startOffset == range.endOffset;
-    }
+    // function updateCollapse(range) {
+    //     range.collapsed =
+    //         range.startContainer && range.endContainer &&
+    //             range.startContainer === range.endContainer &&
+    //             range.startOffset == range.endOffset;
+    // }
 
     function selectOneNode(rng){
         return !rng.collapsed && rng.startContainer.nodeType == 1 && rng.startContainer === rng.endContainer && rng.endOffset - rng.startOffset == 1

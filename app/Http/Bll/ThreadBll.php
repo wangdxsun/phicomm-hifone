@@ -13,6 +13,7 @@ use Hifone\Commands\Thread\AddThreadCommand;
 use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasAuditedEvent;
 use Hifone\Events\Thread\ThreadWasViewedEvent;
+use Hifone\Models\Node;
 use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
@@ -119,12 +120,13 @@ class ThreadBll extends BaseBll
             $thread->status = 0;
             $this->updateOpLog($thread, '自动审核通过');
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
+            $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);
             $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
             event(new ThreadWasAuditedEvent($thread));
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            throw new \Exception('系统错误！');
+            throw $e;
         }
     }
 

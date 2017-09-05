@@ -210,6 +210,7 @@ class ReplyController extends Controller
         DB::beginTransaction();
         try {
             $reply->thread->node->increment('reply_count', 1);//版块回帖数+1
+            $reply->thread->subNode->increment('reply_count', 1);//子版块回帖数+1
             $reply->thread->increment('reply_count', 1);
             $reply->user->increment('reply_count', 1);
 
@@ -238,6 +239,7 @@ class ReplyController extends Controller
         DB::beginTransaction();
         try {
             $reply->thread->node->decrement('reply_count', 1);//版块回帖数-1
+            $reply->thread->subNode->decrement('reply_count', 1);//子版块回帖数-1
             $reply->thread->decrement('reply_count', 1);
             $reply->user->decrement('reply_count', 1);
             $this->trash($reply);

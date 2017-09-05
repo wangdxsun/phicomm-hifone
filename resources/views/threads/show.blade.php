@@ -75,11 +75,6 @@
                                                                   'style' => "overflow:hidden",
                                                                   'id' => 'body_field']) !!}
                             </div>
-                            {{--@include('vendor.ueditor.assets')--}}
-                            {{--<div class="form-group">--}}
-                                {{--<label>{{ trans('hifone.replies.body') }}</label>--}}
-                                {{--<script id="container" name="reply[body]" type="text/plain">{!!  isset($reply) ? $reply->body_original : null !!}</script>--}}
-                            {{--</div>--}}
                             <div class="form-group status-post-submit">
                                 {!! Form::submit(trans('forms.publish'), ['class' => 'btn btn-primary', 'id' => 'reply-create-submit']) !!}
                                 &nbsp;<span class="help-inline" title="Or Command + Enter">Ctrl+Enter</span>
@@ -97,21 +92,4 @@
         </div>
     </div>
     @include('partials.sidebar')
-{{--<script type="text/javascript">--}}
-    {{--var ue = UE.getEditor('container',{--}}
-        {{--toolbars: [--}}
-            {{--['fontsize','forecolor','backcolor','bold', 'italic', 'underline', 'strikethrough', 'blockquote', 'insertunorderedlist', 'insertorderedlist', 'justifyleft','justifycenter', 'justifyright',  'link', 'insertimage','fullscreen']--}}
-        {{--],--}}
-        {{--elementPathEnabled: false,--}}
-        {{--enableContextMenu: false,--}}
-        {{--autoClearEmptyNode:true,--}}
-        {{--wordCount:false,--}}
-        {{--imagePopup:false,--}}
-        {{--initialFrameHeight:200,--}}
-        {{--autotypeset:{ indent: true,imageBlockLine: 'center' }--}}
-    {{--});--}}
-    {{--ue.ready(function() {--}}
-        {{--ue.execCommand('serverparam', '_token', '{{ csrf_token() }}'); // 设置 CSRF token.--}}
-    {{--});--}}
-{{--</script>--}}
 @stop

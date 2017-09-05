@@ -45,6 +45,7 @@ class ReplyBll extends BaseBll
         DB::beginTransaction();
         try {
             $reply->thread->node->increment('reply_count', 1);//版块回帖数+1
+            $reply->thread->subNode->increment('reply_count', 1);//子版块回帖数+1
             $reply->thread->increment('reply_count', 1);
             $reply->user->increment('reply_count', 1);
 

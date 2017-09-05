@@ -104,11 +104,6 @@ class ThreadController extends Controller
             ->with('subNodes',$subNodes);
     }
 
-    /**
-     * Creates a new node.
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function store(ThreadBll $threadBll, WordsFilter $wordsFilter)
     {
         if (Auth::user()->hasRole('NoComment')) {

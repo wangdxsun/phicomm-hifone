@@ -36,11 +36,6 @@ class Thread extends BaseModel implements TaggableInterface
     //use SoftDeletingTrait;
     protected $dates = ['deleted_at', 'last_op_time'];
 
-    /**
-     * The fillable properties.
-     *
-     * @var string[]
-     */
     protected $fillable = [
         'title',
         'body',
@@ -105,6 +100,11 @@ class Thread extends BaseModel implements TaggableInterface
         return $this->belongsTo(Node::class)->select(['id', 'name']);
     }
 
+    public function subNode()
+    {
+        return $this->belongsTo(SubNode::class);
+    }
+
     public function scopeOfNode($query, Node $node)
     {
         return $query->where('node_id', $node->id);
@@ -151,6 +151,9 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function inVisible()
     {
+        if (null == \Auth::user() && $this->status < 0) {
+            return true;
+        }
         return $this->status < 0 && !(\Auth::id() == $this->user->id || \Auth::user()->can('view_thread'));
     }
 

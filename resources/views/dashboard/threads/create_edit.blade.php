@@ -27,11 +27,11 @@
                     </div>
                     <div class="form-group">
                         <select class="selectpicker form-control" name="thread[node_id]" >
-                          <option value="" disabled {!! $node ?: 'selected'; !!}>{{ trans('hifone.threads.pick_node') }}</option>
+                          <option value="" disabled {!! $node ? : 'selected' !!}>{{ trans('hifone.threads.pick_node') }}</option>
                           @foreach ($sections as $section)
-                            <optgroup label="{{{ $section->name }}}">
+                            <optgroup label="{{ $section->name }}">
                               @foreach ($section->nodes as $snode)
-                                <option value="{{ $snode->id }}" {!! (Input::old('node_id') == $snode->id || (isset($node) && $node->id==$snode->id)) ? 'selected' : ''; !!} > - {{ $snode->name }}</option>
+                                <option value="{{ $snode->id }}" {!! (Input::old('node_id') == $snode->id || (isset($node) && $node->id==$snode->id)) ? 'selected' : ''!!} > - {{ $snode->name }}</option>
                               @endforeach
                             </optgroup>
                           @endforeach
@@ -60,7 +60,8 @@
 <script type="text/javascript">
     var ue = UE.getEditor('container',{
         toolbars: [
-            ['fontsize','forecolor','backcolor', 'bold', 'italic', 'underline', 'strikethrough', 'blockquote', 'insertunorderedlist', 'insertorderedlist', 'justifyleft','justifycenter', 'justifyright',  'link', 'insertimage', 'attachment','fullscreen']
+            ['fontsize','forecolor','backcolor', 'bold', 'italic', 'underline', 'strikethrough', 'blockquote', 'insertunorderedlist',
+                'insertorderedlist', 'justifyleft','justifycenter', 'justifyright',  'link', 'insertimage', 'attachment','insertvideo','fullscreen']
         ],
         elementPathEnabled: false,
         enableContextMenu: false,

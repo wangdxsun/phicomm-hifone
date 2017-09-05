@@ -26,7 +26,7 @@
                 <div class="col-xs-2 drag-handle">
                     <a href="/dashboard/node/{{ $node->id }}">{!! $node->name !!}</a>
                 </div>
-                <div class="col-xs-2 drag-handle" >
+                <div class="col-xs-2 drag-handle">
                     <a href="/dashboard/section/{{ $node->section->id }}">{{ $node->section->name }}</a>
                 </div>
                 <div class="col-xs-2 drag-handle">
