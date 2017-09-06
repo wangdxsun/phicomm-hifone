@@ -66,18 +66,18 @@
                                 <script id="container" name="thread[body]" type="text/plain">{!! isset($thread) ? $thread->body : null !!}</script>
                             </div>
 
-                        <div class="form-group">
-                            <select class="form-control js-tag-tokenizer" multiple="multiple" name="thread[tags][]">
-                                @if(isset($thread))
-                                    @foreach($thread->tags as $tag)
-                                        <option selected="selected">{{ $tag->name }}</option>
-                                    @endforeach
-                                @endif
-                            </select>
-                            <small>
-                                {{ trans('hifone.tags.tags_help') }}
-                            </small>
-                        </div>
+                        {{--<div class="form-group">--}}
+                            {{--<select class="form-control js-tag-tokenizer" multiple="multiple" name="thread[tags][]">--}}
+                                {{--@if(isset($thread))--}}
+                                    {{--@foreach($thread->tags as $tag)--}}
+                                        {{--<option selected="selected">{{ $tag->name }}</option>--}}
+                                    {{--@endforeach--}}
+                                {{--@endif--}}
+                            {{--</select>--}}
+                            {{--<small>--}}
+                                {{--{{ trans('hifone.tags.tags_help') }}--}}
+                            {{--</small>--}}
+                        {{--</div>--}}
 
                         <div class="form-group status-post-submit">
                             {!! Form::submit(trans('forms.publish'), ['class' => 'btn btn-primary col-xs-2', 'id' => 'thread-create-submit']) !!}

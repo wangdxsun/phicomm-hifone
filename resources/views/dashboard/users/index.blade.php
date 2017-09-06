@@ -37,6 +37,7 @@
                     <td class="first">ID</td>
                     <td>头像</td>
                     <td>用户名</td>
+                    <td>云账号id</td>
                     <td>用户组</td>
                     <td>发帖数</td>
                     <td>回帖数</td>
@@ -55,6 +56,7 @@
                         <td>{{ $user->id }}</td>
                         <td><img src="{{ $user->avatar_small }}" style="width: 20px; height: 20px;"></td>
                         <td><a href="{{ route('user.show',['id'=>$user->id]) }}" target="_blank">{{ $user->username }}</a></td>
+                        <td>{{ $user->phicomm_id }}</td>
                         <td>{{ $user->role }}</td>
                         <td>{{ $user->thread_count }}</td>
                         <td>{{ $user->reply_count }}</td>
