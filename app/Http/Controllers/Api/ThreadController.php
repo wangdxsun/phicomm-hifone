@@ -60,7 +60,7 @@ class ThreadController extends ApiController
             $threadBll->threadPassAutoAudit($thread);
             $msg = '发布成功';
         }
-        $thread->bdoy = app('parser.at')->parse($thread->bdoy);
+        $thread->body = app('parser.at')->parse($thread->body);
         $thread->body = app('parser.emotion')->parse($thread->body);
         $thread->save();
         return [
