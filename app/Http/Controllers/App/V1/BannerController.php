@@ -16,10 +16,14 @@ class BannerController extends AppController
 {
     public function index()
     {
-        return Carousel::visible()->orderBy('order')->get();
+        $carousels = Carousel::visible()->orderBy('order')->get();
+        foreach ($carousels as $carousel) {
+            $carousel['stastic'] = route('app.banner.show', $carousel->id);
+        }
+        return $carousels;
     }
 
-    public function show(Carousel $carousel)
+    public function bannerViewCount(Carousel $carousel)
     {
         event(new BannerWasViewedEvent($carousel));
     }

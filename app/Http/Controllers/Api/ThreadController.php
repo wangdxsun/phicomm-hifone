@@ -54,22 +54,17 @@ class ThreadController extends ApiController
         if (Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($post)) || $threadBll->isContainsImageOrUrl($post)) {
             if (isset($badWord)) {
                 $thread->bad_word = $badWord;
-                $thread->save();
             }
-            $thread->bdoy = app('parser.at')->parse($thread->bdoy);
-            $thread->body = app('parser.emotion')->parse($thread->body);
-            $thread->save();
-            return [
-                'msg' => '帖子已提交，待审核',
-                'thread' => $thread
-            ];
+            $msg = '帖子已提交，待审核';
+        } else {
+            $threadBll->threadPassAutoAudit($thread);
+            $msg = '发布成功';
         }
         $thread->bdoy = app('parser.at')->parse($thread->bdoy);
         $thread->body = app('parser.emotion')->parse($thread->body);
         $thread->save();
-        $threadBll->threadPassAutoAudit($thread);
         return [
-            'msg' => '发布成功',
+            'msg' => $msg,
             'thread' => $thread
         ];
     }

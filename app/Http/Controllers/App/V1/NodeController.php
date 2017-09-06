@@ -20,7 +20,7 @@ class NodeController extends AppController
         return Node::orderBy('order')->get();
     }
 
-    public function sectionsWithNodes()
+    public function sections()
     {
         $sections = Section::orderBy('order')->get();
         foreach ($sections as $section) {
@@ -34,8 +34,4 @@ class NodeController extends AppController
         return $sections;
     }
 
-    public function subNodes(Node $node)
-    {
-        return $node->subNodes()->orderBy('order', 'desc')->get();
-    }
 }

@@ -47,7 +47,6 @@ class ThreadController extends Controller
     public function index(ThreadBll $threadBll)
     {
         $threads = $threadBll->getThreads();
-
         return $this->view('threads.index')
             ->withThreads($threads)
             ->withSections(Section::orderBy('order')->get());

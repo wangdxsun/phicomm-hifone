@@ -21,14 +21,34 @@ class ThreadController extends AppController
     {
         $commonBll->login();
         $threads = Thread::visible()->with(['user', 'node'])->hot()->paginate();
-
         return $threads;
     }
 
-    public function store()
-    {
-
-    }
+//    public function store(ThreadBll $threadBll, WordsFilter $wordsFilter)
+//    {
+//        if (Auth::user()->hasRole('NoComment')) {
+//            throw new \Exception('对不起，你已被管理员禁止发言');
+//        }
+//
+//        $thread = $threadBll->createThread();
+//        $post = $thread->title.$thread->body;
+//        if (Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($post)) || $threadBll->isContainsImageOrUrl($post)) {
+//            if (isset($badWord)) {
+//                $thread->bad_word = $badWord;
+//            }
+//            $msg = '帖子已提交，待审核';
+//        } else {
+//            $threadBll->threadPassAutoAudit($thread);
+//            $msg = '发布成功';
+//        }
+//        $thread->bdoy = app('parser.at')->parse($thread->bdoy);
+//        $thread->body = app('parser.emotion')->parse($thread->body);
+//        $thread->save();
+//        return [
+//            'msg' => $msg,
+//            'thread' => $thread
+//        ];
+//    }
 
     public function show(Thread $thread)
     {
@@ -53,7 +73,6 @@ class ThreadController extends AppController
         foreach ($replies as &$reply) {
             $reply['liked'] = Auth::check() ? Auth::user()->hasLikeReply($reply) : false;
         }
-
         return $replies;
     }
 }
