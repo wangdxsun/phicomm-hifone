@@ -10,10 +10,13 @@ namespace Hifone\Http\Controllers\App\V1;
 
 use Hifone\Events\Thread\ThreadWasViewedEvent;
 use Hifone\Http\Bll\CommonBll;
+use Hifone\Http\Bll\ThreadBll;
 use Hifone\Http\Controllers\App\AppController;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
 use Auth;
+use Hifone\Services\Filter\WordsFilter;
+use Input;
 
 class ThreadController extends AppController
 {
@@ -26,13 +29,12 @@ class ThreadController extends AppController
 
     public function store(ThreadBll $threadBll, WordsFilter $wordsFilter)
     {
-        json_decode();
-        title;body;sub_node_id;
         if (Auth::user()->hasRole('NoComment')) {
             throw new \Exception('对不起，你已被管理员禁止发言');
         }
 
-        $thread = $threadBll->createThread();
+        $thread = $threadBll->createThreadInApp();
+
         $post = $thread->title.$thread->body;
         if (Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($post)) || $threadBll->isContainsImageOrUrl($post)) {
             if (isset($badWord)) {

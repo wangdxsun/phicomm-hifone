@@ -48,6 +48,21 @@ class CheckController extends  Controller
 //        $res = $trieTree->contain($post, $tree);
 
         //Carbon计算时间差
+
+        $a = [
+            [
+                'type' => 'text',
+                'txt' => 'xxxxxx',
+            ],
+            [
+                'type' => 'text',
+                'txt' => 'xxxxxx',
+            ],
+        ];
+        $json = json_encode($a);
+        $text = json_decode($json, true);
+        dd($a, $json, $text);
+
         $thread = Thread::find(197);
         dd($thread->heat);
 

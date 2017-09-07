@@ -18,7 +18,7 @@ class BannerController extends AppController
     {
         $carousels = Carousel::visible()->orderBy('order')->get();
         foreach ($carousels as $carousel) {
-            $carousel['stastic'] = route('app.banner.show', $carousel->id);
+            $carousel['statistic'] = route('app.banner.show', $carousel->id);
         }
         return $carousels;
     }

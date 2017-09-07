@@ -42,12 +42,7 @@ final class AddThreadCommand
         'sub_node_id' => 'int',
     ];
 
-    /**
-     * Create a new add thread command instance.
-     *
-     * @param string $body
-     */
-    public function __construct($title, $body, $user_id, $node_id, $sub_node_id,$tags, $images = '')
+    public function __construct($title, $body, $user_id, $node_id, $sub_node_id, $tags, $images = '')
     {
         $this->title = $title;
         $this->body = $body;

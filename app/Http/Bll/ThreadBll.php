@@ -81,6 +81,35 @@ class ThreadBll extends BaseBll
 
         $thread = Thread::find($threadTemp->id);
         return $thread;
+    }
+
+    public function createThreadInApp()
+    {
+        $threadData = Input::get('thread');
+        $sub_node_id = isset($threadData['sub_node_id']) ? $threadData['sub_node_id'] : null;
+        $node_id = SubNode::find($sub_node_id)->node_id;
+        $tags = isset($threadData['tags']) ? $threadData['tags'] : '';
+        $json_bodies = json_decode($threadData['body'], true);
+        $body = '';
+        foreach ($json_bodies as $json_body) {
+            if ($json_body['type'] == 'text') {
+                $body.= "<p>".$json_body['content']."</p>";
+            } elseif ($json_body['type'] == 'image') {
+                $body.= "<img src='".$json_body['content']."'/>";
+            }
+        }
+
+        $threadTemp = dispatch(new AddThreadCommand(
+            $threadData['title'],
+            $body,
+            Auth::id(),
+            $node_id,
+            $sub_node_id,
+            $tags
+        ));
+
+        $thread = Thread::find($threadTemp->id);
+        return $thread;
 
     }
 
