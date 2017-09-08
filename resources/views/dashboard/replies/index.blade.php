@@ -38,6 +38,12 @@
                                @if (isset($search['date_end']))
                                value="{{ $search['date_end'] }}"
                                 @endif >
+                        <select class="form-control " name="reply[orderByThreadId]">
+                            <option value="" selected>排列方式</option>
+                            @foreach ($orderByThreadId as $key => $value)
+                                <option value="{{ $key }}">{{ $value }}</option>
+                            @endforeach
+                        </select>
                         <select class="form-control " name="reply[orderType]">
                             <option value="" selected>排列方式</option>
                             @foreach ($orderTypes as $key => $orderType)
