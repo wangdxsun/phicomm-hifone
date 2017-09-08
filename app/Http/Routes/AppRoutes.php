@@ -30,6 +30,7 @@ class AppRoutes
                 $router->post('upload/base64', 'CommonController@uploadBase64');
                 $router->post('upload', 'CommonController@upload');
                 $router->post('threads', 'ThreadController@store');
+                $router->post('replies', 'ReplyController@store');
             });
         });
     }
