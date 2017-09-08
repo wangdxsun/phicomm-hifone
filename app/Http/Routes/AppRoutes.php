@@ -19,7 +19,7 @@ class AppRoutes
             $router->post('user/bind', 'UserController@bind');
 
             $router->get('nodes', 'NodeController@index');
-            $router->get('nodes/sections', 'NodeController@sections');
+            $router->get('sections', 'NodeController@sections');
             $router->get('banners', 'BannerController@index');
             $router->get('banners/{carousel}', 'BannerController@bannerViewCount')->name('banner.show');
             $router->get('threads', 'ThreadController@index');
