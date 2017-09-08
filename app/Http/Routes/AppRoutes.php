@@ -27,6 +27,7 @@ class AppRoutes
             $router->get('threads/{thread}/replies', 'ThreadController@replies');
 
             $router->group(['middleware' => 'auth:hifone'], function ($router) {
+                $router->post('upload/base64', 'CommonController@uploadBase64');
                 $router->post('upload', 'CommonController@upload');
                 $router->post('threads', 'ThreadController@store');
             });

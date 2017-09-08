@@ -10,10 +10,13 @@ namespace Hifone\Http\Controllers\App\V1;
 
 use Hifone\Events\Thread\ThreadWasViewedEvent;
 use Hifone\Http\Bll\CommonBll;
+use Hifone\Http\Bll\ThreadBll;
 use Hifone\Http\Controllers\App\AppController;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
 use Auth;
+use Hifone\Services\Filter\WordsFilter;
+use Input;
 
 class ThreadController extends AppController
 {
@@ -24,31 +27,32 @@ class ThreadController extends AppController
         return $threads;
     }
 
-//    public function store(ThreadBll $threadBll, WordsFilter $wordsFilter)
-//    {
-//        if (Auth::user()->hasRole('NoComment')) {
-//            throw new \Exception('对不起，你已被管理员禁止发言');
-//        }
-//
-//        $thread = $threadBll->createThread();
-//        $post = $thread->title.$thread->body;
-//        if (Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($post)) || $threadBll->isContainsImageOrUrl($post)) {
-//            if (isset($badWord)) {
-//                $thread->bad_word = $badWord;
-//            }
-//            $msg = '帖子已提交，待审核';
-//        } else {
-//            $threadBll->threadPassAutoAudit($thread);
-//            $msg = '发布成功';
-//        }
-//        $thread->bdoy = app('parser.at')->parse($thread->bdoy);
-//        $thread->body = app('parser.emotion')->parse($thread->body);
-//        $thread->save();
-//        return [
-//            'msg' => $msg,
-//            'thread' => $thread
-//        ];
-//    }
+    public function store(ThreadBll $threadBll, WordsFilter $wordsFilter)
+    {
+        if (Auth::user()->hasRole('NoComment')) {
+            throw new \Exception('对不起，你已被管理员禁止发言');
+        }
+
+        $thread = $threadBll->createThreadInApp();
+
+        $post = $thread->title.$thread->body;
+        if (Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($post)) || $threadBll->isContainsImageOrUrl($post)) {
+            if (isset($badWord)) {
+                $thread->bad_word = $badWord;
+            }
+            $msg = '帖子已提交，待审核';
+        } else {
+            $threadBll->threadPassAutoAudit($thread);
+            $msg = '发布成功';
+        }
+        $thread->bdoy = app('parser.at')->parse($thread->bdoy);
+        $thread->body = app('parser.emotion')->parse($thread->body);
+        $thread->save();
+        return [
+            'msg' => $msg,
+            'thread' => $thread
+        ];
+    }
 
     public function show(Thread $thread)
     {
