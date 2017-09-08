@@ -69,10 +69,11 @@ class Thread extends BaseModel implements TaggableInterface
     ];
     
     public static $orderTypes = [
-        'id' => '发帖时间',
-        'node_id' => '帖子板块',
-        'user_id'  => '发帖人',
-        'heat'  => '热度值',
+        'id'         => '发帖时间',
+        'node_id'    => '帖子板块',
+        'user_id'    => '发帖人',
+        'heat'       => '热度值',
+        'updated_at' => '最后回复时间',
     ];
 
     public function likes()
@@ -112,7 +113,8 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function user()
     {
-        return $this->belongsTo(User::class)->select(['id', 'username', 'avatar_url', 'role','score','password','thread_count']);
+        return $this->belongsTo(User::class)->select(['id', 'username', 'avatar_url', 'role','score','password','thread_count',
+            'notification_reply_count','notification_at_count','notification_system_count','notification_chat_count','notification_follow_count']);
     }
 
     public function lastOpUser()
