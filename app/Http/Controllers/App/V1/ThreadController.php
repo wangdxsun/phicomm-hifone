@@ -17,6 +17,7 @@ use Hifone\Models\User;
 use Auth;
 use Hifone\Services\Filter\WordsFilter;
 use Input;
+use Config;
 
 class ThreadController extends AppController
 {
@@ -32,7 +33,6 @@ class ThreadController extends AppController
         if (Auth::user()->hasRole('NoComment')) {
             throw new \Exception('对不起，你已被管理员禁止发言');
         }
-
         $thread = $threadBll->createThreadInApp();
 
         $post = $thread->title.$thread->body;
