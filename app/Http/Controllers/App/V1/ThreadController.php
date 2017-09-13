@@ -16,6 +16,7 @@ use Hifone\Models\Thread;
 use Hifone\Models\User;
 use Auth;
 use Hifone\Services\Filter\WordsFilter;
+use Config;
 use Input;
 use Config;
 
@@ -45,9 +46,10 @@ class ThreadController extends AppController
             $threadBll->threadPassAutoAudit($thread);
             $msg = '发布成功';
         }
-        $thread->bdoy = app('parser.at')->parse($thread->bdoy);
+        $thread->body = app('parser.at')->parse($thread->body);
         $thread->body = app('parser.emotion')->parse($thread->body);
         $thread->save();
+
         return [
             'msg' => $msg,
             'thread' => $thread
