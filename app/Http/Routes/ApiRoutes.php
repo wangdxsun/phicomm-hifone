@@ -34,7 +34,8 @@ class ApiRoutes
 
             //内容相关
             $router->get('thread', 'ThreadController@index');
-            $router->get('search', 'CommonController@search');
+            $router->get('thread/search', 'ThreadController@search');
+            $router->get('user/search', 'UserController@search');
             $router->get('thread/{thread}', 'ThreadController@show');
             $router->get('thread/{thread}/replies', 'ThreadController@replies');
             $router->get('node', 'NodeController@index');
