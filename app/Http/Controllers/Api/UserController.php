@@ -100,4 +100,14 @@ class UserController extends ApiController
 
         return $avatar;
     }
+
+    public function search()
+    {
+        $users = User::searchUser(request('q'));
+        foreach ($users as $user) {
+            $user['followed'] = User::hasFollowUser($user);
+        }
+
+        return $users;
+    }
 }
