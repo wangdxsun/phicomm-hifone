@@ -50,6 +50,7 @@ class UpdateThreadCommandHandler
         }
 
         $thread->update($this->filter($command->data));
+        $thread->updateIndex();
 
         // The thread was added successfully, so now let's deal with the tags.
         $tags = isset($command->data['tags']) ? $command->data['tags'] : [];

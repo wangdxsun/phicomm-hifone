@@ -48,6 +48,7 @@ class ThreadController extends AppController
         $thread->bdoy = app('parser.at')->parse($thread->bdoy);
         $thread->body = app('parser.emotion')->parse($thread->body);
         $thread->save();
+        $thread->addToIndex();
         return [
             'msg' => $msg,
             'thread' => $thread

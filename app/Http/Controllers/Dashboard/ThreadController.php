@@ -225,6 +225,7 @@ class ThreadController extends Controller
             }
             $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
             event(new ThreadWasAuditedEvent($thread));
+            $thread->addToIndex();
             DB::commit();
         } catch (ValidationException $e) {
             DB::rollBack();
@@ -292,6 +293,7 @@ class ThreadController extends Controller
     {
         $thread->status = Thread::TRASH;
         $this->updateOpLog($thread, '删除帖子', trim(request('reason')));
+        $thread->removeFromIndex();
     }
 
     public function getHeatOffset(Thread $thread)

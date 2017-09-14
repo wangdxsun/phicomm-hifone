@@ -63,6 +63,7 @@ class ThreadController extends ApiController
         $thread->body = app('parser.at')->parse($thread->body);
         $thread->body = app('parser.emotion')->parse($thread->body);
         $thread->save();
+        $thread->addToIndex();
         return [
             'msg' => $msg,
             'thread' => $thread
