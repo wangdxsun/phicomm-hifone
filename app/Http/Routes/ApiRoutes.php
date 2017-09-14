@@ -39,7 +39,7 @@ class ApiRoutes
             $router->get('thread/{thread}/replies', 'ThreadController@replies');
             $router->get('node', 'NodeController@index');
             $router->get('sections', 'NodeController@sections');
-            $router->get('subNodes/{node}','SubNodeController@index');
+            $router->get('nodes/{node}/subNodes','SubNodeController@index');
             $router->get('banner', 'BannerController@index');
             $router->get('banner/{carousel}', 'BannerController@show')->name('banner.show');
             $router->get('node/{node}', 'NodeController@show');
