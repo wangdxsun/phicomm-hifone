@@ -34,7 +34,13 @@ class GetFirstImgUrlController extends Controller
         foreach ($url_list_tmp[1] as $k => $v) {
             $imgUrls[] = $v;
         }
-        return array_unique($imgUrls);
+        $imgUrl = array_first($imgUrls,function($key,$value) {
+            if (!(Str::contains($value, 'icon_apk')) && !(Str::contains($value, 'icon_bin')) && !(Str::contains($value, 'icon_word'))) {
+                return $value;
+            }
+            return null;
+        });
+        return $imgUrl;
     }
 
 }
