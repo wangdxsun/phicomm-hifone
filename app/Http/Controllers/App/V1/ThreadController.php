@@ -67,6 +67,8 @@ class ThreadController extends AppController
         $thread['followed'] = User::hasFollowUser($thread->user);
         $thread['liked'] = Auth::check() ? Auth::user()->hasLikeThread($thread) : false;
         $thread['replies'] = $replies;
+        $thread = $thread->toArray();
+        unset($thread['user']['roles']);
         return $thread;
     }
 
