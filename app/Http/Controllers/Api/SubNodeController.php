@@ -7,7 +7,8 @@ class SubNodeController extends ApiController
 {
     public function index(Node $node)
     {
-        $subNodes = $node->subNodes;
-        return $subNodes;
+        $subNodes = $node->subNodes()->orderBy('order')->get();
+        $node['subNodes'] = $subNodes;
+        return $node;
     }
 }

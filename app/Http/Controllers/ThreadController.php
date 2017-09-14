@@ -125,6 +125,7 @@ class ThreadController extends Controller
             $thread->body = app('parser.at')->parse($thread->body);
             $thread->body = app('parser.emotion')->parse($thread->body);
             $thread->save();
+            $thread->addToIndex();
             $threadBll->threadPassAutoAudit($thread);
             return Redirect::route('thread.show', ['thread' => $thread->id])
                 ->withSuccess('帖子审核通过，发表成功！');
@@ -290,6 +291,7 @@ class ThreadController extends Controller
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
             $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
             $this->updateOpLog($thread, '删除帖子', trim(request('reason')));
+            $thread->removeFromIndex();
             DB::commit();
         } catch (ValidationException $e) {
             DB::rollBack();
