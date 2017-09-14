@@ -14,6 +14,7 @@ namespace Hifone\Models;
 use Auth;
 use AltThree\Validator\ValidatingTrait;
 use Cmgmyr\Messenger\Traits\Messagable;
+use Elasticquent\ElasticquentTrait;
 use Hifone\Models\Traits\SearchTrait;
 use Hifone\Presenters\UserPresenter;
 use Illuminate\Auth\Authenticatable;
@@ -26,7 +27,7 @@ use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 class User extends BaseModel implements AuthenticatableContract, CanResetPasswordContract, HasPresenter
 {
-    use Authenticatable, CanResetPassword, EntrustUserTrait, ValidatingTrait, Messagable, SearchTrait;
+    use Authenticatable, CanResetPassword, EntrustUserTrait, ValidatingTrait, Messagable, SearchTrait, ElasticquentTrait;
 
     // Enable hasRole( $name ), can( $permission ),
     //   and ability($roles, $permissions, $options)
@@ -64,6 +65,30 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
 
     protected $searchable = [
         'username',
+    ];
+
+    protected $mappingProperties = [
+        'username' => [
+            'type' => 'string',
+            'analyzer' => 'ik_max_word',
+            'search_analyzer' => 'ik_max_word',
+        ],
+        'id' => [
+            'type' => 'integer',
+            'index' => 'no',
+        ],
+        'follower_count' => [
+            'type' => 'integer',
+            'index' => 'no',
+        ],
+        'avatar_url' => [
+            'type' => 'string',
+            'index' => 'no',
+        ],
+        'role' => [
+            'type' => 'string',
+            'index' => 'no',
+        ]
     ];
 
     public static $orderTypes = [
@@ -272,7 +297,11 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
 
     public function getRoleAttribute()
     {
-        $adminGroup = implode(',', array_column($this->roles->toArray(), 'display_name'));
+        $roles = $this->roles;
+        if (!is_array($roles)) {
+            $roles = $roles->toArray();
+        }
+        $adminGroup = implode(',', array_column($roles, 'display_name'));
         if ($adminGroup) {
             return $adminGroup;
         }

@@ -16,6 +16,7 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
         'bd9634f2d41831496de0d3dfe4c94881' => __DIR__ . '/..' . '/symfony/polyfill-php56/bootstrap.php',
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
         '841780ea2e1d6545ea3a253239d59c05' => __DIR__ . '/..' . '/qiniu/php-sdk/src/Qiniu/functions.php',
+        'ad155f8f1cf0d418fe49e248db8c661b' => __DIR__ . '/..' . '/react/promise/src/functions_include.php',
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
         'e7223560d890eab89cda23685e711e2c' => __DIR__ . '/..' . '/psy/psysh/src/Psy/functions.php',
         '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
@@ -77,6 +78,10 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
             'SocialiteProviders\\Manager\\' => 27,
             'SocialiteProviders\\GitLab\\' => 26,
         ),
+        'R' => 
+        array (
+            'React\\Promise\\' => 14,
+        ),
         'Q' => 
         array (
             'Qiniu\\' => 6,
@@ -124,6 +129,8 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
         ),
         'G' => 
         array (
+            'GuzzleHttp\\Stream\\' => 18,
+            'GuzzleHttp\\Ring\\' => 16,
             'GuzzleHttp\\Psr7\\' => 16,
             'GuzzleHttp\\Promise\\' => 19,
             'GuzzleHttp\\' => 11,
@@ -134,6 +141,11 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
         'F' => 
         array (
             'Faker\\' => 6,
+        ),
+        'E' => 
+        array (
+            'Elasticsearch\\' => 14,
+            'Elasticquent\\' => 13,
         ),
         'D' => 
         array (
@@ -295,6 +307,10 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
         array (
             0 => __DIR__ . '/..' . '/socialiteproviders/gitlab/src',
         ),
+        'React\\Promise\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/react/promise/src',
+        ),
         'Qiniu\\' => 
         array (
             0 => __DIR__ . '/..' . '/qiniu/php-sdk/src/Qiniu',
@@ -379,6 +395,14 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
         array (
             0 => __DIR__ . '/../..' . '/app',
         ),
+        'GuzzleHttp\\Stream\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/streams/src',
+        ),
+        'GuzzleHttp\\Ring\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/ringphp/src',
+        ),
         'GuzzleHttp\\Psr7\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
@@ -406,6 +430,14 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
         'Faker\\' => 
         array (
             0 => __DIR__ . '/..' . '/fzaninotto/faker/src/Faker',
+        ),
+        'Elasticsearch\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/elasticsearch/elasticsearch/src/Elasticsearch',
+        ),
+        'Elasticquent\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/elasticquent/elasticquent/src',
         ),
         'Dotenv\\' => 
         array (

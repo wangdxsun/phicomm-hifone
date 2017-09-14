@@ -14,6 +14,7 @@ namespace Hifone\Models;
 use AltThree\Validator\ValidatingTrait;
 use Carbon\Carbon;
 use Config;
+use Elasticquent\ElasticquentTrait;
 use Hifone\Models\Scopes\Recent;
 use Hifone\Models\Traits\Taggable;
 use Hifone\Services\Dates\DateFactory;
@@ -24,7 +25,7 @@ use Venturecraft\Revisionable\RevisionableTrait;
 
 class Thread extends BaseModel implements TaggableInterface
 {
-    use ValidatingTrait, Taggable, Recent, RevisionableTrait, SoftDeletes;
+    use ValidatingTrait, Taggable, Recent, RevisionableTrait, SoftDeletes, ElasticquentTrait;
 
     const VISIBLE = 0;//正常帖子
     const TRASH = -1;//回收站
@@ -66,6 +67,56 @@ class Thread extends BaseModel implements TaggableInterface
         'sub_node_id' => 'required|int',
         'user_id' => 'required|int',
         'heat_offset' => 'int',
+    ];
+
+    protected $mappingProperties = [
+        'id' => [
+            'type' => 'integer',
+            'index' => 'no'
+        ],
+        'user_id' => [
+            'type' => 'integer',
+            'index' => 'no'
+        ],
+        'node_id' => [
+            'type' => 'integer',
+            'index' => 'no'
+        ],
+        'view_count' => [
+            'type' => 'integer',
+            'index' => 'no'
+        ],
+        'reply_count' => [
+            'type' => 'integer',
+            'index' => 'no'
+        ],
+        'created_at' => [
+            'type' => 'date',
+            'index' => 'no'
+        ],
+        'title' => [
+            'type' => 'string',
+            'analyzer' => 'ik_max_word',
+            'search_analyzer' => 'ik_max_word',
+        ],
+        'body' => [
+            'type' => 'string',
+            'analyzer' => 'ik_max_word',
+            'search_analyzer' => 'ik_max_word',
+        ],
+    ];
+
+    protected $indexSettings = [
+        'analysis' => [
+            'analyzer' => [
+                'ik_html_strip' => [
+                    'type' => 'custom',
+                    'char_filter' => ['html_strip'],
+                    'tokenizer' => 'ik_max_word',
+                    'filter' => ['lowercase'],
+                ],
+            ],
+        ],
     ];
     
     public static $orderTypes = [

@@ -116,7 +116,7 @@ return [
     |
     */
 
-    'log' => env('APP_LOG', 'daily'),
+    'log' => env('APP_LOG', 'single'),
 
     /*
     |--------------------------------------------------------------------------
@@ -190,6 +190,7 @@ return [
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Barryvdh\Cors\ServiceProvider::class,
         Overtrue\LaravelUEditor\UEditorServiceProvider::class,
+        Elasticquent\ElasticquentServiceProvider::class,
     ],
 
     /*
@@ -250,6 +251,7 @@ return [
         'AsyncWidget'  => Arrilot\Widgets\AsyncFacade::class,
         'StringBlade'  => Hifone\StringBlade\Facades\StringBlade::class,
         'Excel'        => Maatwebsite\Excel\Facades\Excel::class,
+        'Es'           => Elasticquent\ElasticquentElasticsearchFacade::class,
     ],
 
 ];
