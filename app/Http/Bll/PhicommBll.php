@@ -185,6 +185,7 @@ class PhicommBll extends BaseBll
         }
         $user = User::create($userData);//直接通过create返回的用户信息不全
         $user = User::find($user->id);
+        $user->addToIndex();
         event(new UserWasAddedEvent($user));
         Auth::login($user);
 
