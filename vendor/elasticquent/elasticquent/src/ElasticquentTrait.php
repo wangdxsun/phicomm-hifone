@@ -299,7 +299,7 @@ trait ElasticquentTrait
                 'order' => 'score',
                 'fields' => [
                     'title' => ["number_of_fragments" => 1],
-                    'body' => ["number_of_fragments" => 1],
+                    'body' => ["number_of_fragments" => 1, "fragment_size" => 50],
                 ]
             ]
         ];
