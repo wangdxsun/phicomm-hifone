@@ -649,7 +649,9 @@ trait ElasticquentTrait
         }
 
         if (isset($hit['highlight'])) {
-            $attributes['search'] = $hit['highlight'];
+            foreach ($hit['highlight'] as $key => $value) {
+                $attributes['search'][$key] = implode('...', $value);
+            }
         }
         $attributes['score'] = $hit['_score'];
 
