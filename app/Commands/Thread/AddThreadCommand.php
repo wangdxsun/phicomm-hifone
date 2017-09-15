@@ -21,6 +21,8 @@ final class AddThreadCommand
 
     public $node_id;
 
+    public $sub_node_id;
+
     public $tags;
 
     public $images;
@@ -37,19 +39,16 @@ final class AddThreadCommand
         'body'    => 'required|string',
         'user_id' => 'int',
         'node_id' => 'int',
+        'sub_node_id' => 'int',
     ];
 
-    /**
-     * Create a new add thread command instance.
-     *
-     * @param string $body
-     */
-    public function __construct($title, $body, $user_id, $node_id, $tags, $images = '')
+    public function __construct($title, $body, $user_id, $node_id, $sub_node_id, $tags, $images = '')
     {
         $this->title = $title;
         $this->body = $body;
         $this->user_id = $user_id;
         $this->node_id = $node_id;
+        $this->sub_node_id = $sub_node_id;
         $this->tags = $tags;
         $this->images = $images;
     }

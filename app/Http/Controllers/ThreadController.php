@@ -23,6 +23,7 @@ use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Http\Bll\ThreadBll;
 use Hifone\Models\Node;
 use Hifone\Models\Section;
+use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
 use Hifone\Repositories\Criteria\Thread\BelongsToNode;
 use Config;
@@ -40,14 +41,21 @@ class ThreadController extends Controller
     {
         parent::__construct();
 
-        $this->middleware('auth', ['except' => ['index', 'show']]);
+        $this->middleware('auth', ['except' => ['index', 'show', 'search']]);
     }
 
     public function index(ThreadBll $threadBll)
     {
         $threads = $threadBll->getThreads();
-
         return $this->view('threads.index')
+            ->withThreads($threads)
+            ->withSections(Section::orderBy('order')->get());
+    }
+
+    public function search(ThreadBll $threadBll)
+    {
+        $threads = $threadBll->search();
+        return $this->view('threads.search')
             ->withThreads($threads)
             ->withSections(Section::orderBy('order')->get());
     }
@@ -70,7 +78,7 @@ class ThreadController extends Controller
             $thread->title      => $thread->url,
         ]);
 
-        $replies = $thread->replies()->visible()
+        $replies = $thread->replies()->visible()->with(['user'])
             ->orderBy('order', 'desc')->orderBy('id', 'asc')
             ->paginate(Config::get('setting.replies_per_page', 30));
 
@@ -93,21 +101,16 @@ class ThreadController extends Controller
      */
     public function create()
     {
-        $node = Node::find(Input::query('node_id'));
         $sections = Section::orderBy('order')->get();
+        $subNodes = SubNode::find(Input::query('sub_node_id'));
 
         $this->breadcrumb->push(trans('hifone.threads.add'), route('thread.create'));
 
         return $this->view('threads.create_edit')
             ->withSections($sections)
-            ->withNode($node);
+            ->with('subNodes',$subNodes);
     }
 
-    /**
-     * Creates a new node.
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function store(ThreadBll $threadBll, WordsFilter $wordsFilter)
     {
         if (Auth::user()->hasRole('NoComment')) {
@@ -115,19 +118,22 @@ class ThreadController extends Controller
         }
         try {
             $thread = $threadBll->createThread();
+            $thread->heat = $thread->heat_compute;
             $post = $thread->body . $thread->title;
             if (Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($post)) || $threadBll->isContainsImageOrUrl($post)) {
                 if (isset($badWord)) {
                     $thread->bad_word = $badWord;
-                    $thread->save();
                 }
+                $thread->body = app('parser.at')->parse($thread->body);
                 $thread->body = app('parser.emotion')->parse($thread->body);
                 $thread->save();
                 return Redirect::route('thread.index')
                     ->withSuccess('帖子发表成功，请耐心等待审核');
             }
+            $thread->body = app('parser.at')->parse($thread->body);
             $thread->body = app('parser.emotion')->parse($thread->body);
             $thread->save();
+            $thread->addToIndex();
             $threadBll->threadPassAutoAudit($thread);
             return Redirect::route('thread.show', ['thread' => $thread->id])
                 ->withSuccess('帖子审核通过，发表成功！');
@@ -293,6 +299,7 @@ class ThreadController extends Controller
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
             $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
             $this->updateOpLog($thread, '删除帖子', trim(request('reason')));
+            $thread->removeFromIndex();
             DB::commit();
         } catch (ValidationException $e) {
             DB::rollBack();

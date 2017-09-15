@@ -51,6 +51,9 @@ class SectionController extends Controller
     public function show(Section $section)
     {
         $nodes = Node::where('section_id', $section->id)->orderBy('order')->get();
+        if (0 == count($nodes))
+            return Redirect::route('dashboard.section.index')
+                ->withErrors('该分类下不存在板块');
 
         return View::make('dashboard.nodes.index')
         ->withPageTitle(trans('dashboard.nodes.nodes').' - '.trans('dashboard.dashboard'))
@@ -76,6 +79,7 @@ class SectionController extends Controller
     public function store()
     {
         $sectionData = Request::get('section');
+        $sectionData['order'] = Section::max('order') + 1;
 
         try {
             Section::create($sectionData);
@@ -124,15 +128,16 @@ class SectionController extends Controller
                 ->withErrors($e->getMessageBag());
         }
 
-        return Redirect::route('dashboard.section.edit', ['id' => $section->id])
+        return Redirect::route('dashboard.section.index')
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.sections.edit.success')));
     }
 
     public function destroy(Section $section)
     {
         if ($section->nodes()->count() > 0) {
-            return back()->withErrors('该分类下存在子板块，无法删除');
+            return back()->withErrors('该分类下存在主板块，无法删除');
         }
+        $section->delete();
 
         return Redirect::route('dashboard.section.index')
             ->withSuccess('分类删除成功');

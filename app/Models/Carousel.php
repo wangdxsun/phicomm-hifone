@@ -6,6 +6,7 @@ class Carousel extends BaseModel
 {
     protected $fillable = [
         'image',
+        'type',
         'url',
         'order',
         'description',
@@ -14,6 +15,8 @@ class Carousel extends BaseModel
         'created_at',
         'updated_at',
     ];
+
+    protected $hidden = ['id', 'order', 'description', 'user_id', 'visible', 'last_op_user_id', 'last_op_time', 'view_count', 'click_count', 'created_at', 'updated_at'];
 
     public $rules = [
         'image'   => 'string|required',
@@ -34,15 +37,5 @@ class Carousel extends BaseModel
     public function scopeVisible($query)
     {
         return $query->where('visible', 1);
-    }
-
-    public function getUrlAttribute()
-    {
-        return route('banner.show', ['carousel' => $this->id]);
-    }
-
-    public function getJumpUrlAttribute()
-    {
-        return $this->attributes['url'];
     }
 }

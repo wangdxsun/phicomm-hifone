@@ -25,7 +25,7 @@ class ApiRoutes
      */
     public function map(Registrar $router)
     {
-        $router->group(['namespace' => 'Api', 'prefix' => 'api/v1', 'middleware' => 'api'], function ($router) {
+        $router->group(['namespace' => 'Api', 'prefix' => 'api/v1', 'middleware' => 'api', 'as' => 'api.'], function ($router) {
 
             $router->get('/', 'HomeController@index');
             $router->get('ping', 'GeneralController@ping');
@@ -34,10 +34,13 @@ class ApiRoutes
 
             //内容相关
             $router->get('thread', 'ThreadController@index');
-            $router->get('search', 'CommonController@search');
+            $router->get('thread/search', 'ThreadController@search');
+            $router->get('user/search', 'UserController@search');
             $router->get('thread/{thread}', 'ThreadController@show');
             $router->get('thread/{thread}/replies', 'ThreadController@replies');
             $router->get('node', 'NodeController@index');
+            $router->get('sections', 'NodeController@sections');
+            $router->get('nodes/{node}/subNodes','SubNodeController@index');
             $router->get('banner', 'BannerController@index');
             $router->get('banner/{carousel}', 'BannerController@show')->name('banner.show');
             $router->get('node/{node}', 'NodeController@show');

@@ -35,6 +35,9 @@ class Reply extends BaseModel
         'ip',
     ];
 
+    protected $hidden = ['body_original', 'bad_word', 'thread_id', 'is_block', 'ip', 'last_op_user_id', 'last_op_time', 'last_op_reason',
+        'updated_at', 'deleted_at'];
+
     protected $dates = ['deleted_at', 'last_op_time'];
 
     /**
@@ -52,6 +55,10 @@ class Reply extends BaseModel
         'user_id'  => '回帖人',
     ];
 
+    public static $orderByThreadId = [
+        'thread_id' => '发帖时间',
+    ];
+
     public function likes()
     {
         return $this->morphMany(Like::class, 'likeable');
@@ -64,7 +71,8 @@ class Reply extends BaseModel
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->select(['id', 'username', 'avatar_url','password',
+            'notification_reply_count','notification_at_count','notification_system_count','notification_chat_count','notification_follow_count']);
     }
 
     public function lastOpUser()
@@ -134,6 +142,8 @@ class Reply extends BaseModel
                 $query->where('created_at', '>=', $value);
             } elseif ($key == 'date_end') {
                 $query->where('created_at', '<=', $value);
+            } elseif ($key == 'orderByThreadId'){
+                    $query->orderBy($value,'desc');
             } elseif ($key == 'orderType'){
                 $query->orderBy($value,'desc');
             }

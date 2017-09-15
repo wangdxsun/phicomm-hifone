@@ -13,6 +13,8 @@ use Hifone\Commands\Thread\AddThreadCommand;
 use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasAuditedEvent;
 use Hifone\Events\Thread\ThreadWasViewedEvent;
+use Hifone\Models\Node;
+use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
 use Hifone\Repositories\Criteria\Thread\Filter;
@@ -38,14 +40,16 @@ class ThreadBll extends BaseBll
 
     public function search()
     {
-        $threads = Thread::visible()->title(request('q'))->with(['user', 'node'])->recent()->paginate();
+        $threads = Thread::searchThread(request('q'))->load(['user', 'node', 'lastReplyUser']);
         return $threads;
     }
 
     public function createThread()
     {
         $threadData = Input::get('thread');
-        $node_id = isset($threadData['node_id']) ? $threadData['node_id'] : null;
+        $sub_node_id = isset($threadData['sub_node_id']) ? $threadData['sub_node_id'] : null;
+        $node_id = SubNode::find($sub_node_id)->node_id;
+
         $tags = isset($threadData['tags']) ? $threadData['tags'] : '';
         $images = '';
 
@@ -70,8 +74,38 @@ class ThreadBll extends BaseBll
             $threadData['body'],
             Auth::id(),
             $node_id,
+            $sub_node_id,
             $tags,
             $images
+        ));
+
+        $thread = Thread::find($threadTemp->id);
+        return $thread;
+    }
+
+    public function createThreadInApp()
+    {
+        $threadData = Input::get('thread');
+        $sub_node_id = isset($threadData['sub_node_id']) ? $threadData['sub_node_id'] : null;
+        $node_id = SubNode::find($sub_node_id)->node_id;
+        $tags = isset($threadData['tags']) ? $threadData['tags'] : '';
+        $json_bodies = json_decode($threadData['body'], true);
+        $body = '';
+        foreach ($json_bodies as $json_body) {
+            if ($json_body['type'] == 'text') {
+                $body.= "<p>".$json_body['content']."</p>";
+            } elseif ($json_body['type'] == 'image') {
+                $body.= "<img src='".$json_body['content']."'/>";
+            }
+        }
+
+        $threadTemp = dispatch(new AddThreadCommand(
+            $threadData['title'],
+            $body,
+            Auth::id(),
+            $node_id,
+            $sub_node_id,
+            $tags
         ));
 
         $thread = Thread::find($threadTemp->id);
@@ -115,12 +149,13 @@ class ThreadBll extends BaseBll
             $thread->status = 0;
             $this->updateOpLog($thread, '自动审核通过');
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
+            $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);
             $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
             event(new ThreadWasAuditedEvent($thread));
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            throw new \Exception('系统错误！');
+            throw $e;
         }
     }
 

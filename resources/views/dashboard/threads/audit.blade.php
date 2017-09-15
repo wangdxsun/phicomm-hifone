@@ -28,7 +28,7 @@
                         <td style="width: 70px;">敏感词</td>
                         <td style="width: 70px;">节点</td>
                         <td style="width: 100px;">发帖人</td>
-                        <td style="width: 100px;">Ip地址</td>
+                        <td style="width: 100px;">IP地址</td>
                         <td style="width: 90px;">发贴时间</td>
                         <td style="width: 70px;">操作</td>
                     </tr>
@@ -41,7 +41,7 @@
                                 <div class="replyContent">
                                     {!! $thread->body !!}
                                 </div>
-                                @if(Str::length($thread->body) > 35 || Str::contains($thread->body,['<img']))
+                                @if(Str::length($thread->body) > 26 || Str::contains($thread->body,['<img']))
                                     <a data-toggle="collapse" href="#thread{{ $thread->id }}" aria-expanded="false">查看更多</a>
                                     <div class="collapse well" id="thread{{ $thread->id }}">{!! $thread->body !!}</div>
                                 @endif

@@ -15,13 +15,7 @@ use Illuminate\Contracts\View\View;
 
 class NodeMenuComposer
 {
-    /**
-     * Bind data to the view.
-     *
-     * @param \Illuminate\Contracts\View\View $view
-     *
-     * @return void
-     */
+
     public function compose(View $view)
     {
         $subMenu = [
@@ -34,6 +28,12 @@ class NodeMenuComposer
             'nodes' => [
                 'title'  => trans('dashboard.nodes.nodes'),
                 'url'    => route('dashboard.node.index'),
+                'icon'   => 'fa fa-sitemap',
+                'active' => false,
+            ],
+            'subNodes' => [
+                'title'  => trans('dashboard.nodes.sub_nodes'),
+                'url'    => route('dashboard.subNode.index'),
                 'icon'   => 'fa fa-sitemap',
                 'active' => false,
             ],

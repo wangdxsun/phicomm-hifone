@@ -31,6 +31,8 @@ class Section extends BaseModel
         'updated_at',
     ];
 
+    protected $hidden = ['created_at', 'updated_at', 'order', 'description'];
+
     /**
      * The validation rules.
      *

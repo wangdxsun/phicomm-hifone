@@ -92,13 +92,6 @@ class DashboardController extends Controller
 
     public function test()
     {
-        $threads = Thread::visible()->orderBy('created_at', 'desc')->paginate(20);
-        $sections = Section::orderBy('order')->get();
-
-        return View::make('dashboard.test')
-            ->withPageTitle('test')
-            ->withThreads($threads)
-            ->withCurrentMenu('index')
-            ->withSections($sections);
+        return view('dashboard.test');
     }
 }

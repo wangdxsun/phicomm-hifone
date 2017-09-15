@@ -12,7 +12,7 @@
                     <abbr class="timeago" title="{!! $reply->created_at !!}">{!! $reply->created_at !!}</abbr>
                     <a name="reply{{ $reply->id }}" class="anchor" href="#reply{{ $reply->id }}" aria-hidden="true">#{!! $thread->replyFloorFromIndex($index) !!}</a>
                     <span class="opts pull-right">
-                        <span class="hideable">
+                        <span>
                             {{--@if (Auth::user() && (Auth::user()->can("manage_threads") || Auth::user()->id == $reply->user_id) )--}}
                             {{--<a class="fa fa-trash-o" id="reply-delete-{!! $reply->id !!}" data-method="delete"  href="javascript:void(0);" data-url="{!! route('reply.destroy', [$reply->id]) !!}" title="{!! trans('forms.delete') !!}"></a>--}}
                             {{--@endif--}}

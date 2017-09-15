@@ -104,7 +104,7 @@ window.Hifone =
       $form = $(this)
       $form.find(':submit').prop 'disabled', true
 
-  initDeleteForm: ->
+  initInlineForm: ->
     $('[data-method]').append(->
       $url = $(this).attr('data-url')
       $method = $(this).attr('data-method')
@@ -132,6 +132,25 @@ window.Hifone =
             return false
           $form.attr('action', $form.attr('action') + '?reason=' + inputValue)
           $form.submit()
+      # 提升帖子热度值
+      else if $(this).hasClass('getAndSet')
+        $getUrl = $(this).attr('get-url')
+        $.get($getUrl, (data) ->
+          swal {
+            type: 'input'
+            title: $title
+            inputValue: data
+            confirmButtonColor: '#FF6F6F'
+            showCancelButton: true
+            closeOnConfirm: false
+          }, (inputValue)->
+            if inputValue == false
+              return false
+            else if inputValue.trim() == ""
+              return false
+            $form.attr('action', $form.attr('action') + '?value=' + inputValue)
+            $form.submit()
+        )
       else if $(this).hasClass('confirm-action')
         swal {
           type: 'warning'
@@ -175,6 +194,7 @@ window.Hifone =
           selectAll.checked = false
           break
         selectAll.checked = true
+
 
 
 $ ->

@@ -11,6 +11,7 @@
 
 namespace Hifone\Http\Routes;
 
+use Hifone\Http\Controllers\Dashboard\ThreadController;
 use Illuminate\Contracts\Routing\Registrar;
 
 /**
@@ -34,7 +35,7 @@ class DashboardRoutes
             'as' => 'dashboard.'
         ], function (Registrar $router) {
             $router->get('/', 'DashboardController@index')->name('index');
-            $router->get('test', 'DashboardController@test');
+            $router->get('test', 'DashboardController@test')->name('test');
             $router->get('markdown', 'DashboardController@markdown')->name('markdown');
             $router->post('user/{user}/avatar', 'UserController@avatar');
             $router->post('user/{user}/comment', 'UserController@comment');
@@ -48,6 +49,7 @@ class DashboardRoutes
             $router->post('thread/batchAudit', 'ThreadController@postBatchAudit');//batch audit thread
             $router->post('thread/{thread}/index/to/trash', 'ThreadController@indexToTrash');
             $router->post('thread/{thread}/audit/to/trash', 'ThreadController@auditToTrash');
+            $router->post('node/{moderator}/audit/to/trash', 'NodeController@auditToTrash');
             $router->post('reply/{reply}/audit', 'ReplyController@postAudit');
             $router->post('reply/batchAudit', 'ReplyController@postBatchAudit');//batch audit reply
             $router->post('reply/{reply}/audit/to/trash', 'ReplyController@auditToTrash');
@@ -72,6 +74,8 @@ class DashboardRoutes
             $router->post('wordsExcel/check','WordsExcelController@check');
             $router->post('word/batchDestroy', 'WordController@batchDestroy');
             $router->get('check/check', 'CheckController@check')->name('check.check');
+            $router->get('thread/{thread}/heat_offset','ThreadController@getHeatOffset');
+            $router->post('thread/{thread}/heat_offset','ThreadController@setHeatOffset');
 
             // Settings
             $router->group(['as' => 'settings.', 'prefix' => 'settings'], function (Registrar $router) {
@@ -109,6 +113,7 @@ class DashboardRoutes
             $router->resource('page', 'PageController');
             $router->resource('section', 'SectionController');
             $router->resource('node', 'NodeController');
+            $router->resource('subNode', 'SubNodeController');
             $router->resource('thread', 'ThreadController');
             $router->resource('reply', 'ReplyController');
             $router->resource('tip', 'TipController');

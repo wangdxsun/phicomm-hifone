@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Hifone\Commands\Thread\AddThreadCommand;
 use Hifone\Models\Thread;
 use Hifone\Services\Tag\AddTag;
+use Illuminate\Support\Str;
 
 class AddThreadCommandHandler
 {
@@ -35,6 +36,7 @@ class AddThreadCommandHandler
             'title'         => $command->title,
             'excerpt'       => Thread::makeExcerpt($command->body),
             'node_id'       => $command->node_id,
+            'sub_node_id'   => $command->sub_node_id,
             'body'          => $body,
             'body_original' => $command->body,
             'created_at'    => Carbon::now()->toDateTimeString(),
@@ -52,13 +54,19 @@ class AddThreadCommandHandler
     }
 
     public function getFirstImageUrl($body) {
-        preg_match_all('/src=["\']{1}([^"]*)["\']{1}/i', $body, $images);
+        preg_match_all('/src=["\']{1}([^"^\']*)["\']/i', $body, $images);
         $imgUrls = [];
         if (count($images) > 0) {
             foreach ($images[1] as $k => $v) {
                 $imgUrls[] = $v;
             }
         }
-        return array_first($imgUrls);
+        $imgUrl = array_first($imgUrls,function($key,$value) {
+            if (!(Str::contains($value, 'icon_apk')) && !(Str::contains($value, 'icon_bin')) && !(Str::contains($value, 'icon_word'))) {
+                return $value;
+            }
+            return null;
+        });
+        return $imgUrl;
     }
 }

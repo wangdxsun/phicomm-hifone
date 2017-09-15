@@ -13,11 +13,16 @@ namespace Hifone\Http\Controllers\Dashboard;
 
 use AltThree\Validator\ValidationException;
 use Hifone\Http\Controllers\Controller;
+use Hifone\Models\Moderator;
 use Hifone\Models\Node;
+use Hifone\Models\Role;
 use Hifone\Models\Section;
+use Hifone\Models\SubNode;
+use Hifone\Models\User;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\View;
+use Mockery\Exception;
 
 class NodeController extends Controller
 {
@@ -30,7 +35,7 @@ class NodeController extends Controller
     {
         View::share([
             'current_menu'  => 'nodes',
-            'sub_title'     => '板块管理',
+            'sub_title'     => '主板块管理',
         ]);
     }
 
@@ -44,8 +49,19 @@ class NodeController extends Controller
         $nodes = Node::orderBy('order')->get();
 
         return View::make('dashboard.nodes.index')
-        ->withPageTitle('板块管理')
+        ->withPageTitle('主板块管理')
         ->withNodes($nodes);
+    }
+
+    public function show(Node $node)
+    {
+        $subNodes = SubNode::where('node_id',$node->id)->orderBy('order')->get();
+        if (0 == count($subNodes))
+            return Redirect::route('dashboard.node.index')
+                ->withErrors('该主板块不存在子版块');
+        return View::make('dashboard.subNodes.index')
+            ->withPageTitle('子版块管理')
+            ->with('subNodes',$subNodes);
     }
 
     /**
@@ -57,7 +73,7 @@ class NodeController extends Controller
     {
         return View::make('dashboard.nodes.create_edit')
             ->withSections(Section::orderBy('order')->get())
-            ->withPageTitle('添加板块');
+            ->withPageTitle('添加主板块');
     }
 
     /**
@@ -67,11 +83,20 @@ class NodeController extends Controller
      */
     public function store()
     {
+        $userData = Request::get('user');
         $nodeData = Request::get('node');
+        $moderatorData = Request::get('moderator');
+        $nodeData['order'] = Node::max('order') + 1;
+        $user = User::findByUsernameOrFail($userData['name']);
+        $user->role_id = $moderatorData['role'];
+        $moderatorData['user_id'] = $user->id;
 
         try {
             $node = Node::create($nodeData);
-            $this->updateOpLog($node, '新增板块');
+            $moderatorData['node_id'] = $node->id;
+            $moderator = Moderator::create($moderatorData);
+            $this->updateOpLog($moderator, '新增板主');
+            $this->updateOpLog($node, '新增主板块');
         } catch (ValidationException $e) {
             return Redirect::route('dashboard.node.create')
                 ->withInput(Request::all())
@@ -95,6 +120,9 @@ class NodeController extends Controller
         return View::make('dashboard.nodes.create_edit')
             ->withPageTitle(trans('dashboard.nodes.edit.title').' - '.trans('dashboard.dashboard'))
             ->withSections(Section::orderBy('order')->get())
+            ->withModerators(Moderator::get())
+            ->withUsers(User::get())
+            ->withRole(Role::get())
             ->withNode($node);
     }
 
@@ -108,9 +136,20 @@ class NodeController extends Controller
     public function update(Node $node)
     {
         $nodeData = Request::get('node');
-
+        $moderatorData = Request::get('moderator');
+        $userData = Request::get('user');
+        if ('' != $userData['name']) {
+            $user = User::findByUsernameOrFail($userData['name']);
+            $user->role_id = $moderatorData['role'];
+            $moderatorData['user_id'] = $user->id;
+        }
+        $moderatorData['node_id'] = $node->id;
         try {
             $node->update($nodeData);
+            if ('' != $userData['name']) {
+                $moderator = Moderator::create($moderatorData);
+                $this->updateOpLog($moderator, '新增版主');
+            }
             $this->updateOpLog($node, '修改板块');
         } catch (ValidationException $e) {
             return Redirect::route('dashboard.node.edit', ['id' => $node->id])
@@ -119,7 +158,7 @@ class NodeController extends Controller
                 ->withErrors($e->getMessageBag());
         }
 
-        return Redirect::route('dashboard.node.edit', ['id' => $node->id])
+        return Redirect::route('dashboard.node.index')
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.nodes.edit.success')));
     }
 
@@ -132,12 +171,27 @@ class NodeController extends Controller
      */
     public function destroy(Node $node)
     {
-        if ($node->threads()->count() > 0) {
-            return back()->withErrors('该板块下存在帖子，无法删除');
+        if ($node->subNodes()->count() > 0 || $node->threads()->count() > 0) {
+            return back()->withErrors('该板块下存在帖子或子板块，无法删除');
         }
         $this->updateOpLog($node, '删除板块');
         $node->delete();
 
         return back()->withSuccess('板块删除成功');
     }
+
+    public function auditToTrash(Moderator $moderator)
+    {
+        try {
+            if (Moderator::where('user_id',$moderator->user_id)->count() == 1) {
+                $moderator->user->role_id = 0;
+                $moderator->delete();
+            }
+            $moderator->delete();
+        } catch (\Exception $e) {
+            return Redirect::back()->withErrors($e->getMessageBag());
+        }
+        return Redirect::back()->withSuccess('恭喜，操作成功！');
+    }
+
 }

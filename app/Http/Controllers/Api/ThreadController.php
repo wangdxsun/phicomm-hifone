@@ -17,14 +17,15 @@ use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\ThreadBll;
 use Hifone\Models\Thread;
 use Hifone\Services\Filter\WordsFilter;
+use DB;
 
 class ThreadController extends ApiController
 {
     public function index(CommonBll $commonBll)
     {
         $commonBll->login();
-        $threads = Thread::visible()->with(['user', 'node'])->hot()->paginate();
-
+        //置顶优先，再按热度值倒序排序
+        $threads = Thread::visible()->with(['user', 'node'])->orderBy('order', 'DESC')->orderBy('heat', 'DESC')->paginate();
         return $threads;
     }
 
@@ -53,22 +54,18 @@ class ThreadController extends ApiController
         if (Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($post)) || $threadBll->isContainsImageOrUrl($post)) {
             if (isset($badWord)) {
                 $thread->bad_word = $badWord;
-                $thread->save();
             }
-            $thread->bdoy = app('parser.at')->parse($thread->bdoy);
-            $thread->body = app('parser.emotion')->parse($thread->body);
-            $thread->save();
-            return [
-                'msg' => '帖子已提交，待审核',
-                'thread' => $thread
-            ];
+            $msg = '帖子已提交，待审核';
+        } else {
+            $threadBll->threadPassAutoAudit($thread);
+            $msg = '发布成功';
         }
-        $thread->bdoy = app('parser.at')->parse($thread->bdoy);
+        $thread->body = app('parser.at')->parse($thread->body);
         $thread->body = app('parser.emotion')->parse($thread->body);
         $thread->save();
-        $threadBll->threadPassAutoAudit($thread);
+        $thread->addToIndex();
         return [
-            'msg' => '发布成功',
+            'msg' => $msg,
             'thread' => $thread
         ];
     }

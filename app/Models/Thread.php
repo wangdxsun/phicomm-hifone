@@ -14,6 +14,7 @@ namespace Hifone\Models;
 use AltThree\Validator\ValidatingTrait;
 use Carbon\Carbon;
 use Config;
+use Elasticquent\ElasticquentTrait;
 use Hifone\Models\Scopes\Recent;
 use Hifone\Models\Traits\Taggable;
 use Hifone\Services\Dates\DateFactory;
@@ -24,7 +25,7 @@ use Venturecraft\Revisionable\RevisionableTrait;
 
 class Thread extends BaseModel implements TaggableInterface
 {
-    use ValidatingTrait, Taggable, Recent, RevisionableTrait, SoftDeletes;
+    use ValidatingTrait, Taggable, Recent, RevisionableTrait, SoftDeletes, ElasticquentTrait;
 
     const VISIBLE = 0;//正常帖子
     const TRASH = -1;//回收站
@@ -36,11 +37,6 @@ class Thread extends BaseModel implements TaggableInterface
     //use SoftDeletingTrait;
     protected $dates = ['deleted_at', 'last_op_time'];
 
-    /**
-     * The fillable properties.
-     *
-     * @var string[]
-     */
     protected $fillable = [
         'title',
         'body',
@@ -48,12 +44,16 @@ class Thread extends BaseModel implements TaggableInterface
         'body_original',
         'user_id',
         'node_id',
+        'sub_node_id',
         'is_excellent',
         'created_at',
         'updated_at',
         'thumbnails',
         'ip',
     ];
+
+    protected $hidden = ['body_original', 'bad_word', 'is_blocked', 'heat_offset', 'heat', 'follower_count', 'ip',
+        'last_op_user_id', 'last_op_reason', 'last_op_time', 'deleted_at'];
 
     /**
      * The validation rules.
@@ -64,13 +64,67 @@ class Thread extends BaseModel implements TaggableInterface
         'title'   => 'required|min:1|max:80',
         'body'    => 'required',
         'node_id' => 'required|int',
+        'sub_node_id' => 'required|int',
         'user_id' => 'required|int',
+        'heat_offset' => 'int',
+    ];
+
+    protected $mappingProperties = [
+        'id' => [
+            'type' => 'integer',
+            'index' => 'no'
+        ],
+        'user_id' => [
+            'type' => 'integer',
+            'index' => 'no'
+        ],
+        'node_id' => [
+            'type' => 'integer',
+            'index' => 'no'
+        ],
+        'view_count' => [
+            'type' => 'integer',
+            'index' => 'no'
+        ],
+        'reply_count' => [
+            'type' => 'integer',
+            'index' => 'no'
+        ],
+        'created_at' => [
+            'type' => 'date',
+            'index' => 'no'
+        ],
+        'title' => [
+            'type' => 'string',
+            'analyzer' => 'ik_max_word',
+            'search_analyzer' => 'ik_max_word',
+        ],
+        'body' => [
+            'type' => 'string',
+            'analyzer' => 'ik_max_word',
+            'search_analyzer' => 'ik_max_word',
+        ],
+    ];
+
+    protected $indexSettings = [
+        'analysis' => [
+            'analyzer' => [
+                'ik_html_strip' => [
+                    'type' => 'custom',
+                    'char_filter' => ['html_strip'],
+                    'tokenizer' => 'ik_max_word',
+                    'filter' => ['lowercase'],
+                ],
+            ],
+        ],
     ];
     
     public static $orderTypes = [
-        'id' => '发帖时间',
-        'node_id' => '帖子板块',
-        'user_id'  => '发帖人',
+        'id'         => '发帖时间',
+        'node_id'    => '帖子板块',
+        'user_id'    => '发帖人',
+        'heat'       => '热度值',
+        'updated_at' => '最后回复时间',
     ];
 
     public function likes()
@@ -95,7 +149,12 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function node()
     {
-        return $this->belongsTo(Node::class);
+        return $this->belongsTo(Node::class)->select(['id', 'name','thread_count','description']);
+    }
+
+    public function subNode()
+    {
+        return $this->belongsTo(SubNode::class);
     }
 
     public function scopeOfNode($query, Node $node)
@@ -105,7 +164,8 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->select(['id', 'username', 'avatar_url', 'role','score','password','thread_count',
+            'notification_reply_count','notification_at_count','notification_system_count','notification_chat_count','notification_follow_count']);
     }
 
     public function lastOpUser()
@@ -144,6 +204,9 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function inVisible()
     {
+        if (null == \Auth::user() && $this->status < 0) {
+            return true;
+        }
         return $this->status < 0 && !(\Auth::id() == $this->user->id || \Auth::user()->can('view_thread'));
     }
 
@@ -193,10 +256,7 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function scopeHot($query)
     {
-        $days = Config::get('setting.hot_thread', 14);
-        return $query->whereRaw("(`created_at` > '" . Carbon::today()->subDays($days)->toDateString() . "' or (`order` > 0) )")
-            ->orderBy('order', 'desc')
-            ->orderBy('updated_at', 'desc');
+        return $query->orderBy('order', 'desc')->orderBy('heat', 'desc');
     }
 
     public function scopePinAndRecentReply($query)
@@ -314,5 +374,36 @@ class Thread extends BaseModel implements TaggableInterface
     public function getThumbnailsAttribute($value)
     {
         return $value ?: request()->getSchemeAndHttpHost().'/images/share.png';
+    }
+
+    //动态计算热度值
+    public function getHeatComputeAttribute()
+    {
+        $view_score = 1;
+        $like_score = 20;
+        $reply_score = 50;
+        $time_score = 1000;
+        $excellent = $this->is_excellent != 0 ? 10000 : 0;
+
+        $createAt = new Carbon($this['attributes']['created_at']);
+        $now = Carbon::now();
+        $timeAlive = $now->diffInSeconds($createAt);
+        $heat = $this->view_count * $view_score + $this->like_count * $like_score + $this->reply_count * $reply_score + $excellent
+            + $this->heatCoolingValue($timeAlive, $time_score) + $this->heat_offset;
+        $heat = ($heat > -100000) ? $heat : -100000;
+        return round($heat, 2, PHP_ROUND_HALF_DOWN);
+    }
+
+    private function heatCoolingValue($timeAlive, $timeScore)
+    {
+        //72小时后逐渐降低，72小时为中点
+        if ($timeAlive <= 72 * 60 * 60) {
+            return $timeScore * cos($timeAlive * PI() / (60 * 60 * 72 * 2));
+        } elseif ($timeAlive <= 72 * 2 * 60 * 60) {
+            return 5 * $timeScore * cos($timeAlive * PI() / (60 * 60 * 72 * 2));
+        } else {
+            $score = ($timeAlive - 60 * 60 * 72 * 2) * (-0.1) - 5 * $timeScore;
+            return $score > -300000 ? $score : -300000;
+        }
     }
 }

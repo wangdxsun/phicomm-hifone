@@ -62,9 +62,9 @@
                     <tr class="head">
                         <td style="width: 70px;">#</td>
                         <td>标题</td>
-                        <td style="width: 80px;">节点</td>
+                        <td style="width: 80px;">版块</td>
                         <td style="width: 120px;">发帖人</td>
-                        <td style="width: 100px;">Ip地址</td>
+                        <td style="width: 100px;">IP地址</td>
                         <td style="width: 160px;">发帖时间</td>
                         <td style="width: 120px;">操作人</td>
                         <td style="width: 160px;">操作时间</td>

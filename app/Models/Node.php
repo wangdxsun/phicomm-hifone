@@ -21,6 +21,7 @@ class Node extends BaseModel implements HasPresenter
      *
      * @var mixed[]
      */
+
     protected $attributes = [
         'section_id' => 0,
     ];
@@ -35,12 +36,28 @@ class Node extends BaseModel implements HasPresenter
         'slug',
         'order',
         'icon',
+        'icon_list',
+        'icon_detail',
         'description',
         'thread_count',
         'reply_count',
         'status',
         'created_at',
         'updated_at',
+        'is_prompt',
+        'prompt',
+    ];
+
+    protected $hidden = [
+        'status',
+        'last_op_user_id',
+        'last_op_time',
+        'created_at',
+        'updated_at',
+        'order',
+        'slug',
+        'section_id',
+        'reply_count'
     ];
 
     /**
@@ -49,9 +66,11 @@ class Node extends BaseModel implements HasPresenter
      * @var string[]
      */
     public $rules = [
-        'name'      => 'required|string',
-        'order'     => 'int',
-        'status'    => 'int',
+        'name'        => 'required|string|min:2|max:50',
+        'order'       => 'int',
+        'status'      => 'int',
+        'description' => 'required|string|min:2|max:100',
+        'prompt'      => 'string|min:10|max:40',
     ];
 
     /**
@@ -61,7 +80,7 @@ class Node extends BaseModel implements HasPresenter
      */
     public function section()
     {
-        return $this->belongsTo(Section::class);
+        return $this->belongsTo(Section::class)->select(['id', 'name']);
     }
 
     /**
@@ -102,5 +121,15 @@ class Node extends BaseModel implements HasPresenter
     public function dailyStats()
     {
         return $this->morphMany(DailyStat::class,'object');
+    }
+
+    public function subNodes()
+    {
+        return $this->hasMany(SubNode::class)->orderBy('order');
+    }
+
+    public function moderators()
+    {
+        return $this->hasMany(Moderator::class);
     }
 }

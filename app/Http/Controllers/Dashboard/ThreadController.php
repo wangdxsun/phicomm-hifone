@@ -95,7 +95,6 @@ class ThreadController extends Controller
                 ->withInput($threadData)
                 ->withErrors($e->getMessageBag());
         }
-
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
@@ -217,10 +216,16 @@ class ThreadController extends Controller
         DB::beginTransaction();
         try {
             $thread->status = 0;
+            //更新热度值
+            $thread->heat = $thread->heat;
             $this->updateOpLog($thread, '审核通过');
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
+            if ($thread->subNode) {
+                $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);
+            }
             $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
             event(new ThreadWasAuditedEvent($thread));
+            $thread->addToIndex();
             DB::commit();
         } catch (ValidationException $e) {
             DB::rollBack();
@@ -259,6 +264,7 @@ class ThreadController extends Controller
         try {
             $this->trash($thread);
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
+            $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);
             $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
             event(new ThreadWasTrashedEvent($thread));
             DB::commit();
@@ -287,5 +293,28 @@ class ThreadController extends Controller
     {
         $thread->status = Thread::TRASH;
         $this->updateOpLog($thread, '删除帖子', trim(request('reason')));
+        $thread->removeFromIndex();
+    }
+
+    public function getHeatOffset(Thread $thread)
+    {
+        if ($thread->heat_offset != null) {
+            return $thread->heat_offset;
+        }
+        return 0;
+    }
+
+    public function setHeatOffset(Thread $thread)
+    {
+        $heatOffset = request('value');
+        try {
+            $thread->heat_offset = $heatOffset;
+            //更新热度值
+            $thread->heat = $thread->heat;
+            $thread->save();
+        } catch (ValidationException $e) {
+            return Redirect::back()->withErrors($e->getMessageBag());
+        }
+        return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 }

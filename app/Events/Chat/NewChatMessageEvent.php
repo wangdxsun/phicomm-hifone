@@ -12,7 +12,6 @@
 namespace Hifone\Events\Chat;
 
 use Hifone\Events\EventInterface;
-use Hifone\Models\Carousel;
 use Hifone\Models\User;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 

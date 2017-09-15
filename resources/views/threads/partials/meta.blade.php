@@ -28,7 +28,7 @@
           {{ $thread->lastReplyUser->username }}
         {{--@endif--}}
       </a>
-     {{ trans('hifone.at') }} <abbr title="{{ $thread->updated_time }}">{{ $thread->updated_at }}</abbr>
+     {{ trans('hifone.at') }} <abbr>{{ $thread->created_at }}</abbr>
     •
   @endif
 

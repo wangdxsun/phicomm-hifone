@@ -19,7 +19,7 @@ class If_ extends Node\Stmt
      * Constructs an if node.
      *
      * @param Node\Expr $cond       Condition
-     * @param array     $subNodes   Array of the following optional subnodes:
+     * @param array     $subNodes   Array of the following optional subNodes:
      *                              'stmts'   => array(): Statements
      *                              'elseifs' => array(): Elseif clauses
      *                              'else'    => null   : Else clause

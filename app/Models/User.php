@@ -14,6 +14,7 @@ namespace Hifone\Models;
 use Auth;
 use AltThree\Validator\ValidatingTrait;
 use Cmgmyr\Messenger\Traits\Messagable;
+use Elasticquent\ElasticquentTrait;
 use Hifone\Models\Traits\SearchTrait;
 use Hifone\Presenters\UserPresenter;
 use Illuminate\Auth\Authenticatable;
@@ -26,7 +27,7 @@ use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 class User extends BaseModel implements AuthenticatableContract, CanResetPasswordContract, HasPresenter
 {
-    use Authenticatable, CanResetPassword, EntrustUserTrait, ValidatingTrait, Messagable, SearchTrait;
+    use Authenticatable, CanResetPassword, EntrustUserTrait, ValidatingTrait, Messagable, SearchTrait, ElasticquentTrait;
 
     // Enable hasRole( $name ), can( $permission ),
     //   and ability($roles, $permissions, $options)
@@ -49,20 +50,47 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
      *
      * @var string[]
      */
-    protected $hidden = ['password', 'remember_token'];
+    protected $hidden = ['password', 'remember_token', 'salt', 'remember_token', 'is_banned', 'image_url', 'location', 'location_id', 'bio',
+        'website', 'company', 'signature', 'locale', 'regip', 'last_op_user_id', 'last_op_time', 'last_op_reason', 'last_visit_time',
+        'created_at', 'updated_at', 'deleted_at', 'nickname', 'email', 'phicomm_id'];
     /**
      * The validation rules.
      *
      * @var string[]
      */
     public $rules = [
-        'username' => ['required'],
+        'username' => 'required',
         'password' => 'required|string|min:6',
     ];
 
     protected $searchable = [
         'username',
     ];
+
+    protected $mappingProperties = [
+        'username' => [
+            'type' => 'string',
+            'analyzer' => 'ik_max_word',
+            'search_analyzer' => 'ik_max_word',
+        ],
+        'id' => [
+            'type' => 'integer',
+            'index' => 'no',
+        ],
+        'follower_count' => [
+            'type' => 'integer',
+            'index' => 'no',
+        ],
+        'avatar_url' => [
+            'type' => 'string',
+            'index' => 'no',
+        ],
+        'role' => [
+            'type' => 'string',
+            'index' => 'no',
+        ]
+    ];
+
     public static $orderTypes = [
         'id' => '用户ID',
         'thread_count' => '发帖数',
@@ -269,7 +297,11 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
 
     public function getRoleAttribute()
     {
-        $adminGroup = implode(',', array_column($this->roles->toArray(), 'display_name'));
+        $roles = $this->roles;
+        if (!is_array($roles)) {
+            $roles = $roles->toArray();
+        }
+        $adminGroup = implode(',', array_column($roles, 'display_name'));
         if ($adminGroup) {
             return $adminGroup;
         }
@@ -355,6 +387,7 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
     {
         return $this->hasMany(Report::class);
     }
+
 
     public function getNotificationCountAttribute()
     {

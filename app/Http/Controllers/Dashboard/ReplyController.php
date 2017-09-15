@@ -50,11 +50,13 @@ class ReplyController extends Controller
         $replies = Reply::visible()->search($search)->with('thread', 'user', 'lastOpUser', 'thread.node')
             ->orderBy('last_op_time', 'desc')->paginate(20);
         $orderTypes = Reply::$orderTypes;
+        $orderByThreadId = Reply::$orderByThreadId;
         return View::make('dashboard.replies.index')
             ->withPageTitle(trans('dashboard.replies.replies').' - '.trans('dashboard.dashboard'))
             ->withReplies($replies)
             ->with('orderTypes',$orderTypes)
             ->withSearch($search)
+            ->with('orderByThreadId',$orderByThreadId)
             ->withCurrentMenu('index');
     }
 
@@ -189,8 +191,7 @@ class ReplyController extends Controller
     {
         $thread = $reply->thread;
         $thread->last_reply_user_id = $reply->user_id;
-        //审核通过操作时不再更新帖子的修改时间，取最近一次审核通过回复的创建时间
-//        $thread->updated_at = Carbon::now()->toDateTimeString();
+        //审核通过时不再更新帖子的修改时间，取最近一次审核通过回复的创建时间
         $thread->save();
         event(new ReplyWasAddedEvent($reply));
         event(new RepliedWasAddedEvent($reply->user, $thread->user));
@@ -210,6 +211,10 @@ class ReplyController extends Controller
         DB::beginTransaction();
         try {
             $reply->thread->node->increment('reply_count', 1);//版块回帖数+1
+            if ($reply->thread->subNode) {
+                $reply->thread->subNode->increment('reply_count', 1);//子版块回帖数+1
+            }
+
             $reply->thread->increment('reply_count', 1);
             $reply->user->increment('reply_count', 1);
 
@@ -238,6 +243,7 @@ class ReplyController extends Controller
         DB::beginTransaction();
         try {
             $reply->thread->node->decrement('reply_count', 1);//版块回帖数-1
+            $reply->thread->subNode->decrement('reply_count', 1);//子版块回帖数-1
             $reply->thread->decrement('reply_count', 1);
             $reply->user->decrement('reply_count', 1);
             $this->trash($reply);

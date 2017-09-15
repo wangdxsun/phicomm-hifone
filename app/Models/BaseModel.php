@@ -43,4 +43,6 @@ class BaseModel extends Model
     {
         return $this->morphMany(Log::class, 'logable');
     }
+
+    public $rules = [];
 }

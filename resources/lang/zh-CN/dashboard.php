@@ -64,7 +64,7 @@ return [
     ],
 
     'sections' => [
-        'sections'     => '分类',
+        'sections'     => '所属分类',
         'name'         => '名称',
         'order'        => '排序',
         'add'          => [
@@ -137,24 +137,43 @@ return [
         ],
     ],
     'nodes' => [
-        'nodes'        => '板块管理',
-        'name'         => '名称',
+        'nodes'        => '主板块管理',
+        'sub_nodes'    => '子板块管理',
+        'name'         => '主板块名称',
+        'sub_name'     => '子板块名称',
         'parent'       => '所属板块',
         'root'         => '根板块',
         'status_name'  => '状态',
-        'description'  => '描述',
-        'icon'         => '板块图标',
+        'description'  => '板块描述',
+        'icon'         => [
+            'hot'      => '首页热门板块图片',
+            'list'     => '板块列表图片',
+            'detail'   => '板块详情页图片',
+        ],
         'slug'         => 'Slug',
         'slug_help'    => '快捷路径',
         'add'          => [
-            'title'   => '添加板块',
-            'success' => '板块添加成功。',
-            'failure' => '板块添加失败！',
+            'title'    => '添加主板块',
+            'sub_title'=> '添加子板块',
+            'success'  => '板块添加成功。',
+            'failure'  => '板块添加失败！',
+        ],
+        'moderator' => [
+            'add'      =>  '添加版主',
+            'type'     =>  '所属版主类别',
+            'list'     =>  '版主列表',
+        ],
+        'prompt'       => [
+            'node'          => '主板块提示',
+            'subNode'       => '子版块提示',
+            'nodeDetail'    => '主板块提示内容',
+            'subNodeDetail' =>'子版块提示内容',
         ],
         'edit' => [
-            'title'   => '编辑板块',
-            'success' => '板块信息更新成功。',
-            'failure' => '板块更新失败！',
+            'title'     => '编辑主板块',
+            'sub_title' => '编辑子板块',
+            'success'   => '板块信息更新成功。',
+            'failure'   => '板块更新失败！',
         ],
 
         'status'       => [

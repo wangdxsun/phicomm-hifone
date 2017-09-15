@@ -23,21 +23,31 @@
                             {!! Form::text('thread[title]', isset($thread) ? $thread->title : null, ['class' => 'form-control', 'id' => 'thread_title', 'placeholder' => trans('hifone.threads.title')]) !!}
                         </div>
 
+
                         <div class="form-group">
-                            <select class="form-control selectpicker" name="thread[node_id]">
-                                <option value="" disabled {!! $node ? null : 'selected' !!}>{{ trans('hifone.threads.pick_node') }}</option>
+                            <select class="form-control selectpicker" name="thread[sub_node_id]">
                                 @foreach ($sections as $section)
-                                    <optgroup label="{{ $section->name }}">
-                                        @if(isset($section->nodes))
-                                            @foreach ($section->nodes as $item)
-                                                <option value="{{ $item->id }}" {!! (Input::old('node_id') == $item->id || (isset($node) && $node->id==$item->id)) ? 'selected' : '' !!} >
-                                                    - {{ $item->name }}</option>
-                                            @endforeach
-                                        @endif
-                                    </optgroup>
+                                    @if(isset($section->nodes))
+                                        @foreach ($section->nodes as $item)
+                                            @if($item->name == '公告活动' || $item->subNodes()->count() > 0)
+                                                <option value="{{ $item->id }}" disabled style="font-size:15px;font-weight:600">{{ $item->name }}</option>
+                                            @else
+                                                <option value="{{ $item->id }}" style="font-size:15px;font-weight:600">{{ $item->name }}</option>
+                                            @endif
+
+                                            @if(isset($item->subNodes))
+                                                @foreach($item->subNodes as $subItem)
+                                                    <option value="{{ $subItem->id }}" {!! (Input::old('sub_node_id') == $subItem->id || (isset($subNode) && $subNode->id==$subItem->id)) ? 'selected' : '' !!} >
+                                                        -- {{ $subItem->name }}</option>
+                                                @endforeach
+                                            @endif
+                                        @endforeach
+                                    @endif
                                 @endforeach
                             </select>
                         </div>
+
+
                         <!-- editor start -->
                         {{--@include('threads.partials.editor_toolbar')--}}
                     <!-- end -->
@@ -56,18 +66,18 @@
                                 <script id="container" name="thread[body]" type="text/plain">{!! isset($thread) ? $thread->body : null !!}</script>
                             </div>
 
-                        <div class="form-group">
-                            <select class="form-control js-tag-tokenizer" multiple="multiple" name="thread[tags][]">
-                                @if(isset($thread))
-                                    @foreach($thread->tags as $tag)
-                                        <option selected="selected">{{ $tag->name }}</option>
-                                    @endforeach
-                                @endif
-                            </select>
-                            <small>
-                                {{ trans('hifone.tags.tags_help') }}
-                            </small>
-                        </div>
+                        {{--<div class="form-group">--}}
+                            {{--<select class="form-control js-tag-tokenizer" multiple="multiple" name="thread[tags][]">--}}
+                                {{--@if(isset($thread))--}}
+                                    {{--@foreach($thread->tags as $tag)--}}
+                                        {{--<option selected="selected">{{ $tag->name }}</option>--}}
+                                    {{--@endforeach--}}
+                                {{--@endif--}}
+                            {{--</select>--}}
+                            {{--<small>--}}
+                                {{--{{ trans('hifone.tags.tags_help') }}--}}
+                            {{--</small>--}}
+                        {{--</div>--}}
 
                         <div class="form-group status-post-submit">
                             {!! Form::submit(trans('forms.publish'), ['class' => 'btn btn-primary col-xs-2', 'id' => 'thread-create-submit']) !!}
@@ -91,16 +101,16 @@
 
         <div class="col-md-3 side-bar">
 
-            @if ( $node )
-                <div class="panel panel-default corner-radius help-box">
-                    <div class="panel-heading text-center">
-                        <h3 class="panel-title">{{ trans('hifone.nodes.current') }} : {{ $node->name }}</h3>
-                    </div>
-                    <div class="panel-body">
-                        {{ $node->description }}
-                    </div>
-                </div>
-            @endif
+            {{--@if ( $node )--}}
+                {{--<div class="panel panel-default corner-radius help-box">--}}
+                    {{--<div class="panel-heading text-center">--}}
+                        {{--<h3 class="panel-title">{{ trans('hifone.nodes.current') }} : {{ $node->name }}</h3>--}}
+                    {{--</div>--}}
+                    {{--<div class="panel-body">--}}
+                        {{--{{ $node->description }}--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+            {{--@endif--}}
 
             <div class="panel panel-default corner-radius help-box">
                 <div class="panel-heading text-center">

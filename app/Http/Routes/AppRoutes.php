@@ -14,12 +14,22 @@ class AppRoutes
 {
     public function map(Registrar $router)
     {
-        $router->group(['namespace' => 'App\V1', 'prefix' => 'app/v1', 'middleware' => 'api'], function ($router) {
+        $router->group(['namespace' => 'App\V1', 'prefix' => 'app/v1', 'middleware' => 'api', 'as' => 'app.'], function ($router) {
             $router->get('user/info', 'UserController@show');
             $router->post('user/bind', 'UserController@bind');
 
-            $router->group(['middleware' => 'auth:hifone'], function ($router) {
+            $router->get('nodes', 'NodeController@index');
+            $router->get('nodes/sections', 'NodeController@sections');
+            $router->get('banners', 'BannerController@index');
+            $router->get('banners/{carousel}', 'BannerController@bannerViewCount')->name('banner.show');
+            $router->get('threads', 'ThreadController@index');
+            $router->get('threads/{thread}', 'ThreadController@show');
+            $router->get('threads/{thread}/replies', 'ThreadController@replies');
 
+            $router->group(['middleware' => 'auth:hifone'], function ($router) {
+                $router->post('upload/base64', 'CommonController@uploadBase64');
+                $router->post('upload', 'CommonController@upload');
+                $router->post('threads', 'ThreadController@store');
             });
         });
     }
