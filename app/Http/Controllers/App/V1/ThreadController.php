@@ -18,6 +18,7 @@ use Auth;
 use Hifone\Services\Filter\WordsFilter;
 use Config;
 use Input;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ThreadController extends AppController
 {
@@ -33,7 +34,6 @@ class ThreadController extends AppController
         if (Auth::user()->hasRole('NoComment')) {
             throw new \Exception('对不起，你已被管理员禁止发言');
         }
-
         $thread = $threadBll->createThreadInApp();
 
         $post = $thread->title.$thread->body;
@@ -49,7 +49,6 @@ class ThreadController extends AppController
         $thread->body = app('parser.at')->parse($thread->body);
         $thread->body = app('parser.emotion')->parse($thread->body);
         $thread->save();
-
         return [
             'msg' => $msg,
             'thread' => $thread
@@ -68,7 +67,8 @@ class ThreadController extends AppController
         $thread['followed'] = User::hasFollowUser($thread->user);
         $thread['liked'] = Auth::check() ? Auth::user()->hasLikeThread($thread) : false;
         $thread['replies'] = $replies;
-
+        $thread = $thread->toArray();
+        unset($thread['user']['roles']);
         return $thread;
     }
 
