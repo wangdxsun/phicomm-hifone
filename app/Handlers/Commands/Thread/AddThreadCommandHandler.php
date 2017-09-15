@@ -54,7 +54,7 @@ class AddThreadCommandHandler
     }
 
     public function getFirstImageUrl($body) {
-        preg_match_all('/src=["\']{1}([^"]*)["\']{1}/i', $body, $images);
+        preg_match_all('/src=["\']{1}([^"^\']*)["\']/i', $body, $images);
         $imgUrls = [];
         if (count($images) > 0) {
             foreach ($images[1] as $k => $v) {
