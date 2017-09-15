@@ -44,9 +44,9 @@
 
             <ul class="nav navbar-nav navbar-right">
                 <li class="nav-search hidden-xs hidden-sm">
-                    {!! Form::open(['method'=>'get', 'class'=>'navbar-form form-search active', 'target'=>'_blank']) !!}
+                    {!! Form::open(['method'=>'get', 'class'=>'navbar-form form-search active', 'route' => 'search']) !!}
                     <div class="form-group">
-                        {!!Form::input('search','q',null,['placeholder'=>trans('hifone.search'),'class'=>'form-control'])!!}
+                        {!!Form::input('search', 'q', request('q'), ['placeholder'=>trans('hifone.search'),'class'=>'form-control'])!!}
                     </div>
                     <i class="fa fa-search"></i>
                     {!! Form::close() !!}

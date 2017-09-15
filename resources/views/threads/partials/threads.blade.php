@@ -62,7 +62,7 @@
                 <span>{{ trans('hifone.threads.last_reply_by') }}</span>
                 <a href="{{ route('user.home', [$thread->lastReplyUser->username]) }}">{{ $thread->lastReplyUser->username }}</a>
                 <span> • </span>
-                <span class="{{ $thread->highlight }}" data-toggle="tooltip" data-placement="top" title="{{ $thread->updated_time }}">{{ $thread->updated_at }}</span>
+                <span class="{{ $thread->highlight }}" data-toggle="tooltip" data-placement="top">{{ $thread->created_at }}</span>
             @endif
             </div>
         </div>

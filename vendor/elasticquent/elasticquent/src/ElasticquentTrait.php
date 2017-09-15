@@ -299,7 +299,7 @@ trait ElasticquentTrait
                 'order' => 'score',
                 'fields' => [
                     'title' => ["number_of_fragments" => 1],
-                    'body' => ["number_of_fragments" => 1],
+                    'body' => ["number_of_fragments" => 1, "fragment_size" => 50],
                 ]
             ]
         ];
@@ -649,7 +649,9 @@ trait ElasticquentTrait
         }
 
         if (isset($hit['highlight'])) {
-            $attributes['search'] = $hit['highlight'];
+            foreach ($hit['highlight'] as $key => $value) {
+                $attributes['search'][$key] = implode('...', $value);
+            }
         }
         $attributes['score'] = $hit['_score'];
 

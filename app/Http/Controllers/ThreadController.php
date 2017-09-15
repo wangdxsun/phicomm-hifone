@@ -41,13 +41,21 @@ class ThreadController extends Controller
     {
         parent::__construct();
 
-        $this->middleware('auth', ['except' => ['index', 'show']]);
+        $this->middleware('auth', ['except' => ['index', 'show', 'search']]);
     }
 
     public function index(ThreadBll $threadBll)
     {
         $threads = $threadBll->getThreads();
         return $this->view('threads.index')
+            ->withThreads($threads)
+            ->withSections(Section::orderBy('order')->get());
+    }
+
+    public function search(ThreadBll $threadBll)
+    {
+        $threads = $threadBll->search();
+        return $this->view('threads.search')
             ->withThreads($threads)
             ->withSections(Section::orderBy('order')->get());
     }
