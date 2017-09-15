@@ -98,6 +98,7 @@ class ThreadBll extends BaseBll
                 $body.= "<img src='".$json_body['content']."'/>";
             }
         }
+
         $threadTemp = dispatch(new AddThreadCommand(
             $threadData['title'],
             $body,
@@ -106,7 +107,6 @@ class ThreadBll extends BaseBll
             $sub_node_id,
             $tags
         ));
-
         $thread = Thread::find($threadTemp->id);
         return $thread;
 

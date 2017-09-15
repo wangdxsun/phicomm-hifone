@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Hifone\Commands\Thread\AddThreadCommand;
 use Hifone\Models\Thread;
 use Hifone\Services\Tag\AddTag;
+use Illuminate\Support\Str;
 
 class AddThreadCommandHandler
 {
@@ -60,6 +61,12 @@ class AddThreadCommandHandler
                 $imgUrls[] = $v;
             }
         }
-        return array_first($imgUrls);
+        $imgUrl = array_first($imgUrls,function($key,$value) {
+            if (!(Str::contains($value, 'icon_apk')) && !(Str::contains($value, 'icon_bin')) && !(Str::contains($value, 'icon_word'))) {
+                return $value;
+            }
+            return null;
+        });
+        return $imgUrl;
     }
 }
