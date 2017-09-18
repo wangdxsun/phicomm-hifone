@@ -73,6 +73,7 @@ class Node extends BaseModel implements HasPresenter
         'prompt'      => 'string|min:10|max:40',
     ];
 
+
     /**
      * Nodes can belong to a section.
      *

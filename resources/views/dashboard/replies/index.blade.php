@@ -81,10 +81,22 @@
                             </td>
                             <td><a href="{{ $reply->thread->url }}" target="_blank" >{{ $reply->thread->title }}</a></td>
                             <td><a href="{{ $reply->thread->node->url }}" target="_blank" >{{ $reply->thread->node->name }}</a></td>
-                            <td><a href="{{ $reply->user->url }}" target="_blank">{{ $reply->user->username }}</a></td>
+                            <td>
+                                @if(isset($reply->user))
+                                    {{ $reply->user }}
+                                @else
+                                <a href="{{ $reply->user->url }}" target="_blank">{{ $reply->user->username }}</a>
+                                @endif
+                            </td>
                             <td>{{ $reply->created_at }}</td>
                             <td>{{ $reply->ip }}</td>
-                            <td>{{ $reply->lastOpUser->username }}</td>
+                            <td>
+                                @if(!isset($reply->last_op_user))
+                                    {{'自动审核'}}
+                                @else
+                                    {{ $reply->last_op_user->username }}
+                                @endif
+                            </td>
                             <td>{{ $reply->last_op_time }}</td>
                             <td>
                                 <a href="/dashboard/reply/{{ $reply->id }}/edit" title="编辑"><i class="fa fa-pencil"></i></a>
