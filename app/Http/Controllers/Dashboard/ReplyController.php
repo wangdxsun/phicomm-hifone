@@ -216,8 +216,9 @@ class ReplyController extends Controller
             }
 
             $reply->thread->increment('reply_count', 1);
-            $reply->user->increment('reply_count', 1);
-
+            if ($reply->user) {
+                $reply->user->increment('reply_count', 1);
+            }
             $reply->status = 0;
             $this->updateOpLog($reply, '审核通过');
 

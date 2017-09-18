@@ -36,7 +36,7 @@ class SendThreadNotificationHandler
         // Notify followed users
         foreach($thread->user->followers()->get() as $followers)
         {
-            if(empty($followers->user())) {
+            if(empty($followers->user)) {
                 continue;
             }
             $followers->user()->increment('notification_follow_count',1);
