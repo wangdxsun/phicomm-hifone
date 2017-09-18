@@ -36,6 +36,9 @@ class SendThreadNotificationHandler
         // Notify followed users
         foreach($thread->user->followers()->get() as $followers)
         {
+            if(empty($followers->user())) {
+                continue;
+            }
             $followers->user()->increment('notification_follow_count',1);
         }
         app('notifier')->batchNotify(
@@ -51,6 +54,7 @@ class SendThreadNotificationHandler
         {
             $users->increment('notification_at_count',1);
         }
+
 
         app('notifier')->batchNotify(
             'thread_mention',

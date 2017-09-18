@@ -125,7 +125,6 @@ class NodeController extends Controller
             ->withPageTitle(trans('dashboard.nodes.edit.title').' - '.trans('dashboard.dashboard'))
             ->withSections(Section::orderBy('order')->get())
             ->withModerators(Moderator::get())
-            ->withUsers(User::get())
             ->withRole(Role::get())
             ->withNode($node);
     }
