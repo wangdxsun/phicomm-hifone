@@ -48,7 +48,13 @@
                             </td>
                             <td>{{ $thread->bad_word }}</td>
                             <td><a href="{{ $thread->node->url }}" target="_blank">{{ $thread->node->name }}</a></td>
-                            <td><a href="{{ $thread->user->url }}" target="_blank">{{ $thread->user->username }}</a></td>
+                            <td>
+                                @if(!isset($thread->user))
+                                    {{ '' }}
+                                @else
+                                    <a href="{{ $thread->user->url }}" target="_blank">{{ $thread->user->username }}</a>
+                                @endif
+                            </td>
                             <td>{{ $thread->ip }}</td>
                             <td>{{ $thread->created_time }}</td>
                             <td>
