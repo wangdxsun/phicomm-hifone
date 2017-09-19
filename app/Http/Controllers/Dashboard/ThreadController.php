@@ -147,7 +147,9 @@ class ThreadController extends Controller
             event(new ExcellentWasAddedEvent($thread->user));
             event(new ThreadWasMarkedExcellentEvent($thread));
         }
-
+        //更新热度值
+        $thread->heat = $thread->heat_compute;
+        $thread->save();
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
@@ -217,7 +219,7 @@ class ThreadController extends Controller
         try {
             $thread->status = 0;
             //更新热度值
-            $thread->heat = $thread->heat;
+            $thread->heat = $thread->heat_compute;
             $this->updateOpLog($thread, '审核通过');
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
             if ($thread->subNode) {
@@ -310,7 +312,7 @@ class ThreadController extends Controller
         try {
             $thread->heat_offset = $heatOffset;
             //更新热度值
-            $thread->heat = $thread->heat;
+            $thread->heat = $thread->heat_compute;
             $thread->save();
         } catch (ValidationException $e) {
             return Redirect::back()->withErrors($e->getMessageBag());
