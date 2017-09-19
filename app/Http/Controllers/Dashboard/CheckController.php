@@ -10,17 +10,23 @@ use Hifone\Models\User;
 class CheckController extends  Controller
 {
     public function check() {
-        $users = User::get();
-        foreach ($users as $user) {
-            unset($user['roles']);
-        }
-        $users->addToIndex();
 
-        $threads = Thread::visible()->get();
-        foreach ($threads as $thread) {
-            $thread->body = strip_tags($thread->body);
-        }
-        $threads->addToIndex();
+        ini_set('memory_limit', '-1');
+        ini_set('max_execution_time', 0);
+        User::chunk(1000, function ($users) {
+            foreach ($users as $user) {
+                unset($user['roles']);
+            }
+            $users->addToIndex();
+        });
+
+        Thread::visible()->chunk(1000, function ($threads) {
+            $threads = Thread::visible()->get();
+            foreach ($threads as $thread) {
+                $thread->body = strip_tags($thread->body);
+            }
+            $threads->addToIndex();
+        });
 
         $threads = Thread::elasticSearch('规定');
 

@@ -97,13 +97,13 @@
 
                 <div class="form-group">
                     <label>{{ trans('dashboard.nodes.prompt.node') }}</label>
-                    <el-tooltip :content="'Switch value: ' + valuePrompt" placement="top" >
+                    <el-tooltip  placement="top" >
                         <el-switch
                                 v-model="valuePrompt"
                                 on-color="#13ce66"
                                 off-color="#ff4949"
-                                on-value="打开"
-                                off-value="关闭">
+                                on-value=1
+                                off-value=0>
                         </el-switch>
                     </el-tooltip>
                     <el-input  v-model="valuePrompt" placeholder="请输入内容" type="hidden" name="node[is_prompt]" value="{{ $node->prompt or null }}"></el-input>
@@ -159,7 +159,7 @@
                 imageUrl: '',
                 imageListUrl: '',
                 imageDetailUrl: '',
-                valuePrompt:'打开',
+                valuePrompt:'',
             };
         },
         methods: {
@@ -177,6 +177,7 @@
             this.imageUrl = "{{ $node->icon or null }}"
             this.imageListUrl = "{{ $node->icon_list or null }}"
             this.imageDetailUrl = "{{ $node->icon_detail or null }}"
+            this.valuePrompt = "{{  $node->is_prompt or 0  }}"
         }
     })
 </script>

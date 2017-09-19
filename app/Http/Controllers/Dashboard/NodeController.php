@@ -86,16 +86,20 @@ class NodeController extends Controller
         $userData = Request::get('user');
         $nodeData = Request::get('node');
         $moderatorData = Request::get('moderator');
+        if ('' != $userData['name']) {
+            $user = User::findByUsernameOrFail($userData['name']);
+            $user->role_id = $moderatorData['role'];
+            $moderatorData['user_id'] = $user->id;
+        }
         $nodeData['order'] = Node::max('order') + 1;
-        $user = User::findByUsernameOrFail($userData['name']);
-        $user->role_id = $moderatorData['role'];
-        $moderatorData['user_id'] = $user->id;
 
         try {
             $node = Node::create($nodeData);
             $moderatorData['node_id'] = $node->id;
-            $moderator = Moderator::create($moderatorData);
-            $this->updateOpLog($moderator, '新增板主');
+            if ('' != $userData['name']) {
+                $moderator = Moderator::create($moderatorData);
+                $this->updateOpLog($moderator, '新增版主');
+            }
             $this->updateOpLog($node, '新增主板块');
         } catch (ValidationException $e) {
             return Redirect::route('dashboard.node.create')
@@ -121,7 +125,6 @@ class NodeController extends Controller
             ->withPageTitle(trans('dashboard.nodes.edit.title').' - '.trans('dashboard.dashboard'))
             ->withSections(Section::orderBy('order')->get())
             ->withModerators(Moderator::get())
-            ->withUsers(User::get())
             ->withRole(Role::get())
             ->withNode($node);
     }

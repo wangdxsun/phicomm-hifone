@@ -17,7 +17,7 @@ use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\ThreadBll;
 use Hifone\Models\Thread;
 use Hifone\Services\Filter\WordsFilter;
-use Illuminate\Support\Facades\DB;
+use DB;
 
 class ThreadController extends ApiController
 {

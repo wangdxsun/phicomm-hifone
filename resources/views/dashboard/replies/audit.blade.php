@@ -46,7 +46,13 @@
                 </td>
                 <td>{{ $reply->bad_word }}</td>
                 <td><a href="{{ $reply->thread->url }}" target="_blank" >{{ $reply->thread->title }}</a></td>
-                <td><a data-name="{{ $reply->user->username }}" href="{{ $reply->user->url }}">{{ $reply->user->username }}</a></td>
+                <td>
+                    @if(!isset($reply->user))
+                        {{ $reply->user }}
+                    @else
+                        <a data-name="{{ $reply->user->username }}" href="{{ $reply->user->url }}">{{ $reply->user->username }}</a>
+                    @endif
+                </td>
                 <td>{{ $reply->ip }}</td>
                 <td>{{ $reply->created_at }}</td>
                 <td>

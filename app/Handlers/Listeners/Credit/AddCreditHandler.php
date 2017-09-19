@@ -53,7 +53,7 @@ class AddCreditHandler
         } elseif ($event instanceof RepliedWasAddedEvent) {
             $action = 'replied';
             $user = $event->threadUser;
-            if ($event->threadUser->id == $event->replyUser->id) {
+            if (empty($event->replyUser) || $event->threadUser->id == $event->replyUser->id) {
                 return false;
             }
         } elseif ($event instanceof ImageWasUploadedEvent) {
@@ -151,7 +151,7 @@ class AddCreditHandler
 
     protected function apply($event, $action, $user)
     {
-        if (!$action) {
+        if (!$action || !$user) {
             return;
         }
         $credit = dispatch(new AddCreditCommand($action, $user));
