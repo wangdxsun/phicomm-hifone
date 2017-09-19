@@ -61,13 +61,13 @@ class Thread extends BaseModel implements TaggableInterface
      * @var string[]
      */
     public $rules = [
-        'title'   => 'required|min:1|max:80',
-        'body'    => 'required',
-        'node_id' => 'required|int',
-        'sub_node_id' => 'required|int',
-        'user_id' => 'required|int',
-        'heat_offset' => 'int',
-    ];
+    'title'   => 'required|min:1|max:80',
+    'body'    => 'required',
+    'node_id' => 'required|int',
+    'sub_node_id' => 'required|int',
+    'user_id' => 'required|int',
+    'heat_offset' => 'int',
+];
 
     protected $mappingProperties = [
         'id' => [

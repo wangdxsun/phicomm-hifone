@@ -93,6 +93,7 @@ class DashboardRoutes
                 $router->post('link/order', 'ApiController@postUpdateLinkOrder');
                 $router->post('section/order', 'ApiController@postUpdateSectionOrder');
                 $router->post('node/order', 'ApiController@postUpdateNodeOrder');
+                $router->post('subNode/order', 'ApiController@postUpdateSubNodeOrder');
                 $router->post('adspace/order', 'ApiController@postUpdateAdspaceOrder');
                 $router->post('location/order', 'ApiController@postUpdateLocationOrder');
                 $router->post('carousel/order', 'ApiController@postUpdateCarouselOrder');

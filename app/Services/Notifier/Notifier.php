@@ -52,7 +52,7 @@ class Notifier
         foreach ($users as $follower) {
             $toUser = (!$follower instanceof User) ? $follower->user : $follower;
 
-            if (empty($toUser) || $author->id == $toUser->id) {
+            if (empty($toUser)|| empty($author) || $author->id == $toUser->id) {
                 continue;
             }
 

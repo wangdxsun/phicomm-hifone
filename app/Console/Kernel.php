@@ -11,6 +11,7 @@
 
 namespace Hifone\Console;
 
+use Hifone\Console\Commands\InitSubNode;
 use Hifone\Console\Commands\SearchImport;
 use Hifone\Console\Commands\UpdateHeat;
 use Illuminate\Console\Scheduling\Schedule;
@@ -29,6 +30,7 @@ class Kernel extends ConsoleKernel
         SendMessage::class,
         UpdateHeat::class,
         SearchImport::class,
+        InitSubNode::class,
     ];
 
     /**

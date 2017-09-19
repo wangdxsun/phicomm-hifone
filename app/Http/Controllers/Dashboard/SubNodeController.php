@@ -43,7 +43,6 @@ class SubNodeController extends Controller
 
     public function edit(SubNode $subNode)
     {
-        //dd($subNode->toArray());
         return View::make('dashboard.subNodes.create_edit')
             ->withPageTitle(trans('dashboard.nodes.edit.sub_title').' - '.trans('dashboard.dashboard'))
             ->withNodes(Node::orderBy('order')->get())
@@ -70,6 +69,7 @@ class SubNodeController extends Controller
     public function store()
     {
         $subNodeData = Request::get('subNode');
+        $subNodeData['order'] = SubNode::max('order') + 1;
         try {
             $subNode = SubNode::create($subNodeData);
             $this->updateOpLog($subNode, '新增子板块');
