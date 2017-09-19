@@ -11,7 +11,7 @@
 
 namespace Hifone\Events\Thread;
 
-use Hifone\Models\Node;
+use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
 
 final class ThreadWasMovedEvent implements ThreadEventInterface
@@ -23,14 +23,14 @@ final class ThreadWasMovedEvent implements ThreadEventInterface
      */
     public $target;
 
-    public $originalNode;
+    public $originalSubNode;
 
     /**
      * Create a new thread has reported event instance.
      */
-    public function __construct(Thread $thread, Node $originalNode)
+    public function __construct(Thread $thread, SubNode $originalSubNode)
     {
         $this->target = $thread;
-        $this->originalNode = $originalNode;
+        $this->originalSubNode = $originalSubNode;
     }
 }

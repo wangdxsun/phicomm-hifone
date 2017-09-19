@@ -20,7 +20,9 @@ use Hifone\Events\Pin\SinkWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasMarkedExcellentEvent;
 use Hifone\Http\Controllers\Controller;
+use Hifone\Models\Node;
 use Hifone\Models\Section;
+use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
 use Hifone\Services\Parsers\Markdown;
@@ -62,12 +64,11 @@ class ThreadController extends Controller
 
     public function edit(Thread $thread)
     {
-        $sections = Section::orderBy('order')->get();
+        $nodes = Node::orderBy('order')->get();
 
         $menu = $thread->status == 0 ? 'index' : 'audit';
         return View::make('dashboard.threads.create_edit')
-            ->withNode($thread->node)
-            ->withSections($sections)
+            ->withNodes($nodes)
             ->withThread($thread)
             ->withCurrentMenu($menu);
     }
@@ -82,6 +83,7 @@ class ThreadController extends Controller
     public function update(Thread $thread)
     {
         $threadData = Input::get('thread');
+        $threadData['node_id'] = SubNode::find($threadData['sub_node_id'])->node->id;
 
         $threadData['body_original'] = $threadData['body'];
         $threadData['body'] = (new Markdown())->convertMarkdownToHtml($threadData['body']);
@@ -95,7 +97,10 @@ class ThreadController extends Controller
                 ->withInput($threadData)
                 ->withErrors($e->getMessageBag());
         }
-        return Redirect::back()->withSuccess('恭喜，操作成功！');
+        if ($thread->status == 0) {
+            return Redirect::route('dashboard.thread.index')->withSuccess('恭喜，操作成功！');
+        }
+        return Redirect::route('dashboard.thread.audit')->withSuccess('恭喜，操作成功！');
     }
 
     public function pin(Thread $thread)

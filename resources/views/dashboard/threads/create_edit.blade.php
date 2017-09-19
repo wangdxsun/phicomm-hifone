@@ -26,15 +26,15 @@
                         <input type="text" class="form-control" name="thread[title]" id="thread-title" required value="{{ isset($thread) ? $thread->title : null }}">
                     </div>
                     <div class="form-group">
-                        <select class="selectpicker form-control" name="thread[node_id]" >
-                          <option value="" disabled {!! $node ? : 'selected' !!}>{{ trans('hifone.threads.pick_node') }}</option>
-                          @foreach ($sections as $section)
-                            <optgroup label="{{ $section->name }}">
-                              @foreach ($section->nodes as $snode)
-                                <option value="{{ $snode->id }}" {!! (Input::old('node_id') == $snode->id || (isset($node) && $node->id==$snode->id)) ? 'selected' : ''!!} > - {{ $snode->name }}</option>
-                              @endforeach
-                            </optgroup>
-                          @endforeach
+                        <select class="selectpicker form-control" name="thread[sub_node_id]" >
+                            @foreach ($nodes as $node)
+                                <optgroup label="{{ $node->name }}">
+                                    @foreach($node->subNodes as $subNode)
+                                        <option value="{{ $subNode->id }}" {!! (Input::old('sub_node_id') == $subNode->id || (isset($thread) && $thread->subNode->id == $subNode->id)) ? 'selected' : '' !!} >
+                                            -- {{ $subNode->name }}</option>
+                                    @endforeach
+                                </optgroup>
+                            @endforeach
                         </select>
                     </div>
                     <div class="form-group">
@@ -48,8 +48,8 @@
 
                 <div class='form-group'>
                     <div class='btn-group'>
-                        <button type="submit" class="btn btn-success">{{ trans('forms.update') }}</button>
-                        <a class="btn btn-default" href="{{ route('dashboard.thread.index') }}">{{ trans('forms.cancel') }}</a>
+                        <button type="submit" class="btn btn-success" >{{ trans('forms.update') }}</button>
+                        <a class="btn btn-default" href="{!! ($thread->status == 0) ? route('dashboard.thread.index') : route('dashboard.thread.audit') !!} ">{{ trans('forms.cancel') }}</a>
                     </div>
                 </div>
             </form>
