@@ -379,15 +379,18 @@ class Thread extends BaseModel implements TaggableInterface
     //动态计算热度值
     public function getHeatComputeAttribute()
     {
-        $view_score = 1;
-        $like_score = 20;
-        $reply_score = 50;
-        $time_score = 1000;
-        $excellent = $this->is_excellent != 0 ? 10000 : 0;
+        $excellent_score = Config::get('setting.excellent_score', 10000);
+        $view_score = Config::get('setting.view_score', 1);
+        $like_score = Config::get('setting.like_score', 20);
+        $reply_score = Config::get('setting.reply_score', 50);
+        $time_score = Config::get('setting.time_score', 1000);
+
+        $excellent = $this->is_excellent != 0 ? $excellent_score : 0;
 
         $createAt = new Carbon($this['attributes']['created_at']);
         $now = Carbon::now();
         $timeAlive = $now->diffInSeconds($createAt);
+
         $heat = $this->view_count * $view_score + $this->like_count * $like_score + $this->reply_count * $reply_score + $excellent
             + $this->heatCoolingValue($timeAlive, $time_score) + $this->heat_offset;
         $heat = ($heat > -100000) ? $heat : -100000;
