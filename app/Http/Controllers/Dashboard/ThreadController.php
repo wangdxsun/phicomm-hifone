@@ -147,7 +147,9 @@ class ThreadController extends Controller
             event(new ExcellentWasAddedEvent($thread->user));
             event(new ThreadWasMarkedExcellentEvent($thread));
         }
-
+        //更新热度值
+        $thread->heat = $thread->heat_compute;
+        $thread->save();
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
