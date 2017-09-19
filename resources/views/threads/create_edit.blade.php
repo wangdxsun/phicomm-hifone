@@ -35,7 +35,7 @@
                                                 <option value="{{ $item->id }}" style="font-size:15px;font-weight:600">{{ $item->name }}</option>
                                             @endif
 
-                                            @if(isset($item->subNodes))
+                                            @if(isset($item->subNodes) && $item->name != '公告活动')
                                                 @foreach($item->subNodes as $subItem)
                                                     <option value="{{ $subItem->id }}" {!! (Input::old('sub_node_id') == $subItem->id || (isset($subNode) && $subNode->id==$subItem->id)) ? 'selected' : '' !!} >
                                                         -- {{ $subItem->name }}</option>
