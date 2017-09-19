@@ -18,6 +18,7 @@ use Hifone\Models\Link;
 use Hifone\Models\Location;
 use Hifone\Models\Node;
 use Hifone\Models\Section;
+use Hifone\Models\SubNode;
 use Illuminate\Support\Facades\Request;
 
 class ApiController extends Controller
@@ -57,6 +58,18 @@ class ApiController extends Controller
         }
 
         return $nodeData;
+    }
+
+    public function postUpdateSubNodeOrder()
+    {
+        $subNodeData = Request::get('ids');
+
+        foreach ($subNodeData as $order => $subNodeId) {
+            // Ordering should be 1-based, data comes in 0-based
+            SubNode::find($subNodeId)->update(['order' => $order + 1]);
+        }
+
+        return $subNodeData;
     }
 
     public function postUpdateAdspaceOrder()
