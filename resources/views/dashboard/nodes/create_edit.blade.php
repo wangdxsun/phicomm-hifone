@@ -97,7 +97,7 @@
 
                 <div class="form-group">
                     <label>{{ trans('dashboard.nodes.prompt.node') }}</label>
-                    <el-tooltip  placement="top" >
+                    <el-tooltip  placement="hidden" >
                         <el-switch
                                 v-model="valuePrompt"
                                 on-color="#13ce66"
