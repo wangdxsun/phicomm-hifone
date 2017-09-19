@@ -26,11 +26,11 @@
                     </div>
                     <div class="form-group">
                         <label>类型</label>
-                        {!!  Form::select('carousel[type]', [0 => '外部链接',1 => '帖子ID'], $carousel->type,['class' => 'form-control'])!!}
+                        {!!  Form::select('carousel[type]', [0 => '外部链接',1 => '帖子ID'], isset($carousel) ? $carousel->type : null,['class' => 'form-control'])!!}
                     </div>
                     <div class="form-group">
                         <label>链接/ID</label>
-                        {!! Form::url('carousel[url]', isset($carousel) ? $carousel->jump_url : null, ['class' => 'form-control']) !!}
+                        {!! Form::text('carousel[url]', isset($carousel) ? $carousel->url : null, ['class' => 'form-control']) !!}
                     </div>
                     <div class="form-group">
                         <label>描述</label>

@@ -71,7 +71,7 @@ class Reply extends BaseModel
 
     public function user()
     {
-        return $this->belongsTo(User::class)->select(['id', 'username', 'avatar_url','password',
+        return $this->belongsTo(User::class)->select(['id', 'username', 'avatar_url','password','score',
             'notification_reply_count','notification_at_count','notification_system_count','notification_chat_count','notification_follow_count']);
     }
 
