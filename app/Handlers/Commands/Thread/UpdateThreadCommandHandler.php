@@ -15,6 +15,7 @@ use Hifone\Commands\Thread\UpdateThreadCommand;
 use Hifone\Events\Thread\ThreadWasMarkedExcellentEvent;
 use Hifone\Events\Thread\ThreadWasMovedEvent;
 use Hifone\Models\Node;
+use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
 use Hifone\Services\Dates\DateFactory;
 use Hifone\Services\Tag\AddTag;
@@ -40,8 +41,9 @@ class UpdateThreadCommandHandler
 
     public function handle(UpdateThreadCommand $command)
     {
+
         $thread = $command->thread;
-        $original_node_id = $thread->node_id;
+        $original_subNode_id = $thread->sub_node_id;
 
         if (isset($command->data['body']) && $command->data['body']) {
             $command->data['body_original'] = $command->data['body'];
@@ -50,7 +52,9 @@ class UpdateThreadCommandHandler
         }
 
         $thread->update($this->filter($command->data));
-        $thread->updateIndex();
+        if ($thread->status == 0) {
+            $thread->updateIndex();
+        }
 
         // The thread was added successfully, so now let's deal with the tags.
         $tags = isset($command->data['tags']) ? $command->data['tags'] : [];
@@ -60,9 +64,9 @@ class UpdateThreadCommandHandler
             event(new ThreadWasMarkedExcellentEvent($thread));
         }
 
-        if (isset($command->data['node_id']) && $original_node_id != $command->data['node_id']) {
-            $originalNode = Node::findOrFail($original_node_id);
-            event(new ThreadWasMovedEvent($command->thread, $originalNode));
+        if (isset($command->data['sub_node_id']) && $original_subNode_id != $command->data['sub_node_id']) {
+            $originalSubNode = SubNode::findOrFail($original_subNode_id);
+            event(new ThreadWasMovedEvent($command->thread, $originalSubNode));
         }
 
         return $thread;
