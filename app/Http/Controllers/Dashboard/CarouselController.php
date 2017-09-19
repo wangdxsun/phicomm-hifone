@@ -14,6 +14,7 @@ namespace Hifone\Http\Controllers\Dashboard;
 use AltThree\Validator\ValidationException;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Carousel;
+use Hifone\Models\Thread;
 use \Redirect;
 use \Request;
 use \View;
@@ -66,6 +67,15 @@ class CarouselController extends Controller
     public function store()
     {
         $carouselData = Request::get('carousel');
+
+        if ($carouselData['type'] == 1) {
+            $thread_id = $carouselData['url'];
+            $thread = Thread::find($thread_id);
+            if (!$thread) {
+                return Redirect::back()->withErrors('您所配置的帖子不存在');
+            }
+        }
+
         try {
             $carousel = Carousel::create($carouselData);
             $this->updateOpLog($carousel, '添加banner');
@@ -90,6 +100,14 @@ class CarouselController extends Controller
     public function update(Carousel $carousel)
     {
         $carouselData = Request::get('carousel');
+        if ($carouselData['type'] == 1) {
+            $thread_id = $carouselData['url'];
+            $thread = Thread::find($thread_id);
+            if (!$thread) {
+                return Redirect::back()->withErrors('您所配置的帖子不存在');
+            }
+        }
+
         try {
             $carousel->update($carouselData);
             $this->updateOpLog($carousel, '修改banner');
