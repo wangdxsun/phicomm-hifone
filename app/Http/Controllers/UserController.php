@@ -84,6 +84,7 @@ class UserController extends Controller
         $data = Input::only('nickname', 'company', 'website', 'signature', 'bio', 'locale');
         try {
             $user->update($data);
+            $user->updateIndex();
         } catch (ValidationException $e) {
             return Redirect::route('user.edit')
                 ->withInput(Input::all())
@@ -110,8 +111,6 @@ class UserController extends Controller
 
     public function threads(User $user)
     {
-//        $threads = Thread::visible()->forUser($user->id)->recent()->paginate(15);
-
         //web端查看自己或管理员查看帖子，包括自己未审核通过的贴子
         if ($user->id == Auth::id() || Auth::user()->can('view_thread')) {
             $threads = $user->threads()->recent()->paginate(15);
@@ -207,6 +206,7 @@ class UserController extends Controller
         $user = Auth::user();
         $user->avatar_url = '/uploads/avatar/'.$path.$user_id.'.jpg';
         $user->save();
+        $user->updateIndex();
 
         event(new AvatarWasUploadedEvent(Auth::user()));
 

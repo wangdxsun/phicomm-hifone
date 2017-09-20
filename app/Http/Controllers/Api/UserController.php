@@ -95,6 +95,7 @@ class UserController extends ApiController
     {
         $avatar = $commonBll->upload();
         Auth::user()->update(['avatar_url' => $avatar['filename']]);
+        Auth::user()->updateIndex();
         $phicommBll->upload($avatar['localFile']);
         unset($avatar['localFile']);
 
