@@ -158,8 +158,6 @@ class ThreadController extends Controller
         $this->needAuthorOrAdminPermission($thread->user_id);
         $sections = Section::orderBy('order')->get();
 
-        $thread->body = $thread->body_original;
-
         return $this->view('threads.create_edit')
             ->withThread($thread)
             ->withSections($sections)
