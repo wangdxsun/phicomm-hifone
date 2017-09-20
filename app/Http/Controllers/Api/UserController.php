@@ -63,7 +63,9 @@ class UserController extends ApiController
     {
         $followers = $followBll->followers($user);
         foreach ($followers as &$follower) {
-            $follower['followed'] = User::hasFollowUser($follower['user']);
+            if (isset($follower['user'])) {
+                $follower['followed'] = User::hasFollowUser($follower['user']);
+            }
         }
 
         return $followers;

@@ -82,7 +82,7 @@
                             <td><a href="{{ $reply->thread->url }}" target="_blank" >{{ $reply->thread->title }}</a></td>
                             <td><a href="{{ $reply->thread->node->url }}" target="_blank" >{{ $reply->thread->node->name }}</a></td>
                             <td>
-                                @if(isset($reply->user))
+                                @if(!isset($reply->user))
                                     {{ $reply->user }}
                                 @else
                                 <a href="{{ $reply->user->url }}" target="_blank">{{ $reply->user->username }}</a>
