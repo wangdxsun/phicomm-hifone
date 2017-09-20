@@ -51,9 +51,13 @@ class SubNodeController extends Controller
 
     public function update(SubNode $subNode)
     {
+        $threads = $subNode->threads;
         $subNodeData = Request::get('subNode');
         try {
             $subNode->update($subNodeData);
+            foreach ($threads as $thread) {
+                $thread->update(['node_id' => $subNodeData['node_id']]);
+            }
             $this->updateOpLog($subNode, '修改板块');
         } catch (ValidationException $e) {
             return Redirect::route('dashboard.subNode.edit', ['id' => $subNode->id])
