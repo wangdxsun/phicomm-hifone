@@ -30,6 +30,7 @@ class UserController extends ApiController
             if ($cloudUser['img'] && $user->avatar_url != $cloudUser['img'] && $cloudUser['img'] != 'Uploads/default/default.jpg') {
                 $user->avatar_url = $cloudUser['img'];
                 $user->save();
+                $user->updateIndex();
             }
             return $user;
         } else {

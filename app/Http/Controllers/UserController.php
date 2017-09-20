@@ -16,6 +16,7 @@ use Auth;
 use Hash;
 use Hifone\Hashing\PasswordHasher;
 use Hifone\Http\Bll\FollowBll;
+use Hifone\Http\Bll\PhicommBll;
 use Hifone\Models\Identity;
 use Hifone\Models\Location;
 use Hifone\Models\Provider;
@@ -183,7 +184,7 @@ class UserController extends Controller
             ->withSuccess(trans('hifone.login.oauth.unbound_success'));
     }
 
-    public function avatarupdate()
+    public function avatarupdate(PhicommBll $phicommBll)
     {
         $user_id = Auth::id();
         $originFile = Input::file('avatar');
@@ -195,16 +196,12 @@ class UserController extends Controller
         $originFile->move($destinationPath, $saveName);
         $img = Image::make($destinationPath.'/'.$saveName);
 
-        $img->resize(192, 192)
-            ->encode('jpg')
-            ->save();
-
-        $img->resize(48, 48)
-            ->encode('jpg')
-            ->save($destinationPath.$user_id.'_small.jpg');
+        $img->resize(192, 192)->encode('jpg')->save();
+        $img->resize(48, 48)->encode('jpg')->save($destinationPath.$user_id.'_small.jpg');
 
         $user = Auth::user();
         $user->avatar_url = '/uploads/avatar/'.$path.$user_id.'.jpg';
+        $phicommBll->upload($destinationPath.'/'.$saveName);
         $user->save();
         $user->updateIndex();
 
