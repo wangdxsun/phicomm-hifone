@@ -148,7 +148,7 @@ return [
     'users' => [
         'users'                     => '用户',
         'id'                        => 'ID',
-        'username'                  => '用户名',
+        'username'                  => '昵称',
         'email'                     => '邮箱地址',
         'avatar'                    => '头像',
         'avatar_upload_success'     => '头像更新成功',
@@ -282,7 +282,7 @@ return [
     'login' => [
         'login'                => '登录',
         'register'             => '注册',
-        'username'             => '用户名',
+        'username'             => '昵称',
         'login_placeholder'    => '用户名或邮箱地址',
         'password'             => '密码',
         'auth_prompt'          => '您好, 请先登录!',
