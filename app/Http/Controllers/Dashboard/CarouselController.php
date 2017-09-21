@@ -75,7 +75,6 @@ class CarouselController extends Controller
                 return Redirect::back()->withErrors('您所配置的帖子不存在');
             }
         }
-
         try {
             $carousel = Carousel::create($carouselData);
             $this->updateOpLog($carousel, '添加banner');
@@ -107,7 +106,6 @@ class CarouselController extends Controller
                 return Redirect::back()->withErrors('您所配置的帖子不存在');
             }
         }
-
         try {
             $carousel->update($carouselData);
             $this->updateOpLog($carousel, '修改banner');
