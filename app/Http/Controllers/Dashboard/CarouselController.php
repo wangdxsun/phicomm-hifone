@@ -70,9 +70,9 @@ class CarouselController extends Controller
 
         if ($carouselData['type'] == 1) {
             $thread_id = $carouselData['url'];
-            $thread = Thread::find($thread_id);
+            $thread = Thread::visible()->find($thread_id);
             if (!$thread) {
-                return Redirect::back()->withErrors('您所配置的帖子不存在');
+                return Redirect::back()->withErrors('您所配置的帖子不可见或不存在');
             }
         }
         try {
@@ -101,9 +101,9 @@ class CarouselController extends Controller
         $carouselData = Request::get('carousel');
         if ($carouselData['type'] == 1) {
             $thread_id = $carouselData['url'];
-            $thread = Thread::find($thread_id);
+            $thread = Thread::visible()->find($thread_id);
             if (!$thread) {
-                return Redirect::back()->withErrors('您所配置的帖子不存在');
+                return Redirect::back()->withErrors('您所配置的帖子不可见或不存在');
             }
         }
         try {
