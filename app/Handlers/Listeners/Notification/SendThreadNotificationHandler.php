@@ -55,7 +55,6 @@ class SendThreadNotificationHandler
             $users->increment('notification_at_count',1);
         }
 
-
         app('notifier')->batchNotify(
             'thread_mention',
             $thread->user,

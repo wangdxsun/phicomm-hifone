@@ -22,15 +22,16 @@ class NodeController extends AppController
 
     public function sections()
     {
-        $sections = Section::orderBy('order')->get();
-        foreach ($sections as $section) {
-            $nodes = $section->nodes;
-            foreach ($nodes as $node) {
-                $subNodes = $node->subNodes()->orderBy('order')->get();
-                $node['subNodes'] = $subNodes;
-            }
-            $sections['nodes'] = $nodes;
-        }
+        $sections = Section::orderBy('order')->with(['nodes.subNodes'])->get();
+//        $sections2 = Section::orderBy('order')->get();
+//        foreach ($sections2 as $section) {
+//            $nodes = $section->nodes;
+//            foreach ($nodes as $node) {
+//                $subNodes = $node->subNodes()->orderBy('order')->get();
+//                $node['subNodes'] = $subNodes;
+//            }
+//            $sections2['nodes'] = $nodes;
+//        }
         return $sections;
     }
 
