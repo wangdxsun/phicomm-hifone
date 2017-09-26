@@ -96,11 +96,7 @@
                         <td>{{ $thread->view_count }}</td>
                         <td>{{ $thread->created_time }}</td>
                         <td>
-                            @if(!isset($thread->last_op_user))
-                                {{'自动审核'}}
-                            @else
-                            {{ $thread->last_op_user->username }}
-                            @endif
+                            {{ $thread->lastOpUser->username }}
                         </td>
                         <td>{{ $thread->last_op_time }}</td>
                         <td>

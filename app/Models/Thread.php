@@ -112,7 +112,7 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function node()
     {
-        return $this->belongsTo(Node::class)->select(['id', 'name','thread_count','description']);
+        return $this->belongsTo(Node::class);
     }
 
     public function subNode()
@@ -219,12 +219,12 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function scopeHot($query)
     {
-        return $query->orderBy('order', 'desc')->orderBy('heat', 'desc');
+        return $query->orderBy('order', 'desc')->orderBy('heat', 'desc')->orderBy('created_at', 'desc');
     }
 
     public function scopePinAndRecentReply($query)
     {
-        return $query->orderBy('order', 'desc')->orderBy('updated_at', 'desc');
+        return $query->orderBy('order', 'desc')->orderBy('created_at', 'desc');
     }
 
     public function scopeExcellent($query)

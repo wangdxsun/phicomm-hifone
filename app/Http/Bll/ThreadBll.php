@@ -149,7 +149,9 @@ class ThreadBll extends BaseBll
             $thread->status = 0;
             $this->updateOpLog($thread, '自动审核通过');
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
-            $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);
+            if ($thread->subNode) {
+                $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);
+            }
             $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
             event(new ThreadWasAuditedEvent($thread));
             DB::commit();

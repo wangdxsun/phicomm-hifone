@@ -19,10 +19,9 @@ use Hifone\Models\Role;
 use Hifone\Models\Section;
 use Hifone\Models\SubNode;
 use Hifone\Models\User;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\View;
-use Mockery\Exception;
+use Redirect;
+use Request;
+use View;
 
 class NodeController extends Controller
 {
@@ -87,7 +86,12 @@ class NodeController extends Controller
         $nodeData = Request::get('node');
         $moderatorData = Request::get('moderator');
         if ('' != $userData['name']) {
-            $user = User::findByUsernameOrFail($userData['name']);
+            $user = User::where('username',$userData['name'])->get();
+            if ([] == $user->toArray()) {
+                return Redirect::route('dashboard.node.create')
+                    ->withInput(Request::all())
+                    ->withErrors('添加版主失败，用户不存在！');
+            }
             $user->role_id = $moderatorData['role'];
             $moderatorData['user_id'] = $user->id;
         }
@@ -142,7 +146,12 @@ class NodeController extends Controller
         $moderatorData = Request::get('moderator');
         $userData = Request::get('user');
         if ('' != $userData['name']) {
-            $user = User::findByUsernameOrFail($userData['name']);
+            $user = User::where('username',$userData['name'])->get();
+            if ([] == $user->toArray()) {
+                return Redirect::route('dashboard.node.edit', ['id' => $node->id])
+                    ->withInput(Request::all())
+                    ->withErrors('添加版主失败，用户不存在！');
+            }
             $user->role_id = $moderatorData['role'];
             $moderatorData['user_id'] = $user->id;
         }

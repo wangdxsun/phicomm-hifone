@@ -37,7 +37,7 @@
 
                                             @if(isset($item->subNodes) && $item->name != '公告活动')
                                                 @foreach($item->subNodes as $subItem)
-                                                    <option value="{{ $subItem->id }}" {!! (Input::old('sub_node_id') == $subItem->id || (isset($subNode) && $subNode->id==$subItem->id)) ? 'selected' : '' !!} >
+                                                    <option value="{{ $subItem->id }}" {!! (Input::old('thread')['sub_node_id'] == $subItem->id || (isset($subNode) && $subNode->id==$subItem->id)) ? 'selected' : '' !!} >
                                                         -- {{ $subItem->name }}</option>
                                                 @endforeach
                                             @endif
@@ -47,37 +47,11 @@
                             </select>
                         </div>
 
-
-                        <!-- editor start -->
-                        {{--@include('threads.partials.editor_toolbar')--}}
-                    <!-- end -->
-                            {{--注释markdown编辑器，修改成新的编辑器用于发帖--}}
-
-                        {{--<div class="form-group">--}}
-                            {{--{!! Form::textarea('thread[body]', isset($thread) ? $thread->body_original : null, ['class' => 'post-editor form-control',--}}
-                                                              {{--'rows' => 15,--}}
-                                                              {{--'style' => "overflow:hidden",--}}
-                                                              {{--'id' => 'body_field',--}}
-                                                              {{--'placeholder' => trans('hifone.markdown_support')]) !!}--}}
-                        {{--</div>--}}
-                            @include('vendor.ueditor.assets')
-                            <div class="form-group">
-                                <label>{{ trans('hifone.threads.body') }}</label>
-                                <script id="container" name="thread[body]" type="text/plain">{!! isset($thread) ? $thread->body : null !!}</script>
-                            </div>
-
-                        {{--<div class="form-group">--}}
-                            {{--<select class="form-control js-tag-tokenizer" multiple="multiple" name="thread[tags][]">--}}
-                                {{--@if(isset($thread))--}}
-                                    {{--@foreach($thread->tags as $tag)--}}
-                                        {{--<option selected="selected">{{ $tag->name }}</option>--}}
-                                    {{--@endforeach--}}
-                                {{--@endif--}}
-                            {{--</select>--}}
-                            {{--<small>--}}
-                                {{--{{ trans('hifone.tags.tags_help') }}--}}
-                            {{--</small>--}}
-                        {{--</div>--}}
+                        @include('vendor.ueditor.assets')
+                        <div class="form-group">
+                            <label>{{ trans('hifone.threads.body') }}</label>
+                            <script id="container" name="thread[body]" type="text/plain">{!! isset($thread) ? $thread->body : null !!}</script>
+                        </div>
 
                         <div class="form-group status-post-submit">
                             {!! Form::submit(trans('forms.publish'), ['class' => 'btn btn-primary col-xs-2', 'id' => 'thread-create-submit']) !!}
@@ -100,17 +74,6 @@
         </div>
 
         <div class="col-md-3 side-bar">
-
-            {{--@if ( $node )--}}
-                {{--<div class="panel panel-default corner-radius help-box">--}}
-                    {{--<div class="panel-heading text-center">--}}
-                        {{--<h3 class="panel-title">{{ trans('hifone.nodes.current') }} : {{ $node->name }}</h3>--}}
-                    {{--</div>--}}
-                    {{--<div class="panel-body">--}}
-                        {{--{{ $node->description }}--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-            {{--@endif--}}
 
             <div class="panel panel-default corner-radius help-box">
                 <div class="panel-heading text-center">
@@ -149,26 +112,27 @@
 
         </div>
     </div>
-    <script type="text/javascript">
-        if (Hifone.Config.role == '创始人' || Hifone.Config.role == '管理员'){
-            var data =['fontsize','forecolor','backcolor','bold', 'italic', 'underline', 'strikethrough', 'blockquote', 'insertunorderedlist', 'insertorderedlist', 'justifyleft','justifycenter', 'justifyright',  'link', 'insertimage','attachment','fullscreen'];
-        }else{
-            var data =['fontsize','bold', 'italic', 'underline', 'strikethrough', 'blockquote', 'insertunorderedlist', 'insertorderedlist', 'justifyleft','justifycenter', 'justifyright',  'link', 'insertimage','fullscreen'];
-        }
-        var ue = UE.getEditor('container',{
-            toolbars: [
-                data
-            ],
-            elementPathEnabled: false,
-            enableContextMenu: false,
-            autoClearEmptyNode:true,
-            wordCount:false,
-            imagePopup:false,
-            initialFrameHeight:350,
-            autotypeset:{ indent: true,imageBlockLine: 'center' }
-        });
-        ue.ready(function() {
-            ue.execCommand('serverparam', '_token', '{{ csrf_token() }}'); // 设置 CSRF token.
-        });
-    </script>
+<script type="text/javascript">
+    if (Hifone.Config.role == '创始人' || Hifone.Config.role == '管理员'){
+        var data =['fontsize','forecolor','backcolor','bold', 'italic', 'underline', 'strikethrough', 'blockquote', 'insertunorderedlist', 'insertorderedlist', 'justifyleft','justifycenter', 'justifyright',  'link', 'insertimage','attachment','fullscreen'];
+    }else{
+        var data =['fontsize','bold', 'italic', 'underline', 'strikethrough', 'blockquote', 'insertunorderedlist', 'insertorderedlist', 'justifyleft','justifycenter', 'justifyright',  'link', 'insertimage','fullscreen'];
+    }
+    var ue = UE.getEditor('container',{
+        toolbars: [
+            data
+        ],
+        elementPathEnabled: false,
+        enableContextMenu: false,
+        autoClearEmptyNode:true,
+        wordCount:false,
+        imagePopup:false,
+        initialFrameHeight:350,
+        autotypeset:{ indent: true,imageBlockLine: 'center' }
+    });
+    ue.ready(function() {
+        ue.execCommand('serverparam', '_token', '{{ csrf_token() }}'); // 设置 CSRF token.
+    });
+</script>
+
 @stop

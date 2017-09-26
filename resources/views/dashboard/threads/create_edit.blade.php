@@ -40,9 +40,6 @@
                     <div class="form-group">
                         <label>{{ trans('hifone.threads.body') }}</label>
                         <script id="container" name="thread[body]" type="text/plain">{!!  isset($thread) ? $thread->body : null !!}</script>
-                        {{--<div class='markdown-control'>--}}
-                            {{--<textarea name="c" class="form-control" rows="10">{{ isset($thread) ? $thread->body_original : null }}</textarea>--}}
-                        {{--</div>--}}
                     </div>
                 </fieldset>
 

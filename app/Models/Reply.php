@@ -34,7 +34,7 @@ class Reply extends BaseModel
         'last_op_reason',
         'ip',
     ];
-
+    
     protected $hidden = ['body_original', 'bad_word', 'is_block', 'ip', 'last_op_user_id', 'last_op_time', 'last_op_reason',
         'updated_at', 'deleted_at'];
 
