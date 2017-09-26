@@ -11,6 +11,7 @@ namespace Hifone\Http\Controllers\Api;
 use Hifone\Http\Bll\NodeBll;
 use Hifone\Models\Node;
 use Hifone\Models\Section;
+use Hifone\Models\Thread;
 
 class NodeController extends ApiController
 {
@@ -21,7 +22,10 @@ class NodeController extends ApiController
 
     public function sections()
     {
-        $sections = Section::orderBy('order')->with(['nodes.subNodes'])->get();
+        //除去无子版块的版块信息
+        $sections = Section::orderBy('order')->with(['nodes.subNodes', 'nodes' => function ($query) {
+            $query->has('subNodes');
+        }])->get();
         return $sections;
     }
 

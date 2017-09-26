@@ -25,7 +25,6 @@ class NotificationController extends ApiController
             'messages' => $messages,
             'systems' => $systems,
         ];
-
         return $notifications;
     }
 

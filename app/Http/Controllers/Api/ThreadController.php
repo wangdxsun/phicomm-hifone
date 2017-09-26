@@ -50,6 +50,7 @@ class ThreadController extends ApiController
         }
 
         $thread = $threadBll->createThread();
+        $thread->heat = $thread->heat_compute;
         $post = $thread->title.$thread->body;
         if (Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($post)) || $threadBll->isContainsImageOrUrl($post)) {
             if (isset($badWord)) {

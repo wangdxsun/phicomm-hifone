@@ -119,7 +119,7 @@ class ThreadController extends Controller
         try {
             $thread = $threadBll->createThread();
             $thread->heat = $thread->heat_compute;
-            $post = $thread->body . $thread->title;
+            $post = $thread->title . $thread->body;
             if (Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($post)) || $threadBll->isContainsImageOrUrl($post)) {
                 if (isset($badWord)) {
                     $thread->bad_word = $badWord;
@@ -128,7 +128,7 @@ class ThreadController extends Controller
                 $thread->body = app('parser.emotion')->parse($thread->body);
                 $thread->save();
                 return Redirect::route('thread.index')
-                    ->withSuccess('帖子发表成功，请耐心等待审核');
+                    ->withSuccess('帖子已提交，待审核');
             }
             $thread->body = app('parser.at')->parse($thread->body);
             $thread->body = app('parser.emotion')->parse($thread->body);
@@ -137,7 +137,7 @@ class ThreadController extends Controller
             $threadBll->threadPassAutoAudit($thread);
 
             return Redirect::route('thread.show', ['thread' => $thread->id])
-                ->withSuccess('帖子审核通过，发表成功！');
+                ->withSuccess('发布成功');
 
         } catch (ValidationException $e) {
                 return Redirect::route('thread.create')
