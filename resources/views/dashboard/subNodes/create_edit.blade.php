@@ -75,11 +75,8 @@
         el: '#app',
         data: function () {
             return {
-                valuePrompt:'',
+                valuePrompt:"{{  $subNode->is_prompt or 0  }}",
             };
-        },
-        mounted: function () {
-            this.valuePrompt = "{{  $subNode->is_prompt or 0  }}"
         }
     })
 </script>

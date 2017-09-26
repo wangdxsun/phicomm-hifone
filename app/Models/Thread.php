@@ -149,7 +149,7 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function node()
     {
-        return $this->belongsTo(Node::class)->select(['id', 'name','thread_count','description']);
+        return $this->belongsTo(Node::class);
     }
 
     public function subNode()

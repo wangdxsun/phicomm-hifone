@@ -133,12 +133,13 @@ class ThreadController extends Controller
             $thread->body = app('parser.at')->parse($thread->body);
             $thread->body = app('parser.emotion')->parse($thread->body);
             $thread->save();
-            $thread->addToIndex();
+            //$thread->addToIndex();
             $threadBll->threadPassAutoAudit($thread);
+
             return Redirect::route('thread.show', ['thread' => $thread->id])
                 ->withSuccess('帖子审核通过，发表成功！');
 
-        } catch (\Exception $e) {
+        } catch (ValidationException $e) {
                 return Redirect::route('thread.create')
                     ->withInput(Input::all())
                     ->withErrors($e->getMessageBag());

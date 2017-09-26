@@ -30,7 +30,7 @@
                             <img v-if="imageUrl" :src="imageUrl" class="el-avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
-                        <el-input v-model="imageUrl" type="hidden" placeholder="请输入内容" name="node[icon]" value="{{ $node->icon or null }}"></el-input>
+                        <el-input v-model="imageUrl" type="hidden" placeholder="请输入内容" name="node[icon]"></el-input>
                     </div>
 
                     <div class="col-xs-4">
@@ -43,7 +43,7 @@
                             <img v-if="imageListUrl" :src="imageListUrl" class="el-avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
-                        <el-input  v-model="imageListUrl" placeholder="请输入内容" type="hidden" name="node[icon_list]" value="{{ $node->icon_list or null }}"></el-input>
+                        <el-input  v-model="imageListUrl" placeholder="请输入内容" type="hidden" name="node[icon_list]"></el-input>
                     </div>
 
                     <div class="col-xs-4">
@@ -56,7 +56,7 @@
                             <img v-if="imageDetailUrl" :src="imageDetailUrl" class="el-avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
-                        <el-input  v-model="imageDetailUrl" placeholder="请输入内容" type="hidden" name="node[icon_detail]" value="{{ $node->icon_detail or null }}"></el-input>
+                        <el-input  v-model="imageDetailUrl" placeholder="请输入内容" type="hidden" name="node[icon_detail]"></el-input>
                     </div>
                 </div>
                 <div class="form-group">
@@ -156,10 +156,10 @@
         el: '#app',
         data: function () {
             return {
-                imageUrl: '',
-                imageListUrl: '',
-                imageDetailUrl: '',
-                valuePrompt:'',
+                imageUrl: "{{ isset($node) ? ($node->icon) : (Input::old('node')['icon']) }}",
+                imageListUrl: "{{ isset($node) ? ($node->icon_list) : (Input::old('node')['icon_list']) }}",
+                imageDetailUrl: "{{ isset($node) ? ($node->icon_detail) : (Input::old('node')['icon_detail']) }}",
+                valuePrompt: "{{  $node->is_prompt or 0  }}",
             };
         },
         methods: {
@@ -172,12 +172,6 @@
             handleAvatarSuccess3: function (res) {
                 this.imageDetailUrl = res.filename;
             },
-        },
-        mounted: function () {
-            this.imageUrl = "{{ $node->icon or null }}"
-            this.imageListUrl = "{{ $node->icon_list or null }}"
-            this.imageDetailUrl = "{{ $node->icon_detail or null }}"
-            this.valuePrompt = "{{  $node->is_prompt or 0  }}"
         }
     })
 </script>
