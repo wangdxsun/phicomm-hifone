@@ -73,21 +73,8 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
             'analyzer' => 'ik_max_word',
             'search_analyzer' => 'ik_max_word',
         ],
-        'id' => [
-            'type' => 'integer',
-            'index' => 'no',
-        ],
-        'follower_count' => [
-            'type' => 'integer',
-            'index' => 'no',
-        ],
-        'avatar_url' => [
-            'type' => 'string',
-            'index' => 'no',
-        ],
-        'role' => [
-            'type' => 'string',
-            'index' => 'no',
+        'score' => [
+            'type' => 'float'
         ]
     ];
 

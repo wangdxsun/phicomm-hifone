@@ -46,25 +46,16 @@ class SearchImport extends Command
      */
     public function handle()
     {
-        Thread::deleteIndex();
-        User::deleteIndex();
         ini_set('memory_limit', '-1');
         ini_set('max_execution_time', 0);
-        User::chunk(1000, function ($users) {
-            foreach ($users as $user) {
-                unset($user['roles']);
-            }
-            $users->addToIndex();
-        });
 
-        Thread::visible()->chunk(1000, function ($threads) {
-            $threads = Thread::visible()->get();
-            foreach ($threads as $thread) {
-                $thread->body = strip_tags($thread->body);
-            }
-            $threads->addToIndex();
-        });
-
+        Thread::deleteIndex();
+        Thread::createIndex();
+        User::putMapping();
+        Thread::addAllToIndex();
+        User::addAllToIndex();
         echo 'Import Data into ElasticSearch Successfully';
+
+        return;
     }
 }

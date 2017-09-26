@@ -61,39 +61,15 @@ class Thread extends BaseModel implements TaggableInterface
      * @var string[]
      */
     public $rules = [
-    'title'   => 'required|min:1|max:80',
-    'body'    => 'required',
-    'node_id' => 'required|int',
-    'sub_node_id' => 'required|int',
-    'user_id' => 'required|int',
-    'heat_offset' => 'int',
-];
+        'title'   => 'required|min:5|max:80',
+        'body'    => 'required',
+        'node_id' => 'required|int',
+        'sub_node_id' => 'required|int',
+        'user_id' => 'required|int',
+        'heat_offset' => 'int',
+    ];
 
     protected $mappingProperties = [
-        'id' => [
-            'type' => 'integer',
-            'index' => 'no'
-        ],
-        'user_id' => [
-            'type' => 'integer',
-            'index' => 'no'
-        ],
-        'node_id' => [
-            'type' => 'integer',
-            'index' => 'no'
-        ],
-        'view_count' => [
-            'type' => 'integer',
-            'index' => 'no'
-        ],
-        'reply_count' => [
-            'type' => 'integer',
-            'index' => 'no'
-        ],
-        'created_at' => [
-            'type' => 'date',
-            'index' => 'no'
-        ],
         'title' => [
             'type' => 'string',
             'analyzer' => 'ik_max_word',
@@ -103,19 +79,6 @@ class Thread extends BaseModel implements TaggableInterface
             'type' => 'string',
             'analyzer' => 'ik_max_word',
             'search_analyzer' => 'ik_max_word',
-        ],
-    ];
-
-    protected $indexSettings = [
-        'analysis' => [
-            'analyzer' => [
-                'ik_html_strip' => [
-                    'type' => 'custom',
-                    'char_filter' => ['html_strip'],
-                    'tokenizer' => 'ik_max_word',
-                    'filter' => ['lowercase'],
-                ],
-            ],
         ],
     ];
     
