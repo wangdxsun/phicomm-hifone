@@ -9,6 +9,7 @@
 namespace Hifone\Http\Controllers;
 
 use Hifone\Events\User\UserWasLoggedinEvent;
+use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\PhicommBll;
 use Hifone\Models\Provider;
 use Hifone\Models\User;
@@ -75,14 +76,14 @@ class PhicommController extends Controller
             ->withPageTitle(trans('hifone.login.login'));
     }
 
-    public function postLogin(Request $request)
+    public function postLogin(CommonBll $commonBll)
     {
-        $this->validate($request, [
+        $this->validate(request(), [
             'phone' => 'required|phone',
             'password' => 'required',
         ]);
-        $phone = $request->get('phone');
-        $password = strtoupper(md5($request->get('password')));
+        $phone = request()->get('phone');
+        $password = strtoupper(md5(request()->get('password')));
         try {
             $phicommId = $this->phicomm->login($phone, $password);
             Session::set('phicommId', $phicommId);
@@ -96,8 +97,9 @@ class PhicommController extends Controller
                     ->withInput(Input::except('password'))
                     ->withError('您已被系统管理员禁止登录');
             }
-            Auth::loginUsingId($user->id);
+            Auth::login($user);
             event(new UserWasLoggedinEvent(Auth::user()));
+            $commonBll->login();
             return Redirect::intended('/')
                 ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.login.success')));
         } else {

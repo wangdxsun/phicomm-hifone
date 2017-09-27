@@ -8,6 +8,7 @@
 
 namespace Hifone\Http\Controllers\Api;
 
+use Hifone\Events\User\UserWasLoggedinEvent;
 use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\PhicommBll;
 use Hifone\Models\User;
@@ -57,6 +58,7 @@ class PhicommController extends ApiController
                 return response('对不起，你已被管理员禁止登录', 403);
             }
             Auth::login($user);
+            event(new UserWasLoggedinEvent(Auth::user()));
             $commonBll->login();
             return $user;
         } else {
