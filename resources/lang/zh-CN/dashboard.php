@@ -138,6 +138,7 @@ return [
     ],
     'nodes' => [
         'nodes'        => '主板块管理',
+        'show'         => '主板块是否开放',
         'sub_nodes'    => '子板块管理',
         'name'         => '主板块名称',
         'sub_name'     => '子板块名称',
