@@ -46,6 +46,7 @@ class Node extends BaseModel implements HasPresenter
         'updated_at',
         'is_prompt',
         'prompt',
+        'is_show'
     ];
 
     protected $hidden = [
@@ -148,5 +149,10 @@ class Node extends BaseModel implements HasPresenter
     public function moderators()
     {
         return $this->hasMany(Moderator::class);
+    }
+
+    public function scopeShow($query)
+    {
+        return $query->where('is_show',1)->get();
     }
 }

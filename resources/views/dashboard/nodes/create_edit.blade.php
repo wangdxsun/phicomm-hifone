@@ -20,6 +20,19 @@
             @include('partials.errors')
                 <fieldset>
                 <div class="form-group">
+                    <label>{{ trans('dashboard.nodes.show') }}</label>
+                    <el-tooltip  placement="hidden" >
+                        <el-switch
+                                v-model="valueShow"
+                                on-color="#13ce66"
+                                off-color="#ff4949"
+                                on-value=1
+                                off-value=0>
+                        </el-switch>
+                    </el-tooltip>
+                    <el-input  v-model="valueShow" placeholder="请输入内容" type="hidden" name="node[is_show]"></el-input>
+                </div>
+                <div class="form-group">
                     <div class="col-xs-4">
                         <label>{{ trans('dashboard.nodes.icon.hot') }}</label><br>
                         <el-upload
@@ -106,7 +119,7 @@
                                 off-value=0>
                         </el-switch>
                     </el-tooltip>
-                    <el-input  v-model="valuePrompt" placeholder="请输入内容" type="hidden" name="node[is_prompt]" value="{{ $node->prompt or null }}"></el-input>
+                    <el-input  v-model="valuePrompt" placeholder="请输入内容" type="hidden" name="node[is_prompt]"></el-input>
                 </div>
                 <div class="form-group">
                     <label>{{ trans('dashboard.nodes.prompt.nodeDetail') }}</label>
@@ -160,6 +173,7 @@
                 imageListUrl: "{{ isset($node) ? ($node->icon_list) : (Input::old('node')['icon_list']) }}",
                 imageDetailUrl: "{{ isset($node) ? ($node->icon_detail) : (Input::old('node')['icon_detail']) }}",
                 valuePrompt: "{{  $node->is_prompt or 0  }}",
+                valueShow: "{{  $node->is_show or 1  }}",
             };
         },
         methods: {
