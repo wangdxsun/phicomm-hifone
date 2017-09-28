@@ -22,54 +22,36 @@
                 <div class="form-group">
                     <label>{{ trans('dashboard.nodes.show') }}</label>
                     <el-tooltip  placement="hidden" >
-                        <el-switch
-                                v-model="valueShow"
-                                on-color="#13ce66"
-                                off-color="#ff4949"
-                                on-value=1
-                                off-value=0>
-                        </el-switch>
+                        <el-switch v-model="valueShow" on-color="#13ce66" off-color="#ff4949" on-value=1 off-value=0></el-switch>
                     </el-tooltip>
-                    <el-input  v-model="valueShow" placeholder="请输入内容" type="hidden" name="node[is_show]"></el-input>
+                    <el-input  v-model="valueShow" type="hidden" name="node[is_show]"></el-input>
                 </div>
                 <div class="form-group">
-                    <div class="col-xs-4">
+                    <div class="col-xs-3">
                         <label>{{ trans('dashboard.nodes.icon.hot') }}</label><br>
-                        <el-upload
-                                class="avatar-uploader"
-                                action="/upload_image"
-                                :show-file-list="false"
-                                :on-success="handleAvatarSuccess1">
+                        <el-upload class="avatar-uploader" action="/upload_image" :show-file-list="false" :on-success="handleAvatarSuccess1">
                             <img v-if="imageUrl" :src="imageUrl" class="el-avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
-                        <el-input v-model="imageUrl" type="hidden" placeholder="请输入内容" name="node[icon]"></el-input>
+                        <el-input v-model="imageUrl" type="hidden" name="node[icon]"></el-input>
                     </div>
 
                     <div class="col-xs-4">
                         <label>{{ trans('dashboard.nodes.icon.list') }}</label><br>
-                        <el-upload
-                                class="avatar-uploader"
-                                action="/upload_image"
-                                :show-file-list="false"
-                                :on-success="handleAvatarSuccess2">
-                            <img v-if="imageListUrl" :src="imageListUrl" class="el-avatar">
+                        <el-upload class="avatar-uploader" action="/upload_image" :show-file-list="false" :on-success="handleAvatarSuccess2">
+                            <img v-if="imageListUrl" :src="imageListUrl" class="el-avatar-list">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
-                        <el-input  v-model="imageListUrl" placeholder="请输入内容" type="hidden" name="node[icon_list]"></el-input>
+                        <el-input  v-model="imageListUrl" type="hidden" name="node[icon_list]"></el-input>
                     </div>
 
-                    <div class="col-xs-4">
+                    <div class="col-xs-5">
                         <label>{{ trans('dashboard.nodes.icon.detail') }}</label><br>
-                        <el-upload
-                                class="avatar-uploader"
-                                action="/upload_image"
-                                :show-file-list="false"
-                                :on-success="handleAvatarSuccess3">
-                            <img v-if="imageDetailUrl" :src="imageDetailUrl" class="el-avatar">
+                        <el-upload class="avatar-uploader" action="/upload_image" :show-file-list="false" :on-success="handleAvatarSuccess3">
+                            <img v-if="imageDetailUrl" :src="imageDetailUrl" class="el-avatar-detail">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
-                        <el-input  v-model="imageDetailUrl" placeholder="请输入内容" type="hidden" name="node[icon_detail]"></el-input>
+                        <el-input  v-model="imageDetailUrl" type="hidden" name="node[icon_detail]"></el-input>
                     </div>
                 </div>
                 <div class="form-group">
@@ -103,23 +85,17 @@
                 <div class="form-group">
                     <label>{{ trans('dashboard.nodes.moderator.type') }}</label>
                     <select name="moderator[role]" class="form-control" >
-                            <option value="3">版主</option>
-                            <option value="12">实习版主</option>
+                        <option value="3">版主</option>
+                        <option value="12">实习版主</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label>{{ trans('dashboard.nodes.prompt.node') }}</label>
                     <el-tooltip  placement="hidden" >
-                        <el-switch
-                                v-model="valuePrompt"
-                                on-color="#13ce66"
-                                off-color="#ff4949"
-                                on-value=1
-                                off-value=0>
-                        </el-switch>
+                        <el-switch v-model="valuePrompt" on-color="#13ce66" off-color="#ff4949" on-value=1 off-value=0></el-switch>
                     </el-tooltip>
-                    <el-input  v-model="valuePrompt" placeholder="请输入内容" type="hidden" name="node[is_prompt]"></el-input>
+                    <el-input  v-model="valuePrompt" type="hidden" name="node[is_prompt]"></el-input>
                 </div>
                 <div class="form-group">
                     <label>{{ trans('dashboard.nodes.prompt.nodeDetail') }}</label>
@@ -140,12 +116,11 @@
                                     <td>{{ $moderator->user->username }}</td>
                                     <td>{{ $moderator->user->role }}</td>
                                     <td>
-                                        <a data-url="/dashboard/node/{{ $moderator->id }}/audit/to/trash" data-method="post" class="need-reason" title="删除"><i class="fa fa-trash"></i></a>
+                                        <a data-url="/dashboard/node/{{ $moderator->id }}/audit/to/trash" data-method="post" class="need-reason" title="鍒犻櫎"><i class="fa fa-trash"></i></a>
                                     </td>
                                 </tr>
                             @endforeach
                             </tbody>
-
                         </table>
                     </div>
                 @endif
@@ -203,14 +178,24 @@
     .avatar-uploader-icon {
         font-size: 28px;
         color: #8c939d;
-        width: 178px;
-        height: 178px;
-        line-height: 178px;
+        width: 150px;
+        height: 150px;
+        line-height: 150px;
         text-align: center;
     }
     .el-avatar {
-        width: 178px;
-        height: 178px;
+        width: 200px;
+        height: 150px;
+        display: block;
+    }
+    .el-avatar-list {
+         width: 350px;
+         height: 150px;
+         display: block;
+     }
+    .el-avatar-detail {
+        width: 350px;
+        height: 150px;
         display: block;
     }
     .el-upload__input {
