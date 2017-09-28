@@ -73,6 +73,7 @@ class PhicommBll extends BaseBll
             throw new \Exception('手机号或密码错误');
         }
         Session::set('access_token', $output['access_token']);
+        Session::set('phicommId', $output['uid']);
 
         return $output['uid'];
     }

@@ -8,7 +8,6 @@
 
 namespace Hifone\Http\Controllers;
 
-use Hifone\Events\User\UserWasLoggedinEvent;
 use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\PhicommBll;
 use Hifone\Models\Provider;
@@ -86,7 +85,6 @@ class PhicommController extends Controller
         $password = strtoupper(md5(request()->get('password')));
         try {
             $phicommId = $this->phicomm->login($phone, $password);
-            Session::set('phicommId', $phicommId);
         } catch (\Exception $e) {
             return Redirect::back()->withInput(Input::except('password'))->withErrors($e->getMessage());
         }
@@ -98,7 +96,6 @@ class PhicommController extends Controller
                     ->withError('您已被系统管理员禁止登录');
             }
             Auth::login($user);
-            event(new UserWasLoggedinEvent(Auth::user()));
             $commonBll->login();
             return Redirect::intended('/')
                 ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.login.success')));
