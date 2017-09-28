@@ -121,7 +121,7 @@ class Thread extends BaseModel implements TaggableInterface
     
     public static $orderTypes = [
         'id'         => '发帖时间',
-        'node_id'    => '帖子板块',
+        'node_id'    => '帖子版块',
         'user_id'    => '发帖人',
         'heat'       => '热度值',
         'updated_at' => '最后回复时间',

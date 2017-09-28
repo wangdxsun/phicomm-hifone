@@ -7,7 +7,7 @@
 <div class="content-wrapper">
     <div class="header sub-header">
         <div class="header sub-header">
-            <span class="uppercase"><i class="ion ion-ios-browsers-outline"></i>子板块管理</span>
+            <span class="uppercase"><i class="ion ion-ios-browsers-outline"></i>子版块管理</span>
             <a class="btn btn-sm btn-success pull-right" href="{{ route('dashboard.subNode.create') }}">
                 {{ trans('dashboard.nodes.add.sub_title') }}
             </a>

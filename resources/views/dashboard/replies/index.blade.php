@@ -59,7 +59,7 @@
                         <td style="width: 60px;">#</td>
                         <td>回帖内容</td>
                         <td style="width: 250px">帖子标题</td>
-                        <td style="width: 70px;">板块</td>
+                        <td style="width: 70px;">版块</td>
                         <td style="width: 100px">回帖人</td>
                         <td style="width: 90px">回帖时间</td>
                         <td style="width: 100px">IP地址</td>
