@@ -53,7 +53,7 @@ class SectionController extends Controller
         $nodes = Node::where('section_id', $section->id)->orderBy('order')->get();
         if (0 == count($nodes))
             return Redirect::route('dashboard.section.index')
-                ->withErrors('该分类下不存在板块');
+                ->withErrors('该分类下不存在版块');
 
         return View::make('dashboard.nodes.index')
         ->withPageTitle(trans('dashboard.nodes.nodes').' - '.trans('dashboard.dashboard'))
@@ -135,7 +135,7 @@ class SectionController extends Controller
     public function destroy(Section $section)
     {
         if ($section->nodes()->count() > 0) {
-            return back()->withErrors('该分类下存在主板块，无法删除');
+            return back()->withErrors('该分类下存在主版块，无法删除');
         }
         $section->delete();
 

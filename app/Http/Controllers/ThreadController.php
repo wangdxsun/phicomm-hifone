@@ -101,7 +101,7 @@ class ThreadController extends Controller
      */
     public function create()
     {
-        //除去无子版块的版块信息,同时判断用户身份决定是否显示公告活动等板块
+        //除去无子版块的版块信息,同时判断用户身份决定是否显示公告活动等版块
         $sections = Section::orderBy('order')->with(['nodes.subNodes', 'nodes' => function ($query) {
             if (Auth::check() && Auth::user()->can('manage_threads')) {
                 $query->has('subNodes');
