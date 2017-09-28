@@ -82,7 +82,7 @@ class UserController extends Controller
         $userData = Input::get('user');
         $roleId = Input::get('roleId');
         if (User::where('username', $userData['username'])->count() > 0) {
-            return back()->withErrors('用户名已存在');
+            return back()->withErrors('昵称已存在');
         }
         try {
             \DB::transaction(function () use ($userData, $roleId) {
