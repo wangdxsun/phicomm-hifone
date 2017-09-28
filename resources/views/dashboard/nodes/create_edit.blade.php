@@ -72,18 +72,18 @@
                     <input type="hidden" name="node[section_id]" value="0">
                 @endif
                 <div class="form-group">
-                    <label>{{ trans('dashboard.nodes.description') }}</label>
+                    <label>板块描述</label>
                     {!! Form::textarea('node[description]', isset($node) ? $node->description : null , ['class' => 'form-control', 'rows' => 5]) !!}
                 </div>
                 <div clas="form-group">
-                    <label >{{ trans('dashboard.nodes.moderator.add') }}</label>
+                    <label>添加版主</label>
                     <input type="text" name="user[name]" class="form-control"
                            @if (isset($user['name']))
                            value="{{ $user['name'] }}"
                             @endif >
                 </div>
                 <div class="form-group">
-                    <label>{{ trans('dashboard.nodes.moderator.type') }}</label>
+                    <label>所属版主类别</label>
                     <select name="moderator[role]" class="form-control" >
                         <option value="3">版主</option>
                         <option value="12">实习版主</option>
@@ -91,14 +91,14 @@
                 </div>
 
                 <div class="form-group">
-                    <label>{{ trans('dashboard.nodes.prompt.node') }}</label>
+                    <label>主板块提示</label>
                     <el-tooltip  placement="hidden" >
                         <el-switch v-model="valuePrompt" on-color="#13ce66" off-color="#ff4949" on-value=1 off-value=0></el-switch>
                     </el-tooltip>
                     <el-input  v-model="valuePrompt" type="hidden" name="node[is_prompt]"></el-input>
                 </div>
                 <div class="form-group">
-                    <label>{{ trans('dashboard.nodes.prompt.nodeDetail') }}</label>
+                    <label>主板块提示内容</label>
                     {!! Form::textarea('node[prompt]', isset($node) ? $node->prompt : null , ['class' => 'form-control', 'rows' => 3]) !!}
                 </div>
                 @if(isset($node))
