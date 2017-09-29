@@ -30,6 +30,7 @@ class UserController extends ApiController
             if ($cloudUser['img'] && $user->avatar_url != $cloudUser['img'] && $cloudUser['img'] != 'Uploads/default/default.jpg') {
                 $user->avatar_url = $cloudUser['img'];
                 $user->save();
+                $user->updateIndex();
             }
             return $user;
         } else {
@@ -97,6 +98,7 @@ class UserController extends ApiController
     {
         $avatar = $commonBll->upload();
         Auth::user()->update(['avatar_url' => $avatar['filename']]);
+        Auth::user()->updateIndex();
         $phicommBll->upload($avatar['localFile']);
         unset($avatar['localFile']);
 

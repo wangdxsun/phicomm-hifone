@@ -59,12 +59,12 @@ class ThreadController extends ApiController
             $msg = '帖子已提交，待审核';
         } else {
             $threadBll->threadPassAutoAudit($thread);
+            $thread->addToIndex();
             $msg = '发布成功';
         }
         $thread->body = app('parser.at')->parse($thread->body);
         $thread->body = app('parser.emotion')->parse($thread->body);
         $thread->save();
-        $thread->addToIndex();
         return [
             'msg' => $msg,
             'thread' => $thread

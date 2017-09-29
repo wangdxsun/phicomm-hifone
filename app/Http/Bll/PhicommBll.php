@@ -73,6 +73,7 @@ class PhicommBll extends BaseBll
             throw new \Exception('手机号或密码错误');
         }
         Session::set('access_token', $output['access_token']);
+        Session::set('phicommId', $output['uid']);
 
         return $output['uid'];
     }
@@ -175,13 +176,13 @@ class PhicommBll extends BaseBll
             'regip' => getClientIp(),
         ];
         if (User::where('username', request('username'))->count() > 0) {
-            throw new \Exception('该用户名已被使用');
+            throw new \Exception('该昵称已被使用');
         }
         if (User::where('phicomm_id', $userData['phicomm_id'])->count() > 0) {
             throw new \Exception('请勿重复关联');
         }
         if ($wordsFilter->filterWord(request('username')) || $wordsFilter->filterKeyWord(request('username'))) {
-            throw new \Exception('用户名包含被系统屏蔽字符');
+            throw new \Exception('昵称包含被系统屏蔽字符');
         }
         $user = User::create($userData);//直接通过create返回的用户信息不全
         $user = User::find($user->id);

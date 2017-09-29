@@ -46,11 +46,13 @@ class SearchImport extends Command
      */
     public function handle()
     {
-        Thread::deleteIndex();
-        User::deleteIndex();
         ini_set('memory_limit', '-1');
         ini_set('max_execution_time', 0);
-        User::chunk(1000, function ($users) {
+
+        Thread::deleteIndex();
+        Thread::createIndex();
+        User::putMapping();
+        User::chunk(5000, function ($users) {
             foreach ($users as $user) {
                 unset($user['roles']);
             }
@@ -64,7 +66,8 @@ class SearchImport extends Command
             }
             $threads->addToIndex();
         });
-
         echo 'Import Data into ElasticSearch Successfully';
+
+        return;
     }
 }

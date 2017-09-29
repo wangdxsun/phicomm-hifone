@@ -52,7 +52,7 @@ class Thread extends BaseModel implements TaggableInterface
         'ip',
     ];
 
-    protected $hidden = ['body_original', 'bad_word', 'is_blocked', 'heat_offset', 'heat', 'follower_count', 'ip',
+    protected $hidden = ['body_original', 'bad_word', 'is_blocked', 'heat_offset', 'follower_count', 'ip',
         'last_op_user_id', 'last_op_reason', 'last_op_time', 'deleted_at'];
 
     /**
@@ -61,39 +61,15 @@ class Thread extends BaseModel implements TaggableInterface
      * @var string[]
      */
     public $rules = [
-    'title'   => 'required|min:1|max:80',
-    'body'    => 'required',
-    'node_id' => 'required|int',
-    'sub_node_id' => 'required|int',
-    'user_id' => 'required|int',
-    'heat_offset' => 'int',
-];
+        'title'   => 'required|min:5|max:80',
+        'body'    => 'required',
+        'node_id' => 'required|int',
+        'sub_node_id' => 'required|int',
+        'user_id' => 'required|int',
+        'heat_offset' => 'int',
+    ];
 
     protected $mappingProperties = [
-        'id' => [
-            'type' => 'integer',
-            'index' => 'no'
-        ],
-        'user_id' => [
-            'type' => 'integer',
-            'index' => 'no'
-        ],
-        'node_id' => [
-            'type' => 'integer',
-            'index' => 'no'
-        ],
-        'view_count' => [
-            'type' => 'integer',
-            'index' => 'no'
-        ],
-        'reply_count' => [
-            'type' => 'integer',
-            'index' => 'no'
-        ],
-        'created_at' => [
-            'type' => 'date',
-            'index' => 'no'
-        ],
         'title' => [
             'type' => 'string',
             'analyzer' => 'ik_max_word',
@@ -105,23 +81,10 @@ class Thread extends BaseModel implements TaggableInterface
             'search_analyzer' => 'ik_max_word',
         ],
     ];
-
-    protected $indexSettings = [
-        'analysis' => [
-            'analyzer' => [
-                'ik_html_strip' => [
-                    'type' => 'custom',
-                    'char_filter' => ['html_strip'],
-                    'tokenizer' => 'ik_max_word',
-                    'filter' => ['lowercase'],
-                ],
-            ],
-        ],
-    ];
     
     public static $orderTypes = [
         'id'         => '发帖时间',
-        'node_id'    => '帖子板块',
+        'node_id'    => '帖子版块',
         'user_id'    => '发帖人',
         'heat'       => '热度值',
         'updated_at' => '最后回复时间',

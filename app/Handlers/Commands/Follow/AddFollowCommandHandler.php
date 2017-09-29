@@ -42,6 +42,7 @@ class AddFollowCommandHandler
                 $target->decrement('follower_count', 1);
                 if ($target instanceOf User) {
                     Auth::user()->decrement('follow_count', 1);
+                    Auth::user()->updateIndex();
                 }
 
                 event(new FollowWasRemovedEvent($target));
@@ -51,6 +52,7 @@ class AddFollowCommandHandler
                 $target->increment('follower_count', 1);
                 if ($target instanceOf User) {
                     Auth::user()->increment('follow_count', 1);
+                    Auth::user()->updateIndex();
                 }
                 event(new FollowWasAddedEvent($target));
                 event(new FollowedWasAddedEvent($target));

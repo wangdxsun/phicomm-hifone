@@ -34,7 +34,7 @@ class NodeController extends Controller
     {
         View::share([
             'current_menu'  => 'nodes',
-            'sub_title'     => '主板块管理',
+            'sub_title'     => '主版块管理',
         ]);
     }
 
@@ -48,7 +48,7 @@ class NodeController extends Controller
         $nodes = Node::orderBy('order')->get();
 
         return View::make('dashboard.nodes.index')
-        ->withPageTitle('主板块管理')
+        ->withPageTitle('主版块管理')
         ->withNodes($nodes);
     }
 
@@ -57,7 +57,7 @@ class NodeController extends Controller
         $subNodes = SubNode::where('node_id',$node->id)->orderBy('order')->get();
         if (0 == count($subNodes))
             return Redirect::route('dashboard.node.index')
-                ->withErrors('该主板块不存在子版块');
+                ->withErrors('该主版块不存在子版块');
         return View::make('dashboard.subNodes.index')
             ->withPageTitle('子版块管理')
             ->with('subNodes',$subNodes);
@@ -72,7 +72,7 @@ class NodeController extends Controller
     {
         return View::make('dashboard.nodes.create_edit')
             ->withSections(Section::orderBy('order')->get())
-            ->withPageTitle('添加主板块');
+            ->withPageTitle('添加主版块');
     }
 
     /**
@@ -104,7 +104,7 @@ class NodeController extends Controller
                 $moderator = Moderator::create($moderatorData);
                 $this->updateOpLog($moderator, '新增版主');
             }
-            $this->updateOpLog($node, '新增主板块');
+            $this->updateOpLog($node, '新增主版块');
         } catch (ValidationException $e) {
             return Redirect::route('dashboard.node.create')
                 ->withInput(Request::all())
@@ -162,7 +162,7 @@ class NodeController extends Controller
                 $moderator = Moderator::create($moderatorData);
                 $this->updateOpLog($moderator, '新增版主');
             }
-            $this->updateOpLog($node, '修改板块');
+            $this->updateOpLog($node, '修改版块');
         } catch (ValidationException $e) {
             return Redirect::route('dashboard.node.edit', ['id' => $node->id])
                 ->withInput(Request::all())
@@ -184,12 +184,12 @@ class NodeController extends Controller
     public function destroy(Node $node)
     {
         if ($node->subNodes()->count() > 0 || $node->threads()->count() > 0) {
-            return back()->withErrors('该板块下存在帖子或子板块，无法删除');
+            return back()->withErrors('该版块下存在帖子或子版块，无法删除');
         }
-        $this->updateOpLog($node, '删除板块');
+        $this->updateOpLog($node, '删除版块');
         $node->delete();
 
-        return back()->withSuccess('板块删除成功');
+        return back()->withSuccess('版块删除成功');
     }
 
     public function auditToTrash(Moderator $moderator)

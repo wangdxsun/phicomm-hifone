@@ -47,9 +47,9 @@ return [
     'action_text'         => 'Are you sure you want to do this?',
 // 节点
     'nodes'            => [
-        'all'               => '板块导航',
-        'current'           => '当前板块',
-        'same_node_threads' => '同板块推荐',
+        'all'               => '版块导航',
+        'current'           => '当前版块',
+        'same_node_threads' => '同版块推荐',
     ],
 
 // 话题
@@ -79,7 +79,7 @@ return [
         'share2facebook' => '分享到 Facebook',
 
         // Create or Edit
-        'pick_node'      => '选择板块',
+        'pick_node'      => '选择版块',
         'mark_excellent' => '设为精华贴',
         'mark_stick'     => '置顶此帖子',
         'mark_sink'      => '下沉此帖子',
@@ -148,7 +148,7 @@ return [
     'users' => [
         'users'                     => '用户',
         'id'                        => 'ID',
-        'username'                  => '用户名',
+        'username'                  => '昵称',
         'email'                     => '邮箱地址',
         'avatar'                    => '头像',
         'avatar_upload_success'     => '头像更新成功',
@@ -282,7 +282,7 @@ return [
     'login' => [
         'login'                => '登录',
         'register'             => '注册',
-        'username'             => '用户名',
+        'username'             => '昵称',
         'login_placeholder'    => '用户名或邮箱地址',
         'password'             => '密码',
         'auth_prompt'          => '您好, 请先登录!',

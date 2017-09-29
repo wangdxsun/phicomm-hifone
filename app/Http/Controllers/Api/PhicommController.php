@@ -70,7 +70,7 @@ class PhicommController extends ApiController
         $this->validate(request(), [
             'username' => 'required|max:15|regex:/\A[\x{4e00}-\x{9fa5}A-Za-z0-9\-\_\.]+\z/u',
         ], [
-            'username.regex' => '用户名含有非法字符'
+            'username.regex' => '昵称含有非法字符'
         ]);
         $user = $phicommBll->bind($wordsFilter);
 

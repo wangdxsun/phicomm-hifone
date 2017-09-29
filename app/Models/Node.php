@@ -77,7 +77,7 @@ class Node extends BaseModel implements HasPresenter
     ];
 
     public $validationMessages = [
-        'icon.required'           => '首页热门板块图片是必填字段',
+        'icon.required'           => '首页热门版块图片是必填字段',
         'icon_list.required'      => '版块列表图片是必填字段',
         'icon_detail.required'    => '版块详情页是必填字段',
         'name.required' => '主版块名称是必填字段',

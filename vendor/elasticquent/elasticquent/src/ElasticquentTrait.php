@@ -301,6 +301,10 @@ trait ElasticquentTrait
                     'title' => ["number_of_fragments" => 1],
                     'body' => ["number_of_fragments" => 1, "fragment_size" => 45],
                 ]
+            ],
+            'sort' => [
+                '_score' => ['order' => 'desc'],
+                'created_at' => ['order' => 'desc']
             ]
         ];
 
@@ -329,6 +333,10 @@ trait ElasticquentTrait
                 'fields' => [
                     'username' => ["number_of_fragments" => 1],
                 ]
+            ],
+            'sort' => [
+                '_score' => ['order' => 'desc'],
+                'score' => ['order' => 'desc']
             ]
         ];
 
@@ -481,8 +489,6 @@ trait ElasticquentTrait
 
     /**
      * Get Mapping
-     *
-     * @return void
      */
     public static function getMapping()
     {
@@ -653,7 +659,7 @@ trait ElasticquentTrait
                 $attributes['search'][$key] = implode('...', $value);
             }
         }
-        $attributes['score'] = $hit['_score'];
+        $attributes['_score'] = $hit['_score'];
 
         $instance = $this::newFromBuilderRecursive($this, $attributes);
 
