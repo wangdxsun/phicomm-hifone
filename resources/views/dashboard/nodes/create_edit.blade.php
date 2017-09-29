@@ -104,7 +104,7 @@
                     <label>{{ trans('dashboard.nodes.moderator.type') }}</label>
                     <select name="moderator[role]" class="form-control" >
                             <option value="3">版主</option>
-                            <option value="12">实习版主</option>
+                            <option value="13">实习版主</option>
                     </select>
                 </div>
 

@@ -146,7 +146,7 @@ class NodeController extends Controller
         $moderatorData = Request::get('moderator');
         $userData = Request::get('user');
         if ('' != $userData['name']) {
-            $user = User::where('username',$userData['name'])->get();
+            $user = User::where('username',$userData['name'])->first();
             if ([] == $user->toArray()) {
                 return Redirect::route('dashboard.node.edit', ['id' => $node->id])
                     ->withInput(Request::all())

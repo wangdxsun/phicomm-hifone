@@ -21,6 +21,14 @@ class NodeController extends ApiController
         return Node::orderBy('order')->get();
     }
 
+    public function subNodes()
+    {
+        //除去无子版块的版块信息,同时判断用户身份决定是否显示公告活动等板块
+        $sections = Section::orderBy('order')->with(['nodes.subNodes', 'nodes' => function ($query) {
+            $query->has('subNodes');
+        }])->get();
+        return $sections;
+    }
     public function sections()
     {
         //除去无子版块的版块信息,同时判断用户身份决定是否显示公告活动等板块

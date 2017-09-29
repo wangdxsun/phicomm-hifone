@@ -102,6 +102,7 @@ class InitSubNode extends Command
                 $thread->save();
             }
         });
-
+        echo 'Init SubNode successfullt';
+        return;
     }
 }

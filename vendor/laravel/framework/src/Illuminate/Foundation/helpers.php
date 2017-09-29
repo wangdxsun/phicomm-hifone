@@ -696,7 +696,6 @@ if (! function_exists('trans')) {
         if (is_null($id)) {
             return app('translator');
         }
-
         return app('translator')->trans($id, $parameters, $domain, $locale);
     }
 }
