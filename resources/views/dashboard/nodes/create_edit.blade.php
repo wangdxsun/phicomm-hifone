@@ -93,20 +93,20 @@
                     <label>{{ trans('dashboard.nodes.description') }}</label>
                     {!! Form::textarea('node[description]', isset($node) ? $node->description : null , ['class' => 'form-control', 'rows' => 5]) !!}
                 </div>
-                <div clas="form-group">
-                    <label >{{ trans('dashboard.nodes.moderator.add') }}</label>
-                    <input type="text" name="user[name]" class="form-control"
-                           @if (isset($user['name']))
-                           value="{{ $user['name'] }}"
-                            @endif >
-                </div>
-                <div class="form-group">
-                    <label>{{ trans('dashboard.nodes.moderator.type') }}</label>
-                    <select name="moderator[role]" class="form-control" >
-                            <option value="3">版主</option>
-                            <option value="13">实习版主</option>
-                    </select>
-                </div>
+                {{--<div clas="form-group">--}}
+                    {{--<label >{{ trans('dashboard.nodes.moderator.add') }}</label>--}}
+                    {{--<input type="text" name="user[name]" class="form-control"--}}
+                           {{--@if (isset($user['name']))--}}
+                           {{--value="{{ $user['name'] }}"--}}
+                            {{--@endif >--}}
+                {{--</div>--}}
+                {{--<div class="form-group">--}}
+                    {{--<label>{{ trans('dashboard.nodes.moderator.type') }}</label>--}}
+                    {{--<select name="moderator[role]" class="form-control" >--}}
+                            {{--<option value="3">版主</option>--}}
+                            {{--<option value="13">实习版主</option>--}}
+                    {{--</select>--}}
+                {{--</div>--}}
 
                 <div class="form-group">
                     <label>{{ trans('dashboard.nodes.prompt.node') }}</label>
@@ -125,30 +125,30 @@
                     <label>{{ trans('dashboard.nodes.prompt.nodeDetail') }}</label>
                     {!! Form::textarea('node[prompt]', isset($node) ? $node->prompt : null , ['class' => 'form-control', 'rows' => 3]) !!}
                 </div>
-                @if(isset($node))
-                    <div>
-                        <label>{{ trans('dashboard.nodes.moderator.list') }}</label>
-                        <table class="table table-bordered table-striped table-condensed">
-                            <tbody>
-                            <tr class="head">
-                                <td>版主用户名</td>
-                                <td>所在组别</td>
-                                <td>操作</td>
-                            </tr>
-                            @foreach($node->moderators as $moderator)
-                                <tr>
-                                    <td>{{ $moderator->user->username }}</td>
-                                    <td>{{ $moderator->user->role }}</td>
-                                    <td>
-                                        <a data-url="/dashboard/node/{{ $moderator->id }}/audit/to/trash" data-method="post" class="need-reason" title="删除"><i class="fa fa-trash"></i></a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                            </tbody>
+                {{--@if(isset($node))--}}
+                    {{--<div>--}}
+                        {{--<label>{{ trans('dashboard.nodes.moderator.list') }}</label>--}}
+                        {{--<table class="table table-bordered table-striped table-condensed">--}}
+                            {{--<tbody>--}}
+                            {{--<tr class="head">--}}
+                                {{--<td>版主用户名</td>--}}
+                                {{--<td>所在组别</td>--}}
+                                {{--<td>操作</td>--}}
+                            {{--</tr>--}}
+                            {{--@foreach($node->moderators as $moderator)--}}
+                                {{--<tr>--}}
+                                    {{--<td>{{ $moderator->user->username }}</td>--}}
+                                    {{--<td>{{ $moderator->user->role }}</td>--}}
+                                    {{--<td>--}}
+                                        {{--<a data-url="/dashboard/node/{{ $moderator->id }}/audit/to/trash" data-method="post" class="need-reason" title="删除"><i class="fa fa-trash"></i></a>--}}
+                                    {{--</td>--}}
+                                {{--</tr>--}}
+                            {{--@endforeach--}}
+                            {{--</tbody>--}}
 
-                        </table>
-                    </div>
-                @endif
+                        {{--</table>--}}
+                    {{--</div>--}}
+                {{--@endif--}}
 
                 </fieldset>
 
