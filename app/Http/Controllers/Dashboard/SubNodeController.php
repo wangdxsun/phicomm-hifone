@@ -90,7 +90,6 @@ class SubNodeController extends Controller
 
     public function destroy(SubNode $subNode)
     {
-        //dd($subNode->threads);
         if ($subNode->threads()->count()> 0) {
             return back()->withErrors('该子版块下存在帖子，无法删除');
         }
