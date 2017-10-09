@@ -17,7 +17,7 @@ class ReplyController extends ApiController
     public function store(ReplyBll $replyBll, WordsFilter $wordsFilter)
     {
         $reply = $replyBll->createReply();
-        if (Config::get('setting.auto_audit', 0) == 0  || ($badWord = $wordsFilter->filterWord($reply->body))|| $replyBll->isContainsImageOrUrl($reply->body)) {
+        if (Config::get('setting.auto_audit', 0) == 0  || ($badWord = $wordsFilter->filterWord($reply->body)) || $replyBll->isContainsImageOrUrl($reply->body)) {
             if (isset($badWord)) {
                 $reply->bad_word = $badWord;
                 $reply->save();

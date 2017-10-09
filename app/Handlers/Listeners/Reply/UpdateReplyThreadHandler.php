@@ -20,6 +20,7 @@ class UpdateReplyThreadHandler
         $reply = $event->reply;
 
         $reply->thread->decrement('reply_count', 1);
+        $reply->thread->updateIndex();
 
         $reply->thread->generateLastReplyUserInfo();
     }

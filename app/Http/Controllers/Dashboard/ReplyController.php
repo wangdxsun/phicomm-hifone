@@ -216,6 +216,7 @@ class ReplyController extends Controller
             }
 
             $reply->thread->increment('reply_count', 1);
+            $reply->thread->updateIndex();
             if ($reply->user) {
                 $reply->user->increment('reply_count', 1);
             }
@@ -246,6 +247,7 @@ class ReplyController extends Controller
             $reply->thread->node->decrement('reply_count', 1);//版块回帖数-1
             $reply->thread->subNode->decrement('reply_count', 1);//子版块回帖数-1
             $reply->thread->decrement('reply_count', 1);
+            $reply->thread->updateIndex();
             $reply->user->decrement('reply_count', 1);
             $this->trash($reply);
             event(new ReplyWasTrashedEvent($reply));
