@@ -315,8 +315,8 @@ class ThreadController extends Controller
         $heatOffset = request('value');
         try {
             $thread->heat_offset = $heatOffset;
-            //更新热度值
             $thread->heat = $thread->heat_compute;
+            $this->updateOpLog($thread, '提升帖子', $heatOffset);
             $thread->save();
         } catch (ValidationException $e) {
             return Redirect::back()->withErrors($e->getMessageBag());
