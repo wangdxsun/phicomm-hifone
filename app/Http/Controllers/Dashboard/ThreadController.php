@@ -26,7 +26,7 @@ use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
 use Hifone\Services\Parsers\Markdown;
-use Illuminate\Support\Facades\DB;
+use DB;
 use Redirect;
 use View;
 use Input;
@@ -272,6 +272,7 @@ class ThreadController extends Controller
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
             $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);
             $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
+            $thread->removeFromIndex();
             event(new ThreadWasTrashedEvent($thread));
             DB::commit();
         } catch (ValidationException $e) {
@@ -299,7 +300,6 @@ class ThreadController extends Controller
     {
         $thread->status = Thread::TRASH;
         $this->updateOpLog($thread, '删除帖子', trim(request('reason')));
-        $thread->removeFromIndex();
     }
 
     public function getHeatOffset(Thread $thread)
