@@ -74,7 +74,7 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
             'search_analyzer' => 'ik_max_word',
         ],
         'score' => [
-            'type' => 'float'
+            'type' => 'integer'
         ]
     ];
 

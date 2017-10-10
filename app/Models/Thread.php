@@ -73,13 +73,15 @@ class Thread extends BaseModel implements TaggableInterface
         'title' => [
             'type' => 'string',
             'analyzer' => 'ik_max_word',
-            'search_analyzer' => 'ik_max_word',
         ],
         'body' => [
             'type' => 'string',
             'analyzer' => 'ik_max_word',
-            'search_analyzer' => 'ik_max_word',
         ],
+        'created_at' => [
+            'type' => 'date',
+            'format' => 'yyyy-MM-dd HH:mm',
+        ]
     ];
     
     public static $orderTypes = [
