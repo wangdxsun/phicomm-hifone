@@ -25,7 +25,7 @@ class ThreadController extends ApiController
     {
         $commonBll->login();
         //置顶优先，再按热度值倒序排序
-        $threads = Thread::visible()->with(['user', 'node'])->orderBy('order', 'DESC')->orderBy('heat', 'DESC')->paginate();
+        $threads = Thread::visible()->with(['user', 'node'])->hot()->paginate();
         return $threads;
     }
 

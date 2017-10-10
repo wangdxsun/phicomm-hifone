@@ -224,7 +224,7 @@ class Thread extends BaseModel implements TaggableInterface
         return $query->orderBy('order', 'desc')->orderBy('heat', 'desc')->orderBy('created_at', 'desc');
     }
 
-    public function scopePinAndRecentReply($query)
+    public function scopePinAndRecent($query)
     {
         return $query->orderBy('order', 'desc')->orderBy('created_at', 'desc');
     }
