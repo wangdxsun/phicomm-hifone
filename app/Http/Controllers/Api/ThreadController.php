@@ -36,8 +36,9 @@ class ThreadController extends ApiController
         return $threads;
     }
 
-    public function show(Thread $thread, ThreadBll $threadBll)
+    public function show(Thread $thread, ThreadBll $threadBll, CommonBll $commonBll)
     {
+        $commonBll->login();
         $threadBll->showThread($thread);
 
         return $thread;

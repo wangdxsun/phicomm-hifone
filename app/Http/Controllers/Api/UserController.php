@@ -79,8 +79,9 @@ class UserController extends ApiController
         return $threads;
     }
 
-    public function credit(UserBll $userBll)
+    public function credit(UserBll $userBll, CommonBll $commonBll)
     {
+        $commonBll->login();
         $credits = $userBll->getCredits();
 
         return $credits;
