@@ -29,7 +29,7 @@
                                 @foreach ($sections as $section)
                                     @if(isset($section->nodes))
                                         @foreach ($section->nodes as $item)
-                                            <option value="{{ $item->id }}" style="font-size:15px;font-weight:600">{{ $item->name }}</option>
+                                            <option disabled value="{{ $item->id }}" style="font-size:15px;font-weight:600">{{ $item->name }}</option>
                                             @foreach($item->subNodes as $subItem)
                                                 <option value="{{ $subItem->id }}" {!! (Input::old('thread')['sub_node_id'] == $subItem->id || (isset($subNode) && $subNode->id==$subItem->id)) ? 'selected' : '' !!} >
                                                     -- {{ $subItem->name }}</option>

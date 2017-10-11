@@ -278,7 +278,7 @@ class ThreadController extends Controller
             DB::rollBack();
             return Redirect::back()->withErrors($e->getMessageBag());
         }
-
+        $thread->removeFromIndex();
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
@@ -299,7 +299,6 @@ class ThreadController extends Controller
     {
         $thread->status = Thread::TRASH;
         $this->updateOpLog($thread, '删除帖子', trim(request('reason')));
-        $thread->removeFromIndex();
     }
 
     public function getHeatOffset(Thread $thread)
