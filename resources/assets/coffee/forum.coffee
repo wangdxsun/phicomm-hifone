@@ -21,7 +21,7 @@ window.ForumView = Backbone.View.extend
 
     Hifone.initAjax()
     Hifone.initTextareaAutoResize()
-    Hifone.initDeleteForm()
+    Hifone.initInlineForm()
     Hifone.initSelect2()
 
     self.initScrollToTop()
