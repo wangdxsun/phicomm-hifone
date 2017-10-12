@@ -139,10 +139,9 @@ class ThreadController extends Controller
             $thread = $threadBll->createThread();
             $thread->heat = $thread->heat_compute;
             $post = $thread->title . $thread->body;
+            $badWord = '';
             if (Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($post)) || $threadBll->isContainsImageOrUrl($post)) {
-                if (isset($badWord)) {
-                    $thread->bad_word = $badWord;
-                }
+                $thread->bad_word = $badWord;
                 $thread->body = app('parser.at')->parse($thread->body);
                 $thread->body = app('parser.emotion')->parse($thread->body);
                 $thread->save();
