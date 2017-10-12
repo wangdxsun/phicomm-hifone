@@ -31,8 +31,8 @@ class NodeController extends ApiController
                 $query->show()->has('subNodes');
             }
         }])->get();
-        return $sections;
 
+        return $sections;
     }
 
     /**
@@ -43,6 +43,7 @@ class NodeController extends ApiController
         $sections = Section::orderBy('order')->with(['nodes.subNodes', 'nodes' => function ($query) {
             $query->has('subNodes');
         }])->get();
+
         return $sections;
     }
 

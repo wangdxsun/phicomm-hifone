@@ -13,13 +13,12 @@ use Hifone\Commands\Thread\AddThreadCommand;
 use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasAuditedEvent;
 use Hifone\Events\Thread\ThreadWasViewedEvent;
-use Hifone\Models\Node;
 use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
 use Hifone\Repositories\Criteria\Thread\Filter;
 use Hifone\Repositories\Criteria\Thread\Search;
-use Illuminate\Support\Facades\DB;
+use DB;
 use Input;
 use Auth;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -140,7 +139,7 @@ class ThreadBll extends BaseBll
         return $replies;
     }
 
-    public function threadPassAutoAudit($thread)
+    public function AutoAudit($thread)
     {
         //自动审核通过，触发相应的代码逻辑
         event(new ThreadWasAddedEvent($thread));

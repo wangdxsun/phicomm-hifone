@@ -152,7 +152,7 @@ class ThreadController extends Controller
             $thread->body = app('parser.at')->parse($thread->body);
             $thread->body = app('parser.emotion')->parse($thread->body);
             $thread->save();
-            $threadBll->threadPassAutoAudit($thread);
+            $threadBll->AutoAudit($thread);
 
             return Redirect::route('thread.show', ['thread' => $thread->id])
                 ->withSuccess('发布成功');

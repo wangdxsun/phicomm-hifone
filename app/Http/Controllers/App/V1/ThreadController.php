@@ -42,7 +42,7 @@ class ThreadController extends AppController
             }
             $msg = '帖子已提交，待审核';
         } else {
-            $threadBll->threadPassAutoAudit($thread);
+            $threadBll->AutoAudit($thread);
             $thread->addToIndex();
             $msg = '发布成功';
         }
