@@ -30,7 +30,7 @@ class NodeController extends ApiController
             } else {
                 $query->show()->has('subNodes');
             }
-        }])->get();
+        }])->has('nodes')->get();
 
         return $sections;
     }
@@ -42,7 +42,7 @@ class NodeController extends ApiController
     {
         $sections = Section::orderBy('order')->with(['nodes.subNodes', 'nodes' => function ($query) {
             $query->has('subNodes');
-        }])->get();
+        }])->has('nodes')->get();
 
         return $sections;
     }
