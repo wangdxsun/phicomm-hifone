@@ -30,8 +30,6 @@ class ChangeUsernameHandler
     //处理改用户名操作。
     protected function changeUsername($user)
     {
-        //$identitity = Identity::where('user_id', $user->id)->first();
-        \Log::info('start changed username : '.$user->id);
         $identitity = $user->identities()->first();
         if ($identitity && $identitity->nickname && Str::endsWith($user->username, '_'.$identitity->provider_id)) {
             if (!User::whereUsername($identitity->nickname)->exists()) {
@@ -40,6 +38,5 @@ class ChangeUsernameHandler
                 \Log::info('changed username : '.$user->id);
             }
         }
-        \Log::info('end changed username : '.$user->id);
     }
 }

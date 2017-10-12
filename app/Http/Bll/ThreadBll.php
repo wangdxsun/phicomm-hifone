@@ -109,7 +109,6 @@ class ThreadBll extends BaseBll
 
         $thread = Thread::find($threadTemp->id);
         return $thread;
-
     }
 
     public function showThread($thread)

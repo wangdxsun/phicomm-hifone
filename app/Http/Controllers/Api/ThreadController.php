@@ -53,6 +53,7 @@ class ThreadController extends ApiController
         $thread = $threadBll->createThread();
         $thread->heat = $thread->heat_compute;
         $post = $thread->title.$thread->body;
+        $badWord = '';
         if (Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($post)) || $threadBll->isContainsImageOrUrl($post)) {
             $thread->bad_word = $badWord;
             $msg = '帖子已提交，待审核';

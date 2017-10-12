@@ -26,9 +26,7 @@ class BannerController extends ApiController
     {
         //统计Banner次数
         event(new BannerWasViewedEvent($carousel));
-        return [
-            "type" => $carousel->type,
-            "url" => $carousel->jump_url
-            ];
+
+        return '统计banner点击';
     }
 }
