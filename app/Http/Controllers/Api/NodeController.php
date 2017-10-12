@@ -36,7 +36,7 @@ class NodeController extends ApiController
     }
 
     /**
-     * 显示所有板块
+     * 显示所有版块
      */
     public function sections()
     {

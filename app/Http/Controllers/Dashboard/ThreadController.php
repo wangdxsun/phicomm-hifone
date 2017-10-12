@@ -279,7 +279,7 @@ class ThreadController extends Controller
             DB::rollBack();
             return Redirect::back()->withErrors($e->getMessageBag());
         }
-
+        $thread->removeFromIndex();
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 

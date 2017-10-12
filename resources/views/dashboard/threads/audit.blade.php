@@ -49,7 +49,13 @@
                             </td>
                             <td>{{ $thread->bad_word }}</td>
                             <td><a href="{{ $thread->node->url }}" target="_blank">{{ $thread->node->name }}</a></td>
-                            <td>{{ $thread->subNode->name }}</td>
+                            <td>
+                                @if($thread->sub_node_id == 0)
+                                    {{ '' }}
+                                @else
+                                    {{ $thread->subNode->name }}
+                                @endif
+                                </td>
                             <td>
                                 @if(!isset($thread->user))
                                     {{ '' }}
