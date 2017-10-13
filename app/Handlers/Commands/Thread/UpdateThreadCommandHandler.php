@@ -52,6 +52,7 @@ class UpdateThreadCommandHandler
         }
 
         $thread->update($this->filter($command->data));
+
         if ($thread->status == 0) {
             $thread->updateIndex();
         }
@@ -64,7 +65,7 @@ class UpdateThreadCommandHandler
             event(new ThreadWasMarkedExcellentEvent($thread));
         }
 
-        if (isset($command->data['sub_node_id']) && $original_subNode_id != $command->data['sub_node_id']) {
+        if (isset($command->data['sub_node_id']) && $original_subNode_id != intval($command->data['sub_node_id']) ) {
             $originalSubNode = SubNode::findOrFail($original_subNode_id);
             event(new ThreadWasMovedEvent($command->thread, $originalSubNode));
         }
