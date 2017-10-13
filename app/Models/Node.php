@@ -153,6 +153,6 @@ class Node extends BaseModel implements HasPresenter
 
     public function scopeShow($query)
     {
-        return $query->where('is_show',1)->get();
+        return $query->where('is_show',1);
     }
 }

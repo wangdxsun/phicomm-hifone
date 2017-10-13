@@ -30,7 +30,7 @@
                             @foreach ($nodes as $node)
                                 <optgroup label="{{ $node->name }}">
                                     @foreach($node->subNodes as $subNode)
-                                        <option value="{{ $subNode->id }}" {!! (Input::old('sub_node_id') == $subNode->id || (isset($thread) && $thread->subNode->id == $subNode->id)) ? 'selected' : '' !!} >
+                                        <option value={{ $subNode->id }} {!! (Input::old('sub_node_id') == $subNode->id || (isset($thread) && $thread->subNode->id == $subNode->id)) ? 'selected' : '' !!} >
                                             -- {{ $subNode->name }}</option>
                                     @endforeach
                                 </optgroup>
