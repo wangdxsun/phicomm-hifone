@@ -49,9 +49,11 @@ class InitSubNode extends Command
     {
         $nodes = Node::orderBy('order')->with('subNodes')->get();
         foreach ($nodes as $node) {
+            $node->reply_count = 0;
             $node->update(['thread_count' => $node->threads()->visible()->count()]);
             foreach ($node->subNodes as $subNode) {
                 $subNode->update(['thread_count' => $subNode->threads()->visible()->count()]);
+                $subNode->reply_count = 0;
                 foreach ($subNode->threads as $thread) {
                     $subNode->reply_count = $subNode->reply_count + $thread->reply_count;
                 }
