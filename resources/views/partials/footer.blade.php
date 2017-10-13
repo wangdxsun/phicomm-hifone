@@ -18,7 +18,7 @@
                 <a href="/faq">常见问题解答</a>
             </p>
             <p>
-                <a href="http://hifone.com/" target="_blank"><img src="/images/phicomm.png" border="0" height="40" data-toggle="tooltip" data-placement="top" title="Powered by Phicomm" /></a>
+                <a href="http://hifone.com/" target="_blank"><img src="/images/phicomm1.png" border="0" height="40" data-toggle="tooltip" data-placement="top" title="Powered by Phicomm" /></a>
             </p>
         </div>
     </div>
