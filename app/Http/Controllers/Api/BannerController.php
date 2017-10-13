@@ -26,7 +26,10 @@ class BannerController extends ApiController
     {
         //统计Banner次数
         event(new BannerWasViewedEvent($carousel));
-
-        return '统计banner点击';
+        if ($carousel->type == 0) {
+            return redirect($carousel->url);
+        } else {
+            return redirect('/thread/'.$carousel->url);
+        }
     }
 }
