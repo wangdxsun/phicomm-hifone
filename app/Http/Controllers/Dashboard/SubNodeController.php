@@ -56,7 +56,9 @@ class SubNodeController extends Controller
         try {
             $subNode->update($subNodeData);
             foreach ($threads as $thread) {
-                $thread->update(['node_id' => $subNodeData['node_id']]);
+                if ($thread->node_id != $subNodeData['node_id']) {
+                    $thread->update(['node_id' => $subNodeData['node_id']]);
+                }
             }
             $this->updateOpLog($subNode, '修改版块');
         } catch (ValidationException $e) {
