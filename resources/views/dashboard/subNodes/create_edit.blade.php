@@ -36,7 +36,7 @@
                     @endif
                     <div class="form-group">
                         <label>{{ trans('dashboard.nodes.description') }}</label>
-                        {!! Form::textarea('node[description]', isset($subNode) ? $subNode->description : null , ['class' => 'form-control', 'rows' => 5]) !!}
+                        {!! Form::textarea('subNode[description]', isset($subNode) ? $subNode->description : null , ['class' => 'form-control', 'rows' => 5]) !!}
                     </div>
                     <div class="form-group">
                         <label>{{ trans('dashboard.nodes.prompt.subNode') }}</label>

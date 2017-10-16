@@ -58,7 +58,7 @@ class SubNodeController extends Controller
             foreach ($threads as $thread) {
                 $thread->update(['node_id' => $subNodeData['node_id']]);
             }
-            $this->updateOpLog($subNode, '修改版块');
+            $this->updateOpLog($subNode, '修改子版块');
         } catch (ValidationException $e) {
             return Redirect::route('dashboard.subNode.edit', ['id' => $subNode->id])
                 ->withInput(Request::all())
