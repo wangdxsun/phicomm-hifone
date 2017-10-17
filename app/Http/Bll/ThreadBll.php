@@ -41,8 +41,8 @@ class ThreadBll extends BaseBll
     {
         $threads = Thread::searchThread(request('q'));
         foreach ($threads as $thread) {
-            unset($threads['node']);
-            unset($threads['user']);
+            unset($thread['node']);
+            unset($thread['user']);
         }
         $threads = $threads->load(['user', 'node', 'lastReplyUser']);
 
