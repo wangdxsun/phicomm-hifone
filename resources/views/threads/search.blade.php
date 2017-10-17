@@ -79,7 +79,6 @@
                                                 {{ $thread->node->name }}
                                             </a>
                                             <span> • </span>
-                                            <!-- <span> • </span> -->
                                         @endif
                                         @if($thread->tagsList)
                                             <span class="tag-list hidden-xs">
