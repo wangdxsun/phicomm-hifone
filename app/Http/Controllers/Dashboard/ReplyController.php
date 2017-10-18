@@ -200,13 +200,13 @@ class ReplyController extends Controller
     }
 
     //从回收站恢复回复
-    public function recycle($reply)
+    public function recycle(Reply $reply)
     {
         return $this->passAudit($reply);
     }
 
     //将回复状态修改为审核通过，回复所属帖子修改时间将被更新
-    public function passAudit($reply)
+    public function passAudit(Reply $reply)
     {
         DB::beginTransaction();
         try {
