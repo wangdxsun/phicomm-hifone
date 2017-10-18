@@ -118,7 +118,6 @@ class ThreadController extends Controller
             $this->updateOpLog($thread, '置顶');
             event(new ThreadWasPinnedEvent($thread));
             event(new PinWasAddedEvent($thread->user, 'Thread'));
-
         }
 
         return Redirect::back()->withSuccess('恭喜，操作成功！');
@@ -218,7 +217,7 @@ class ThreadController extends Controller
     }
 
     //将帖子状态修改为审核通过,需要将帖子数加1
-    public function passAudit($thread)
+    public function passAudit(Thread $thread)
     {
         DB::beginTransaction();
         try {
