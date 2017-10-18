@@ -20,6 +20,19 @@
             @include('partials.errors')
                 <fieldset>
                 <div class="form-group">
+                    <label>{{ trans('dashboard.nodes.show') }}</label>
+                    <el-tooltip  placement="hidden" >
+                        <el-switch
+                                v-model="valueShow"
+                                on-color="#13ce66"
+                                off-color="#ff4949"
+                                on-value=1
+                                off-value=0>
+                        </el-switch>
+                    </el-tooltip>
+                    <el-input  v-model="valueShow" placeholder="请输入内容" type="hidden" name="node[is_show]"></el-input>
+                </div>
+                <div class="form-group">
                     <div class="col-xs-4">
                         <label>{{ trans('dashboard.nodes.icon.hot') }}</label><br>
                         <el-upload
@@ -30,7 +43,7 @@
                             <img v-if="imageUrl" :src="imageUrl" class="el-avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
-                        <el-input v-model="imageUrl" type="hidden" placeholder="请输入内容" name="node[icon]" value="{{ $node->icon or null }}"></el-input>
+                        <el-input v-model="imageUrl" type="hidden" placeholder="请输入内容" name="node[icon]"></el-input>
                     </div>
 
                     <div class="col-xs-4">
@@ -43,7 +56,7 @@
                             <img v-if="imageListUrl" :src="imageListUrl" class="el-avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
-                        <el-input  v-model="imageListUrl" placeholder="请输入内容" type="hidden" name="node[icon_list]" value="{{ $node->icon_list or null }}"></el-input>
+                        <el-input  v-model="imageListUrl" placeholder="请输入内容" type="hidden" name="node[icon_list]"></el-input>
                     </div>
 
                     <div class="col-xs-4">
@@ -56,7 +69,7 @@
                             <img v-if="imageDetailUrl" :src="imageDetailUrl" class="el-avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
-                        <el-input  v-model="imageDetailUrl" placeholder="请输入内容" type="hidden" name="node[icon_detail]" value="{{ $node->icon_detail or null }}"></el-input>
+                        <el-input  v-model="imageDetailUrl" placeholder="请输入内容" type="hidden" name="node[icon_detail]"></el-input>
                     </div>
                 </div>
                 <div class="form-group">
@@ -80,62 +93,62 @@
                     <label>{{ trans('dashboard.nodes.description') }}</label>
                     {!! Form::textarea('node[description]', isset($node) ? $node->description : null , ['class' => 'form-control', 'rows' => 5]) !!}
                 </div>
-                <div clas="form-group">
-                    <label >{{ trans('dashboard.nodes.moderator.add') }}</label>
-                    <input type="text" name="user[name]" class="form-control"
-                           @if (isset($user['name']))
-                           value="{{ $user['name'] }}"
-                            @endif >
-                </div>
-                <div class="form-group">
-                    <label>{{ trans('dashboard.nodes.moderator.type') }}</label>
-                    <select name="moderator[role]" class="form-control" >
-                            <option value="3">版主</option>
-                            <option value="12">实习版主</option>
-                    </select>
-                </div>
+                {{--<div clas="form-group">--}}
+                    {{--<label >{{ trans('dashboard.nodes.moderator.add') }}</label>--}}
+                    {{--<input type="text" name="user[name]" class="form-control"--}}
+                           {{--@if (isset($user['name']))--}}
+                           {{--value="{{ $user['name'] }}"--}}
+                            {{--@endif >--}}
+                {{--</div>--}}
+                {{--<div class="form-group">--}}
+                    {{--<label>{{ trans('dashboard.nodes.moderator.type') }}</label>--}}
+                    {{--<select name="moderator[role]" class="form-control" >--}}
+                            {{--<option value="3">版主</option>--}}
+                            {{--<option value="13">实习版主</option>--}}
+                    {{--</select>--}}
+                {{--</div>--}}
 
                 <div class="form-group">
                     <label>{{ trans('dashboard.nodes.prompt.node') }}</label>
-                    <el-tooltip :content="'Switch value: ' + valuePrompt" placement="top" >
+                    <el-tooltip  placement="hidden" >
                         <el-switch
                                 v-model="valuePrompt"
                                 on-color="#13ce66"
                                 off-color="#ff4949"
-                                on-value="打开"
-                                off-value="关闭">
+                                on-value=1
+                                off-value=0>
                         </el-switch>
                     </el-tooltip>
-                    <el-input  v-model="valuePrompt" placeholder="请输入内容" type="hidden" name="node[is_prompt]" value="{{ $node->prompt or null }}"></el-input>
+                    <el-input  v-model="valuePrompt" placeholder="请输入内容" type="hidden" name="node[is_prompt]"></el-input>
                 </div>
                 <div class="form-group">
                     <label>{{ trans('dashboard.nodes.prompt.nodeDetail') }}</label>
                     {!! Form::textarea('node[prompt]', isset($node) ? $node->prompt : null , ['class' => 'form-control', 'rows' => 3]) !!}
                 </div>
-                @if(isset($node))
-                    <div>
-                        <label>{{ trans('dashboard.nodes.moderator.list') }}</label>
-                        <table class="table table-bordered table-striped table-condensed">
-                            <tbody>
-                            <tr class="head">
-                                <td>版主用户名</td>
-                                <td>所在组别</td>
-                                <td>操作</td>
-                            </tr>
-                            @foreach($node->moderators as $moderator)
-                                <tr>
-                                    <td>{{ $moderator->user->username }}</td>
-                                    <td>{{ $moderator->user->role }}</td>
-                                    <td>
-                                        <a data-url="/dashboard/node/{{ $moderator->id }}/audit/to/trash" data-method="post" class="need-reason" title="删除"><i class="fa fa-trash"></i></a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                            </tbody>
+                {{--@if(isset($node))--}}
+                    {{--<div>--}}
+                        {{--<label>{{ trans('dashboard.nodes.moderator.list') }}</label>--}}
+                        {{--<table class="table table-bordered table-striped table-condensed">--}}
+                            {{--<tbody>--}}
+                            {{--<tr class="head">--}}
+                                {{--<td>版主用户名</td>--}}
+                                {{--<td>所在组别</td>--}}
+                                {{--<td>操作</td>--}}
+                            {{--</tr>--}}
+                            {{--@foreach($node->moderators as $moderator)--}}
+                                {{--<tr>--}}
+                                    {{--<td>{{ $moderator->user->username }}</td>--}}
+                                    {{--<td>{{ $moderator->user->role }}</td>--}}
+                                    {{--<td>--}}
+                                        {{--<a data-url="/dashboard/node/{{ $moderator->id }}/audit/to/trash" data-method="post" class="need-reason" title="删除"><i class="fa fa-trash"></i></a>--}}
+                                    {{--</td>--}}
+                                {{--</tr>--}}
+                            {{--@endforeach--}}
+                            {{--</tbody>--}}
 
-                        </table>
-                    </div>
-                @endif
+                        {{--</table>--}}
+                    {{--</div>--}}
+                {{--@endif--}}
 
                 </fieldset>
 
@@ -156,10 +169,11 @@
         el: '#app',
         data: function () {
             return {
-                imageUrl: '',
-                imageListUrl: '',
-                imageDetailUrl: '',
-                valuePrompt:'打开',
+                imageUrl: "{{ isset($node) ? ($node->icon) : (Input::old('node')['icon']) }}",
+                imageListUrl: "{{ isset($node) ? ($node->icon_list) : (Input::old('node')['icon_list']) }}",
+                imageDetailUrl: "{{ isset($node) ? ($node->icon_detail) : (Input::old('node')['icon_detail']) }}",
+                valuePrompt: "{{  $node->is_prompt or 0  }}",
+                valueShow: "{{  $node->is_show or 1  }}",
             };
         },
         methods: {
@@ -172,11 +186,6 @@
             handleAvatarSuccess3: function (res) {
                 this.imageDetailUrl = res.filename;
             },
-        },
-        mounted: function () {
-            this.imageUrl = "{{ $node->icon or null }}"
-            this.imageListUrl = "{{ $node->icon_list or null }}"
-            this.imageDetailUrl = "{{ $node->icon_detail or null }}"
         }
     })
 </script>

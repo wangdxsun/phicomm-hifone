@@ -21,7 +21,6 @@ return [
     | as the size rules. Feel free to tweak each of these messages here.
     |
     */
-
     'accepted'   => ':attribute 必须是可以接受的。',
     'active_url' => ':attribute 不是一个有效的URL网址。',
     'after'      => ':attribute 必须在 :date 之后。',

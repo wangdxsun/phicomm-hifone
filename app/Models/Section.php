@@ -30,6 +30,14 @@ class Section extends BaseModel
         'created_at',
         'updated_at',
     ];
+    public $validationMessages = [
+        'name.required' => '分类名称是必填字段',
+        'name.min' => '分类名称最少2个字符',
+        'name.max' => '分类名称最多50个字符',
+        'description.required' => '分类描述是必填字段',
+        'description.min' => '分类描述最少2个字符',
+        'description.max' => '分类描述最多50个字符',
+    ];
 
     protected $hidden = ['created_at', 'updated_at', 'order', 'description'];
 

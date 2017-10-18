@@ -46,6 +46,7 @@ class Node extends BaseModel implements HasPresenter
         'updated_at',
         'is_prompt',
         'prompt',
+        'is_show'
     ];
 
     protected $hidden = [
@@ -61,16 +62,33 @@ class Node extends BaseModel implements HasPresenter
     ];
 
     /**
-     * The validation rules.
-     *
+     * The validation rules
      * @var string[]
      */
     public $rules = [
+        'icon'         => 'required',
+        'icon_list'    => 'required',
+        'icon_detail'  => 'required',
         'name'        => 'required|string|min:2|max:50',
         'order'       => 'int',
         'status'      => 'int',
         'description' => 'required|string|min:2|max:100',
         'prompt'      => 'string|min:10|max:40',
+    ];
+
+    public $validationMessages = [
+        'icon.required'           => '首页热门版块图片是必填字段',
+        'icon_list.required'      => '版块列表图片是必填字段',
+        'icon_detail.required'    => '版块详情页是必填字段',
+        'name.required' => '主版块名称是必填字段',
+        'name.min' => '主版块名称最少2个字符',
+        'name.max' => '主版块名称最多50个字符',
+        'prompt.required' => '提示语是必填字段',
+        'prompt.min' => '提示语最少10个字符',
+        'prompt.max' => '提示语最多40个字符',
+        'description.required' => '主版块描述是必填字段',
+        'description.min' => '主版块描述最少2个字符',
+        'description.max' => '主版块描述最多100个字符',
     ];
 
     /**
@@ -131,5 +149,10 @@ class Node extends BaseModel implements HasPresenter
     public function moderators()
     {
         return $this->hasMany(Moderator::class);
+    }
+
+    public function scopeShow($query)
+    {
+        return $query->where('is_show', 1);
     }
 }

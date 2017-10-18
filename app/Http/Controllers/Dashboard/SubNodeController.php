@@ -20,7 +20,7 @@ class SubNodeController extends Controller
     {
         View::share([
             'current_menu'  => 'subNodes',
-            'sub_title'     => '子板块管理',
+            'sub_title'     => '子版块管理',
         ]);
     }
 
@@ -29,7 +29,7 @@ class SubNodeController extends Controller
         $subNodes = SubNode::orderBy('order')->get();
 
         return View::make('dashboard.subNodes.index')
-            ->withPageTitle('子板块管理')
+            ->withPageTitle('子版块管理')
             ->with('subNodes',$subNodes);
     }
 
@@ -38,12 +38,11 @@ class SubNodeController extends Controller
         $nodes = Node::orderby('order')->get();
         return View::make('dashboard.subNodes.create_edit')
             ->withNodes($nodes)
-            ->withPageTitle('添加子板块');
+            ->withPageTitle('添加子版块');
     }
 
     public function edit(SubNode $subNode)
     {
-        //dd($subNode->toArray());
         return View::make('dashboard.subNodes.create_edit')
             ->withPageTitle(trans('dashboard.nodes.edit.sub_title').' - '.trans('dashboard.dashboard'))
             ->withNodes(Node::orderBy('order')->get())
@@ -52,10 +51,16 @@ class SubNodeController extends Controller
 
     public function update(SubNode $subNode)
     {
+        $threads = $subNode->threads;
         $subNodeData = Request::get('subNode');
         try {
             $subNode->update($subNodeData);
-            $this->updateOpLog($subNode, '修改板块');
+            foreach ($threads as $thread) {
+                if ($thread->node_id != $subNodeData['node_id']) {
+                    $thread->update(['node_id' => $subNodeData['node_id']]);
+                }
+            }
+            $this->updateOpLog($subNode, '修改版块');
         } catch (ValidationException $e) {
             return Redirect::route('dashboard.subNode.edit', ['id' => $subNode->id])
                 ->withInput(Request::all())
@@ -70,9 +75,10 @@ class SubNodeController extends Controller
     public function store()
     {
         $subNodeData = Request::get('subNode');
+        $subNodeData['order'] = SubNode::max('order') + 1;
         try {
             $subNode = SubNode::create($subNodeData);
-            $this->updateOpLog($subNode, '新增子板块');
+            $this->updateOpLog($subNode, '新增子版块');
         } catch (ValidationException $e) {
             return Redirect::route('dashboard.subNode.create')
                 ->withInput(Request::all())
@@ -86,13 +92,12 @@ class SubNodeController extends Controller
 
     public function destroy(SubNode $subNode)
     {
-        //dd($subNode->threads);
         if ($subNode->threads()->count()> 0) {
-            return back()->withErrors('该子板块下存在帖子，无法删除');
+            return back()->withErrors('该子版块下存在帖子，无法删除');
         }
-        $this->updateOpLog($subNode, '删除板块');
+        $this->updateOpLog($subNode, '删除版块');
         $subNode->delete();
 
-        return back()->withSuccess('板块删除成功');
+        return back()->withSuccess('版块删除成功');
     }
 }

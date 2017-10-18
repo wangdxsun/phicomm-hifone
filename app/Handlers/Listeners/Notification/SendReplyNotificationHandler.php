@@ -30,49 +30,55 @@ class SendReplyNotificationHandler
     protected function newReplyNotify(Reply $reply)
     {
         $thread = $reply->thread;
-        if($reply->user->id != $thread->user->id)
-        {
-            $thread->user()->increment('notification_reply_count', 1);
-        }
-        // Notify the author
-        app('notifier')->batchNotify(
-            'thread_new_reply',
-            $reply->user,
-            [$thread->user],
-            $reply,
-            $reply->body
-        );
-
-        // Notify followed users
-        app('notifier')->batchNotify(
-            'followed_thread_new_reply',
-            $reply->user,
-            $thread->followers()->get(),
-            $reply->thread,
-            $reply->body
-        );
-        foreach($thread->followers()->get() as $followers)
-        {
-            $followers->user()->increment('notification_follow_count',1);
-        }
-
-        $parserAt = app('parser.at');
-        $parserAt->parse($reply->body_original);
-
-        // Notify mentioned users
-        app('notifier')->batchNotify(
-            'reply_mention',
-            $reply->user,
-            $parserAt->users,
-            $reply,
-            $reply->body
-        );
-        foreach($parserAt->users as $users)
-        {
-            if($reply->user->id != $users->id)
+        if(!empty($reply->user) && !empty($thread->user)) {
+            if($reply->user->id != $thread->user->id)
             {
-                $users->increment('notification_at_count',1);
+                $thread->user()->increment('notification_reply_count', 1);
+            }
+            // Notify the author
+            app('notifier')->batchNotify(
+                'thread_new_reply',
+                $reply->user,
+                [$thread->user],
+                $reply,
+                $reply->body
+            );
+
+            // Notify followed users
+            app('notifier')->batchNotify(
+                'followed_thread_new_reply',
+                $reply->user,
+                $thread->followers()->get(),
+                $reply->thread,
+                $reply->body
+            );
+            foreach($thread->followers()->get() as $followers)
+            {
+                if(empty($followers->user)) {
+                    continue;
+                }
+                $followers->user()->increment('notification_follow_count',1);
+            }
+
+            $parserAt = app('parser.at');
+            $parserAt->parse($reply->body_original);
+
+            // Notify mentioned users
+            app('notifier')->batchNotify(
+                'reply_mention',
+                $reply->user,
+                $parserAt->users,
+                $reply,
+                $reply->body
+            );
+            foreach($parserAt->users as $users)
+            {
+                if($reply->user->id != $users->id)
+                {
+                    $users->increment('notification_at_count',1);
+                }
             }
         }
+
     }
 }

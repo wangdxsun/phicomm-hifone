@@ -82,7 +82,7 @@ class UserController extends Controller
         $userData = Input::get('user');
         $roleId = Input::get('roleId');
         if (User::where('username', $userData['username'])->count() > 0) {
-            return back()->withErrors('用户名已存在');
+            return back()->withErrors('昵称已存在');
         }
         try {
             \DB::transaction(function () use ($userData, $roleId) {
@@ -95,6 +95,7 @@ class UserController extends Controller
                 $user = User::create($userData);
                 $user->role_id = $roleId;
                 $this->updateOpLog($user, '创建用户');
+                $user->addToIndex();
             });
         } catch (ValidationException $e) {
             return Redirect::back()
@@ -134,6 +135,7 @@ class UserController extends Controller
                 $user->update($userData);
                 $user->role_id = $roleId;
                 $this->updateOpLog($user, '修改用户信息');
+                $user->updateIndex();
             });
         } catch (ValidationException $e) {
             return Redirect::back()
@@ -150,6 +152,7 @@ class UserController extends Controller
     {
         $user->avatar_url = '';
         $this->updateOpLog($user, '恢复默认头像');
+        $user->updateIndex();
 
         return Redirect::back()->withSuccess('头像删除成功');
     }
@@ -159,6 +162,7 @@ class UserController extends Controller
     {
         $user->role_id = ($user->role_id == Role::NO_COMMENT) ? Role::REGISTER_USER : Role::NO_COMMENT;
         $this->updateOpLog($user, $user->role_id ? '取消禁言' : '禁言');
+        $user->updateIndex();
         return Redirect::back()->withSuccess('修改成功');
     }
 
@@ -167,6 +171,7 @@ class UserController extends Controller
     {
         $user->role_id = ($user->role_id == Role::NO_LOGIN) ? Role::REGISTER_USER : Role::NO_LOGIN;
         $this->updateOpLog($user, $user->role_id ? '取消禁止登录' : '禁止登录');
+        $user->updateIndex();
         return Redirect::back()->withSuccess('修改成功');
     }
 

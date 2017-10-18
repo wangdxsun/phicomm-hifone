@@ -29,6 +29,7 @@ class ForumRoutes
     {
         $router->group(['middleware' => ['web', 'localize']], function (Registrar $router) {
             $router->get('/', 'ThreadController@index')->name('home');
+            $router->get('/search', 'ThreadController@search')->name('search');
             $router->get('/excellent', 'HomeController@excellent')->name('excellent');
             $router->get('/feed', 'HomeController@feed')->name('feed');
             $router->get('/captcha', 'CaptchaController@index')->name('captcha');

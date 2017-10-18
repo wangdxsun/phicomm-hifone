@@ -40,13 +40,13 @@
                     </div>
                     <div class="form-group">
                         <label>{{ trans('dashboard.nodes.prompt.subNode') }}</label>
-                        <el-tooltip :content="'子版块: ' + valuePrompt" placement="top" >
+                        <el-tooltip placement="hidden">
                             <el-switch
                                 v-model="valuePrompt"
                                 on-color="#13ce66"
                                 off-color="#ff4949"
-                                on-value="打开"
-                                off-value="关闭">
+                                on-value= 1
+                                off-value=0>
                             </el-switch>
                         </el-tooltip>
                         <el-input  v-model="valuePrompt" placeholder="请输入内容" type="hidden" name="subNode[is_prompt]" value="{{ $subNode->prompt or null }}"></el-input>
@@ -75,7 +75,7 @@
         el: '#app',
         data: function () {
             return {
-                valuePrompt:'打开',
+                valuePrompt:"{{  $subNode->is_prompt or 0  }}",
             };
         }
     })

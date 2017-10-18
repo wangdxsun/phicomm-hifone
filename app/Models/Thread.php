@@ -14,6 +14,7 @@ namespace Hifone\Models;
 use AltThree\Validator\ValidatingTrait;
 use Carbon\Carbon;
 use Config;
+use Elasticquent\ElasticquentTrait;
 use Hifone\Models\Scopes\Recent;
 use Hifone\Models\Traits\Taggable;
 use Hifone\Services\Dates\DateFactory;
@@ -24,7 +25,7 @@ use Venturecraft\Revisionable\RevisionableTrait;
 
 class Thread extends BaseModel implements TaggableInterface
 {
-    use ValidatingTrait, Taggable, Recent, RevisionableTrait, SoftDeletes;
+    use ValidatingTrait, Taggable, Recent, RevisionableTrait, SoftDeletes, ElasticquentTrait;
 
     const VISIBLE = 0;//正常帖子
     const TRASH = -1;//回收站
@@ -51,7 +52,7 @@ class Thread extends BaseModel implements TaggableInterface
         'ip',
     ];
 
-    protected $hidden = ['body_original', 'bad_word', 'is_blocked', 'heat_offset', 'heat', 'follower_count', 'ip', 'last_reply_user_id',
+    protected $hidden = ['body_original', 'bad_word', 'is_blocked', 'heat_offset', 'follower_count', 'ip',
         'last_op_user_id', 'last_op_reason', 'last_op_time', 'deleted_at'];
 
     /**
@@ -60,17 +61,32 @@ class Thread extends BaseModel implements TaggableInterface
      * @var string[]
      */
     public $rules = [
-        'title'   => 'required|min:1|max:80',
+        'title'   => 'required|max:80',
         'body'    => 'required',
         'node_id' => 'required|int',
         'sub_node_id' => 'required|int',
         'user_id' => 'required|int',
         'heat_offset' => 'int',
     ];
+
+    protected $mappingProperties = [
+        'title' => [
+            'type' => 'string',
+            'analyzer' => 'ik_max_word',
+        ],
+        'body' => [
+            'type' => 'string',
+            'analyzer' => 'ik_max_word',
+        ],
+        'created_at' => [
+            'type' => 'date',
+            'format' => 'yyyy-MM-dd HH:mm',
+        ]
+    ];
     
     public static $orderTypes = [
         'id'         => '发帖时间',
-        'node_id'    => '帖子板块',
+        'node_id'    => '帖子版块',
         'user_id'    => '发帖人',
         'heat'       => '热度值',
         'updated_at' => '最后回复时间',
@@ -98,7 +114,7 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function node()
     {
-        return $this->belongsTo(Node::class)->select(['id', 'name','thread_count','description']);
+        return $this->belongsTo(Node::class);
     }
 
     public function subNode()
@@ -113,7 +129,7 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function user()
     {
-        return $this->belongsTo(User::class)->select(['id', 'username', 'avatar_url', 'role','score','password','thread_count',
+        return $this->belongsTo(User::class)->select(['id', 'username', 'avatar_url', 'role','score','password','thread_count','score',
             'notification_reply_count','notification_at_count','notification_system_count','notification_chat_count','notification_follow_count']);
     }
 
@@ -205,12 +221,17 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function scopeHot($query)
     {
-        return $query->orderBy('order', 'desc')->orderBy('heat', 'desc');
+        return $query->orderBy('order', 'desc')->orderBy('heat', 'desc')->orderBy('created_at', 'desc');
     }
 
-    public function scopePinAndRecentReply($query)
+    public function scopePinAndRecent($query)
     {
-        return $query->orderBy('order', 'desc')->orderBy('updated_at', 'desc');
+        return $query->orderBy('order', 'desc')->orderBy('created_at', 'desc');
+    }
+
+    public function scopeRecent($query)
+    {
+        return $query->orderBy('created_at', 'desc');
     }
 
     public function scopeExcellent($query)
@@ -328,15 +349,18 @@ class Thread extends BaseModel implements TaggableInterface
     //动态计算热度值
     public function getHeatComputeAttribute()
     {
-        $view_score = 1;
-        $like_score = 20;
-        $reply_score = 50;
-        $time_score = 1000;
-        $excellent = $this->is_excellent != 0 ? 10000 : 0;
+        $excellent_score = Config::get('setting.excellent_score', 10000);
+        $view_score = Config::get('setting.view_score', 1);
+        $like_score = Config::get('setting.like_score', 20);
+        $reply_score = Config::get('setting.reply_score', 50);
+        $time_score = Config::get('setting.time_score', 1000);
+
+        $excellent = $this->is_excellent != 0 ? $excellent_score : 0;
 
         $createAt = new Carbon($this['attributes']['created_at']);
         $now = Carbon::now();
         $timeAlive = $now->diffInSeconds($createAt);
+
         $heat = $this->view_count * $view_score + $this->like_count * $like_score + $this->reply_count * $reply_score + $excellent
             + $this->heatCoolingValue($timeAlive, $time_score) + $this->heat_offset;
         $heat = ($heat > -100000) ? $heat : -100000;

@@ -41,13 +41,21 @@ class ThreadController extends Controller
     {
         parent::__construct();
 
-        $this->middleware('auth', ['except' => ['index', 'show']]);
+        $this->middleware('auth', ['except' => ['index', 'show', 'search']]);
     }
 
     public function index(ThreadBll $threadBll)
     {
         $threads = $threadBll->getThreads();
         return $this->view('threads.index')
+            ->withThreads($threads)
+            ->withSections(Section::orderBy('order')->get());
+    }
+
+    public function search(ThreadBll $threadBll)
+    {
+        $threads = $threadBll->search();
+        return $this->view('threads.search')
             ->withThreads($threads)
             ->withSections(Section::orderBy('order')->get());
     }
@@ -93,7 +101,14 @@ class ThreadController extends Controller
      */
     public function create()
     {
-        $sections = Section::orderBy('order')->get();
+        //除去无子版块的版块信息,同时判断用户身份决定是否显示公告活动等版块
+        $sections = Section::orderBy('order')->with(['nodes.subNodes', 'nodes' => function ($query) {
+            if (Auth::check() && Auth::user()->can('manage_threads')) {
+                $query->has('subNodes');
+            } else {
+                $query->show()->has('subNodes');
+            }
+        }])->get();
         $subNodes = SubNode::find(Input::query('sub_node_id'));
 
         $this->breadcrumb->push(trans('hifone.threads.add'), route('thread.create'));
@@ -108,28 +123,40 @@ class ThreadController extends Controller
         if (Auth::user()->hasRole('NoComment')) {
             return Redirect::back()->withErrors('您已被系统管理员禁言');
         }
+        $this->validate(request(), [
+            'thread.title' => 'required|min:5|max:80',
+            'thread.body' => 'required|min:5|max:10000',
+            'thread.sub_node_id' => 'required',
+        ], [
+            'thread.title.required' => '帖子标题必填',
+            'thread.title.min' => '帖子标题不得少于5个字符',
+            'thread.title.max' => '帖子标题不得多于80个字符',
+            'thread.body.required' => '帖子内容必填',
+            'thread.body.min' => '帖子内容不得少于5个字符',
+            'thread.body.max' => '帖子内容不得多于10000个字符',
+        ]);
         try {
             $thread = $threadBll->createThread();
             $thread->heat = $thread->heat_compute;
-            $post = $thread->body . $thread->title;
+            $post = $thread->title . $thread->body;
+            $badWord = '';
             if (Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($post)) || $threadBll->isContainsImageOrUrl($post)) {
-                if (isset($badWord)) {
-                    $thread->bad_word = $badWord;
-                }
+                $thread->bad_word = $badWord;
                 $thread->body = app('parser.at')->parse($thread->body);
                 $thread->body = app('parser.emotion')->parse($thread->body);
                 $thread->save();
                 return Redirect::route('thread.index')
-                    ->withSuccess('帖子发表成功，请耐心等待审核');
+                    ->withSuccess('帖子已提交，待审核');
             }
             $thread->body = app('parser.at')->parse($thread->body);
             $thread->body = app('parser.emotion')->parse($thread->body);
             $thread->save();
-            $threadBll->threadPassAutoAudit($thread);
-            return Redirect::route('thread.show', ['thread' => $thread->id])
-                ->withSuccess('帖子审核通过，发表成功！');
+            $threadBll->AutoAudit($thread);
 
-        } catch (\Exception $e) {
+            return Redirect::route('thread.show', ['thread' => $thread->id])
+                ->withSuccess('发布成功');
+
+        } catch (ValidationException $e) {
                 return Redirect::route('thread.create')
                     ->withInput(Input::all())
                     ->withErrors($e->getMessageBag());
@@ -148,8 +175,6 @@ class ThreadController extends Controller
     {
         $this->needAuthorOrAdminPermission($thread->user_id);
         $sections = Section::orderBy('order')->get();
-
-        $thread->body = $thread->body_original;
 
         return $this->view('threads.create_edit')
             ->withThread($thread)
@@ -290,6 +315,7 @@ class ThreadController extends Controller
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
             $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
             $this->updateOpLog($thread, '删除帖子', trim(request('reason')));
+            $thread->removeFromIndex();
             DB::commit();
         } catch (ValidationException $e) {
             DB::rollBack();

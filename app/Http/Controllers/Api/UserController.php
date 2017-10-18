@@ -30,6 +30,7 @@ class UserController extends ApiController
             if ($cloudUser['img'] && $user->avatar_url != $cloudUser['img'] && $cloudUser['img'] != 'Uploads/default/default.jpg') {
                 $user->avatar_url = $cloudUser['img'];
                 $user->save();
+                $user->updateIndex();
             }
             return $user;
         } else {
@@ -63,7 +64,9 @@ class UserController extends ApiController
     {
         $followers = $followBll->followers($user);
         foreach ($followers as &$follower) {
-            $follower['followed'] = User::hasFollowUser($follower['user']);
+            if (isset($follower['user'])) {
+                $follower['followed'] = User::hasFollowUser($follower['user']);
+            }
         }
 
         return $followers;
@@ -76,8 +79,9 @@ class UserController extends ApiController
         return $threads;
     }
 
-    public function credit(UserBll $userBll)
+    public function credit(UserBll $userBll, CommonBll $commonBll)
     {
+        $commonBll->login();
         $credits = $userBll->getCredits();
 
         return $credits;
@@ -95,9 +99,20 @@ class UserController extends ApiController
     {
         $avatar = $commonBll->upload();
         Auth::user()->update(['avatar_url' => $avatar['filename']]);
+        Auth::user()->updateIndex();
         $phicommBll->upload($avatar['localFile']);
         unset($avatar['localFile']);
 
         return $avatar;
+    }
+
+    public function search()
+    {
+        $users = User::searchUser(request('q'));
+        foreach ($users as $user) {
+            $user['followed'] = User::hasFollowUser($user);
+        }
+
+        return $users;
     }
 }

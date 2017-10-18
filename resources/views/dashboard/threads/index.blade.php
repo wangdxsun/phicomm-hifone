@@ -65,7 +65,8 @@
                     <tr class="head">
                         <td style="width: 70px;">#</td>
                         <td>标题</td>
-                        <td style="width: 80px;">版块</td>
+                        <td style="width: 80px;">主版块</td>
+                        <td style="width: 80px;">子版块</td>
                         <td style="width: 120px;">发帖人</td>
                         <td style="width: 100px;">IP地址</td>
                         <td style="width: 60px;">热度值</td>
@@ -73,7 +74,7 @@
                         <td style="width: 50px;">查看</td>
                         <td style="width: 150px;">发帖时间</td>
                         <td style="width: 100px;">操作人</td>
-                        <td style="width: 150px;">操作时间</td>
+                        <td style="width: 90px;">操作时间</td>
                         <td style="width: 120px;">操作</td>
                     </tr>
                     @foreach($threads as $thread)
@@ -81,13 +82,22 @@
                         <td>{{ $thread->id }}</td>
                         <td><a target="_blank" href="{{ $thread->url }}">{{ $thread->title }}</a></td>
                         <td><a href="{{ $thread->node->url }}" target="_blank">{{ $thread->node->name }}</a></td>
-                        <td><a href="{{ $thread->user->url }}" target="_blank">{{ $thread->user->username }}</a></td>
+                        <td>{{ $thread->subNode->name }}</td>
+                        <td>
+                            @if(!isset($thread->user))
+                                {{ '' }}
+                            @else
+                            <a href="{{ $thread->user->url }}" target="_blank">{{ $thread->user->username }}</a>
+                            @endif
+                        </td>
                         <td>{{ $thread->ip }}</td>
                         <td>{{ $thread->heat }}</td>
                         <td>{{ $thread->reply_count }}</td>
                         <td>{{ $thread->view_count }}</td>
                         <td>{{ $thread->created_time }}</td>
-                        <td>{{ $thread->lastOpUser->username }}</td>
+                        <td>
+                            {{ $thread->lastOpUser->username }}
+                        </td>
                         <td>{{ $thread->last_op_time }}</td>
                         <td>
                             <a data-url="/dashboard/thread/{{$thread->id}}/excellent" data-method="post" title="精华"><i class="{{ $thread->excellent }}"></i></a>

@@ -38,7 +38,7 @@ class SendSingleNotificationHandler
             $this->follow($event->target);
         } elseif ($event instanceof ThreadWasLikedEvent) {
             //like oneself's thread or reply ,there is no notification.
-            if (Auth::user() != $event->target->user){
+            if (Auth::user()->id != $event->target->user->id){
                 $this->like($event->target);
             }
         } elseif ($event instanceof FavoriteWasAddedEvent) {

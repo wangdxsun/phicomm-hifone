@@ -20,11 +20,13 @@ use Hifone\Events\Pin\SinkWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasMarkedExcellentEvent;
 use Hifone\Http\Controllers\Controller;
+use Hifone\Models\Node;
 use Hifone\Models\Section;
+use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
 use Hifone\Services\Parsers\Markdown;
-use Illuminate\Support\Facades\DB;
+use DB;
 use Redirect;
 use View;
 use Input;
@@ -62,12 +64,11 @@ class ThreadController extends Controller
 
     public function edit(Thread $thread)
     {
-        $sections = Section::orderBy('order')->get();
+        $nodes = Node::orderBy('order')->get();
 
         $menu = $thread->status == 0 ? 'index' : 'audit';
         return View::make('dashboard.threads.create_edit')
-            ->withNode($thread->node)
-            ->withSections($sections)
+            ->withNodes($nodes)
             ->withThread($thread)
             ->withCurrentMenu($menu);
     }
@@ -82,6 +83,7 @@ class ThreadController extends Controller
     public function update(Thread $thread)
     {
         $threadData = Input::get('thread');
+        $threadData['node_id'] = SubNode::find($threadData['sub_node_id'])->node->id;
 
         $threadData['body_original'] = $threadData['body'];
         $threadData['body'] = (new Markdown())->convertMarkdownToHtml($threadData['body']);
@@ -95,7 +97,10 @@ class ThreadController extends Controller
                 ->withInput($threadData)
                 ->withErrors($e->getMessageBag());
         }
-        return Redirect::back()->withSuccess('恭喜，操作成功！');
+        if ($thread->status == 0) {
+            return Redirect::route('dashboard.thread.index')->withSuccess('恭喜，操作成功！');
+        }
+        return Redirect::route('dashboard.thread.audit')->withSuccess('恭喜，操作成功！');
     }
 
     public function pin(Thread $thread)
@@ -113,7 +118,6 @@ class ThreadController extends Controller
             $this->updateOpLog($thread, '置顶');
             event(new ThreadWasPinnedEvent($thread));
             event(new PinWasAddedEvent($thread->user, 'Thread'));
-
         }
 
         return Redirect::back()->withSuccess('恭喜，操作成功！');
@@ -147,7 +151,9 @@ class ThreadController extends Controller
             event(new ExcellentWasAddedEvent($thread->user));
             event(new ThreadWasMarkedExcellentEvent($thread));
         }
-
+        //更新热度值
+        $thread->heat = $thread->heat_compute;
+        $thread->save();
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
@@ -211,13 +217,12 @@ class ThreadController extends Controller
     }
 
     //将帖子状态修改为审核通过,需要将帖子数加1
-    public function passAudit($thread)
+    public function passAudit(Thread $thread)
     {
         DB::beginTransaction();
         try {
             $thread->status = 0;
-            //更新热度值
-            $thread->heat = $thread->heat;
+            $thread->heat = $thread->heat_compute;
             $this->updateOpLog($thread, '审核通过');
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
             if ($thread->subNode) {
@@ -225,6 +230,7 @@ class ThreadController extends Controller
             }
             $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
             event(new ThreadWasAuditedEvent($thread));
+            $thread->addToIndex();
             DB::commit();
         } catch (ValidationException $e) {
             DB::rollBack();
@@ -265,13 +271,13 @@ class ThreadController extends Controller
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
             $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);
             $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
+            $thread->removeFromIndex();
             event(new ThreadWasTrashedEvent($thread));
             DB::commit();
         } catch (ValidationException $e) {
             DB::rollBack();
             return Redirect::back()->withErrors($e->getMessageBag());
         }
-
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
@@ -307,8 +313,8 @@ class ThreadController extends Controller
         $heatOffset = request('value');
         try {
             $thread->heat_offset = $heatOffset;
-            //更新热度值
-            $thread->heat = $thread->heat;
+            $thread->heat = $thread->heat_compute;
+            $this->updateOpLog($thread, '提升帖子', $heatOffset);
             $thread->save();
         } catch (ValidationException $e) {
             return Redirect::back()->withErrors($e->getMessageBag());

@@ -13,6 +13,7 @@ namespace Hifone\Http\Controllers;
 
 use Hifone\Http\Bll\NodeBll;
 use Hifone\Models\Node;
+use Hifone\Models\Section;
 use Hifone\Models\Thread;
 use Hifone\Repositories\Criteria\Thread\BelongsToNode;
 use Hifone\Repositories\Criteria\Thread\Filter;

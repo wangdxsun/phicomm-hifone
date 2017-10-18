@@ -200,13 +200,13 @@ class ReplyController extends Controller
     }
 
     //从回收站恢复回复
-    public function recycle($reply)
+    public function recycle(Reply $reply)
     {
         return $this->passAudit($reply);
     }
 
     //将回复状态修改为审核通过，回复所属帖子修改时间将被更新
-    public function passAudit($reply)
+    public function passAudit(Reply $reply)
     {
         DB::beginTransaction();
         try {
@@ -216,8 +216,10 @@ class ReplyController extends Controller
             }
 
             $reply->thread->increment('reply_count', 1);
-            $reply->user->increment('reply_count', 1);
-
+            $reply->thread->updateIndex();
+            if ($reply->user) {
+                $reply->user->increment('reply_count', 1);
+            }
             $reply->status = 0;
             $this->updateOpLog($reply, '审核通过');
 
@@ -245,6 +247,7 @@ class ReplyController extends Controller
             $reply->thread->node->decrement('reply_count', 1);//版块回帖数-1
             $reply->thread->subNode->decrement('reply_count', 1);//子版块回帖数-1
             $reply->thread->decrement('reply_count', 1);
+            $reply->thread->updateIndex();
             $reply->user->decrement('reply_count', 1);
             $this->trash($reply);
             event(new ReplyWasTrashedEvent($reply));

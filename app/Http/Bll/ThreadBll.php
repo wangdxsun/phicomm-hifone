@@ -13,13 +13,12 @@ use Hifone\Commands\Thread\AddThreadCommand;
 use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasAuditedEvent;
 use Hifone\Events\Thread\ThreadWasViewedEvent;
-use Hifone\Models\Node;
 use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
 use Hifone\Repositories\Criteria\Thread\Filter;
 use Hifone\Repositories\Criteria\Thread\Search;
-use Illuminate\Support\Facades\DB;
+use DB;
 use Input;
 use Auth;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -40,7 +39,7 @@ class ThreadBll extends BaseBll
 
     public function search()
     {
-        $threads = Thread::visible()->title(request('q'))->with(['user', 'node'])->recent()->paginate();
+        $threads = Thread::searchThread(request('q'))->load(['user', 'node', 'lastReplyUser']);
         return $threads;
     }
 
@@ -109,7 +108,6 @@ class ThreadBll extends BaseBll
         ));
         $thread = Thread::find($threadTemp->id);
         return $thread;
-
     }
 
     public function showThread($thread)
@@ -139,16 +137,19 @@ class ThreadBll extends BaseBll
         return $replies;
     }
 
-    public function threadPassAutoAudit($thread)
+    public function AutoAudit($thread)
     {
         //自动审核通过，触发相应的代码逻辑
         event(new ThreadWasAddedEvent($thread));
         DB::beginTransaction();
         try {
             $thread->status = 0;
+            $thread->addToIndex();
             $this->updateOpLog($thread, '自动审核通过');
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
-            $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);
+            if ($thread->subNode) {
+                $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);
+            }
             $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
             event(new ThreadWasAuditedEvent($thread));
             DB::commit();

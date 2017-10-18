@@ -12,6 +12,7 @@ use Hifone\Http\Bll\PhicommBll;
 use Hifone\Http\Controllers\App\AppController;
 use Hifone\Models\User;
 use Hifone\Services\Filter\WordsFilter;
+use Auth;
 
 class UserController extends AppController
 {
@@ -20,7 +21,7 @@ class UserController extends AppController
         $this->validate(request(), [
             'username' => 'required|max:15|regex:/\A[\x{4e00}-\x{9fa5}A-Za-z0-9\-\_\.]+\z/u',
         ], [
-            'username.regex' => '用户名含有非法字符'
+            'username.regex' => '昵称含有非法字符'
         ]);
         $phicommBll->bind($wordsFilter);
 
@@ -29,7 +30,10 @@ class UserController extends AppController
 
     public function show()
     {
-        $user = User::findUserByPhicommId(\Auth::phicommId());
+        if (empty(Auth::phicommId())) {
+            throw new \Exception('缺少token');
+        }
+        $user = User::findUserByPhicommId(Auth::phicommId());
         if (!$user) {
             throw new \Exception('请先关联社区账号');
         }

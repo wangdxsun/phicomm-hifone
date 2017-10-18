@@ -70,7 +70,7 @@ class Log extends BaseModel
             case Carousel::class:
                 return 'banner';
             case Node::class:
-                return '板块';
+                return '版块';
             case Word::class:
                 return '敏感词';
             default:

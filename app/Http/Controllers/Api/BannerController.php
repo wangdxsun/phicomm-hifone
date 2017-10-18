@@ -15,16 +15,21 @@ class BannerController extends ApiController
 {
     public function index()
     {
-        return Carousel::visible()->orderBy('order')->get();
+        $carousels = Carousel::visible()->orderBy('order')->get();
+        foreach ($carousels as $carousel) {
+            $carousel['statistic'] = route('api.banner.show', $carousel->id);
+        }
+        return $carousels;
     }
 
     public function show(Carousel $carousel)
     {
         //统计Banner次数
         event(new BannerWasViewedEvent($carousel));
-        return [
-            "type" => $carousel->type,
-            "url" => $carousel->jump_url
-            ];
+        if ($carousel->type == 0) {
+            return redirect($carousel->url);
+        } else {
+            return redirect('/thread/'.$carousel->url);
+        }
     }
 }
