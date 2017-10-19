@@ -47,6 +47,7 @@ class ReplyBll extends BaseBll
             $reply->thread->node->increment('reply_count', 1);//版块回帖数+1
             $reply->thread->subNode->increment('reply_count', 1);//子版块回帖数+1
             $reply->thread->increment('reply_count', 1);
+            $reply->thread->updateIndex();
             $reply->user->increment('reply_count', 1);
 
             $reply->status = 0;

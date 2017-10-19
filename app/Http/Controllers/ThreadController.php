@@ -123,14 +123,25 @@ class ThreadController extends Controller
         if (Auth::user()->hasRole('NoComment')) {
             return Redirect::back()->withErrors('您已被系统管理员禁言');
         }
+        $this->validate(request(), [
+            'thread.title' => 'required|min:5|max:80',
+            'thread.body' => 'required|min:5|max:10000',
+            'thread.sub_node_id' => 'required',
+        ], [
+            'thread.title.required' => '帖子标题必填',
+            'thread.title.min' => '帖子标题不得少于5个字符',
+            'thread.title.max' => '帖子标题不得多于80个字符',
+            'thread.body.required' => '帖子内容必填',
+            'thread.body.min' => '帖子内容不得少于5个字符',
+            'thread.body.max' => '帖子内容不得多于10000个字符',
+        ]);
         try {
             $thread = $threadBll->createThread();
             $thread->heat = $thread->heat_compute;
             $post = $thread->title . $thread->body;
+            $badWord = '';
             if (Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($post)) || $threadBll->isContainsImageOrUrl($post)) {
-                if (isset($badWord)) {
-                    $thread->bad_word = $badWord;
-                }
+                $thread->bad_word = $badWord;
                 $thread->body = app('parser.at')->parse($thread->body);
                 $thread->body = app('parser.emotion')->parse($thread->body);
                 $thread->save();
@@ -140,8 +151,7 @@ class ThreadController extends Controller
             $thread->body = app('parser.at')->parse($thread->body);
             $thread->body = app('parser.emotion')->parse($thread->body);
             $thread->save();
-            //$thread->addToIndex();
-            $threadBll->threadPassAutoAudit($thread);
+            $threadBll->AutoAudit($thread);
 
             return Redirect::route('thread.show', ['thread' => $thread->id])
                 ->withSuccess('发布成功');

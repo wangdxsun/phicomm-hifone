@@ -16,7 +16,7 @@ use Hifone\Models\Thread;
 use Hifone\Models\User;
 use Auth;
 use Hifone\Services\Filter\WordsFilter;
-use Input;
+use Config;
 
 class ThreadController extends AppController
 {
@@ -36,13 +36,12 @@ class ThreadController extends AppController
         $thread = $threadBll->createThreadInApp();
 
         $post = $thread->title.$thread->body;
+        $badWord = '';
         if (Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($post)) || $threadBll->isContainsImageOrUrl($post)) {
-            if (isset($badWord)) {
-                $thread->bad_word = $badWord;
-            }
+            $thread->bad_word = $badWord;
             $msg = '帖子已提交，待审核';
         } else {
-            $threadBll->threadPassAutoAudit($thread);
+            $threadBll->AutoAudit($thread);
             $thread->addToIndex();
             $msg = '发布成功';
         }

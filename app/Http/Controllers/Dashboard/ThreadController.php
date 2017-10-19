@@ -26,7 +26,7 @@ use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
 use Hifone\Services\Parsers\Markdown;
-use Illuminate\Support\Facades\DB;
+use DB;
 use Redirect;
 use View;
 use Input;
@@ -118,7 +118,6 @@ class ThreadController extends Controller
             $this->updateOpLog($thread, '置顶');
             event(new ThreadWasPinnedEvent($thread));
             event(new PinWasAddedEvent($thread->user, 'Thread'));
-
         }
 
         return Redirect::back()->withSuccess('恭喜，操作成功！');
@@ -218,7 +217,7 @@ class ThreadController extends Controller
     }
 
     //将帖子状态修改为审核通过,需要将帖子数加1
-    public function passAudit($thread)
+    public function passAudit(Thread $thread)
     {
         DB::beginTransaction();
         try {
@@ -272,13 +271,13 @@ class ThreadController extends Controller
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
             $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);
             $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
+            $thread->removeFromIndex();
             event(new ThreadWasTrashedEvent($thread));
             DB::commit();
         } catch (ValidationException $e) {
             DB::rollBack();
             return Redirect::back()->withErrors($e->getMessageBag());
         }
-        $thread->removeFromIndex();
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
@@ -314,8 +313,8 @@ class ThreadController extends Controller
         $heatOffset = request('value');
         try {
             $thread->heat_offset = $heatOffset;
-            //更新热度值
             $thread->heat = $thread->heat_compute;
+            $this->updateOpLog($thread, '提升帖子', $heatOffset);
             $thread->save();
         } catch (ValidationException $e) {
             return Redirect::back()->withErrors($e->getMessageBag());

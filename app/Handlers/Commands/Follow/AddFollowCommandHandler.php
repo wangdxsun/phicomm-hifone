@@ -40,6 +40,7 @@ class AddFollowCommandHandler
             if ($target->followers()->forUser(Auth::id())->count()) {
                 $target->followers()->forUser(Auth::id())->delete();
                 $target->decrement('follower_count', 1);
+                $target->updateIndex();
                 if ($target instanceOf User) {
                     Auth::user()->decrement('follow_count', 1);
                     Auth::user()->updateIndex();
@@ -50,6 +51,7 @@ class AddFollowCommandHandler
             } else {
                 $target->followers()->create(['user_id' => Auth::id()]);
                 $target->increment('follower_count', 1);
+                $target->updateIndex();
                 if ($target instanceOf User) {
                     Auth::user()->increment('follow_count', 1);
                     Auth::user()->updateIndex();

@@ -25,7 +25,7 @@ class ThreadController extends ApiController
     {
         $commonBll->login();
         //置顶优先，再按热度值倒序排序
-        $threads = Thread::visible()->with(['user', 'node'])->orderBy('order', 'DESC')->orderBy('heat', 'DESC')->paginate();
+        $threads = Thread::visible()->with(['user', 'node'])->hot()->paginate();
         return $threads;
     }
 
@@ -36,8 +36,9 @@ class ThreadController extends ApiController
         return $threads;
     }
 
-    public function show(Thread $thread, ThreadBll $threadBll)
+    public function show(Thread $thread, ThreadBll $threadBll, CommonBll $commonBll)
     {
+        $commonBll->login();
         $threadBll->showThread($thread);
 
         return $thread;
@@ -52,14 +53,12 @@ class ThreadController extends ApiController
         $thread = $threadBll->createThread();
         $thread->heat = $thread->heat_compute;
         $post = $thread->title.$thread->body;
+        $badWord = '';
         if (Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($post)) || $threadBll->isContainsImageOrUrl($post)) {
-            if (isset($badWord)) {
-                $thread->bad_word = $badWord;
-            }
+            $thread->bad_word = $badWord;
             $msg = '帖子已提交，待审核';
         } else {
-            $threadBll->threadPassAutoAudit($thread);
-            $thread->addToIndex();
+            $threadBll->AutoAudit($thread);
             $msg = '发布成功';
         }
         $thread->body = app('parser.at')->parse($thread->body);

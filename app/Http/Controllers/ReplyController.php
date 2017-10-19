@@ -30,11 +30,9 @@ class ReplyController extends Controller
     {
         try{
             $reply = $replyBll->createReply();
+            $badWord = '';
             if (Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($reply->body)) || $replyBll->isContainsImageOrUrl($reply->body)) {
-                if (isset($badWord)) {
-                    $reply->bad_word = $badWord;
-                    $reply->save();
-                }
+                $reply->bad_word = $badWord;
                 $reply->body = app('parser.at')->parse($reply->body);
                 $reply->body = app('parser.emotion')->parse($reply->body);
                 $reply->save();

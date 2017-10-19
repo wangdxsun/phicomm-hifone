@@ -61,7 +61,7 @@ class Thread extends BaseModel implements TaggableInterface
      * @var string[]
      */
     public $rules = [
-        'title'   => 'required|min:5|max:80',
+        'title'   => 'required|max:80',
         'body'    => 'required',
         'node_id' => 'required|int',
         'sub_node_id' => 'required|int',
@@ -73,13 +73,15 @@ class Thread extends BaseModel implements TaggableInterface
         'title' => [
             'type' => 'string',
             'analyzer' => 'ik_max_word',
-            'search_analyzer' => 'ik_max_word',
         ],
         'body' => [
             'type' => 'string',
             'analyzer' => 'ik_max_word',
-            'search_analyzer' => 'ik_max_word',
         ],
+        'created_at' => [
+            'type' => 'date',
+            'format' => 'yyyy-MM-dd HH:mm',
+        ]
     ];
     
     public static $orderTypes = [
@@ -222,9 +224,14 @@ class Thread extends BaseModel implements TaggableInterface
         return $query->orderBy('order', 'desc')->orderBy('heat', 'desc')->orderBy('created_at', 'desc');
     }
 
-    public function scopePinAndRecentReply($query)
+    public function scopePinAndRecent($query)
     {
         return $query->orderBy('order', 'desc')->orderBy('created_at', 'desc');
+    }
+
+    public function scopeRecent($query)
+    {
+        return $query->orderBy('created_at', 'desc');
     }
 
     public function scopeExcellent($query)

@@ -26,5 +26,7 @@ class BannerController extends AppController
     public function bannerViewCount(Carousel $carousel)
     {
         event(new BannerWasViewedEvent($carousel));
+
+        return '统计banner点击';
     }
 }

@@ -74,7 +74,7 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
             'search_analyzer' => 'ik_max_word',
         ],
         'score' => [
-            'type' => 'float'
+            'type' => 'integer'
         ]
     ];
 
@@ -220,7 +220,7 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
 
     public function getAvatarUrlAttribute($value)
     {
-        return $value ?: request()->getSchemeAndHttpHost() . '/images/phiwifi.png';
+        return $value ?: env('APP_URL') . '/images/phiwifi.png';
     }
 
     /**
