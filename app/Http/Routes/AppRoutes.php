@@ -20,6 +20,9 @@ class AppRoutes
 
             $router->get('nodes', 'NodeController@index');
             $router->get('sections', 'NodeController@sections');
+            $router->get('subNodes', 'NodeController@subNodes');
+            $router->get('nodes/{node}', 'NodeController@show');
+            $router->get('subNodes/{subNode}', 'NodeController@showOfSubNode');
             $router->get('banners', 'BannerController@index');
             $router->get('banners/{carousel}', 'BannerController@bannerViewCount')->name('banner.show');
             $router->get('threads', 'ThreadController@index');

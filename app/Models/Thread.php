@@ -127,6 +127,11 @@ class Thread extends BaseModel implements TaggableInterface
         return $query->where('node_id', $node->id);
     }
 
+    public function scopeOfSubNode($query, SubNode $subNode)
+    {
+        return $query->where('sub_node_id', $subNode->id);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class)->select(['id', 'username', 'avatar_url', 'role','score','password','thread_count','score',

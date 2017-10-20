@@ -16,6 +16,9 @@ use Input;
 
 class CommonBll extends BaseBll
 {
+    /**
+     * 触发用户每日签到
+     */
     public function login()
     {
         if (Auth::check()) {

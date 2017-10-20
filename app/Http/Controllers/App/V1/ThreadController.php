@@ -55,30 +55,18 @@ class ThreadController extends AppController
         ];
     }
 
-    public function show(Thread $thread)
+    public function show(Thread $thread, ThreadBll $threadBll, CommonBll $commonBll)
     {
-        if ($thread->inVisible()) {
-            throw new NotFoundHttpException('帖子状态不可见');
-        }
-        event(new ThreadWasViewedEvent($thread));
+        $commonBll->login();
+        $thread = $threadBll->showThread($thread);
+//        $thread = $thread->toArray();
+//        unset($thread['user']['roles']);
 
-        $thread = $thread->load(['user']);
-        $replies = $this->replies($thread);
-        $thread['followed'] = User::hasFollowUser($thread->user);
-        $thread['liked'] = Auth::check() ? Auth::user()->hasLikeThread($thread) : false;
-        $thread['replies'] = $replies;
-        $thread = $thread->toArray();
-        unset($thread['user']['roles']);
         return $thread;
     }
 
-    public function replies($thread)
+    public function replies(Thread $thread)
     {
-        $replies = $thread->replies()->visible()->with(['user'])
-            ->orderBy('order', 'desc')->orderBy('created_at', 'desc')->paginate();
-        foreach ($replies as &$reply) {
-            $reply['liked'] = Auth::check() ? Auth::user()->hasLikeReply($reply) : false;
-        }
-        return $replies;
+        return (new ThreadBll())->replies($thread);
     }
 }

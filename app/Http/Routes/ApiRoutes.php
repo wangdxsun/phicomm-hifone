@@ -41,10 +41,11 @@ class ApiRoutes
             $router->get('node', 'NodeController@index');
             $router->get('sections', 'NodeController@sections');
             $router->get('subNodes', 'NodeController@subNodes');
+            $router->get('nodes/{node}', 'NodeController@show');
+            $router->get('subNodes/{subNode}', 'NodeController@showOfSubNode');
             $router->get('nodes/{node}/subNodes','SubNodeController@index');
             $router->get('banner', 'BannerController@index');
             $router->get('banner/{carousel}', 'BannerController@show')->name('banner.show');
-            $router->get('node/{node}', 'NodeController@show');
             $router->get('report/reason', 'ReportController@reason');
 
             //登录相关

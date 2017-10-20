@@ -9,11 +9,14 @@
 namespace Hifone\Http\Bll;
 
 use Hifone\Models\Node;
+use Hifone\Models\Section;
+use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
 use Hifone\Repositories\Criteria\Thread\BelongsToNode;
 use Hifone\Repositories\Criteria\Thread\Filter;
 use Hifone\Repositories\Criteria\Thread\Search;
 use Input;
+use Auth;
 
 class NodeBll extends BaseBll
 {
@@ -29,17 +32,80 @@ class NodeBll extends BaseBll
         return $threads;
     }
 
-    public function recentThreads(Node $node)
+    private function recentThreadsOfNode(Node $node)
     {
         $threads = Thread::visible()->ofNode($node)->recent()->with(['user', 'subNode'])->paginate();
 
         return $threads;
     }
 
-    public function hotThreads(Node $node)
+    private function hotThreadsOfNode(Node $node)
     {
         $threads = Thread::visible()->ofNode($node)->hot()->with(['user', 'subNode'])->paginate();
 
         return $threads;
+    }
+
+    public function sections()
+    {
+        $sections = Section::orderBy('order')->with(['nodes.subNodes', 'nodes' => function ($query) {
+            $query->has('subNodes');
+        }])->has('nodes')->get();
+
+        return $sections;
+    }
+
+    public function subNodes()
+    {
+        //除去无子版块的版块信息,同时判断用户身份决定是否显示公告活动等主版块
+        $sections = Section::orderBy('order')->with(['nodes.subNodes', 'nodes' => function ($query) {
+            if (Auth::check() && Auth::user()->can('manage_threads')) {
+                $query->has('subNodes');
+            } else {
+                $query->show()->has('subNodes');
+            }
+        }])->has('nodes')->get();
+
+        return $sections;
+    }
+
+    public function show(Node $node, NodeBll $nodeBll)
+    {
+        $hot = $nodeBll->hotThreadsOfNode($node);
+        $recent = $nodeBll->recentThreadsOfNode($node);
+        $moderators = $node->moderators()->with(['user'])->get();
+
+        $node['hot'] = $hot;
+        $node['recent'] = $recent;
+        $node['moderators'] = $moderators;
+
+        return $node;
+    }
+
+    private function recentThreadsOfSubNode(SubNode $subNode)
+    {
+        $threads = Thread::visible()->ofSubNode($subNode)->recent()->with(['user', 'subNode'])->paginate();
+
+        return $threads;
+    }
+
+    private function hotThreadsOfSubNode(SubNode $subNode)
+    {
+        $threads = Thread::visible()->ofSubNode($subNode)->hot()->with(['user', 'subNode'])->paginate();
+
+        return $threads;
+    }
+
+    public function showOfSubNode(SubNode $subNode, NodeBll $nodeBll)
+    {
+        $hot = $nodeBll->recentThreadsOfSubNode($subNode);
+        $recent = $nodeBll->hotThreadsOfSubNode($subNode);
+        $moderators = $subNode->node->moderators()->with(['user'])->get();
+
+        $node['hot'] = $hot;
+        $node['recent'] = $recent;
+        $node['moderators'] = $moderators;
+
+        return $node;
     }
 }

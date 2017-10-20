@@ -11,8 +11,8 @@ namespace Hifone\Http\Controllers\Api;
 use Hifone\Http\Bll\NodeBll;
 use Hifone\Models\Node;
 use Hifone\Models\Section;
-use Hifone\Models\Thread;
 use Auth;
+use Hifone\Models\SubNode;
 
 class NodeController extends ApiController
 {
@@ -21,42 +21,49 @@ class NodeController extends ApiController
         return Node::orderBy('order')->get();
     }
 
-    public function subNodes()
+    /**
+     * 版块列表
+     * @param NodeBll $nodeBll
+     * @return mixed
+     */
+    public function sections(NodeBll $nodeBll)
     {
-        //除去无子版块的版块信息,同时判断用户身份决定是否显示公告活动等主版块
-        $sections = Section::orderBy('order')->with(['nodes.subNodes', 'nodes' => function ($query) {
-            if (Auth::check() && Auth::user()->can('manage_threads')) {
-                $query->has('subNodes');
-            } else {
-                $query->show()->has('subNodes');
-            }
-        }])->has('nodes')->get();
-
+        $sections = $nodeBll->sections();
         return $sections;
     }
 
     /**
-     * 显示所有版块
+     * 发帖选择子版块
+     * @param NodeBll $nodeBll
+     * @return mixed
      */
-    public function sections()
+    public function subNodes(NodeBll $nodeBll)
     {
-        $sections = Section::orderBy('order')->with(['nodes.subNodes', 'nodes' => function ($query) {
-            $query->has('subNodes');
-        }])->has('nodes')->get();
-
+        $sections = $nodeBll->subNodes();
         return $sections;
     }
 
+    /**
+     * 版块详情
+     * @param Node $node
+     * @param NodeBll $nodeBll
+     * @return Node
+     */
     public function show(Node $node, NodeBll $nodeBll)
     {
-        $hot = $nodeBll->hotThreads($node);
-        $recent = $nodeBll->recentThreads($node);
-        $moderators = $node->moderators()->with(['user'])->get();
+        $node = $nodeBll->show($node, $nodeBll);
+        return $node;
+    }
 
-        $node['hot'] = $hot;
-        $node['recent'] = $recent;
-        $node['moderators'] = $moderators;
-
+    /**
+     * 版块内按子版块筛选
+     * @param SubNode $subNode
+     * @param NodeBll $nodeBll
+     * @return Node
+     */
+    public function showOfSubNode(SubNode $subNode, NodeBll $nodeBll)
+    {
+        $node = $nodeBll->showOfSubNode($subNode, $nodeBll);
         return $node;
     }
 }
