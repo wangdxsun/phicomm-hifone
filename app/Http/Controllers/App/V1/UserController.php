@@ -9,6 +9,7 @@
 namespace Hifone\Http\Controllers\App\V1;
 
 use Hifone\Http\Bll\PhicommBll;
+use Hifone\Http\Bll\UserBll;
 use Hifone\Http\Controllers\App\AppController;
 use Hifone\Models\User;
 use Hifone\Services\Filter\WordsFilter;
@@ -38,5 +39,12 @@ class UserController extends AppController
             throw new \Exception('请先关联社区账号');
         }
         return $user;
+    }
+
+    public function favorites(User $user, UserBll $userBll)
+    {
+        $threads = $userBll->getFavorites($user);
+
+        return $threads;
     }
 }

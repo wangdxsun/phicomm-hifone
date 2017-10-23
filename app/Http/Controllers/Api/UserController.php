@@ -115,4 +115,11 @@ class UserController extends ApiController
 
         return $users;
     }
+
+    public function favorites(User $user, UserBll $userBll)
+    {
+        $threads = $userBll->getFavorites($user);
+
+        return $threads;
+    }
 }

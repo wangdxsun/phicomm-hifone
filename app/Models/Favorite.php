@@ -34,4 +34,9 @@ class Favorite extends BaseModel
     {
         return self::forUser($user->id)->where('thread_id', $thread->id)->first();
     }
+
+    public function thread()
+    {
+        return $this->belongsTo(Thread::class);
+    }
 }

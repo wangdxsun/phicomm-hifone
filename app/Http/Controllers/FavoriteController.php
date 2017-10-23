@@ -11,21 +11,13 @@
 
 namespace Hifone\Http\Controllers;
 
-use AltThree\Validator\ValidationException;
-use Hifone\Commands\Favorite\AddFavoriteCommand;
+use Hifone\Http\Bll\FavoriteBll;
 use Hifone\Models\Thread;
-use Illuminate\Support\Facades\Response;
 
 class FavoriteController extends Controller
 {
-    public function createOrDelete(Thread $thread)
+    public function createOrDeleteFavorite(Thread $thread, FavoriteBll $favoriteBll)
     {
-        try {
-            dispatch(new AddFavoriteCommand($thread));
-        } catch (ValidationException $e) {
-            return $e->getMessageBag();
-        }
-
-        return ['status' => 1];
+        return $favoriteBll->createOrDelete($thread);
     }
 }

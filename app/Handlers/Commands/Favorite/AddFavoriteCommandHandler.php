@@ -55,10 +55,14 @@ class AddFavoriteCommandHandler
     {
         if (Favorite::isUserFavoritedThread(Auth::user(), $thread)) {
             Auth::user()->favoriteThreads()->detach($thread->id);
+            if ($thread->favorite_count > 0){
+                $thread->decrement('favorite_count', 1);
+            }
 
             event(new FavoriteWasRemovedEvent($thread->user));
         } else {
             Auth::user()->favoriteThreads()->attach($thread->id);
+            $thread->increment('favorite_count', 1);
 
             event(new FavoriteWasAddedEvent($thread));
         }

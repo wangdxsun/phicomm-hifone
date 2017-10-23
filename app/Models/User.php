@@ -113,6 +113,11 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         return $this->belongsToMany(Thread::class, 'favorites')->withTimestamps();
     }
 
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class)->orderBy('id', 'desc');
+    }
+
     /**
      * Users can have many threads.
      *

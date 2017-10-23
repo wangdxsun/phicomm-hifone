@@ -29,11 +29,20 @@ class AppRoutes
             $router->get('threads/{thread}', 'ThreadController@show');
             $router->get('threads/{thread}/replies', 'ThreadController@replies');
 
+            // Authorization Required
             $router->group(['middleware' => 'auth:hifone'], function ($router) {
                 $router->post('upload/base64', 'CommonController@uploadBase64');
                 $router->post('upload', 'CommonController@upload');
                 $router->post('threads', 'ThreadController@store');
                 $router->post('replies', 'ReplyController@store');
+                $router->post('follow/user/{user}', 'FollowController@user');
+                $router->post('follow/thread/{thread}', 'FollowController@thread');
+                $router->post('like/thread/{thread}', 'LikeController@thread');
+                $router->post('like/reply/{reply}', 'LikeController@reply');
+                $router->post('report/thread/{thread}', 'ReportController@thread');
+                $router->post('report/reply/{reply}', 'ReportController@reply');
+                $router->post('favorite/thread/{thread}', 'FavoriteController@createOrDeleteFavorite');
+                $router->get('favorite/threads/{user}', 'UserController@favorites');
             });
         });
     }
