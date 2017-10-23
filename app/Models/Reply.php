@@ -105,6 +105,11 @@ class Reply extends BaseModel
         return $query->where('status', -1)->orWhere('status', -5);//回收站
     }
 
+    public function scopePinAndRecent($query)
+    {
+        return $query->orderBy('order', 'desc')->orderBy('created_at', 'desc');
+    }
+
     public function getPinAttribute()
     {
         return $this->order > 0 ? 'fa fa-thumb-tack text-danger' : 'fa fa-thumb-tack';
