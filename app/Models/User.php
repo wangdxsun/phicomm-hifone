@@ -370,6 +370,11 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         return $this->reports()->ofType(Reply::class)->ofId($reply->id)->count() > 0;
     }
 
+    public function hasFavoriteThread(Thread $thread)
+    {
+        return $this->favorites()->ofThread($thread->id)->count() > 0;
+    }
+
     public function likes()
     {
         return $this->hasMany(Like::class);

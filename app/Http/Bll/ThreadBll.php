@@ -121,6 +121,7 @@ class ThreadBll extends BaseBll
         $replies = $this->replies($thread);
         $thread['followed'] = User::hasFollowUser($thread->user);
         $thread['liked'] = Auth::check() ? Auth::user()->hasLikeThread($thread) : false;
+        $thread['favorite'] = Auth::check() ? Auth::user()->hasFavoriteThread($thread) : false;
         $thread['replies'] = $replies;
 
         return $thread;
@@ -128,8 +129,8 @@ class ThreadBll extends BaseBll
 
     public function replies($thread)
     {
-        $replies = $thread->replies()->visible()->with(['user'])
-            ->orderBy('order', 'desc')->orderBy('created_at', 'desc')->get();
+        $replies = $thread->replies()->visible()->with(['user', 'reply'])
+            ->orderBy('order', 'desc')->orderBy('created_at', 'desc')->paginate();
         foreach ($replies as $reply) {
             $reply['liked'] = Auth::check() ? Auth::user()->hasLikeReply($reply) : false;
         }

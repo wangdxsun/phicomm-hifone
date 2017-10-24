@@ -85,6 +85,18 @@ class Reply extends BaseModel
         return $this->belongsTo(Thread::class);
     }
 
+    //评论的所有回复
+    public function replies()
+    {
+        return $this->hasMany(Reply::class);
+    }
+
+    //回复所属的评论或回复
+    public function reply()
+    {
+        return $this->belongsTo(Reply::class);
+    }
+
     public function reports()
     {
         return $this->morphMany(Report::class, 'reportable');
