@@ -74,6 +74,9 @@ class AddCreditHandler
         } elseif ($event instanceof FavoriteWasRemovedEvent) {
             $action = 'favorite_removed';
             $user = $event->user;
+            if (Auth::id() == $user->id) {//取消收藏自己的帖子
+                return false;
+            }
         } elseif ($event instanceof PinWasAddedEvent) {
             if($event->action == 'Thread'){
                 $action = 'thread_pin';
