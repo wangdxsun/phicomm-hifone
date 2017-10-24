@@ -327,11 +327,6 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         return $thread->follows()->forUser($this->id)->count() > 0;
     }
 
-    public function isFavoriteThread($thread)
-    {
-        return $thread->favorites()->forUser($this->id)->count() > 0;
-    }
-
     public static function hasFollowUser(User $user)
     {
         if (Auth::guest()) {
