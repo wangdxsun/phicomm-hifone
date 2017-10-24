@@ -39,7 +39,13 @@ class ThreadBll extends BaseBll
 
     public function search()
     {
-        $threads = Thread::searchThread(request('q'))->load(['user', 'node', 'lastReplyUser']);
+        $threads = Thread::searchThread(request('q'));
+        foreach ($threads as $thread) {
+            unset($thread['node']);
+            unset($thread['user']);
+        }
+        $threads = $threads->load(['user', 'node', 'lastReplyUser']);
+
         return $threads;
     }
 
@@ -51,14 +57,6 @@ class ThreadBll extends BaseBll
 
         $tags = isset($threadData['tags']) ? $threadData['tags'] : '';
         $images = '';
-
-        //如果有单独上传图片，将图片拼接到正文后面
-//        if (Input::hasFile('images')) {
-//            foreach ($images = Input::file('images') as $image) {
-//                $res = dispatch(new UploadImageCommand($image));
-//                $threadData['body'] .= "<img src='{$res["filename"]}'/>";
-//            }
-//        }
 
         //base64上传
         if (Input::has('images')) {
@@ -118,20 +116,17 @@ class ThreadBll extends BaseBll
         event(new ThreadWasViewedEvent($thread));
 
         $thread = $thread->load(['user', 'node']);
-        $replies = $this->replies($thread);
         $thread['followed'] = User::hasFollowUser($thread->user);
         $thread['liked'] = Auth::check() ? Auth::user()->hasLikeThread($thread) : false;
         $thread['favorite'] = Auth::check() ? Auth::user()->hasFavoriteThread($thread) : false;
-        $thread['replies'] = $replies;
 
         return $thread;
     }
 
     public function replies($thread)
     {
-        $replies = $thread->replies()->visible()->with(['user', 'reply'])
-            ->orderBy('order', 'desc')->orderBy('created_at', 'desc')->paginate();
-        foreach ($replies as $reply) {
+        $replies = $thread->replies()->visible()->with(['user', 'reply'])->pinAndRecent()->paginate();
+        foreach ($replies as &$reply) {
             $reply['liked'] = Auth::check() ? Auth::user()->hasLikeReply($reply) : false;
         }
         return $replies;

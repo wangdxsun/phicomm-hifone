@@ -100,4 +100,11 @@ class HifoneGuard extends SessionGuard implements Guard
         $tokenInfo = json_decode(base64_decode($tokens[1]), true);
         return $tokenInfo['uid'];
     }
+
+    public function logout()
+    {
+        $this->session->remove('access_token');
+        $this->session->remove('phicommId');
+        parent::logout();
+    }
 }
