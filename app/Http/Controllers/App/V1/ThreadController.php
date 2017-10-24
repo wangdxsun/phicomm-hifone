@@ -43,7 +43,6 @@ class ThreadController extends AppController
             $msg = '帖子已提交，待审核';
         } else {
             $threadBll->AutoAudit($thread);
-            $thread->addToIndex();
             $msg = '发布成功';
         }
         $thread->body = app('parser.at')->parse($thread->body);
