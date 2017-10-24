@@ -9,16 +9,21 @@
 namespace Hifone\Http\Bll;
 
 use Hifone\Commands\Like\AddLikeCommand;
+use Auth;
 
 class LikeBll extends BaseBll
 {
     public function likeThread($thread)
     {
         dispatch(new AddLikeCommand($thread));
+
+        return ['liked' => Auth::check() ? Auth::user()->hasLikeThread($thread) : false];
     }
 
     public function likeReply($reply)
     {
         dispatch(new AddLikeCommand($reply));
+
+        return ['liked' => Auth::check() ? Auth::user()->hasLikeReply($reply) : false];
     }
 }

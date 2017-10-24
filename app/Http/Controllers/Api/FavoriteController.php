@@ -15,6 +15,6 @@ class FavoriteController extends ApiController
 {
     public function createOrDeleteFavorite(Thread $thread, FavoriteBll $favoriteBll)
     {
-        return $favoriteBll->createOrDelete($thread);
+        return $favoriteBll->favoriteThread($thread);
     }
 }

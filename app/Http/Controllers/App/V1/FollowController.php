@@ -22,8 +22,6 @@ class FollowController extends AppController
 
     public function thread(Thread $thread, FollowBll $followBll)
     {
-        $followBll->followThread($thread);
-
-        return ['status' => 1];
+        return $followBll->followThread($thread);
     }
 }
