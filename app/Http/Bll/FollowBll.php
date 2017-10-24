@@ -34,7 +34,7 @@ class FollowBll extends BaseBll
         }
         dispatch(new AddFollowCommand($thread));
 
-        return ['followed' => Auth::check() ? Auth::user()->hasFollowThread($thread) : false];
+        return ['followed' => Auth::user()->hasFollowThread($thread)];
     }
 
     public function follows(User $user)

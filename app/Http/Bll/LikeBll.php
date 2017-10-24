@@ -17,13 +17,13 @@ class LikeBll extends BaseBll
     {
         dispatch(new AddLikeCommand($thread));
 
-        return ['liked' => Auth::check() ? Auth::user()->hasLikeThread($thread) : false];
+        return ['liked' => Auth::user()->hasLikeThread($thread)];
     }
 
     public function likeReply($reply)
     {
         dispatch(new AddLikeCommand($reply));
 
-        return ['liked' => Auth::check() ? Auth::user()->hasLikeReply($reply) : false];
+        return ['liked' => Auth::user()->hasLikeReply($reply)];
     }
 }

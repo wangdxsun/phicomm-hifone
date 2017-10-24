@@ -13,6 +13,6 @@ class FavoriteBll extends BaseBll
     {
         dispatch(new AddFavoriteCommand($thread));
 
-        return ['favorite' => Auth::check() ? Auth::user()->hasFavoriteThread($thread) : false];
+        return ['favorite' => Auth::user()->hasFavoriteThread($thread)];
     }
 }
