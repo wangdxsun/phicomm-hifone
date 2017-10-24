@@ -16,6 +16,6 @@ class FavoriteController extends AppController
 {
     public function createOrDeleteFavorite(Thread $thread, FavoriteBll $favoriteBll)
     {
-        return $favoriteBll->createOrDelete($thread);
+        return $favoriteBll->favoriteThread($thread);
     }
 }

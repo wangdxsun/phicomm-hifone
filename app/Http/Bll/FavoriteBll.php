@@ -2,21 +2,18 @@
 
 namespace Hifone\Http\Bll;
 
-use AltThree\Validator\ValidationException;
+use Exception;
+use Auth;
 use Hifone\Commands\Favorite\AddFavoriteCommand;
 use Hifone\Models\Thread;
 
 class FavoriteBll extends BaseBll
 {
 
-    public function createOrDelete(Thread $thread)
+    public function favoriteThread(Thread $thread)
     {
-        try {
-            dispatch(new AddFavoriteCommand($thread));
-        } catch (ValidationException $e) {
-            return $e->getMessageBag();
-        }
+        dispatch(new AddFavoriteCommand($thread));
 
-        return ['status' => 1];
+        return ['favorite' => Auth::check() ? Auth::user()->isFavoriteThread($thread) : false];
     }
 }

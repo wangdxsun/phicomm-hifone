@@ -17,15 +17,11 @@ class LikeController extends ApiController
 {
     public function thread(Thread $thread, LikeBll $likeBll)
     {
-        $likeBll->likeThread($thread);
-
-        return Response::json('success');
+        return $likeBll->likeThread($thread);
     }
 
     public function reply(Reply $reply, LikeBll $likeBll)
     {
-        $likeBll->likeReply($reply);
-
-        return Response::json('success');
+        return $likeBll->likeReply($reply);
     }
 }

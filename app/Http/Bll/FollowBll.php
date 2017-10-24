@@ -32,7 +32,9 @@ class FollowBll extends BaseBll
         if ($thread->user->id == Auth::id()) {
             throw new Exception('自己的帖子无需关注');
         }
-        return dispatch(new AddFollowCommand($thread));
+        dispatch(new AddFollowCommand($thread));
+
+        return ['followed' => Auth::check() ? Auth::user()->hasFollowThread($thread) : false];
     }
 
     public function follows(User $user)
