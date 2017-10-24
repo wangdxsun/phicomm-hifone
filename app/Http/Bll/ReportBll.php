@@ -21,7 +21,7 @@ class ReportBll
     {
         $reportData = Input::get('report');
         $reportData['user_id'] = Auth::id();
-        if ($thread->reports()->forUser(Auth::id())->count() > 0) {
+        if (Auth::user()->hasReportThread($thread)) {
             throw new \Exception('你已经举报过了哦');
         }
         $thread->reports()->create($reportData);
@@ -31,7 +31,7 @@ class ReportBll
     {
         $reportData = Input::get('report');
         $reportData['user_id'] = Auth::id();
-        if ($reply->reports()->forUser(Auth::id())->count() > 0) {
+        if (Auth::user()->hasReportReply($reply)) {
             throw new \Exception('你已经举报过了哦');
         }
         $reply->reports()->create($reportData);

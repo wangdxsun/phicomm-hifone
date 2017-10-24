@@ -59,8 +59,6 @@ class ThreadController extends AppController
     {
         $commonBll->login();
         $thread = $threadBll->showThread($thread);
-//        $thread = $thread->toArray();
-//        unset($thread['user']['roles']);
 
         return $thread;
     }
