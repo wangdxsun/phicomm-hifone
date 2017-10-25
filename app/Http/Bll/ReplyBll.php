@@ -14,9 +14,11 @@ use Hifone\Events\Reply\RepliedWasAddedEvent;
 use Hifone\Events\Reply\ReplyWasAddedEvent;
 use Hifone\Events\Reply\ReplyWasAuditedEvent;
 use Hifone\Models\Reply;
+use Hifone\Services\Filter\WordsFilter;
 use Illuminate\Support\Facades\DB;
 use Input;
 use Auth;
+use Config;
 
 class ReplyBll extends BaseBll
 {
@@ -66,6 +68,26 @@ class ReplyBll extends BaseBll
         ));
 //        $reply = Reply::find($replyTemp->id);
         return $reply;
+    }
+
+    public function auditReply($reply, WordsFilter $wordsFilter)
+    {
+        $badWord = '';
+        if (Config::get('setting.auto_audit', 0) == 0  || ($badWord = $wordsFilter->filterWord($reply->body)) || $this->isContainsImageOrUrl($reply->body)) {
+            $reply->bad_word = $badWord;
+            $msg = $this->getMsg($reply->reply_id, false);
+        } else {
+            $this->replyPassAutoAudit($reply);
+            $msg = $this->getMsg($reply->reply_id, true);
+        }
+        $reply->body = app('parser.at')->parse($reply->body);
+        $reply->body = app('parser.emotion')->parse($reply->body);
+        $reply->save();
+
+        return [
+            'msg' => $msg,
+            'reply' => $reply
+        ];
     }
 
     public function replyPassAutoAudit($reply)
