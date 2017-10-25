@@ -35,7 +35,7 @@ final class AddReplyCommand
      *
      * @param string $body
      */
-    public function __construct($body, $user_id, $thread_id, $reply_id = null, $images = '')
+    public function __construct($body, $user_id, $thread_id, $reply_id, $images)
     {
         $this->body = $body;
         $this->user_id = $user_id;
