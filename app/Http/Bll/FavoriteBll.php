@@ -8,7 +8,6 @@ use Hifone\Models\Thread;
 
 class FavoriteBll extends BaseBll
 {
-
     public function favoriteThread(Thread $thread)
     {
         dispatch(new AddFavoriteCommand($thread));
