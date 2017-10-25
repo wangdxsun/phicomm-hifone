@@ -56,4 +56,27 @@ class Chat extends BaseModel
     {
         return $query->where('from_user_id', \Auth::id())->orWhere('to_user_id', \Auth::id());
     }
+
+    public function scopeSearch($query, $searches = [])
+    {
+        foreach ($searches as $key => $value) {
+            if ($key == 'from_user_id') {
+                $query->whereHas('from', function ($query) use ($value){
+                    $query->where('username', 'like',"%$value%");
+                });
+            } elseif ($key == 'to_user_id') {
+                $query->whereHas('to', function ($query) use ($value){
+                    $query->where('username', 'like',"%$value%");
+                });
+            } elseif ($key == 'message') {
+                $query->where('message', 'LIKE', "%$value%");
+            } elseif ($key == 'date_start') {
+                $query->where('created_at', '>=', $value);
+            } elseif ($key == 'date_end') {
+                $query->where('created_at', '<=', $value);
+            } else {
+                $query->where($key, $value);
+            }
+        }
+    }
 }

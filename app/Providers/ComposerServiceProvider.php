@@ -25,6 +25,7 @@ use Hifone\Composers\SidebarComposer;
 use Hifone\Composers\TimezoneComposer;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\ServiceProvider;
+use Hifone\Composers\Dashboard\ChatsMenuComposer;
 
 /**
  * This is the config service provider class.
@@ -50,6 +51,7 @@ class ComposerServiceProvider extends ServiceProvider
         $factory->composer(['dashboard.groups.*'], RoleMenuComposer::class);
         $factory->composer(['dashboard.stats.*'], StatMenuComposer::class);
         $factory->composer(['dashboard.tips.*', 'dashboard.links.*', 'dashboard.locations.*', 'dashboard.settings.*', ], SettingMenuComposer::class);
+        $factory->composer(['dashboard.chat.*'], ChatsMenuComposer::class);
     }
 
     /**

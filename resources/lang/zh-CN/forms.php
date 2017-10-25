@@ -29,4 +29,5 @@ return [
     'register' => '注册',
     'enabled'  => '激活',
     'disabled' => '禁用',
+    'send'     => '发送'
 ];

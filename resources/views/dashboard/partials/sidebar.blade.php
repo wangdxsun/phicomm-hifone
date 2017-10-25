@@ -47,24 +47,14 @@
                     <span>敏感词过滤</span>
                 </a>
             </li>
-            {{--<li {!! set_active('dashboard/notice*') !!}>--}}
-                {{--<a href="{{ route('dashboard.notice.index') }}">--}}
-                    {{--<i class="fa fa-bullhorn"></i>--}}
-                    {{--<span>公告管理</span>--}}
-                {{--</a>--}}
-            {{--</li>--}}
+
             <li {!! set_active('dashboard/creditRule*') !!}>
                 <a href="{{ route('dashboard.creditRule.index') }}">
                     <i class="fa fa-star"></i>
                     <span>经验值管理</span>
                 </a>
             </li>
-            {{--<li {!! set_active('dashboard/page*') !!} {!! set_active('dashboard/photo*') !!}>--}}
-                {{--<a href="{{ route('dashboard.photo.index') }}">--}}
-                    {{--<i class="fa fa-image"></i>--}}
-                    {{--<span>其他管理</span>--}}
-                {{--</a>--}}
-            {{--</li>--}}
+
             <li {!! set_active('dashboard/carousel*') !!}>
                 <a href="{{ route('dashboard.carousel.index') }}">
                     <i class="fa fa-image"></i>
@@ -75,6 +65,12 @@
                 <a href="{{ route('dashboard.node.index') }}">
                     <i class="fa fa-sitemap"></i>
                     <span>版块管理</span>
+                </a>
+            </li>
+            <li {!! set_active('dashboard/chat*') !!}>
+                <a href="{{ route('dashboard.chat.send') }}">
+                    <i class="fa fa-envelope-o"></i>
+                    <span>私信群发</span>
                 </a>
             </li>
             <li {!! set_active('dashboard/report*') !!}>
@@ -95,12 +91,7 @@
                     <span>数据统计</span>
                 </a>
             </li>
-            {{--<li {!! set_active('dashboard/adspace*') !!} {!! set_active('dashboard/advertisement*') !!} {!! set_active('dashboard/adblock*') !!}>--}}
-                {{--<a href="{{ route('dashboard.advertisement.index') }}">--}}
-                    {{--<i class="fa fa-audio-description"></i>--}}
-                    {{--<span>{{ trans('dashboard.advertisements.advertisements') }}</span>--}}
-                {{--</a>--}}
-            {{--</li>--}}
+
             <li {!! set_active('dashboard/settings*') !!}>
                 <a href="{{ route('dashboard.settings.general') }}">
                     <i class="fa fa-gears"></i>

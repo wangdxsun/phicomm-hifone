@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('content')
-    <div class="content-wrapper">
+    <div class="content-wrapper" id="app">
         <div class="header sub-header">
             <span class="uppercase">
                 <i class="fa fa-file-text-o"></i> {{ $sub_header }}
@@ -9,7 +9,7 @@
             <div class="clearfix"></div>
         </div>
     @if(isset($sub_menu))
-    @include('dashboard.partials.sub-nav')
+        @include('dashboard.partials.sub-nav')
     @endif
         <div class="row">
             <div class="col-sm-12">
@@ -17,15 +17,15 @@
                 <div class="toolbar">
                     <form class="form-inline">
                         <div class="form-group">
-                            <input type="text" name="thread[id]" class="form-control" placeholder="帖子ID"
+                            <input type="text" name="thread[id]" class="form-control" placeholder="帖子ID" style="width: 100px;"
                                    @if (isset($search['id']))
                                       value="{{ $search['id'] }}"
                                    @endif >
-                            <input type="text" name="thread[title]" class="form-control" placeholder="帖子标题"
+                            <input type="text" name="thread[title]" class="form-control" placeholder="帖子标题" style="width: 160px;"
                                    @if (isset($search['title']))
                                         value="{{ $search['title'] }}"
                                    @endif >
-                            <input type="text" name="thread[user_id]" class="form-control" placeholder="发帖人"
+                            <input type="text" name="thread[user_id]" class="form-control" placeholder="发帖人" style="width: 100px;"
                                    @if (isset($search['user_id']))
                                         value="{{ $search['user_id'] }}"
                                    @endif >
@@ -42,15 +42,20 @@
                                 </optgroup>
                             @endforeach
                         </select>
-                        <input name="thread[date_start]" size="10" type="text" class="form_date form-control" data-date-format="yyyy-mm-dd" placeholder="开始时间"
-                               @if (isset($search['date_start']))
-                               value="{{ $search['date_start'] }}"
-                               @endif >
-                        <input name="thread[date_end]" size="10" type="text" class="form_date form-control" data-date-format="yyyy-mm-dd" placeholder="结束时间"
-                               @if (isset($search['date_end']))
-                               value="{{ $search['date_end'] }}"
-                               @endif >
-
+                        <select class="form-control" name="thread[sub_node_id]">
+                            <option value = "" selected>全部子版块</option>
+                            @foreach ($nodes as $node)
+                                <optgroup label="{{ $node->name }}">
+                                    @if(isset($node->subNodes))
+                                        @foreach ($node->subNodes as $subNode)
+                                            <option value="{{ $subNode->id }}" >{{ $subNode->name }}</option>
+                                        @endforeach
+                                    @endif
+                                </optgroup>
+                            @endforeach
+                        </select>
+                        <el-date-picker type="datetime" placeholder="开始时间" v-model="date_start" name="search[date_start]"></el-date-picker>
+                        <el-date-picker type="datetime" placeholder="结束时间" v-model="date_end"  name="search[date_end]"></el-date-picker>
                         <select class="form-control " name="thread[orderType]">
                             <option value="" selected>排列方式</option>
                             @foreach ($orderTypes as $key => $orderType)
@@ -58,21 +63,23 @@
                             @endforeach
                         </select>
                         <button class="btn btn-default">搜索</button>
+                        <el-input :value="date_end_str" placeholder="请输入内容"  type="hidden" resize=" both"  style="width: 60px; height: 10px;" name="search[date_end]"></el-input>
+                        <el-input :value="date_start_str" placeholder="请输入内容"  type="hidden" resize=" both"  style="width: 60px; height: 10px;" name="search[date_start]"></el-input>
                     </form>
                 </div>
                 <table class="table table-bordered table-striped table-condensed">
                 <tbody>
                     <tr class="head">
                         <td style="width: 70px;">#</td>
-                        <td>标题</td>
+                        <td style="width: 240px;">标题</td>
                         <td style="width: 80px;">主版块</td>
                         <td style="width: 80px;">子版块</td>
                         <td style="width: 120px;">发帖人</td>
-                        <td style="width: 100px;">IP地址</td>
+                        <td style="width: 90px;">IP地址</td>
                         <td style="width: 60px;">热度值</td>
                         <td style="width: 50px;">回帖</td>
                         <td style="width: 50px;">查看</td>
-                        <td style="width: 150px;">发帖时间</td>
+                        <td style="width: 90px;">发帖时间</td>
                         <td style="width: 100px;">操作人</td>
                         <td style="width: 90px;">操作时间</td>
                         <td style="width: 120px;">操作</td>
@@ -118,5 +125,23 @@
                 </div>
         </div>
     </div>
-
+    <script>
+        new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    date_start:"",
+                    date_end:"",
+                };
+            },
+            computed: {
+                date_start_str: function () {
+                    return this.date_start === '' ? '' : this.date_start.format('yyyy-MM-dd hh:mm:ss');
+                },
+                date_end_str: function () {
+                    return this.date_end === '' ? '' : this.date_end.format('yyyy-MM-dd hh:mm:ss');
+                }
+            }
+        });
+    </script>
 @stop

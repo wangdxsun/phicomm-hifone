@@ -18,7 +18,10 @@ class Favorite extends BaseModel
      *
      * @var string[]
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'thread_id',
+        'user_id'
+    ];
 
     /**
      * Favorites can belong to a user.
