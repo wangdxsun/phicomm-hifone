@@ -26,8 +26,11 @@ class AppRoutes
             $router->get('banners', 'BannerController@index');
             $router->get('banners/{carousel}', 'BannerController@bannerViewCount')->name('banner.show');
             $router->get('threads', 'ThreadController@index');
-            $router->get('threads/{thread}', 'ThreadController@show');
-            $router->get('threads/{thread}/replies', 'ThreadController@replies');
+            $router->get('threads/search', 'ThreadController@search');
+            $router->get('users/search', 'UserController@search');
+            $router->get('threads/{thread}', 'ThreadController@show')->where('thread', '[0-9]+');
+            $router->get('threads/{thread}/replies', 'ThreadController@replies')->where('thread', '[0-9]+');
+
 
             // Authorization Required
             $router->group(['middleware' => 'auth:hifone'], function ($router) {
