@@ -381,6 +381,10 @@ return [
         ],
     ],
 
+    'chat' => [
+        'send'  => '发送用户私信',
+        'lists' => '历史私信记录'
+    ],
     // Sidebar footer
     'help'        => '帮助',
     'home'        => '首页',

@@ -76,6 +76,9 @@ class DashboardRoutes
             $router->get('check/check', 'CheckController@check')->name('check.check');
             $router->get('thread/{thread}/heat_offset','ThreadController@getHeatOffset');
             $router->post('thread/{thread}/heat_offset','ThreadController@setHeatOffset');
+            $router->get('chat/send','ChatController@sendChat')->name('chat.send');
+            $router->get('chat/lists','ChatController@chatLists')->name('chat.lists');
+            $router->post('chat/store','ChatController@chatStore')->name('chat.store');
 
             // Settings
             $router->group(['as' => 'settings.', 'prefix' => 'settings'], function (Registrar $router) {

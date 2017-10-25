@@ -43,7 +43,7 @@
                             <img v-if="imageUrl" :src="imageUrl" class="el-avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
-                        <el-input v-model="imageUrl" type="hidden" placeholder="请输入内容" name="node[icon]"></el-input>
+                        <el-input v-model="imageUrl"  placeholder="请输入内容" name="node[icon]"></el-input>
                     </div>
 
                     <div class="col-xs-4">
