@@ -13,6 +13,8 @@ namespace Hifone\Handlers\Commands\Favorite;
 
 use Auth;
 use Hifone\Commands\Favorite\AddFavoriteCommand;
+use Hifone\Events\Favorite\FavoriteThreadWasAddedEvent;
+use Hifone\Events\Favorite\FavoriteThreadWasRemovedEvent;
 use Hifone\Events\Favorite\FavoriteWasAddedEvent;
 use Hifone\Events\Favorite\FavoriteWasRemovedEvent;
 use Hifone\Models\Favorite;
@@ -59,12 +61,14 @@ class AddFavoriteCommandHandler
                 $thread->decrement('favorite_count', 1);
             }
 
-            event(new FavoriteWasRemovedEvent($thread->user));
+            event(new FavoriteWasRemovedEvent($thread->user));//帖子被取消收藏，被动事件
+            event(new FavoriteThreadWasRemovedEvent(Auth::user()));//取消对帖子的收藏，主动事件
         } else {
             Auth::user()->favoriteThreads()->attach($thread->id);
             $thread->increment('favorite_count', 1);
 
-            event(new FavoriteWasAddedEvent($thread));
+            event(new FavoriteWasAddedEvent($thread));//帖子被收藏，被动事件
+            event(new FavoriteThreadWasAddedEvent(Auth::user()));//收藏帖子，主动事件
         }
     }
 }

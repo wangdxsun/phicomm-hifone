@@ -15,6 +15,8 @@ use Auth;
 use Hifone\Commands\Credit\AddCreditCommand;
 use Hifone\Events\Credit\CreditWasAddedEvent;
 use Hifone\Events\EventInterface;
+use Hifone\Events\Favorite\FavoriteThreadWasAddedEvent;
+use Hifone\Events\Favorite\FavoriteThreadWasRemovedEvent;
 use Hifone\Events\Follow\FollowWasRemovedEvent;
 use Hifone\Events\Image\ImageWasUploadedEvent;
 use Hifone\Events\Like\LikeWasRemovedEvent;
@@ -66,17 +68,27 @@ class AddCreditHandler
             $action = 'login';
             $user = $event->user;
         } elseif ($event instanceof FavoriteWasAddedEvent) {
-            $action = 'favorite';
             $user = $event->thread->user;
-            if (Auth::id() == $user->id) {//收藏自己的帖子
+            if (Auth::id() == $user->id) {
+                //帖子被收藏，需要加积分，自己收藏自己的帖子只需要主动操作加分
                 return false;
+            } else {
+                $action = 'favorite';
             }
-        } elseif ($event instanceof FavoriteWasRemovedEvent) {
-            $action = 'favorite_removed';
+        } elseif ($event instanceof FavoriteThreadWasAddedEvent) {
             $user = $event->user;
-            if (Auth::id() == $user->id) {//取消收藏自己的帖子
+            $action = 'thread_favorite';
+        } elseif ($event instanceof FavoriteWasRemovedEvent) {
+            $user = $event->user;
+            if (Auth::id() == $user->id) {
+                //帖子被取消收藏，需要减积分，取消收藏自己的帖子不会减积分
                 return false;
+            } else {
+                $action = 'favorite_removed';
             }
+        } elseif ($event instanceof FavoriteThreadWasRemovedEvent) {
+            $user = $event->user;
+            $action = 'thread_favorite_removed';
         } elseif ($event instanceof PinWasAddedEvent) {
             if($event->action == 'Thread'){
                 $action = 'thread_pin';
