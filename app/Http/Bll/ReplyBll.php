@@ -101,4 +101,22 @@ class ReplyBll extends BaseBll
             throw new \Exception('系统错误！');
         }
     }
+
+    public function getMsg($reply_id, $isAudit)
+    {
+        if (!$isAudit) {
+            if ($reply_id) {
+                return $msg = '回复已提交，待审核';
+            } else {
+                return $msg = '评论已提交，待审核';
+            }
+        } else {
+            if ($reply_id) {
+                return $msg = '回复成功';
+            } else {
+                return $msg = '评论成功';
+            }
+        }
+
+    }
 }

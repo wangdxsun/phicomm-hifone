@@ -21,10 +21,10 @@ class ReplyController extends AppController
         $badWord = '';
         if (Config::get('setting.auto_audit', 0) == 0  || ($badWord = $wordsFilter->filterWord($reply->body)) || $replyBll->isContainsImageOrUrl($reply->body)) {
             $reply->bad_word = $badWord;
-            $msg = '回复已提交，待审核';
+            $msg = $replyBll->getMsg($reply->reply_id, false);
         } else {
             $replyBll->replyPassAutoAudit($reply);
-            $msg = '回复成功';
+            $msg = $replyBll->getMsg($reply->reply_id, true);
         }
         $reply->body = app('parser.at')->parse($reply->body);
         $reply->body = app('parser.emotion')->parse($reply->body);
@@ -34,4 +34,5 @@ class ReplyController extends AppController
             'reply' => $reply
         ];
     }
+
 }
