@@ -30,7 +30,7 @@ class AddThreadCommandHandler
     {
         $thumbnails = $this->getFirstImageUrl($command->body.$command->images);
         $body = app('parser.markdown')->convertMarkdownToHtml($command->body);
-        $body = "$body".$command->images;
+        $body .= $command->images;
         $data = [
             'user_id'       => $command->user_id,
             'title'         => $command->title,

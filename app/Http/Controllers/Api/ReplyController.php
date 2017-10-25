@@ -20,20 +20,16 @@ class ReplyController extends ApiController
         $badWord = '';
         if (Config::get('setting.auto_audit', 0) == 0  || ($badWord = $wordsFilter->filterWord($reply->body)) || $replyBll->isContainsImageOrUrl($reply->body)) {
             $reply->bad_word = $badWord;
-            $reply->body = app('parser.at')->parse($reply->body);
-            $reply->body = app('parser.emotion')->parse($reply->body);
-            $reply->save();
-            return [
-                'msg' => '回复已提交，待审核',
-                'reply' => $reply
-            ];
+            $msg = '评论已提交，待审核';
+        } else {
+            $replyBll->replyPassAutoAudit($reply);
+            $msg = '评论成功';
         }
         $reply->body = app('parser.at')->parse($reply->body);
         $reply->body = app('parser.emotion')->parse($reply->body);
         $reply->save();
-        $replyBll->replyPassAutoAudit($reply);
         return [
-            'msg' => '回复成功',
+            'msg' => $msg,
             'reply' => $reply
         ];
     }

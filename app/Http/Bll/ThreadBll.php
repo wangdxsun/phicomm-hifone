@@ -60,8 +60,7 @@ class ThreadBll extends BaseBll
 
         //base64上传
         if (Input::has('images')) {
-            for ($i = 0; $i < count(Input::get('images')); $i++) {
-                $image = Input::get('images')[$i];
+            foreach ($threadImages = Input::get('images') as $image) {
                 $upload = dispatch(new UploadBase64ImageCommand($image));
                 $images .= "<img src='{$upload["filename"]}'/>";
             }

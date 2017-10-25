@@ -17,7 +17,7 @@ class ReplyController extends AppController
 {
     public function store(ReplyBll $replyBll, WordsFilter $wordsFilter)
     {
-        $reply = $replyBll->createReply();
+        $reply = $replyBll->createReplyApp();
         $badWord = '';
         if (Config::get('setting.auto_audit', 0) == 0  || ($badWord = $wordsFilter->filterWord($reply->body)) || $replyBll->isContainsImageOrUrl($reply->body)) {
             $reply->bad_word = $badWord;

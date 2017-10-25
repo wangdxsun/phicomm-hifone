@@ -48,16 +48,13 @@ class AddReplyCommandHandler
     {
         $body = app('parser.markdown')->convertMarkdownToHtml($command->body);
         //如果有单独上传图片，将图片拼接到正文后面
-        if (Input::has('images')) {
-            foreach ($images = Input::get('images') as $image) {
-                $res = dispatch(new UploadBase64ImageCommand($image));
-                $body .= "<img src='{$res["filename"]}'/>";
-                $command->body .= "<img src='{$res["filename"]}'/>";
-            }
-        }
+        $body .= $command->images;
+        $command->body .= $command->images;
+
         $data = [
             'user_id'       => $command->user_id,
             'thread_id'     => $command->thread_id,
+            'reply_id'     => $command->reply_id,
             'body'          => $body,
             'body_original' => $command->body,
             'created_at'    => Carbon::now()->toDateTimeString(),

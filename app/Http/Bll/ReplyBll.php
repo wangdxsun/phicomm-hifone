@@ -25,11 +25,43 @@ class ReplyBll extends BaseBll
             throw new \Exception('对不起，你已被管理员禁止发言');
         }
         $replyData = request('reply');
+        $images = '';
+        if (Input::has('images')) {
+            foreach ($replyImages = Input::get('images') as $image) {
+                $upload = dispatch(new UploadBase64ImageCommand($image));
+                $images .= "<img src='{$upload["filename"]}'/>";
+            }
+        }
 
         $reply = dispatch(new AddReplyCommand(
             $replyData['body'],
             Auth::id(),
-            $replyData['thread_id']
+            $replyData['thread_id'],
+            array_get($replyData, 'reply_id'),
+            $images
+        ));
+        return $reply;
+    }
+
+    public function createReplyApp()
+    {
+        if (Auth::user()->hasRole('NoComment')) {
+            throw new \Exception('对不起，你已被管理员禁止发言');
+        }
+        $replyData = request('reply');
+        $images = '';
+        if (Input::has('images')) {
+            foreach ($replyImages = Input::get('images') as $replyImage) {
+                $images.= "<img src='".$replyImage."'/>";
+            }
+        }
+
+        $reply = dispatch(new AddReplyCommand(
+            $replyData['body'],
+            Auth::id(),
+            $replyData['thread_id'],
+            array_get($replyData, 'reply_id'),
+            $images
         ));
         return $reply;
     }
