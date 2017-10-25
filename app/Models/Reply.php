@@ -30,6 +30,7 @@ class Reply extends BaseModel
         'body',
         'user_id',
         'thread_id',
+        'reply_id',
         'body_original',
         'last_op_reason',
         'ip',

@@ -13,6 +13,7 @@ use Hifone\Commands\Reply\AddReplyCommand;
 use Hifone\Events\Reply\RepliedWasAddedEvent;
 use Hifone\Events\Reply\ReplyWasAddedEvent;
 use Hifone\Events\Reply\ReplyWasAuditedEvent;
+use Hifone\Models\Reply;
 use Illuminate\Support\Facades\DB;
 use Input;
 use Auth;
@@ -63,6 +64,7 @@ class ReplyBll extends BaseBll
             array_get($replyData, 'reply_id'),
             $images
         ));
+//        $reply = Reply::find($replyTemp->id);
         return $reply;
     }
 
