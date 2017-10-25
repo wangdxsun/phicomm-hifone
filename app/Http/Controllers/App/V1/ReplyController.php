@@ -11,7 +11,6 @@ namespace Hifone\Http\Controllers\App\V1;
 use Hifone\Http\Bll\ReplyBll;
 use Hifone\Http\Controllers\App\AppController;
 use Hifone\Services\Filter\WordsFilter;
-use Config;
 
 class ReplyController extends AppController
 {

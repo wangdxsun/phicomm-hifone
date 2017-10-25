@@ -29,6 +29,13 @@ class ThreadController extends AppController
         return $threads;
     }
 
+    public function search(ThreadBll $threadBll)
+    {
+        $threads = $threadBll->search();
+
+        return $threads;
+    }
+
     public function store(ThreadBll $threadBll, WordsFilter $wordsFilter)
     {
         if (Auth::user()->hasRole('NoComment')) {
