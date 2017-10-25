@@ -17,7 +17,11 @@ class NodeController extends AppController
 {
     public function index()
     {
-        return Node::orderBy('order')->get();
+        $nodes = Node::orderBy('order')->get();
+        foreach ($nodes as $node) {
+            $node['detail_url'] = route('app.node.show', $node->id);
+        }
+        return $nodes;
     }
 
     /**
@@ -28,6 +32,11 @@ class NodeController extends AppController
     public function sections(NodeBll $nodeBll)
     {
         $sections = $nodeBll->sections();
+        foreach ($sections as $section) {
+            foreach ($nodes = $section['nodes'] as $node) {
+                $node['detail_url'] = route('app.node.show', $node->id);
+            }
+        }
         return $sections;
     }
 
