@@ -48,6 +48,7 @@ class Reply extends BaseModel
      */
     public $rules = [
         'thread_id' => 'required|int',
+        'reply_id' => 'int',
         'body'      => 'required|max:15000',
         'user_id'   => 'int',
     ];
@@ -107,17 +108,17 @@ class Reply extends BaseModel
 
     public function scopeVisible($query)
     {
-        return $query->where('status', '>=', 0);
+        return $query->where('status', '>=', Reply::VISIBLE);
     }
 
     public function scopeAudit($query)
     {
-        return $query->where('status', -2);//审核中
+        return $query->where('status', Reply::Audit);//审核中
     }
 
     public function scopeTrash($query)
     {
-        return $query->where('status', -1)->orWhere('status', -5);//回收站
+        return $query->where('status', Reply::TRASH)->orWhere('status', -5);//回收站
     }
 
     public function scopePinAndRecent($query)
@@ -147,7 +148,7 @@ class Reply extends BaseModel
 
 //    public function getBodyAttribute($value)
 //    {
-//        return $this->status < 0 ? "该评论已删除" : $value;
+//        return $this->status < Reply::VISIBLE ? "该评论已删除" : $value;
 //    }
 
     public function scopeSearch($query,$searches = [])

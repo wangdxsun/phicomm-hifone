@@ -69,7 +69,7 @@ class ReplyController extends Controller
      */
     public function edit(Reply $reply)
     {
-        $menu = $reply->status == 0 ? 'index' : 'audit';
+        $menu = $reply->status == Reply::VISIBLE ? 'index' : 'audit';
         return View::make('dashboard.replies.create_edit')
             ->withPageTitle(trans('dashboard.replies.edit.title').' - '.trans('dashboard.dashboard'))
             ->withReply($reply)->withCurrentMenu($menu);
@@ -220,7 +220,7 @@ class ReplyController extends Controller
             if ($reply->user) {
                 $reply->user->increment('reply_count', 1);
             }
-            $reply->status = 0;
+            $reply->status = Reply::VISIBLE;
             $this->updateOpLog($reply, '审核通过');
 
             //把当前回复的创建时间和回复所属的帖子的修改时间进行比对

@@ -138,7 +138,7 @@ class ThreadBll extends BaseBll
         event(new ThreadWasAddedEvent($thread));
         DB::beginTransaction();
         try {
-            $thread->status = 0;
+            $thread->status = Thread::VISIBLE;
             $thread->addToIndex();
             $this->updateOpLog($thread, '自动审核通过');
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
