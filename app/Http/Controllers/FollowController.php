@@ -17,14 +17,14 @@ use Hifone\Models\User;
 
 class FollowController extends Controller
 {
-    public function createOrDelete(Thread $thread, FollowBll $followBll)
+    public function followThread(Thread $thread, FollowBll $followBll)
     {
         $followBll->followThread($thread);
 
         return ['status' => 1];
     }
 
-    public function createOrDeleteUser(User $user, FollowBll $followBll)
+    public function followUser(User $user, FollowBll $followBll)
     {
         $followBll->followUser($user);
 

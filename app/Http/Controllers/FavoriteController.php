@@ -16,7 +16,7 @@ use Hifone\Models\Thread;
 
 class FavoriteController extends Controller
 {
-    public function createOrDeleteFavorite(Thread $thread, FavoriteBll $favoriteBll)
+    public function threadFavorite(Thread $thread, FavoriteBll $favoriteBll)
     {
         return $favoriteBll->favoriteThread($thread);
     }
