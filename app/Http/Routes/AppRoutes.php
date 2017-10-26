@@ -45,7 +45,7 @@ class AppRoutes
                 $router->post('report/thread/{thread}', 'ReportController@thread');
                 $router->post('report/reply/{reply}', 'ReportController@reply');
                 $router->post('favorite/thread/{thread}', 'FavoriteController@createOrDeleteFavorite');
-                $router->get('favorite/threads/{user}', 'UserController@favorites');
+                $router->get('users/{user}/favorites', 'UserController@favorites');
             });
         });
     }

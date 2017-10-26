@@ -28,8 +28,9 @@ class Thread extends BaseModel implements TaggableInterface
     use ValidatingTrait, Taggable, Recent, RevisionableTrait, SoftDeletes, ElasticquentTrait;
 
     const VISIBLE = 0;//正常帖子
-    const TRASH = -1;//回收站
-    const Audit = -2;//待审核
+    const TRASH = -1;//审核未通过
+    const AUDIT = -2;//待审核 or 审核中
+    const DELETED = -3;//已删除
 
     // manually maintain
     public $timestamps = false;
@@ -41,6 +42,7 @@ class Thread extends BaseModel implements TaggableInterface
         'title',
         'body',
         'excerpt',
+        'channel',
         'body_original',
         'user_id',
         'node_id',
@@ -180,19 +182,22 @@ class Thread extends BaseModel implements TaggableInterface
         return $this->status < 0 && !(\Auth::id() == $this->user->id || \Auth::user()->can('view_thread'));
     }
 
+    //正常
     public function scopeVisible($query)
     {
         return $query->where('status', '>=', static::VISIBLE);
     }
 
+    //待审核
     public function scopeAudit($query)
     {
-        return $query->where('status', static::Audit);//审核中
+        return $query->where('status', static::AUDIT);//审核中
     }
 
+    //回收站
     public function scopeTrash($query)
     {
-        return $query->where('status', static::TRASH);//回收站
+        return $query->whereIn('status', [static::TRASH, static::DELETED]);//审核未通过和已删除
     }
 
     public function scopeTitle($query, $search)

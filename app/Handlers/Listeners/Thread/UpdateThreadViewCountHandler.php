@@ -24,7 +24,7 @@ class UpdateThreadViewCountHandler
 
         if (!$this->hasViewedThread($thread)) {
             $thread->increment('view_count', 1);
-            if ($thread->status == 0) {
+            if ($thread->status == Thread::VISIBLE) {
                 $thread->updateIndex();
             }
             $this->storeViewedThread($thread);

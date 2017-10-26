@@ -53,7 +53,7 @@ class UpdateThreadCommandHandler
 
         $thread->update($this->filter($command->data));
 
-        if ($thread->status == 0) {
+        if ($thread->status == Thread::VISIBLE) {
             $thread->updateIndex();
         }
 

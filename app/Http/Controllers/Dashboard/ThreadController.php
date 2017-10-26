@@ -64,11 +64,51 @@ class ThreadController extends Controller
             ->withSections($sections);
     }
 
+    /**
+     * 待审核列表
+     * @return mixed
+     */
+    public function audit()
+    {
+        $threads = Thread::audit()->with('node', 'user', 'lastOpUser')->orderBy('created_at', 'desc')->paginate(20);
+
+        return view('dashboard.threads.audit')
+            ->withPageTitle(trans('dashboard.threads.threads').' - '.trans('dashboard.dashboard'))
+            ->withThreads($threads)
+            ->withCurrentMenu('audit');
+    }
+
+    /**
+     * 回收站列表
+     * @return mixed
+     */
+    public function trashView()
+    {
+        $search = $this->filterEmptyValue(Input::get('thread'));
+        $threads = Thread::trash()->search($search)->with('node', 'user', 'lastOpUser')->orderBy('last_op_time', 'desc')->paginate(20);
+        $threadAll = Thread::trash()->get();
+        $userIds = array_unique(array_column($threadAll->toArray(), 'user_id'));
+        $operators = array_unique(array_column($threadAll->toArray(), 'last_op_user_id'));
+        $sections = Section::orderBy('order')->get();
+        $orderTypes = Thread::$orderTypes;
+
+        return view('dashboard.threads.trash')
+            ->withPageTitle(trans('dashboard.threads.threads').' - '.trans('dashboard.dashboard'))
+            ->withThreads($threads)
+            ->withThreadAll($threadAll)
+            ->with('orderTypes',$orderTypes)
+            ->withSections($sections)
+            ->withCurrentMenu('trash')
+            ->withSearch($search)
+            ->withUsers(User::find($userIds))
+            ->withOperators(User::find($operators));
+    }
+
     public function edit(Thread $thread)
     {
         $nodes = Node::orderBy('order')->get();
 
-        $menu = $thread->status == 0 ? 'index' : 'audit';
+        $menu = $thread->status == Thread::VISIBLE ? 'index' : 'audit';
         return View::make('dashboard.threads.create_edit')
             ->withNodes($nodes)
             ->withThread($thread)
@@ -77,9 +117,7 @@ class ThreadController extends Controller
 
     /**
      * Edit an thread.
-     *
      * @param int $id
-     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Thread $thread)
@@ -99,7 +137,7 @@ class ThreadController extends Controller
                 ->withInput($threadData)
                 ->withErrors($e->getMessageBag());
         }
-        if ($thread->status == 0) {
+        if ($thread->status == Thread::VISIBLE) {
             return Redirect::route('dashboard.thread.index')->withSuccess('恭喜，操作成功！');
         }
         return Redirect::route('dashboard.thread.audit')->withSuccess('恭喜，操作成功！');
@@ -167,20 +205,6 @@ class ThreadController extends Controller
             ->withSuccess('恭喜，操作成功！');
     }
 
-    /**
-     * 待审核列表
-     * @return mixed
-     */
-    public function audit()
-    {
-        $threads = Thread::audit()->with('node', 'user', 'lastOpUser')->orderBy('created_at', 'desc')->paginate(20);
-
-        return view('dashboard.threads.audit')
-            ->withPageTitle(trans('dashboard.threads.threads').' - '.trans('dashboard.dashboard'))
-            ->withThreads($threads)
-            ->withCurrentMenu('audit');
-    }
-
     //批量审核通过帖子
     public function postBatchAudit() {
         $count = 0;
@@ -223,7 +247,7 @@ class ThreadController extends Controller
     {
         DB::beginTransaction();
         try {
-            $thread->status = 0;
+            $thread->status = Thread::VISIBLE;
             $thread->heat = $thread->heat_compute;
             $this->updateOpLog($thread, '审核通过');
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
@@ -242,34 +266,13 @@ class ThreadController extends Controller
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
-    public function trashView()
-    {
-        $search = $this->filterEmptyValue(Input::get('thread'));
-        $threads = Thread::trash()->search($search)->with('node', 'user', 'lastOpUser')->orderBy('last_op_time', 'desc')->paginate(20);
-        $threadAll = Thread::trash()->get();
-        $userIds = array_unique(array_column($threadAll->toArray(), 'user_id'));
-        $operators = array_unique(array_column($threadAll->toArray(), 'last_op_user_id'));
-        $sections = Section::orderBy('order')->get();
-        $orderTypes = Thread::$orderTypes;
-
-        return view('dashboard.threads.trash')
-            ->withPageTitle(trans('dashboard.threads.threads').' - '.trans('dashboard.dashboard'))
-            ->withThreads($threads)
-            ->withThreadAll($threadAll)
-            ->with('orderTypes',$orderTypes)
-            ->withSections($sections)
-            ->withCurrentMenu('trash')
-            ->withSearch($search)
-            ->withUsers(User::find($userIds))
-            ->withOperators(User::find($operators));
-    }
-
     //从审核通过删除帖子，需要将帖子数-1
     public function indexToTrash(Thread $thread)
     {
         DB::beginTransaction();
         try {
-            $this->trash($thread);
+            $thread->status = Thread::DELETED;
+            $this->updateOpLog($thread, '删除帖子', trim(request('reason')));
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
             $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);
             $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
@@ -287,19 +290,13 @@ class ThreadController extends Controller
     public function auditToTrash(Thread $thread)
     {
         try {
-            $this->trash($thread);
+            $thread->status = Thread::TRASH;
+            $this->updateOpLog($thread, '帖子审核未通过', trim(request('reason')));
         } catch (\Exception $e) {
             return Redirect::back()->withErrors($e->getMessageBag());
         }
 
         return Redirect::back()->withSuccess('恭喜，操作成功！');
-    }
-
-    //将帖子放到回收站
-    public function trash(Thread $thread)
-    {
-        $thread->status = Thread::TRASH;
-        $this->updateOpLog($thread, '删除帖子', trim(request('reason')));
     }
 
     public function getHeatOffset(Thread $thread)
