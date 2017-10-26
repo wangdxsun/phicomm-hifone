@@ -30,22 +30,22 @@ class ApiRoutes
             $router->get('/', 'HomeController@index');
             $router->get('ping', 'GeneralController@ping');
             $router->get('exception', 'GeneralController@exception');
-            $router->get('emotion', 'GeneralController@emotion');
+            $router->get('emotions', 'GeneralController@emotion');
 
             //内容相关
-            $router->get('thread', 'ThreadController@index');
+            $router->get('threads', 'ThreadController@index');
             $router->get('thread/search', 'ThreadController@search');
             $router->get('user/search', 'UserController@search');
-            $router->get('thread/{thread}', 'ThreadController@show');
-            $router->get('thread/{thread}/replies', 'ThreadController@replies');
-            $router->get('node', 'NodeController@index');
+            $router->get('threads/{thread}', 'ThreadController@show');
+            $router->get('threads/{thread}/replies', 'ThreadController@replies');
+            $router->get('nodes', 'NodeController@index');
             $router->get('sections', 'NodeController@sections');
             $router->get('subNodes', 'NodeController@subNodes');
             $router->get('nodes/{node}', 'NodeController@show');
             $router->get('subNodes/{subNode}', 'NodeController@showOfSubNode');
             $router->get('nodes/{node}/subNodes','SubNodeController@index');
-            $router->get('banner', 'BannerController@index');
-            $router->get('banner/{carousel}', 'BannerController@show')->name('banner.show');
+            $router->get('banners', 'BannerController@index');
+            $router->get('banners/{carousel}', 'BannerController@show')->name('banner.show');
             $router->get('report/reason', 'ReportController@reason');
 
             //登录相关
@@ -58,23 +58,22 @@ class ApiRoutes
             //个人中心
             $router->get('user/me', 'UserController@me');
             $router->get('u/{username}', 'UserController@showByUsername');
-            $router->get('user/{user}', 'UserController@show')->where('user', '[0-9]+');
-            $router->get('user/{user}/follows', 'UserController@follows');
-            $router->get('user/{user}/followers', 'UserController@followers');
-            $router->get('user/{user}/threads', 'UserController@threads');
-            $router->get('user/{user}/replies', 'UserController@replies');
+            $router->get('users/{user}', 'UserController@show')->where('user', '[0-9]+');
+            $router->get('users/{user}/follows', 'UserController@follows');
+            $router->get('users/{user}/followers', 'UserController@followers');
+            $router->get('users/{user}/threads', 'UserController@threads');
 
             // Authorization Required
             $router->group(['middleware' => 'auth:hifone'], function ($router) {
-                $router->post('thread', 'ThreadController@store');
-                $router->post('reply', 'ReplyController@store');
-                $router->post('follow/user/{user}', 'FollowController@user');
-                $router->post('follow/thread/{thread}', 'FollowController@thread');
-                $router->post('like/thread/{thread}', 'LikeController@thread');
-                $router->post('like/reply/{reply}', 'LikeController@reply');
-                $router->post('favorite/thread/{thread}', 'FavoriteController@threadFavorite');
-                $router->post('report/thread/{thread}', 'ReportController@thread');
-                $router->post('report/reply/{reply}', 'ReportController@reply');
+                $router->post('threads', 'ThreadController@store');
+                $router->post('replies', 'ReplyController@store');
+                $router->post('follow/users/{user}', 'FollowController@user');
+                $router->post('follow/threads/{thread}', 'FollowController@thread');
+                $router->post('like/threads/{thread}', 'LikeController@thread');
+                $router->post('like/replies/{reply}', 'LikeController@reply');
+                $router->post('favorite/threads/{thread}', 'FavoriteController@threadFavorite');
+                $router->post('report/threads/{thread}', 'ReportController@thread');
+                $router->post('report/replies/{reply}', 'ReportController@reply');
                 $router->get('notification', 'NotificationController@index');
                 $router->get('watch', 'NotificationController@watch');
                 $router->get('credit', 'UserController@credit');
@@ -87,6 +86,8 @@ class ApiRoutes
                 $router->get('notification/at', 'NotificationController@at');
                 $router->get('notification/system', 'NotificationController@system');
                 $router->post('logout', 'PhicommController@logout');
+                $router->get('user/replies', 'UserController@replies');
+                $router->get('user/favorites', 'UserController@favorites');
             });
         });
     }
