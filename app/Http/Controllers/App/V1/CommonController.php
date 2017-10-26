@@ -19,8 +19,7 @@ class CommonController extends AppController
     {
         $images = [];
         if (Input::has('images')) {
-            for ($i = 0; $i < count(Input::get('images')); $i++) {
-                $image = Input::get('images')[$i];
+            foreach (Input::get('images') as $image) {
                 $upload = dispatch(new UploadBase64ImageCommand($image));
                 $images[] = $upload["filename"];
             }

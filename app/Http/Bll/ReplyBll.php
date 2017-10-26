@@ -59,14 +59,14 @@ class ReplyBll extends BaseBll
             }
         }
 
-        $reply = dispatch(new AddReplyCommand(
+        $replyTemp = dispatch(new AddReplyCommand(
             $replyData['body'],
             Auth::id(),
             $replyData['thread_id'],
             array_get($replyData, 'reply_id'),
             $images
         ));
-//        $reply = Reply::find($replyTemp->id);
+        $reply = Reply::find($replyTemp->id);
         return $reply->load('user', 'reply');
     }
 
