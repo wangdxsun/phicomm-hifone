@@ -54,8 +54,8 @@ class ReplyBll extends BaseBll
         $replyData = request('reply');
         $images = '';
         if (Input::has('images')) {
-            foreach ($replyImages = Input::get('images') as $replyImage) {
-                $images.= "<img src='".$replyImage."'/>";
+            foreach ($replyImages = json_decode(Input::get('images'), true) as $image) {
+                $images.= "<img src='".$image['image']."'/>";
             }
         }
 
