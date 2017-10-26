@@ -77,8 +77,8 @@ class ApiRoutes
                 $router->post('report/threads/{thread}', 'ReportController@thread');
                 $router->post('report/replies/{reply}', 'ReportController@reply');
                 $router->get('notification', 'NotificationController@index');
-                $router->get('watch', 'NotificationController@watch');
-                $router->get('credit', 'UserController@credit');
+                $router->get('user/watch', 'NotificationController@watch');
+                $router->get('user/credit', 'UserController@credit');
                 $router->post('user/avatar', 'UserController@upload');
 
                 $router->get('chats', 'ChatController@chats');
