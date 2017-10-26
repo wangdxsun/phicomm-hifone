@@ -13,6 +13,12 @@ class GeneralTest extends AbstractApiTestCase
     public function testPing()
     {
         $this->get('/api/v1/ping');
-        $this->seeJson(['data' => 'pong']);
+        $this->see('Pong!');
+    }
+
+    public function testException()
+    {
+        $this->get('/api/v1/exception');
+        $this->seeJson(['msg' => 'myException']);
     }
 }
