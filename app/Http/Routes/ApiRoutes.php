@@ -72,7 +72,7 @@ class ApiRoutes
                 $router->post('follow/thread/{thread}', 'FollowController@thread');
                 $router->post('like/thread/{thread}', 'LikeController@thread');
                 $router->post('like/reply/{reply}', 'LikeController@reply');
-                $router->post('favorite/thread/{thread}', 'FavoriteController@thread');
+                $router->post('favorite/thread/{thread}', 'FavoriteController@threadFavorite');
                 $router->post('report/thread/{thread}', 'ReportController@thread');
                 $router->post('report/reply/{reply}', 'ReportController@reply');
                 $router->get('notification', 'NotificationController@index');

@@ -41,6 +41,16 @@ class UserController extends AppController
         return $user;
     }
 
+    public function search()
+    {
+        $users = User::searchUser(request('q'));
+        foreach ($users as $user) {
+            $user['followed'] = User::hasFollowUser($user);
+        }
+
+        return $users;
+    }
+
     public function favorites(User $user, UserBll $userBll)
     {
         $threads = $userBll->getFavorites($user);

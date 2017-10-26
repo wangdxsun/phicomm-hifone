@@ -36,12 +36,21 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
 
-        // Favorite
+        // Favorite帖子被收藏
         \Hifone\Events\Favorite\FavoriteWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
+        //帖子被取消收藏
         \Hifone\Events\Favorite\FavoriteWasRemovedEvent::class => [
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+        ],
+        //帖子被取消收藏
+        \Hifone\Events\Favorite\FavoriteThreadWasAddedEvent::class => [
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+        ],
+        //帖子被取消收藏
+        \Hifone\Events\Favorite\FavoriteThreadWasRemovedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
 

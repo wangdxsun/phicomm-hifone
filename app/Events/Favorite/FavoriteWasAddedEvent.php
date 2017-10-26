@@ -13,7 +13,7 @@ namespace Hifone\Events\Favorite;
 
 use Hifone\Models\Thread;
 use Hifone\Models\User;
-
+//帖子被收藏，被动操作
 final class FavoriteWasAddedEvent implements FavoriteEventInterface
 {
     public $thread;
