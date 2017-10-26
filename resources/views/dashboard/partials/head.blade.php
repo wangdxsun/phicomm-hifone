@@ -25,7 +25,7 @@
     <script src="{{ elixir('dist/js/all.js') }}"></script>
     <script src="/js/vue.js"></script>
     <script src="/js/elementui.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="/js/axios.min.js"></script>
     <script type="text/javascript">
         var Global = {};
         Global.locale = 'zh-CN';
