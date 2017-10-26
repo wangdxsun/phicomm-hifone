@@ -62,6 +62,8 @@ class ApiRoutes
             $router->get('users/{user}/follows', 'UserController@follows');
             $router->get('users/{user}/followers', 'UserController@followers');
             $router->get('users/{user}/threads', 'UserController@threads');
+            $router->get('users/{user}/replies', 'UserController@replies');
+            $router->get('users/{user}/favorites', 'UserController@favorites');
 
             // Authorization Required
             $router->group(['middleware' => 'auth:hifone'], function ($router) {
@@ -86,8 +88,6 @@ class ApiRoutes
                 $router->get('notification/at', 'NotificationController@at');
                 $router->get('notification/system', 'NotificationController@system');
                 $router->post('logout', 'PhicommController@logout');
-                $router->get('user/replies', 'UserController@replies');
-                $router->get('user/favorites', 'UserController@favorites');
             });
         });
     }
