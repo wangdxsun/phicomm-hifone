@@ -67,7 +67,7 @@ class ReplyBll extends BaseBll
             $images
         ));
         $reply = Reply::find($replyTemp->id);
-        return $reply->load('user', 'reply');
+        return $reply->load('user', 'reply.user');
     }
 
     public function auditReply($reply, WordsFilter $wordsFilter)
