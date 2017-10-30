@@ -30,22 +30,22 @@ class ApiRoutes
             $router->get('/', 'HomeController@index');
             $router->get('ping', 'GeneralController@ping');
             $router->get('exception', 'GeneralController@exception');
-            $router->get('emotion', 'GeneralController@emotion');
+            $router->get('emotions', 'GeneralController@emotion');
 
             //内容相关
-            $router->get('thread', 'ThreadController@index');
+            $router->get('threads', 'ThreadController@index');
             $router->get('thread/search', 'ThreadController@search');
             $router->get('user/search', 'UserController@search');
-            $router->get('thread/{thread}', 'ThreadController@show');
-            $router->get('thread/{thread}/replies', 'ThreadController@replies');
-            $router->get('node', 'NodeController@index');
+            $router->get('threads/{thread}', 'ThreadController@show');
+            $router->get('threads/{thread}/replies', 'ThreadController@replies');
+            $router->get('nodes', 'NodeController@index');
             $router->get('sections', 'NodeController@sections');
             $router->get('subNodes', 'NodeController@subNodes');
             $router->get('nodes/{node}', 'NodeController@show');
             $router->get('subNodes/{subNode}', 'NodeController@showOfSubNode');
             $router->get('nodes/{node}/subNodes','SubNodeController@index');
-            $router->get('banner', 'BannerController@index');
-            $router->get('banner/{carousel}', 'BannerController@show')->name('banner.show');
+            $router->get('banners', 'BannerController@index');
+            $router->get('banners/{carousel}', 'BannerController@show')->name('banner.show');
             $router->get('report/reason', 'ReportController@reason');
 
             //登录相关
@@ -66,20 +66,21 @@ class ApiRoutes
             $router->get('user/{user}/favorites', 'UserController@favorites');
             $router->get('rank', 'RankController@ranks');
 
+
             // Authorization Required
             $router->group(['middleware' => 'auth:hifone'], function ($router) {
-                $router->post('thread', 'ThreadController@store');
-                $router->post('reply', 'ReplyController@store');
-                $router->post('follow/user/{user}', 'FollowController@user');
-                $router->post('follow/thread/{thread}', 'FollowController@thread');
-                $router->post('like/thread/{thread}', 'LikeController@thread');
-                $router->post('like/reply/{reply}', 'LikeController@reply');
-                $router->post('favorite/thread/{thread}', 'FavoriteController@threadFavorite');
-                $router->post('report/thread/{thread}', 'ReportController@thread');
-                $router->post('report/reply/{reply}', 'ReportController@reply');
+                $router->post('threads', 'ThreadController@store');
+                $router->post('replies', 'ReplyController@store');
+                $router->post('follow/users/{user}', 'FollowController@user');
+                $router->post('follow/threads/{thread}', 'FollowController@thread');
+                $router->post('like/threads/{thread}', 'LikeController@thread');
+                $router->post('like/replies/{reply}', 'LikeController@reply');
+                $router->post('favorite/threads/{thread}', 'FavoriteController@threadFavorite');
+                $router->post('report/threads/{thread}', 'ReportController@thread');
+                $router->post('report/replies/{reply}', 'ReportController@reply');
                 $router->get('notification', 'NotificationController@index');
-                $router->get('watch', 'NotificationController@watch');
-                $router->get('credit', 'UserController@credit');
+                $router->get('user/watch', 'NotificationController@watch');
+                $router->get('user/credit', 'UserController@credit');
                 $router->post('user/avatar', 'UserController@upload');
 
                 $router->get('chats', 'ChatController@chats');

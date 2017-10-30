@@ -54,20 +54,20 @@ class ReplyBll extends BaseBll
         $replyData = request('reply');
         $images = '';
         if (Input::has('images')) {
-            foreach ($replyImages = Input::get('images') as $replyImage) {
-                $images.= "<img src='".$replyImage."'/>";
+            foreach ($replyImages = json_decode(Input::get('images'), true) as $image) {
+                $images.= "<img src='".$image['image']."'/>";
             }
         }
 
-        $reply = dispatch(new AddReplyCommand(
+        $replyTemp = dispatch(new AddReplyCommand(
             $replyData['body'],
             Auth::id(),
             $replyData['thread_id'],
             array_get($replyData, 'reply_id'),
             $images
         ));
-//        $reply = Reply::find($replyTemp->id);
-        return $reply;
+        $reply = Reply::find($replyTemp->id);
+        return $reply->load('user', 'reply.user');
     }
 
     public function auditReply($reply, WordsFilter $wordsFilter)
@@ -83,7 +83,6 @@ class ReplyBll extends BaseBll
         $reply->body = app('parser.at')->parse($reply->body);
         $reply->body = app('parser.emotion')->parse($reply->body);
         $reply->save();
-
         return [
             'msg' => $msg,
             'reply' => $reply
@@ -106,7 +105,7 @@ class ReplyBll extends BaseBll
             $reply->thread->updateIndex();
             $reply->user->increment('reply_count', 1);
 
-            $reply->status = 0;
+            $reply->status = Reply::VISIBLE;
             $this->updateOpLog($reply, '自动审核通过');
 
             //把当前回复的创建时间和回复所属的帖子的修改时间进行比对

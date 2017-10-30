@@ -1,31 +1,39 @@
 <?php
-
-/*
- * This file is part of Hifone.
- *
- * (c) Hifone.com <hifone@hifone.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+/**
+ * Created by PhpStorm.
+ * User: qiuling.jiang
+ * Date: 2017/10/26
+ * Time: 10:48
  */
 
 namespace Hifone\Test\Api;
 
 class ThreadTest extends AbstractApiTestCase
 {
-    public function testGetThreads()
+    public function testThreads()
     {
-        $threads = factory('Hifone\Models\Thread', 3)->create();
-        $this->get('/api/v1/threads');
-        $this->seeJson(['id' => $threads[0]->id]);
-        $this->seeJson(['id' => $threads[1]->id]);
-        $this->seeJson(['id' => $threads[2]->id]);
-        $this->assertResponseOk();
+        $this->get('/threads');
+        $this->seeJsonStructure([
+            'next_page_url',
+            'data' => [
+                '*' => ['id', 'title', 'body', 'thumbnails', 'user' => [
+                    'id', 'username', 'avatar_url'
+                ], 'node' => [
+                    'id', 'name', 'description', 'thread_count', 'icon', 'icon_detail', 'icon_list'
+                ]],
+            ],
+        ]);
     }
 
-    public function testGetInvalidThread()
+    public function testSearch()
     {
-        $this->get('/api/v1/threads/0');
-        $this->assertResponseStatus(404);
+        $this->get('/thread/search?q=江');
+        $this->seeJsonStructure([
+            '*' => ['id', 'title', 'body', 'thumbnails', 'user' => [
+                'id', 'username', 'avatar_url'
+            ], 'node' => [
+                'id', 'name', 'description', 'thread_count', 'icon', 'icon_detail', 'icon_list'
+            ]],
+        ]);
     }
 }
