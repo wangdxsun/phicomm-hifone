@@ -2,13 +2,13 @@
 
 namespace Hifone\Http\Controllers\Api;
 
-use Hifone\Models\Rank;
+use Hifone\Http\Bll\RankBll;
 
 class RankController extends ApiController
 {
-    public function ranks()
+    public function ranks(RankBll $rankBll)
     {
-        $ranks = Rank::orderBy('id','desc')->limit(10)->get();
+        $ranks = $rankBll->ranks();
         return $ranks;
     }
 }
