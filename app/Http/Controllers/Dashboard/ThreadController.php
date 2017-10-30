@@ -271,8 +271,7 @@ class ThreadController extends Controller
     {
         DB::beginTransaction();
         try {
-            $thread->status = Thread::DELETED;
-            $this->updateOpLog($thread, '删除帖子', trim(request('reason')));
+            $this->delete($thread);
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
             $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);
             $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
@@ -290,13 +289,26 @@ class ThreadController extends Controller
     public function auditToTrash(Thread $thread)
     {
         try {
-            $thread->status = Thread::TRASH;
-            $this->updateOpLog($thread, '帖子审核未通过', trim(request('reason')));
+            $this->trash($thread);
         } catch (\Exception $e) {
             return Redirect::back()->withErrors($e->getMessageBag());
         }
 
         return Redirect::back()->withSuccess('恭喜，操作成功！');
+    }
+
+    //删除正常帖子，放到回收站
+    public function delete(Thread $thread)
+    {
+        $thread->status = Thread::DELETED;
+        $this->updateOpLog($thread, '删除帖子', trim(request('reason')));
+    }
+
+    //回复审核未通过，放到回收站
+    public function trash(Thread $thread)
+    {
+        $thread->status = Thread::TRASH;
+        $this->updateOpLog($thread, '帖子审核未通过', trim(request('reason')));
     }
 
     public function getHeatOffset(Thread $thread)
