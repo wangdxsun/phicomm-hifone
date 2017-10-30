@@ -128,6 +128,7 @@ class ThreadBll extends BaseBll
         $replies = $thread->replies()->visible()->with(['user', 'reply.user'])->pinAndRecent()->paginate();
         foreach ($replies as &$reply) {
             $reply['liked'] = Auth::check() ? Auth::user()->hasLikeReply($reply) : false;
+            $reply['reported'] = Auth::check() ? Auth::user()->hasReportReply($reply) : false;
         }
         return $replies;
     }
