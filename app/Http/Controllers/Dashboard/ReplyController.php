@@ -12,7 +12,6 @@
 namespace Hifone\Http\Controllers\Dashboard;
 
 use AltThree\Validator\ValidationException;
-use Carbon\Carbon;
 use Hifone\Commands\Reply\UpdateReplyCommand;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Reply\RepliedWasAddedEvent;
@@ -23,7 +22,6 @@ use Hifone\Models\Thread;
 use Hifone\Models\User;
 use Hifone\Services\Parsers\Markdown;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use View;
 use Input;
 use Redirect;
