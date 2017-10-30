@@ -118,7 +118,7 @@ class ThreadBll extends BaseBll
         $thread['followed'] = User::hasFollowUser($thread->user);
         $thread['liked'] = Auth::check() ? Auth::user()->hasLikeThread($thread) : false;
         $thread['reported'] = Auth::check() ? Auth::user()->hasReportThread($thread) : false;
-        $thread['favorited'] = Auth::check() ? Auth::user()->hasFavoriteThread($thread) : false;
+        $thread['favorite'] = Auth::check() ? Auth::user()->hasFavoriteThread($thread) : false;
 
         return $thread;
     }

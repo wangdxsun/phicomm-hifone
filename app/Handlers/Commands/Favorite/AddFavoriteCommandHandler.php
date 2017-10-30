@@ -18,8 +18,6 @@ use Hifone\Events\Favorite\FavoriteThreadWasRemovedEvent;
 use Hifone\Events\Favorite\FavoriteWasAddedEvent;
 use Hifone\Events\Favorite\FavoriteWasRemovedEvent;
 use Hifone\Models\Favorite;
-use Hifone\Models\Thread;
-use Hifone\Models\User;
 use Hifone\Services\Dates\DateFactory;
 
 class AddFavoriteCommandHandler
