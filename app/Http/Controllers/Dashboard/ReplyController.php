@@ -60,6 +60,36 @@ class ReplyController extends Controller
             ->withCurrentMenu('index');
     }
 
+    public function audit()
+    {
+        $replies = Reply::audit()->with('thread', 'user')->orderBy('created_at', 'desc')->paginate(20);
+
+        return View::make('dashboard.replies.audit')
+            ->withPageTitle(trans('dashboard.replies.replies').' - '.trans('dashboard.dashboard'))
+            ->withReplies($replies)->withCurrentMenu('audit');
+    }
+
+    public function trashView()
+    {
+        $search = $this->filterEmptyValue(Input::get('reply'));
+        $replies = Reply::trash()->search($search)->with('thread', 'user', 'lastOpUser')->orderBy('last_op_time', 'desc')->paginate(20);
+        $replyAll = Reply::trash()->get()->toArray();
+        $threadIds = array_unique(array_column($replyAll, 'thread_id'));
+        $userIds = array_unique(array_column($replyAll, 'user_id'));
+        $operators = array_unique(array_column($replyAll, 'last_op_user_id'));
+        $orderTypes = Reply::$orderTypes;
+
+
+        return View::make('dashboard.replies.trash')
+            ->withPageTitle('回复回收站')
+            ->with('orderTypes',$orderTypes)
+            ->withSearch($search)
+            ->withReplies($replies)->withCurrentMenu('trash')
+            ->withThreads(Thread::find($threadIds))
+            ->withUsers(User::find($userIds))
+            ->withOperators(User::find($operators));
+    }
+
     /**
      * Shows the edit reply view.
      *
@@ -130,37 +160,6 @@ class ReplyController extends Controller
 
         return Redirect::back()->withSuccess('恭喜，操作成功');
     }
-
-    public function audit()
-    {
-        $replies = Reply::audit()->with('thread', 'user')->orderBy('created_at', 'desc')->paginate(20);
-
-        return View::make('dashboard.replies.audit')
-            ->withPageTitle(trans('dashboard.replies.replies').' - '.trans('dashboard.dashboard'))
-            ->withReplies($replies)->withCurrentMenu('audit');
-    }
-
-    public function trashView()
-    {
-        $search = $this->filterEmptyValue(Input::get('reply'));
-        $replies = Reply::trash()->search($search)->with('thread', 'user', 'lastOpUser')->orderBy('last_op_time', 'desc')->paginate(20);
-        $replyAll = Reply::trash()->get()->toArray();
-        $threadIds = array_unique(array_column($replyAll, 'thread_id'));
-        $userIds = array_unique(array_column($replyAll, 'user_id'));
-        $operators = array_unique(array_column($replyAll, 'last_op_user_id'));
-        $orderTypes = Reply::$orderTypes;
-
-
-        return View::make('dashboard.replies.trash')
-            ->withPageTitle('回复回收站')
-            ->with('orderTypes',$orderTypes)
-            ->withSearch($search)
-            ->withReplies($replies)->withCurrentMenu('trash')
-            ->withThreads(Thread::find($threadIds))
-            ->withUsers(User::find($userIds))
-            ->withOperators(User::find($operators));
-    }
-
 
     //批量审核通过回帖
     public function postBatchAudit() {
@@ -244,12 +243,12 @@ class ReplyController extends Controller
     {
         DB::beginTransaction();
         try {
+            $this->delete($reply);
             $reply->thread->node->decrement('reply_count', 1);//版块回帖数-1
             $reply->thread->subNode->decrement('reply_count', 1);//子版块回帖数-1
             $reply->thread->decrement('reply_count', 1);
             $reply->thread->updateIndex();
             $reply->user->decrement('reply_count', 1);
-            $this->trash($reply);
             event(new ReplyWasTrashedEvent($reply));
             DB::commit();
         } catch (\Exception $e) {
@@ -270,10 +269,17 @@ class ReplyController extends Controller
         return Redirect::back()->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
     }
 
-    //将回复放到回收站
+    //删除正常回复，放到回收站
+    public function delete(Reply $reply)
+    {
+        $reply->status = Reply::DELETED;
+        $this->updateOpLog($reply, '删除回复', trim(request('reason')));
+    }
+
+    //回复审核未通过，放到回收站
     public function trash(Reply $reply)
     {
         $reply->status = Reply::TRASH;
-        $this->updateOpLog($reply, '删除回复', trim(request('reason')));
+        $this->updateOpLog($reply, '回复审核未通过', trim(request('reason')));
     }
 }
