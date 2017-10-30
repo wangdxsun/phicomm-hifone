@@ -11,6 +11,7 @@
 
 namespace Hifone\Console;
 
+use Hifone\Console\Commands\GetRank;
 use Hifone\Console\Commands\InitSubNode;
 use Hifone\Console\Commands\SearchImport;
 use Hifone\Console\Commands\UpdateHeat;
@@ -27,7 +28,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         // Commands\Inspire::class,
-        GetExcellentUser::class,
+        GetRank::class,
         SendMessage::class,
         UpdateHeat::class,
         SearchImport::class,
