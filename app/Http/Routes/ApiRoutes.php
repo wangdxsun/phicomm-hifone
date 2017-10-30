@@ -58,12 +58,14 @@ class ApiRoutes
             //个人中心
             $router->get('user/me', 'UserController@me');
             $router->get('u/{username}', 'UserController@showByUsername');
-            $router->get('users/{user}', 'UserController@show')->where('user', '[0-9]+');
-            $router->get('users/{user}/follows', 'UserController@follows');
-            $router->get('users/{user}/followers', 'UserController@followers');
-            $router->get('users/{user}/threads', 'UserController@threads');
-            $router->get('users/{user}/replies', 'UserController@replies');
-            $router->get('users/{user}/favorites', 'UserController@favorites');
+            $router->get('user/{user}', 'UserController@show')->where('user', '[0-9]+');
+            $router->get('user/{user}/follows', 'UserController@follows');
+            $router->get('user/{user}/followers', 'UserController@followers');
+            $router->get('user/{user}/threads', 'UserController@threads');
+            $router->get('user/{user}/replies', 'UserController@replies');
+            $router->get('user/{user}/favorites', 'UserController@favorites');
+            $router->get('rank', 'RankController@ranks');
+
 
             // Authorization Required
             $router->group(['middleware' => 'auth:hifone'], function ($router) {

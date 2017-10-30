@@ -65,6 +65,7 @@
                         @if(!Auth::user()->hasRole('NoComment'))
                             {!! Form::open(['route' => 'reply.store', 'id' => 'reply_create_form', 'class' => 'create_form', 'method' => 'post']) !!}
                             <input type="hidden" name="reply[thread_id]" value="{{ $thread->id }}" />
+                            {{--<input type="hidden" name="reply[reply_id]" />--}}
                             <!-- editor start -->
                             @include('threads.partials.editor_toolbar')
                                     <!-- end -->

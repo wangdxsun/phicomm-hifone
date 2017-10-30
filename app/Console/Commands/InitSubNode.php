@@ -10,9 +10,7 @@ namespace Hifone\Console\Commands;
 
 
 use Hifone\Models\Node;
-use Hifone\Models\Thread;
 use Illuminate\Console\Command;
-use Illuminate\Support\Str;
 
 class InitSubNode extends Command
 {

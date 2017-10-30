@@ -10,8 +10,15 @@ namespace Hifone\Test\Api;
 
 use Hifone\Test\AbstractTestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class AbstractApiTestCase extends AbstractTestCase
 {
-//    use DatabaseMigrations;
+    use DatabaseTransactions;
+
+    public function get($uri, array $headers = [])
+    {
+        $uri = '/api/v1' . $uri;
+        parent::get($uri, $headers);
+    }
 }

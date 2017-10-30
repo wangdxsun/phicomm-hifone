@@ -122,4 +122,10 @@ class UserController extends ApiController
 
         return $threads;
     }
+
+    public function excellentUsers(UserBll $userBll)
+    {
+        $users = $userBll->getExcellentUsers();
+        return $users;
+    }
 }

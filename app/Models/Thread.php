@@ -389,4 +389,20 @@ class Thread extends BaseModel implements TaggableInterface
             return $score > -300000 ? $score : -300000;
         }
     }
+
+    //计算帖子中自己的评论数
+    public function selfReplyCount(Thread $thread)
+    {
+       return $this->replies()->visible()->where('user_id',$thread->user_id)->count();
+    }
+    //计算帖子自己点赞数
+    public function selfLikeCount(Thread $thread)
+    {
+        return $this->likes()->where('user_id',$thread->user_id)->count();
+    }
+    //计算帖子自己收藏数
+    public function selfFavoriteCount(Thread $thread)
+    {
+        return $this->favorites()->where('user_id',$thread->user_id)->count();
+    }
 }
