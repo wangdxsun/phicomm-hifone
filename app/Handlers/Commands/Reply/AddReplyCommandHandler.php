@@ -54,7 +54,7 @@ class AddReplyCommandHandler
         $data = [
             'user_id'       => $command->user_id,
             'thread_id'     => $command->thread_id,
-            'reply_id'     => $command->reply_id,
+            'reply_id'      => $command->reply_id,
             'body'          => $body,
             'body_original' => $command->body,
             'created_at'    => Carbon::now()->toDateTimeString(),

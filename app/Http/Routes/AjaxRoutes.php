@@ -41,7 +41,7 @@ class AjaxRoutes
             $router->post('/follow/{thread}', 'FollowController@followThread')->name('follow.createOrDelete');
             $router->post('/follow/user/{user}', 'FollowController@followUser')->name('follow.user');
             $router->delete('reply/{reply}/delete', 'ReplyController@destroy')->name('reply.destroy');
-            $router->post('/favorite/{thread}', 'FavoriteController@favoriteThread')->name('favorite.createOrDelete');
+            $router->post('/favorite/{thread}', 'FavoriteController@threadFavorite')->name('favorite.createOrDelete');
 
             //获取通知数
             $router->get('/notification/count', 'NotificationController@count')->name('notification.count');

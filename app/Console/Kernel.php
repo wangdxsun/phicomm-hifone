@@ -27,6 +27,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         // Commands\Inspire::class,
+        GetExcellentUser::class,
         SendMessage::class,
         UpdateHeat::class,
         SearchImport::class,
