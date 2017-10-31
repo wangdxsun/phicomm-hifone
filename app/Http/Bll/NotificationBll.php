@@ -48,7 +48,7 @@ class NotificationBll extends BaseBll
     {
         $notifications = Notification::forUser(Auth::id())->at()->recent()->with(['object', 'author'])->get();
         foreach ($notifications as $key => &$notification) {
-            if ($notification->object->status < 0 || $notification->object->thread->status < 0) {
+            if ($notification->object->status < 0 || ($notification->object_type == 'Hifone\Models\Reply' && $notification->object->thread->status < 0)) {
                 unset($notifications[$key]);
             }
         }
