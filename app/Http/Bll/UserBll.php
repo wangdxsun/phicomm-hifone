@@ -40,7 +40,6 @@ class UserBll extends BaseBll
                 unset($replies[$key]);
             }
         }
-
         return $replies;
     }
 
@@ -52,11 +51,7 @@ class UserBll extends BaseBll
     //个人收藏帖子列表
     public function getFavorites(User $user)
     {
-        if (Auth::check()) {
-            $threads = $user->favorites()->with(['thread.user', 'thread.node'])->has('thread')->paginate();
-        } else {
-            $threads = [];
-        }
+        $threads = $user->favorites()->with(['thread.user', 'thread.node'])->has('thread')->paginate();
         return $threads;
     }
 

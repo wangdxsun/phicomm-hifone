@@ -38,6 +38,7 @@ class Favorite extends BaseModel
         return self::forUser($user->id)->where('thread_id', $thread->id)->first();
     }
 
+    //收藏帖子只显示正常和已删除
     public function thread()
     {
         return $this->belongsTo(Thread::class)->whereIn('status', [Thread::VISIBLE, Thread::DELETED]);
