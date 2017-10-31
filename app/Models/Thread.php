@@ -178,11 +178,11 @@ class Thread extends BaseModel implements TaggableInterface
     public function inVisible()
     {
         //未登录，帖子可见性取决于帖子本身
-        if (Auth::guest() && !$this->visible) {
+        if (Auth::guest() && !$this->getVisibleAttribute()) {
             return true;
         }
         //已登录，帖子可见取决于帖子状态和是否当前用户或管理员
-        return !$this->visible && !(Auth::id() == $this->user->id || Auth::user()->can('view_thread'));
+        return !$this->getVisibleAttribute() && !(Auth::id() == $this->user->id || Auth::user()->can('view_thread'));
     }
 
     //正常

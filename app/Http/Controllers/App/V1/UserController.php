@@ -47,7 +47,6 @@ class UserController extends AppController
         foreach ($users as $user) {
             $user['followed'] = User::hasFollowUser($user);
         }
-
         return $users;
     }
 
