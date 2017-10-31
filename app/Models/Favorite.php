@@ -40,7 +40,7 @@ class Favorite extends BaseModel
 
     public function thread()
     {
-        return $this->belongsTo(Thread::class);
+        return $this->belongsTo(Thread::class)->whereIn('status', [Thread::VISIBLE, Thread::DELETED]);
     }
 
     public function scopeOfThread($query, $thread_id)

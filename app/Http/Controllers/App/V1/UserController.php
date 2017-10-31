@@ -54,7 +54,6 @@ class UserController extends AppController
     public function favorites(User $user, UserBll $userBll)
     {
         $threads = $userBll->getFavorites($user);
-
         return $threads;
     }
 }

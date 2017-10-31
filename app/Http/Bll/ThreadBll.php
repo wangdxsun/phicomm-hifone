@@ -107,7 +107,7 @@ class ThreadBll extends BaseBll
         return $thread;
     }
 
-    public function showThread($thread)
+    public function showThread(Thread $thread)
     {
         if ($thread->inVisible()) {
             throw new NotFoundHttpException('帖子状态不可见');
@@ -123,7 +123,7 @@ class ThreadBll extends BaseBll
         return $thread;
     }
 
-    public function replies($thread)
+    public function replies(Thread $thread)
     {
         $replies = $thread->replies()->visible()->with(['user', 'reply.user'])->pinAndRecent()->paginate();
         foreach ($replies as &$reply) {
@@ -133,7 +133,7 @@ class ThreadBll extends BaseBll
         return $replies;
     }
 
-    public function AutoAudit($thread)
+    public function AutoAudit(Thread $thread)
     {
         //自动审核通过，触发相应的代码逻辑
         event(new ThreadWasAddedEvent($thread));

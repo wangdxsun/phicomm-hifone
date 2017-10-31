@@ -14,6 +14,7 @@ namespace Hifone\Models;
 use AltThree\Validator\ValidatingTrait;
 use Carbon\Carbon;
 use Config;
+use Auth;
 use Elasticquent\ElasticquentTrait;
 use Hifone\Models\Scopes\Recent;
 use Hifone\Models\Traits\Taggable;
@@ -176,10 +177,12 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function inVisible()
     {
-        if (null == \Auth::user() && $this->status < 0) {
+        //未登录，帖子可见性取决于帖子本身
+        if (Auth::guest() && !$this->visible) {
             return true;
         }
-        return $this->status < 0 && !(\Auth::id() == $this->user->id || \Auth::user()->can('view_thread'));
+        //已登录，帖子可见取决于帖子状态和是否当前用户或管理员
+        return !$this->visible && !(Auth::id() == $this->user->id || Auth::user()->can('view_thread'));
     }
 
     //正常

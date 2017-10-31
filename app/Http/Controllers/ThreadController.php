@@ -70,7 +70,7 @@ class ThreadController extends Controller
     public function show(Thread $thread)
     {
         if ($thread->inVisible()) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException('帖子状态不可见');
         }
 
         $this->breadcrumb->push([

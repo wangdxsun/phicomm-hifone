@@ -52,8 +52,8 @@ class UserBll extends BaseBll
     //个人收藏帖子列表
     public function getFavorites(User $user)
     {
-        if (Auth::check() && $user->id == Auth::id()) {
-            $threads = $user->favorites()->with(['thread.user', 'thread.node'])->paginate();
+        if (Auth::check()) {
+            $threads = $user->favorites()->with(['thread.user', 'thread.node'])->has('thread')->paginate();
         } else {
             $threads = [];
         }
