@@ -65,6 +65,8 @@ class ApiRoutes
             $router->get('user/{user}/replies', 'UserController@replies');
             $router->get('user/{user}/favorites', 'UserController@favorites');
             $router->get('rank', 'RankController@ranks');
+            $router->get('rank/rankCount', 'RankController@rankCount');
+            $router->post('rank', 'RankController@rankStatus');
 
 
             // Authorization Required
