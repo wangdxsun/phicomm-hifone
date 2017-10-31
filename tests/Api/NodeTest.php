@@ -8,7 +8,7 @@
 
 namespace Hifone\Test\Api;
 
-class NodeTest extends AbstractApiTestCase
+class NodeTest extends ApiTestCase
 {
     public function testNodes()
     {
