@@ -122,9 +122,21 @@ class Reply extends BaseModel
         return $query->whereIn('status', [static::TRASH, static::DELETED])->orWhere('status', -5);//回收站
     }
 
+    //正常和已删除
+    public function scopeVisibleAndDeleted($query)
+    {
+        return $query->whereIn('status', [static::VISIBLE, static::DELETED]);
+    }
+
     public function scopePinAndRecent($query)
     {
         return $query->orderBy('order', 'desc')->orderBy('created_at', 'desc');
+    }
+
+    //评论可见性
+    public function getVisibleAttribute()
+    {
+        return $this->status == static::VISIBLE || $this->status == static::DELETED;
     }
 
     public function getPinAttribute()

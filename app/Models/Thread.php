@@ -200,6 +200,12 @@ class Thread extends BaseModel implements TaggableInterface
         return $query->whereIn('status', [static::TRASH, static::DELETED]);//审核未通过和已删除
     }
 
+    //正常和已删除
+    public function scopeVisibleAndDeleted($query)
+    {
+        return $query->whereIn('status', [static::VISIBLE, static::DELETED]);
+    }
+
     public function scopeTitle($query, $search)
     {
         if (!$search) {
@@ -265,15 +271,11 @@ class Thread extends BaseModel implements TaggableInterface
         return ($current_page - 1) * Config::get('hifone.replies_perpage') + $index;
     }
 
-    /**
-     * Get the presenter class.
-     *
-     * @return string
-     */
-//    public function getPresenterClass()
-//    {
-//        return ThreadPresenter::class;
-//    }
+    //帖子可见性
+    public function getVisibleAttribute()
+    {
+        return $this->status == static::VISIBLE || $this->status == static::DELETED;
+    }
 
     public function getReportAttribute()
     {
@@ -405,4 +407,5 @@ class Thread extends BaseModel implements TaggableInterface
     {
         return $this->favorites()->where('user_id',$thread->user_id)->count();
     }
+
 }

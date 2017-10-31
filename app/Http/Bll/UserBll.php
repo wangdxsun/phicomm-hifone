@@ -27,16 +27,16 @@ class UserBll extends BaseBll
         if (Auth::check() && ($user->id == Auth::id() || Auth::user()->can('view_thread'))) {
             $threads = $user->threads()->with(['user', 'node'])->recent()->paginate();
         } else {
-            $threads = $user->threads()->visible()->with(['user', 'node'])->recent()->paginate();
+            $threads = $user->threads()->visibleAndDeleted()->with(['user', 'node'])->recent()->paginate();
         }
         return $threads;
     }
 
     public function getReplies(User $user)
     {
-        $replies = $user->replies()->visible()->with(['thread'])->recent()->paginate();
+        $replies = $user->replies()->visibleAndDeleted()->with(['thread'])->recent()->paginate();
         foreach ($replies as $key => $reply) {
-            if ($reply->thread->status < 0) {
+            if (!$reply->thread->visible) {
                 unset($replies[$key]);
             }
         }

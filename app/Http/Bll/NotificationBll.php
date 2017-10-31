@@ -19,7 +19,7 @@ class NotificationBll extends BaseBll
         Auth::user()->save();
         $notifications = Notification::forUser(Auth::id())->watch()->recent()->with(['object'])->get();
         foreach ($notifications as $key => &$notification) {
-            if ($notification->object->status < 0) {
+            if (!$notification->object->visible) {
                 unset($notifications[$key]);
             } else {
                 $notification->object->node;
@@ -34,7 +34,7 @@ class NotificationBll extends BaseBll
     {
         $notifications = Notification::forUser(Auth::id())->ofType('thread_new_reply')->recent()->with(['object', 'author'])->get();
         foreach ($notifications as $key => &$notification) {
-            if (empty($notification->object) || $notification->object->status < 0 || $notification->object->thread->status < 0) {
+            if (empty($notification->object) || !$notification->object->visible || !$notification->object->thread->visible) {//兼容回收站帖子-1状态的老数据
                 unset($notifications[$key]);
             }
         }
@@ -48,7 +48,7 @@ class NotificationBll extends BaseBll
     {
         $notifications = Notification::forUser(Auth::id())->at()->recent()->with(['object', 'author'])->get();
         foreach ($notifications as $key => &$notification) {
-            if ($notification->object->status < 0 || ($notification->object_type == 'Hifone\Models\Reply' && $notification->object->thread->status < 0)) {
+            if (!$notification->object->visible || ($notification->object_type == 'Hifone\Models\Reply' && !$notification->object->thread->visible)) {
                 unset($notifications[$key]);
             }
         }
@@ -61,10 +61,10 @@ class NotificationBll extends BaseBll
     {
         $notifications = Notification::forUser(Auth::id())->system()->recent()->with(['object', 'author'])->get();
         foreach ($notifications as $key => &$notification) {
-            if ($notification->type <> 'user_follow' && $notification->object->status < 0) {
+            if ($notification->type <> 'user_follow' && !$notification->object->visible) {
                 unset($notifications[$key]);
             }
-            if ($notification->type == 'reply_like' && $notification->object->thread->status < 0) {
+            if ($notification->type == 'reply_like' && !$notification->object->thread->visible) {
                 unset($notifications[$key]);
             }
         }
