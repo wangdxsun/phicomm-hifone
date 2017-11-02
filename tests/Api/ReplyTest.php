@@ -10,7 +10,7 @@ namespace Hifone\Test\Api;
 
 use Hifone\Models\Thread;
 
-class ReplyTest extends AbstractApiTestCase
+class ReplyTest extends ApiTestCase
 {
     public function testReplies()
     {

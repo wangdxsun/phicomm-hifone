@@ -24,6 +24,8 @@ abstract class AbstractTestCase extends TestCase
      */
     protected $baseUrl = 'http://localhost';
 
+    protected $user = null;
+
     /**
      * Creates the application.
      *
@@ -38,12 +40,15 @@ abstract class AbstractTestCase extends TestCase
         return $app;
     }
 
-    /**
-     * Become a user.
-     */
-    protected function beUser()
+    public function setUp()
     {
-        $this->user = factory(User::class)->create();
+        parent::setUp();
+        $this->beUser();
+    }
+
+    protected function beUser(User $user = null)
+    {
+        $this->user = $user ?: User::first();
 
         $this->be($this->user);
     }

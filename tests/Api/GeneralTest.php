@@ -8,7 +8,7 @@
 
 namespace Hifone\Test\Api;
 
-class GeneralTest extends AbstractApiTestCase
+class GeneralTest extends ApiTestCase
 {
     public function testPing()
     {

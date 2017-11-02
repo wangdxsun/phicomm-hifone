@@ -8,7 +8,7 @@
 
 namespace Hifone\Test\Api;
 
-class ThreadTest extends AbstractApiTestCase
+class ThreadTest extends ApiTestCase
 {
     public function testThreads()
     {
