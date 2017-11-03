@@ -46,7 +46,8 @@ class ChatBll extends BaseBll
             event(new NewChatMessageEvent($from, $to, $message));
         }
         if (Input::has('message')) {
-            $message = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse(request('message')));
+            $message = Input::get('message');
+//            $message = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse(request('message')));
             event(new NewChatMessageEvent($from, $to, $message));
         }
         $to->increment('notification_chat_count', 1);

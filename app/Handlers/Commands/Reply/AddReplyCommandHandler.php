@@ -20,22 +20,6 @@ use Input;
 
 class AddReplyCommandHandler
 {
-    /**
-     * The date factory instance.
-     *
-     * @var \Hifone\Services\Dates\DateFactory
-     */
-    protected $dates;
-
-    /**
-     * Create a new report issue command handler instance.
-     *
-     * @param \Hifone\Services\Dates\DateFactory $dates
-     */
-    public function __construct(DateFactory $dates)
-    {
-        $this->dates = $dates;
-    }
 
     /**
      * Handle the report thread command.

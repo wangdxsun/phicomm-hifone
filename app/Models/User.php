@@ -336,6 +336,7 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
 
     public static function hasFollowUser(User $user)
     {
+
         if (Auth::guest()) {
             return 'unFollow';
         }

@@ -14,7 +14,6 @@ namespace Hifone\Handlers\Commands\Thread;
 use Hifone\Commands\Thread\UpdateThreadCommand;
 use Hifone\Events\Thread\ThreadWasMarkedExcellentEvent;
 use Hifone\Events\Thread\ThreadWasMovedEvent;
-use Hifone\Models\Node;
 use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
 use Hifone\Services\Dates\DateFactory;
@@ -43,14 +42,14 @@ class UpdateThreadCommandHandler
     {
 
         $thread = $command->thread;
-        $original_subNode_id = $thread->sub_node_id;
+        $original_subNode_id = $thread->sub_node_id;//帖子更新前的子版块id
 
         if (isset($command->data['body']) && $command->data['body']) {
             $command->data['body_original'] = $command->data['body'];
             $command->data['excerpt'] = Thread::makeExcerpt($command->data['body']);
             $command->data['body'] = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse($command->data['body']));
         }
-
+        //过滤数据中的空字段，并且更新帖子
         $thread->update($this->filter($command->data));
 
         if ($thread->status == Thread::VISIBLE) {
@@ -66,7 +65,7 @@ class UpdateThreadCommandHandler
         }
 
         if (isset($command->data['sub_node_id']) && $original_subNode_id != intval($command->data['sub_node_id']) ) {
-            $originalSubNode = SubNode::findOrFail($original_subNode_id);
+            $originalSubNode = SubNode::find($original_subNode_id);
             event(new ThreadWasMovedEvent($command->thread, $originalSubNode));
         }
 

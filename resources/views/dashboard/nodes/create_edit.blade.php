@@ -43,7 +43,7 @@
                             <img v-if="imageUrl" :src="imageUrl" class="el-avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
-                        <el-input v-model="imageUrl"  placeholder="请输入内容" name="node[icon]"></el-input>
+                        <el-input v-model="imageUrl"  placeholder="请输入内容" type="hidden" name="node[icon]"></el-input>
                     </div>
 
                     <div class="col-xs-4">
@@ -120,8 +120,7 @@
                         </el-switch>
                     </el-tooltip>
                     <el-input  v-model="valuePrompt" placeholder="请输入内容" type="hidden" name="node[is_prompt]"></el-input>
-                </div>
-                <div class="form-group">
+
                     <label>{{ trans('dashboard.nodes.prompt.nodeDetail') }}</label>
                     {!! Form::textarea('node[prompt]', isset($node) ? $node->prompt : null , ['class' => 'form-control', 'rows' => 3]) !!}
                 </div>

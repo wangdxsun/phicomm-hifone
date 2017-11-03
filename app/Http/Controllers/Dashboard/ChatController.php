@@ -43,11 +43,8 @@ class ChatController extends Controller
                 ->withErrors('文字、图片不能同时为空');
         } elseif ($data['userType'] == 3) {
             //为所有用户发送私信
-            $users = User::all();
+            $users = User::where('id', '<>', Auth::user()->id)->get();
             foreach ($users as $user) {
-                if ($user->id == Auth::user()->id) {
-                    continue;
-                }
                 $chatBll->newMessage($user);
             }
             return Redirect::route('dashboard.chat.send')
@@ -59,11 +56,8 @@ class ChatController extends Controller
                 return Redirect::route('dashboard.chat.send')
                     ->withErrors('请输入有效的帖子ID');
             }
-            $replies = $thread->replies()->visible()->search($data)->get()->unique('user_id');
+            $replies = $thread->replies()->visible()->search($data)->where('user_id', '<>', Auth::user()->id)->get()->unique('user_id');
             foreach ($replies as $reply) {
-                if ($reply->user->id == Auth::user()->id) {
-                    continue;
-                }
                 $chatBll->newMessage($reply->user);
             }
             return Redirect::route('dashboard.chat.send')
