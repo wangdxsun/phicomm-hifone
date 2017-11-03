@@ -19,6 +19,7 @@ use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Pin\SinkWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasMarkedExcellentEvent;
+use Hifone\Events\Thread\ThreadWasMovedEvent;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Node;
 use Hifone\Models\Section;
@@ -331,5 +332,46 @@ class ThreadController extends Controller
             return Redirect::back()->withErrors($e->getMessageBag());
         }
         return Redirect::back()->withSuccess('恭喜，操作成功！');
+    }
+
+    //在审核通过页面，批量移动帖子到别的版块
+    public function batchMoveThread()
+    {
+        $count = 0;
+        $threadData = Input::get('thread');
+        $threadData['node_id'] = SubNode::find($threadData['sub_node_id'])->node->id;
+        $threadIds = Input::get('batch');
+        if ($threadIds != null) {
+            DB::beginTransaction();
+            try {
+                foreach ($threadIds as $threadId) {
+                    if (Thread::find($threadId)){
+                        self::moveThread(Thread::find($threadId),$threadData);
+                        $count++;
+                    }
+                }
+                DB::commit();
+            } catch(ValidationException $e) {
+                DB::rollBack();
+                return Redirect::back()->withErrors($e->getMessageBag());
+            }
+            return  Redirect::back()->withSuccess('恭喜，成功将'.$count.'个帖子移动到相应子版块！');;
+        } else {
+            return Redirect::back()->withErrors('您未选中任何记录！');
+        }
+
+    }
+
+    //移动帖子,将帖子移入别的版块
+    public function moveThread(Thread $thread, $threadData)
+    {
+        DB::beginTransaction();
+        try {
+            dispatch(new UpdateThreadCommand($thread, $threadData));
+            DB::commit();
+        } catch(ValidationException $e) {
+            DB::rollBack();
+            return Redirect::back()->withErrors($e->getMessageBag());
+        }
     }
 }

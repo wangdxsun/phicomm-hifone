@@ -13,7 +13,8 @@ class Rank extends BaseModel
         'start_date',
         'end_date',
         'week_rank',
-        'followed'
+        'followed',
+        'score'
     ];
 
     public function user()

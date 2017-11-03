@@ -19,7 +19,7 @@ class UpdateThreadNodesHandler
     public function handle(ThreadWasMovedEvent $event)
     {
         $thread = $event->target;
-
+        //此时帖子的信息已经被修改，thread中保存的是最新的子版块信息
         $targetSubNode = $thread->subNode;
         $originalSubNode = $event->originalSubNode;
 

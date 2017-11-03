@@ -177,9 +177,9 @@ class Reply extends BaseModel
                 });
             } elseif ($key == 'body') {
                 $query->where('body', 'LIKE', "%$value%");
-            } elseif ($key == 'date_start') {
+            } elseif ($key == 'date_start' && null != $value ) {
                 $query->where('created_at', '>=', $value);
-            } elseif ($key == 'date_end') {
+            } elseif ($key == 'date_end' && null != $value ) {
                 $query->where('created_at', '<=', $value);
             } elseif ($key == 'orderByThreadId'){
                     $query->orderBy($value,'desc');
