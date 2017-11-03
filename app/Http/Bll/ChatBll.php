@@ -13,14 +13,15 @@ use Hifone\Events\Chat\NewChatMessageEvent;
 use Hifone\Models\Chat;
 use Hifone\Models\User;
 use Input;
+use Auth;
 
 class ChatBll extends BaseBll
 {
     public function chats()
     {
         $messages = Chat::my()->latest()->get()->unique('from_to')->load(['from', 'to']);
-        \Auth::user()->notification_chat_count = 0;
-        \Auth::user()->save();
+        Auth::user()->notification_chat_count = 0;
+        Auth::user()->save();
 
         return $messages;
     }
@@ -32,7 +33,7 @@ class ChatBll extends BaseBll
 
     public function newMessage(User $to)
     {
-        $from = \Auth::user();
+        $from = Auth::user();
         if (Input::has('image')) {
             $image = Input::get('image');
             $res = dispatch(new UploadBase64ImageCommand($image));

@@ -13,7 +13,7 @@ namespace Hifone\Events\Thread;
 
 use Hifone\Models\Thread;
 
-final class ThreadWasMarkedFavoriteEvent implements ThreadEventInterface
+final class ThreadWasRemovedFavoriteEvent implements ThreadEventInterface
 {
     /**
      * The thread that has been reported.

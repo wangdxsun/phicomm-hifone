@@ -10,10 +10,10 @@ use Hifone\Models\Thread;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 
-class GetFirstImgUrlController extends Controller
+class TestController extends Controller
 {
-    public function index()
+    public function test()
     {
-
+        dd(session()->getId(), csrf_token());
     }
 }

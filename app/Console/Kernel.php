@@ -12,6 +12,7 @@
 namespace Hifone\Console;
 
 use Hifone\Console\Commands\GetRank;
+use Hifone\Console\Commands\GetThumbnails;
 use Hifone\Console\Commands\InitSubNode;
 use Hifone\Console\Commands\SearchImport;
 use Hifone\Console\Commands\UpdateHeat;
@@ -27,12 +28,12 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        // Commands\Inspire::class,
         GetRank::class,
         SendMessage::class,
         UpdateHeat::class,
         SearchImport::class,
         InitSubNode::class,
+        GetThumbnails::class,
     ];
 
     /**
