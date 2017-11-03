@@ -175,6 +175,7 @@ class Thread extends BaseModel implements TaggableInterface
         $this->save();
     }
 
+    //帖子详情处判定是否可见
     public function inVisible()
     {
         //未登录，帖子可见性取决于帖子本身

@@ -133,7 +133,7 @@ class ThreadBll extends BaseBll
         return $replies;
     }
 
-    public function AutoAudit(Thread $thread)
+    public function autoAudit(Thread $thread)
     {
         //自动审核通过，触发相应的代码逻辑
         event(new ThreadWasAddedEvent($thread));

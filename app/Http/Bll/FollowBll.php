@@ -9,10 +9,8 @@
 namespace Hifone\Http\Bll;
 
 use Auth;
-use Config;
 use Exception;
 use Hifone\Commands\Follow\AddFollowCommand;
-use Hifone\Models\Follow;
 use Hifone\Models\User;
 
 class FollowBll extends BaseBll

@@ -21,7 +21,6 @@ use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Pin\SinkWasAddedEvent;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Http\Bll\ThreadBll;
-use Hifone\Models\Node;
 use Hifone\Models\Section;
 use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
@@ -151,7 +150,7 @@ class ThreadController extends Controller
             $thread->body = app('parser.at')->parse($thread->body);
             $thread->body = app('parser.emotion')->parse($thread->body);
             $thread->save();
-            $threadBll->AutoAudit($thread);
+            $threadBll->autoAudit($thread);
 
             return Redirect::route('thread.show', ['thread' => $thread->id])
                 ->withSuccess('发布成功');
