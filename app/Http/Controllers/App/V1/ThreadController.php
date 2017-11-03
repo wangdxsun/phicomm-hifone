@@ -49,7 +49,7 @@ class ThreadController extends AppController
             $thread->bad_word = $badWord;
             $msg = '帖子已提交，待审核';
         } else {
-            $threadBll->AutoAudit($thread);
+            $threadBll->autoAudit($thread);
             $msg = '发布成功';
         }
         $thread->body = app('parser.at')->parse($thread->body);
