@@ -26,6 +26,8 @@ abstract class AbstractTestCase extends TestCase
 
     protected $user = null;
 
+    protected $admin = null;
+
     /**
      * Creates the application.
      *
@@ -43,13 +45,12 @@ abstract class AbstractTestCase extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->beUser();
+        $this->setUser();
     }
 
-    protected function beUser(User $user = null)
+    protected function setUser()
     {
-        $this->user = $user ?: User::first();
-
-        $this->be($this->user);
+        $this->user = User::find(1755);
+        $this->admin = User::find(1);
     }
 }

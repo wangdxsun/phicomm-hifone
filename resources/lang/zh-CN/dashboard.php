@@ -51,7 +51,9 @@ return [
         ],
         'batch' => [
             'audit'   => '批量审核通过',
+            'move'    => '批量移动',
         ],
+        'move'  => '移动至版块',
     ],
     'replies' => [
         'replies' => '回帖',

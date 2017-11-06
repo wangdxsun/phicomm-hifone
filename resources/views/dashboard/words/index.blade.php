@@ -93,7 +93,6 @@
                                 <span class="modify_info" data-name="{{$word->id}},{{$word->type}},{{$word->word}},{{$word->status}},{{$word->replacement}}"><i class="fa fa-pencil"></i></span>
                                 <a data-url="{{ route('dashboard.word.destroy',['id'=>$word->id]) }}" data-method="delete" class="confirm-action"><i class="fa fa-trash"></i></a>
                             </td>
-
                         </tr>
                     @endforeach
                     </tbody>

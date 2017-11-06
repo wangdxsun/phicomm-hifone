@@ -10,7 +10,7 @@ namespace Hifone\Http\Bll;
 
 use Carbon\Carbon;
 use Hifone\Models\BaseModel;
-use Illuminate\Support\Facades\Auth;
+use Auth;
 
 class BaseBll
 {

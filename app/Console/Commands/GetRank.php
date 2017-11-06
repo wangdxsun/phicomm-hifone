@@ -21,7 +21,7 @@ class GetRank extends Command
     //根据被点赞数，被评论数和被收藏数筛选优质用户
     public function handle()
     {
-        $lastMonday = Carbon::today()->previousWeekendDay()->subDay(56)->toDateTimeString();
+        $lastMonday = Carbon::today()->previousWeekendDay()->subDay(6)->toDateTimeString();
         $lastSunday = Carbon::today()->previousWeekendDay()->addDays(1)->toDateTimeString();
         $threads = Thread::visible()->whereBetween('created_at',[$lastMonday,$lastSunday])
             ->with('user')->get()->groupBy('user_id');
@@ -45,16 +45,18 @@ class GetRank extends Command
             }
             array_push($userRankCount, [
                 'favoriteCount' => $favoriteCount - $selfFavoriteCount,
-                'likeCount' => $likeCount - $selfLikeCount,
-                'replyCount' => $replyCount - $selfReplyCount,
-                'all_count' => $replyCount - $selfReplyCount + $favoriteCount - $selfFavoriteCount + $likeCount - $selfLikeCount,
-                'user_id' => $user_id,
-                'score' => User::find($user_id)->score,
-                'week_rank' => $week_rank
+                'likeCount'     => $likeCount - $selfLikeCount,
+                'replyCount'    => $replyCount - $selfReplyCount,
+                'all_count'     => User::find($user_id)->can('manage_threads') ? -1 : ($replyCount - $selfReplyCount
+                                   + $favoriteCount - $selfFavoriteCount + $likeCount - $selfLikeCount),
+                'user_id'       => $user_id,
+                'score'         => User::find($user_id)->can('manage_threads') ? -1 : User::find($user_id)->score,
+                'week_rank'     => $week_rank,
             ]);
         }
-        $userRankCount = collect($userRankCount)->sortByDesc('all_count')->values()->all();
+        $userRankCount = collect($userRankCount)->sortByDesc('score')->sortByDesc('all_count')->values()->all();
         $userRankCount = array_slice($userRankCount,0,10);
+
 
         foreach ($userRankCount as $data) {
             Rank::create([

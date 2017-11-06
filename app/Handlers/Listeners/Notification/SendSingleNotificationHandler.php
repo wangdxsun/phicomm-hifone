@@ -12,16 +12,10 @@
 namespace Hifone\Handlers\Listeners\Notification;
 
 use Auth;
-use Hifone\Events\Credit\CreditWasAddedEvent;
 use Hifone\Events\EventInterface;
-use Hifone\Events\Favorite\FavoriteEventInterface;
 use Hifone\Events\Follow\FollowedWasAddedEvent;
-use Hifone\Events\Follow\FollowEventInterface;
-use Hifone\Events\Like\LikeEventInterface;
 use Hifone\Events\Thread\ThreadWasMarkedExcellentEvent;
 use Hifone\Events\Thread\ThreadWasMovedEvent;
-use Hifone\Events\User\UserWasAddedEvent;
-use Hifone\Events\User\UserWasLoggedinEvent;
 use Hifone\Events\Favorite\FavoriteWasAddedEvent;
 use Hifone\Models\Thread;
 use Hifone\Events\Thread\ThreadWasPinnedEvent;

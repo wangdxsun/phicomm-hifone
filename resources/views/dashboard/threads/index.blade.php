@@ -31,7 +31,7 @@
                                    @endif >
                         </div>
                         <select class="form-control" name="thread[node_id]">
-                            <option value = "" selected>全部节点</option>
+                            <option value = "" selected>全部版块</option>
                             @foreach ($sections as $section)
                                 <optgroup label="{{ $section->name }}">
                                     @if(isset($section->nodes))
@@ -54,8 +54,8 @@
                                 </optgroup>
                             @endforeach
                         </select>
-                        <el-date-picker type="datetime" placeholder="开始时间" v-model="date_start" name="search[date_start]"></el-date-picker>
-                        <el-date-picker type="datetime" placeholder="结束时间" v-model="date_end"  name="search[date_end]"></el-date-picker>
+                        <el-date-picker type="datetime" placeholder="开始时间" v-model="date_start"></el-date-picker>
+                        <el-date-picker type="datetime" placeholder="结束时间" v-model="date_end"></el-date-picker>
                         <select class="form-control " name="thread[orderType]">
                             <option value="" selected>排列方式</option>
                             @foreach ($orderTypes as $key => $orderType)
@@ -63,61 +63,97 @@
                             @endforeach
                         </select>
                         <button class="btn btn-default">搜索</button>
-                        <el-input :value="date_end_str" placeholder="请输入内容"  type="hidden" resize=" both"  style="width: 60px; height: 10px;" name="search[date_end]"></el-input>
-                        <el-input :value="date_start_str" placeholder="请输入内容"  type="hidden" resize=" both"  style="width: 60px; height: 10px;" name="search[date_start]"></el-input>
+                        <el-input :value="date_end_str" placeholder="请输入内容"  type="hidden" resize=" both"  style="width: 60px; height: 10px;" name="thread[date_end]"></el-input>
+                        <el-input :value="date_start_str" placeholder="请输入内容"  type="hidden" resize=" both"  style="width: 60px; height: 10px;" name="thread[date_start]"></el-input>
                     </form>
                 </div>
-                <table class="table table-bordered table-striped table-condensed">
-                <tbody>
-                    <tr class="head">
-                        <td style="width: 70px;">#</td>
-                        <td style="width: 240px;">标题</td>
-                        <td style="width: 80px;">主版块</td>
-                        <td style="width: 80px;">子版块</td>
-                        <td style="width: 120px;">发帖人</td>
-                        <td style="width: 90px;">IP地址</td>
-                        <td style="width: 60px;">热度值</td>
-                        <td style="width: 50px;">回帖</td>
-                        <td style="width: 50px;">查看</td>
-                        <td style="width: 90px;">发帖时间</td>
-                        <td style="width: 100px;">操作人</td>
-                        <td style="width: 90px;">操作时间</td>
-                        <td style="width: 120px;">操作</td>
-                    </tr>
-                    @foreach($threads as $thread)
-                    <tr>
-                        <td>{{ $thread->id }}</td>
-                        <td><a target="_blank" href="{{ $thread->url }}">{{ $thread->title }}</a></td>
-                        <td><a href="{{ $thread->node->url }}" target="_blank">{{ $thread->node->name }}</a></td>
-                        <td>{{ $thread->subNode->name }}</td>
-                        <td>
-                            @if(!isset($thread->user))
-                                {{ '' }}
-                            @else
-                            <a href="{{ $thread->user->url }}" target="_blank">{{ $thread->user->username }}</a>
-                            @endif
-                        </td>
-                        <td>{{ $thread->ip }}</td>
-                        <td>{{ $thread->heat }}</td>
-                        <td>{{ $thread->reply_count }}</td>
-                        <td>{{ $thread->view_count }}</td>
-                        <td>{{ $thread->created_time }}</td>
-                        <td>
-                            {{ $thread->lastOpUser->username }}
-                        </td>
-                        <td>{{ $thread->last_op_time }}</td>
-                        <td>
-                            <a data-url="/dashboard/thread/{{$thread->id}}/excellent" data-method="post" title="精华"><i class="{{ $thread->excellent }}"></i></a>
-                            <a data-url="/dashboard/thread/{{$thread->id}}/pin" data-method="post" title="置顶"><i class="{{ $thread->pin }}"></i></a>
-                            <a data-url="/dashboard/thread/{{ $thread->id }}/heat_offset" get-url="/dashboard/thread/{{ $thread->id }}/heat_offset" data-title="修改热度值偏移" data-method="post" class="getAndSet" title="提升"><i class="fa fa-level-up"></i></a>
-                            <a data-url="/dashboard/thread/{{$thread->id}}/sink" data-method="post" title="下沉"><i class="{{ $thread->sink }}"></i></a>
-                            <a href="/dashboard/thread/{{ $thread->id }}/edit"><i class="fa fa-pencil" title="编辑"></i></a>
-                            <a data-url="/dashboard/thread/{{ $thread->id }}/index/to/trash" data-title="帖子移入垃圾站" data-method="post" class="need-reason" title="删除"><i class="fa fa-trash"></i></a>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-                </table>
+                <form action="{{ URL('dashboard/thread/batchMove')}}"  id="batchMoveThread" method="POST">
+                    {!! csrf_field() !!}
+                    <div class="btn btn-default" class="move_thread" onclick="moveThread()">批量移动</div>
+                    <table class="table table-bordered table-striped table-condensed">
+                        <tbody>
+                        <tr class="head">
+                            <td style="width: 30px;"><input id="selectAll" type="checkbox"></td>
+                            <td style="width: 70px;">#id</td>
+                            <td style="width: 240px;">标题</td>
+                            <td style="width: 80px;">主版块</td>
+                            <td style="width: 80px;">子版块</td>
+                            <td style="width: 120px;">发帖人</td>
+                            <td style="width: 90px;">IP地址</td>
+                            <td style="width: 60px;">热度值</td>
+                            <td style="width: 50px;">回帖</td>
+                            <td style="width: 50px;">查看</td>
+                            <td style="width: 90px;">发帖时间</td>
+                            <td style="width: 100px;">操作人</td>
+                            <td style="width: 90px;">操作时间</td>
+                            <td style="width: 120px;">操作</td>
+                        </tr>
+                        @foreach($threads as $thread)
+                            <tr>
+                                <td><input class="checkAll" type="checkbox" name="batch[]" value="{{ $thread->id }}"></td>
+                                <td>{{ $thread->id }}</td>
+                                <td><a target="_blank" href="{{ $thread->url }}">{{ $thread->title }}</a></td>
+                                <td><a href="{{ $thread->node->url }}" target="_blank">{{ $thread->node->name }}</a></td>
+                                <td>{{ $thread->subNode->name }}</td>
+                                <td>
+                                    @if(!isset($thread->user))
+                                        {{ '' }}
+                                    @else
+                                        <a href="{{ $thread->user->url }}" target="_blank">{{ $thread->user->username }}</a>
+                                    @endif
+                                </td>
+                                <td>{{ $thread->ip }}</td>
+                                <td>{{ $thread->heat }}</td>
+                                <td>{{ $thread->reply_count }}</td>
+                                <td>{{ $thread->view_count }}</td>
+                                <td>{{ $thread->created_time }}</td>
+                                <td>
+                                    {{ $thread->lastOpUser->username }}
+                                </td>
+                                <td>{{ $thread->last_op_time }}</td>
+                                <td>
+                                    <a data-url="/dashboard/thread/{{$thread->id}}/excellent" data-method="post" title="精华"><i class="{{ $thread->excellent }}"></i></a>
+                                    <a data-url="/dashboard/thread/{{$thread->id}}/pin" data-method="post" title="置顶"><i class="{{ $thread->pin }}"></i></a>
+                                    <a data-url="/dashboard/thread/{{ $thread->id }}/heat_offset" get-url="/dashboard/thread/{{ $thread->id }}/heat_offset" data-title="修改热度值偏移" data-method="post" class="getAndSet" title="提升"><i class="fa fa-level-up"></i></a>
+                                    <a data-url="/dashboard/thread/{{$thread->id}}/sink" data-method="post" title="下沉"><i class="{{ $thread->sink }}"></i></a>
+                                    <a href="/dashboard/thread/{{ $thread->id }}/edit"><i class="fa fa-pencil" title="编辑"></i></a>
+                                    <a data-url="/dashboard/thread/{{ $thread->id }}/index/to/trash" data-title="帖子移入垃圾站" data-method="post" class="need-reason" title="删除"><i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                    <div class="modal fade" id="moveThreadModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="content-wrapper">
+                                    <div class="header sub-header">
+                                        <span class="uppercase">移动帖子</span>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <select class="form-control" name="thread[sub_node_id]">
+                                                @foreach ($nodes as $node)
+                                                    <optgroup label="{{ $node->name }}">
+                                                        @if(isset($node->subNodes))
+                                                            @foreach ($node->subNodes as $subNode)
+                                                                <option value="{{ $subNode->id }}" >{{ $subNode->name }}</option>
+                                                            @endforeach
+                                                        @endif
+                                                    </optgroup>
+                                                @endforeach
+                                            </select>
+                                            <div class="form-group">
+                                                {!! Form::submit('保存',['class'=>'btn btn-success', 'id' => 'commit']) !!}
+                                                {!! Form::button('取消',['class'=>'btn btn-default', 'id' => 'cancel']) !!}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
                 <div class="text-right">
                 <!-- Pager -->
@@ -144,4 +180,5 @@
             }
         });
     </script>
+    <script type="text/javascript" src="{{ URL::asset('/js/moveThread.js') }}"></script>
 @stop
