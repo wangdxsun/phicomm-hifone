@@ -36,4 +36,7 @@
         <env name="MAIL_DRIVER" value="log"/>
         <env name="QUEUE_DRIVER" value="sync"/>
     </php>
+    <!--<logging>-->
+        <!--<log type="coverage-html" target="public/code-coverage" charset="UTF-8"/>-->
+    <!--</logging>-->
 </phpunit>

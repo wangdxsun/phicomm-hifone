@@ -54,7 +54,7 @@ class NodeTest extends ApiTestCase
 
     public function testSubNodes()
     {
-        $this->get('/subNodes');
+        $this->actingAs($this->admin)->get('/subNodes');
         $this->seeJsonStructure([
             '*' => ['id', 'name', 'nodes' => [
                 '*' => ['id', 'name', 'description', 'thread_count', 'icon', 'icon_detail', 'icon_list', 'is_show',
@@ -62,7 +62,10 @@ class NodeTest extends ApiTestCase
                 ]
             ]]
         ]);
-        //对普通用户隐藏的板块不允许出现
+        $this->seeJson(['is_show' => 0]);
+
+        //对普通用户隐藏公告活动版块
+        $this->actingAs($this->user)->get('/subNodes');
         $this->dontSeeJson(['is_show' => 0]);
     }
 }
