@@ -26,6 +26,7 @@ class SubNode extends BaseModel
         'updated_at',
         'is_prompt',
         'prompt',
+        'is_feedback',
     ];
 
     protected $hidden = [
@@ -64,6 +65,12 @@ class SubNode extends BaseModel
     public function threads()
     {
         return $this->hasMany(Thread::class);
+    }
+
+    //是否在意见反馈显示该子版块:0不显示，1显示
+    public function scopeFeedback($query)
+    {
+        return $query->where('is_feedback', 1);
     }
 
 }

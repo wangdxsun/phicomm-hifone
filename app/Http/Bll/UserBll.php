@@ -55,4 +55,15 @@ class UserBll extends BaseBll
         return $threads;
     }
 
+    //查看自己反馈历史记录
+    public function getFeedbacks(User $user)
+    {
+        if (Auth::check() && $user->id == Auth::id()){
+            $feedbacks = $user->threads()->feedback()->recent()->paginate();
+        } else {
+            $feedbacks = [];
+        }
+        return $feedbacks;
+    }
+
 }

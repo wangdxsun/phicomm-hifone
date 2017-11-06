@@ -21,6 +21,7 @@ class AppRoutes
             $router->get('nodes', 'NodeController@index');
             $router->get('sections', 'NodeController@sections');
             $router->get('subNodes', 'NodeController@subNodes');
+            $router->get('subNodes/feedback', 'NodeController@subNodesInFeedback');
             $router->get('nodes/{node}', 'NodeController@show')->name('node.show');
             $router->get('subNodes/{subNode}', 'NodeController@showOfSubNode');
             $router->get('banners', 'BannerController@index');
@@ -37,6 +38,7 @@ class AppRoutes
                 $router->post('upload/base64', 'CommonController@uploadBase64');
                 $router->post('upload', 'CommonController@upload');
                 $router->post('threads', 'ThreadController@store');
+                $router->post('feedbacks', 'ThreadController@feedback');
                 $router->post('replies', 'ReplyController@store');
                 $router->post('follow/user/{user}', 'FollowController@user');
                 $router->post('follow/thread/{thread}', 'FollowController@thread');
@@ -46,6 +48,7 @@ class AppRoutes
                 $router->post('report/reply/{reply}', 'ReportController@reply');
                 $router->post('favorite/thread/{thread}', 'FavoriteController@createOrDeleteFavorite');
                 $router->get('users/{user}/favorites', 'UserController@favorites');
+                $router->get('users/{user}/feedbacks', 'UserController@feedbacks');
             });
         });
     }

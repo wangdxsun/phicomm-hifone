@@ -65,6 +65,18 @@ class NodeBll extends BaseBll
         return $sections;
     }
 
+    public function subNodesInFeedback()
+    {
+        //意见反馈处显示的子版块
+        $nodes = Node::orderBy('order')->with(['subNodes' => function ($query) {
+            $query->feedback();
+        }])->get()->filter(function ($node) {
+            return $node->subNodes->count() > 0;
+        })->values();
+
+        return $nodes;
+    }
+
     public function show(Node $node, NodeBll $nodeBll)
     {
         $hot = $nodeBll->hotThreadsOfNode($node);
