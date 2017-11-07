@@ -192,10 +192,12 @@ class EventServiceProvider extends ServiceProvider
         //帖子移入垃圾箱
         \Hifone\Events\Thread\ThreadWasTrashedEvent::class => [
             \Hifone\Handlers\Listeners\Stats\UpdateDailyStatsHandler::class,
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
         //回复移入垃圾箱
         \Hifone\Events\Reply\ReplyWasTrashedEvent::class => [
             \Hifone\Handlers\Listeners\Stats\UpdateDailyStatsHandler::class,
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
 
     ];
