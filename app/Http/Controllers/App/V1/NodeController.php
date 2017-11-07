@@ -75,4 +75,14 @@ class NodeController extends AppController
         return $node;
     }
 
+    /**
+     * 意见反馈发帖选择子版块
+     * @param NodeBll $nodeBll
+     */
+    public function subNodesInFeedback(NodeBll $nodeBll)
+    {
+        $nodes = $nodeBll->subNodesInFeedback();
+        return $nodes;
+    }
+
 }

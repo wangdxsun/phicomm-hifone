@@ -55,4 +55,9 @@ class UserController extends AppController
         $threads = $userBll->getFavorites($user);
         return $threads;
     }
+
+    public function feedbacks(User $user, UserBll $userBll)
+    {
+        return $userBll->getFeedbacks($user);
+    }
 }

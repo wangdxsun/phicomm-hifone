@@ -19,8 +19,10 @@ use Hifone\Models\User;
 use Hifone\Repositories\Criteria\Thread\Filter;
 use Hifone\Repositories\Criteria\Thread\Search;
 use DB;
+use Hifone\Services\Filter\WordsFilter;
 use Input;
 use Auth;
+use Config;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ThreadBll extends BaseBll
@@ -107,6 +109,62 @@ class ThreadBll extends BaseBll
         return $thread;
     }
 
+    public function createFeedback()
+    {
+        $threadData = Input::get('thread');
+        $sub_node_id = isset($threadData['sub_node_id']) ? $threadData['sub_node_id'] : null;
+        $node_id = SubNode::find($sub_node_id)->node_id;
+        $tags = isset($threadData['tags']) ? $threadData['tags'] : '';
+        $json_bodies = json_decode($threadData['body'], true);
+        $body = '';
+        foreach ($json_bodies as $json_body) {
+            if ($json_body['type'] == 'text') {
+                $body.= "<p>".$json_body['content']."</p>";
+            } elseif ($json_body['type'] == 'image') {
+                $body.= "<img src='".$json_body['content']."'/>";
+            }
+        }
+        $channel = Thread::FEEDBACK;
+        $dev_info = $threadData['dev_info'];
+        $contact  = isset($threadData['contact']) ? $threadData['contact'] : null;
+
+        $threadTemp = dispatch(new AddThreadCommand(
+            $threadData['title'],
+            $body,
+            Auth::id(),
+            $node_id,
+            $sub_node_id,
+            $tags,
+            '',
+            $channel,
+            $dev_info,
+            $contact
+        ));
+        $thread = Thread::find($threadTemp->id);
+        return $thread;
+    }
+
+    public function auditThread(Thread $thread, WordsFilter $wordsFilter)
+    {
+        $thread->heat = $thread->heat_compute;
+        $post = $thread->title.$thread->body;
+        $badWord = '';
+        if (Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($post)) || $threadBll->isContainsImageOrUrl($post)) {
+            $thread->bad_word = $badWord;
+            $msg = '帖子已提交，待审核';
+        } else {
+            $this->autoAudit($thread);
+            $msg = '发布成功';
+        }
+        $thread->body = app('parser.at')->parse($thread->body);
+        $thread->body = app('parser.emotion')->parse($thread->body);
+        $thread->save();
+        return [
+            'msg' => $msg,
+            'thread' => $thread
+        ];
+    }
+
     public function showThread(Thread $thread)
     {
         if ($thread->inVisible()) {
@@ -125,7 +183,7 @@ class ThreadBll extends BaseBll
 
     public function replies(Thread $thread)
     {
-        $replies = $thread->replies()->visible()->with(['user', 'reply.user'])->pinAndRecent()->paginate();
+        $replies = $thread->replies()->whereIn('status',[0,-3])->with(['user', 'reply.user'])->pinAndRecent()->paginate();
         foreach ($replies as &$reply) {
             $reply['liked'] = Auth::check() ? Auth::user()->hasLikeReply($reply) : false;
             $reply['reported'] = Auth::check() ? Auth::user()->hasReportReply($reply) : false;

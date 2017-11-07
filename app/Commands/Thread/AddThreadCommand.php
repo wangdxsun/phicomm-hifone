@@ -11,6 +11,8 @@
 
 namespace Hifone\Commands\Thread;
 
+use Hifone\Models\Thread;
+
 final class AddThreadCommand
 {
     public $title;
@@ -29,6 +31,12 @@ final class AddThreadCommand
 
     public $thumbnails;
 
+    public $channel;
+
+    public $dev_info;
+
+    public $contact;
+
     /**
      * The validation rules.
      *
@@ -42,7 +50,7 @@ final class AddThreadCommand
         'sub_node_id' => 'int',
     ];
 
-    public function __construct($title, $body, $user_id, $node_id, $sub_node_id, $tags, $images = '')
+    public function __construct($title, $body, $user_id, $node_id, $sub_node_id, $tags, $images = '', $channel = Thread::H5, $dev_info = NULL, $contact = NULL)
     {
         $this->title = $title;
         $this->body = $body;
@@ -51,5 +59,8 @@ final class AddThreadCommand
         $this->sub_node_id = $sub_node_id;
         $this->tags = $tags;
         $this->images = $images;
+        $this->channel = $channel;
+        $this->dev_info = $dev_info;
+        $this->contact = $contact;
     }
 }

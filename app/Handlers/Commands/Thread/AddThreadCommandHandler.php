@@ -43,6 +43,9 @@ class AddThreadCommandHandler
             'updated_at'    => Carbon::now()->toDateTimeString(),
             'thumbnails'    => $thumbnails,
             'ip'            => getClientIp().':'.$_SERVER['REMOTE_PORT'],
+            'channel'       => $command->channel,
+            'dev_info'      => $command->dev_info,
+            'contact'       => $command->contact
         ];
         // Create the thread
         $thread = Thread::create($data);

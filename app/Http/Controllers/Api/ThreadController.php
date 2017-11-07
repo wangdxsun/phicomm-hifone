@@ -49,25 +49,9 @@ class ThreadController extends ApiController
         if (Auth::user()->hasRole('NoComment')) {
             throw new \Exception('对不起，你已被管理员禁止发言');
         }
-
         $thread = $threadBll->createThread();
-        $thread->heat = $thread->heat_compute;
-        $post = $thread->title.$thread->body;
-        $badWord = '';
-        if (Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($post)) || $threadBll->isContainsImageOrUrl($post)) {
-            $thread->bad_word = $badWord;
-            $msg = '帖子已提交，待审核';
-        } else {
-            $threadBll->autoAudit($thread);
-            $msg = '发布成功';
-        }
-        $thread->body = app('parser.at')->parse($thread->body);
-        $thread->body = app('parser.emotion')->parse($thread->body);
-        $thread->save();
-        return [
-            'msg' => $msg,
-            'thread' => $thread
-        ];
+        $result = $threadBll->auditThread($thread, $wordsFilter);
+        return $result;
     }
 
     public function replies(Thread $thread, ThreadBll $threadBll)
