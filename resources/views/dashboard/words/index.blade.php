@@ -4,9 +4,6 @@
     <div class="content-wrapper">
         <div class="header sub-header">
             <i class="fa fa-filter pull-left"></i>{{ trans('dashboard.words.word') }}
-            <a class="btn btn-sm btn-success pull-right" style="margin-left: 15px;" href="{{ route('dashboard.check.check') }}">
-                敏感词检测
-            </a>
             <a class="btn btn-sm btn-success pull-right" style="margin-left: 15px;" href="{{ route('dashboard.word.create') }}">
                 {{trans('dashboard.words.add.title') }}
             </a>
