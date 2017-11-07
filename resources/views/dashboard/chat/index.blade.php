@@ -98,7 +98,7 @@
                 getUser(query) {
                     if (query !== '') {
                         this.loading = true;
-                        axios.get('http://hifone1.dm.dev.phiwifi.com:1885/api/v1/user/search?q=' + query).then(response => {
+                        axios.get('/api/v1/user/search?q=' + query).then(response => {
                             this.loading = false;
                             this.users = response.data
                         })

@@ -74,17 +74,19 @@
                         <tbody>
                         <tr class="head">
                             <td style="width: 30px;"><input id="selectAll" type="checkbox"></td>
-                            <td style="width: 70px;">#id</td>
-                            <td style="width: 240px;">标题</td>
+                            <td style="width: 70px;">#</td>
+                            <td style="width: 180px;">标题</td>
                             <td style="width: 80px;">主版块</td>
                             <td style="width: 80px;">子版块</td>
-                            <td style="width: 120px;">发帖人</td>
+                            <td style="width: 80px;">发帖人</td>
+                            <td style="width: 60px;">来源</td>
+                            <td style="width: 90px;">用户设备信息</td>
                             <td style="width: 90px;">IP地址</td>
                             <td style="width: 60px;">热度值</td>
                             <td style="width: 50px;">回帖</td>
                             <td style="width: 50px;">查看</td>
                             <td style="width: 90px;">发帖时间</td>
-                            <td style="width: 100px;">操作人</td>
+                            <td style="width: 80px;">操作人</td>
                             <td style="width: 90px;">操作时间</td>
                             <td style="width: 120px;">操作</td>
                         </tr>
@@ -102,6 +104,8 @@
                                         <a href="{{ $thread->user->url }}" target="_blank">{{ $thread->user->username }}</a>
                                     @endif
                                 </td>
+                                <td>{{ $thread->channel == 0 ? "社区" : "意见反馈" }}</td>
+                                <td>{{ $thread->dev_info }}</td>
                                 <td>{{ $thread->ip }}</td>
                                 <td>{{ $thread->heat }}</td>
                                 <td>{{ $thread->reply_count }}</td>
@@ -143,6 +147,7 @@
                                                     </optgroup>
                                                 @endforeach
                                             </select>
+                                            <hr>
                                             <div class="form-group">
                                                 {!! Form::submit('保存',['class'=>'btn btn-success', 'id' => 'commit']) !!}
                                                 {!! Form::button('取消',['class'=>'btn btn-default', 'id' => 'cancel']) !!}

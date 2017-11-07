@@ -17,7 +17,6 @@ class ChatController extends Controller
     public function sendChat()
     {
         return View::make('dashboard.chat.index')
-            ->withUsers(User::all())
             ->withCurrentMenu('send');
 
     }

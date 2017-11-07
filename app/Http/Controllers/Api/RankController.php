@@ -19,8 +19,8 @@ class RankController extends ApiController
         return 'success';
     }
 
-    public function rankCount(RankBll $rankBll)
+    public function count(RankBll $rankBll)
     {
-        return $rankBll->rankCount();
+        return $rankBll->count();
     }
 }

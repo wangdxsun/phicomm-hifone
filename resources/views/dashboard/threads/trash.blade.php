@@ -63,11 +63,13 @@
                         <td style="width: 70px;">#</td>
                         <td style="width: 250px;">标题</td>
                         <td style="width: 80px;">版块</td>
-                        <td style="width: 120px;">发帖人</td>
+                        <td style="width: 80px;">发帖人</td>
+                        <td style="width: 60px;">来源</td>
+                        <td style="width: 100px;">用户设备信息</td>
                         <td style="width: 100px;">IP地址</td>
-                        <td style="width: 160px;">发帖时间</td>
-                        <td style="width: 120px;">操作人</td>
-                        <td style="width: 160px;">操作时间</td>
+                        <td style="width: 80px;">发帖时间</td>
+                        <td style="width: 80px;">操作人</td>
+                        <td style="width: 80px;">操作时间</td>
                         <td style="width: 150px;">操作原因</td>
                         <td style="width: 50px;">操作</td>
                     </tr>
@@ -77,6 +79,8 @@
                             <td><a href="{{ $thread->url }}" target="_blank" ><i class="{{ $thread->icon }}"></i> {{ $thread->title }}</a></td>
                             <td><a href="{{ $thread->node->url }}" target="_blank">{{ $thread->node->name }}</a></td>
                             <td><a href="{{ $thread->user->url }}" target="_blank">{{ $thread->user->username }}</a></td>
+                            <td>{{ $thread->channel == 0 ? "社区" : "意见反馈" }}</td>
+                            <td>{{ $thread->dev_info }}</td>
                             <td>{{ $thread->ip }}</td>
                             <td>{{ $thread->created_time }}</td>
                             <td>{{ $thread->lastOpUser->username }}</td>

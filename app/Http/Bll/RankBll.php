@@ -24,17 +24,16 @@ class RankBll extends BaseBll
         $rankData = Input::get('rank_status');
         $user =  Auth::user();
         $user->update(['rank_status' => $rankData]);
-        $user->save();
     }
 
 
-    public function rankCount()
+    public function count()
     {
         return [
-            '0' => User::where('rank_status',0)->count(),
-            '1' => User::where('rank_status',1)->count(),
-            '2' => User::where('rank_status',2)->count(),
-            '3' => User::where('rank_status',3)->count(),
+            '未做选择' => User::where('rank_status',0)->count(),
+            '期待上榜' => User::where('rank_status',1)->count(),
+            '随便看看' => User::where('rank_status',2)->count(),
+            '不感兴趣' => User::where('rank_status',3)->count(),
         ];
     }
 }
