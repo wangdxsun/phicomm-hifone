@@ -65,9 +65,6 @@ class ApiRoutes
             $router->get('users/{user}/replies', 'UserController@replies');
             $router->get('users/{user}/favorites', 'UserController@favorites');
             $router->get('rank', 'RankController@ranks');
-            $router->get('rank/rankCount', 'RankController@rankCount');
-            $router->post('rank', 'RankController@rankStatus');
-
 
             // Authorization Required
             $router->group(['middleware' => 'auth:hifone'], function ($router) {
@@ -84,6 +81,8 @@ class ApiRoutes
                 $router->get('user/watch', 'NotificationController@watch');
                 $router->get('user/credit', 'UserController@credit');
                 $router->post('user/avatar', 'UserController@upload');
+                $router->post('rank', 'RankController@rankStatus');
+                $router->get('rank/count', 'RankController@count');
 
                 $router->get('chats', 'ChatController@chats');
                 $router->get('chat/{user}', 'ChatController@messages');
