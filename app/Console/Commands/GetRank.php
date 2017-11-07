@@ -28,7 +28,7 @@ class GetRank extends Command
         $userRankCount = [];
         $week_rank = 0;
         //对于这一段时间的活跃用户，计算被点赞数，被评论数，被收藏数
-        foreach ($threads as  $user_id => $userThreads) {
+        foreach ($threads as  $userId => $userThreads) {
             $favoriteCount = 0;
             $likeCount = 0;
             $replyCount = 0;
@@ -43,19 +43,21 @@ class GetRank extends Command
                 $selfLikeCount += $userThread->selfLikeCount($userThread);
                 $selfFavoriteCount += $userThread->selfFavoriteCount($userThread);
             }
-            array_push($userRankCount, [
-                'favoriteCount' => $favoriteCount - $selfFavoriteCount,
-                'likeCount'     => $likeCount - $selfLikeCount,
-                'replyCount'    => $replyCount - $selfReplyCount,
-                'all_count'     => User::find($user_id)->can('manage_threads') ? -1 : ($replyCount - $selfReplyCount
-                                   + $favoriteCount - $selfFavoriteCount + $likeCount - $selfLikeCount),
-                'user_id'       => $user_id,
-                'score'         => User::find($user_id)->can('manage_threads') ? -1 : User::find($user_id)->score,
-                'week_rank'     => $week_rank,
-            ]);
+            if (!User::find($userId)->can('manage_threads')) {
+                array_push($userRankCount, [
+                    'favoriteCount' => $favoriteCount - $selfFavoriteCount,
+                    'likeCount'     => $likeCount - $selfLikeCount,
+                    'replyCount'    => $replyCount - $selfReplyCount,
+                    'all_count'     => $replyCount - $selfReplyCount + $favoriteCount - $selfFavoriteCount + $likeCount - $selfLikeCount,
+                    'user_id'       => $userId,
+                    'score'         => User::find($userId)->score,
+                    'week_rank'     => $week_rank,
+                ]);
+            }
         }
         $userRankCount = collect($userRankCount)->sortByDesc('score')->sortByDesc('all_count')->values()->all();
         $userRankCount = array_slice($userRankCount,0,10);
+        Rank::where('start_date',$lastMonday)->delete();
 
 
         foreach ($userRankCount as $data) {
