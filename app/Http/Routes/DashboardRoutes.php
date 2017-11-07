@@ -74,7 +74,6 @@ class DashboardRoutes
             $router->post('wordsExcel/import','WordsExcelController@import');
             $router->post('wordsExcel/check','WordsExcelController@check');
             $router->post('word/batchDestroy', 'WordController@batchDestroy');
-            $router->get('check/check', 'CheckController@check')->name('check.check');
             $router->get('thread/{thread}/heat_offset','ThreadController@getHeatOffset');
             $router->post('thread/{thread}/heat_offset','ThreadController@setHeatOffset');
             $router->get('chat/send','ChatController@sendChat')->name('chat.send');
