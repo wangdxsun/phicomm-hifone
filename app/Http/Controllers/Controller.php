@@ -73,11 +73,12 @@ abstract class Controller extends BaseController
 
     public function updateOpLog(BaseModel $model, $operation, $reason = null)
     {
-        $model->last_op_user_id = ($operation == '自动审核通过' ? 0 : Auth::id());
+        $operator = $operation == '自动审核通过' ? 0 : Auth::id();
+        $model->last_op_user_id = $operator;
         $model->last_op_time = Carbon::now()->toDateTimeString();
         $reason && $model->last_op_reason = $reason;
         $model->save();
-        $logData['user_id'] = Auth::id();
+        $logData['user_id'] = $operator;
         $logData['operation'] = $operation;
         $logData['reason'] = $reason;
         $model->logs()->create($logData);

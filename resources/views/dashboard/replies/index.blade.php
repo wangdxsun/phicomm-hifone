@@ -90,13 +90,7 @@
                             </td>
                             <td>{{ $reply->created_at }}</td>
                             <td>{{ $reply->ip }}</td>
-                            <td>
-                                @if(!isset($reply->last_op_user))
-                                    {{'自动审核'}}
-                                @else
-                                    {{ $reply->last_op_user->username }}
-                                @endif
-                            </td>
+                            <td>{{ $reply->lastOpUser->username }}</td>
                             <td>{{ $reply->last_op_time }}</td>
                             <td>
                                 <a href="/dashboard/reply/{{ $reply->id }}/edit" title="编辑"><i class="fa fa-pencil"></i></a>

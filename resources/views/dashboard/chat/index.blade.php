@@ -7,62 +7,40 @@
         @endif
         @include('partials.errors')
         <div>
-            {!! Form::open(['route' => 'dashboard.chat.store', 'method' => 'post', 'class' => 'create_form']) !!}
+            {!! Form::open(['route' => 'dashboard.chat.store', 'method' => 'post', 'class' => 'create_form form-horizontal']) !!}
             <div class="form-group">
-                <span style="position: relative;top: -67px;"> {{'用户选择：'}}</span>
-                <template>
+                <label class="col-sm-1 control-label">用户选择：</label>
+                <div class="col-sm-6">
                     <el-radio-group v-model="usersType" name="chat[userType]">
+                        <div><el-radio :label="3">社区全体用户</el-radio></div>
                         <div>
-                            <el-radio :label="3">社区全体用户</el-radio>
-                        </div>
-
-                        <div class="div-inline">
                             <el-radio :label="6">具体帖子内的回复用户</el-radio>
-                            <el-input v-model="threadId" name="chat[thread_id]" placeholder="请输入帖子ID,若按回贴时间筛选请选择回复的开始时间和结束时间"></el-input>
+                            <el-input v-model="threadId" name="chat[thread_id]" placeholder="请输入帖子ID" width="100px"></el-input>
                             <el-date-picker type="datetime" placeholder="开始时间" v-model="date_start" name="chat[date_start]"></el-date-picker>
                             <el-date-picker type="datetime" placeholder="结束时间" v-model="date_end"  name="chat[date_end]"></el-date-picker>
                             <el-input :value="date_start_str" placeholder="请输入内容" type="hidden" resize="both"  style="width: 60px; height: 10px;" name="chat[date_start]"></el-input>
                             <el-input :value="date_end_str" placeholder="请输入内容" type="hidden" resize="both"  style="width: 60px; height: 10px;" name="chat[date_end]"></el-input>
                         </div>
-
                         <div>
                             <el-radio :label="9">自主选择用户</el-radio>
-                            <el-select
-                                v-model="userIds"
-                                multiple
-                                filterable
-                                remote
-                                placeholder="请输入用户名"
-                                :remote-method="getUser"
-                                :loading="loading">
-                                <el-option
-                                    v-for="user in users"
-                                    :key="user.id"
-                                    :label="user.username"
-                                    :value="user.id">
-                                </el-option>
+                            <el-select v-model="userIds" multiple filterable remote placeholder="请输入用户名" :remote-method="getUser" :loading="loading">
+                                <el-option v-for="user in users" :key="user.id" :label="user.username" :value="user.id"></el-option>
                             </el-select>
                             <input type="hidden" class="form-control" :value="userIds" name="chat[userIds]">
                         </div>
                     </el-radio-group>
                     <input type="hidden" class="form-control" v-model="usersType" name="chat[userType]">
-                </template>
+                </div>
             </div>
-
             <div class="form-group">
-                <span style="display: block; float: left;">{{'消息内容：'}}</span>
-                <template>
-                    <el-input style="width: 80%;" name="message"
-                              type="textarea"
-                              :rows="10"
-                              placeholder="文字、图片不能同时为空"
-                              v-model="chatBody">
-                    </el-input>
-                </template>
-
+                <label class="col-sm-1 control-label">消息内容：</label>
+                <div class="col-sm-6">
+                    <el-input name="message" type="textarea" :rows="10" placeholder="文字、图片不能同时为空" v-model="chatBody"></el-input>
+                </div>
             </div>
-            <div style="position: relative;left: 67px;">
-                <template>
+            <div class="form-group">
+                <label class="col-sm-1 control-label">消息图片：</label>
+                <div class="col-sm-6">
                     <el-upload
                             class="avatar-uploader"
                             action="/upload_image"
@@ -74,16 +52,11 @@
                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
                     <el-input type="hidden" v-model="dialogImageUrl" name="imageUrl"></el-input>
-                </template>
+                </div>
             </div>
             <div class="form-group">
-                <span display="inline">{{'发送方式：'}}</span>
-                <span >{{'私信'}}</span>
-            </div>
-
-            <div class="col-xs-12" style="text-align: center">
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success" style="width: 100px;height: 60px;">{{ trans('forms.submit') }}</button>
+                <div class="col-sm-offset-1 col-sm-6">
+                    <button type="submit" class="btn btn-success">提交</button>
                 </div>
             </div>
             {!! Form::close() !!}
@@ -139,9 +112,6 @@
 
     </script>
     <style>
-        .div-inline {
-            display:inline
-        }
         .avatar-uploader .el-upload {
             border: 1px dashed #d9d9d9;
             border-radius: 1px;
