@@ -143,6 +143,7 @@
                                                     </optgroup>
                                                 @endforeach
                                             </select>
+                                            <hr>
                                             <div class="form-group">
                                                 {!! Form::submit('保存',['class'=>'btn btn-success', 'id' => 'commit']) !!}
                                                 {!! Form::button('取消',['class'=>'btn btn-default', 'id' => 'cancel']) !!}
