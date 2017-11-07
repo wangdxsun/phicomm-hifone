@@ -17,6 +17,7 @@ use Hifone\Repositories\Criteria\Thread\Filter;
 use Hifone\Repositories\Criteria\Thread\Search;
 use Input;
 use Auth;
+use Jenssegers\Agent\Agent;
 
 class NodeBll extends BaseBll
 {

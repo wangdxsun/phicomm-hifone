@@ -77,15 +77,16 @@ class ReplyBll extends BaseBll
     public function auditReply($reply, WordsFilter $wordsFilter)
     {
         $badWord = '';
-        if (Config::get('setting.auto_audit', 0) == 0  || ($badWord = $wordsFilter->filterWord($reply->body)) || $this->isContainsImageOrUrl($reply->body)) {
+        $needManAudit = Config::get('setting.auto_audit', 0) == 0  || ($badWord = $wordsFilter->filterWord($reply->body)) || $this->isContainsImageOrUrl($reply->body);
+        $reply->body = app('parser.at')->parse($reply->body);
+        $reply->body = app('parser.emotion')->parse($reply->body);
+        if ($needManAudit) {
             $reply->bad_word = $badWord;
             $msg = $this->getMsg($reply->reply_id, false);
         } else {
             $this->AutoAudit($reply);
             $msg = $this->getMsg($reply->reply_id, true);
         }
-        $reply->body = app('parser.at')->parse($reply->body);
-        $reply->body = app('parser.emotion')->parse($reply->body);
         $reply->save();
         return [
             'msg' => $msg,
@@ -127,9 +128,9 @@ class ReplyBll extends BaseBll
         }
     }
 
-    public function getMsg($reply_id, $isAudit)
+    public function getMsg($reply_id, $isAutoAudit)
     {
-        if (!$isAudit) {
+        if (!$isAutoAudit) {
             if ($reply_id) {
                 return $msg = '回复已提交，待审核';
             } else {
