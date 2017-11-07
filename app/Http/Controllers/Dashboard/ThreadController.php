@@ -40,7 +40,6 @@ class ThreadController extends Controller
     /**
      * Creates a new thread controller instance.
      *
-     * @return void
      */
     public function __construct()
     {
@@ -53,7 +52,7 @@ class ThreadController extends Controller
     {
         $search = $this->filterEmptyValue(Input::get('thread'));
         if (array_key_exists('sub_node_id',$search) && array_key_exists('node_id',$search) && $search['node_id'] != SubNode::find($search['sub_node_id'])->node->id) {
-            return Redirect::route('dashboard.thread.index')->withErrors('主板块信息和子版块信息不一致！');
+            return Redirect::route('dashboard.thread.index')->withErrors('主版块信息和子版块信息不一致！');
         }
         $threads = Thread::visible()->search($search)->with('node', 'user', 'lastOpUser')->orderBy('last_op_time', 'desc')->paginate(20);
         $sections = Section::orderBy('order')->get();
@@ -256,9 +255,9 @@ class ThreadController extends Controller
             $this->updateOpLog($thread, '审核通过');
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
             if ($thread->subNode) {
-                $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);
+                $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visibleAndDeleted()->count()]);
             }
-            $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
+            $thread->user->update(['thread_count' => $thread->user->threads()->visibleAndDeleted()->count()]);
             event(new ThreadWasAuditedEvent($thread));
             $thread->addToIndex();
             DB::commit();
@@ -276,9 +275,9 @@ class ThreadController extends Controller
         DB::beginTransaction();
         try {
             $this->delete($thread);
-            $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
-            $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);
-            $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
+            $thread->node->update(['thread_count' => $thread->node->threads()->visibleAndDeleted()->count()]);
+            $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visibleAndDeleted()->count()]);
+            $thread->user->update(['thread_count' => $thread->user->threads()->visibleAndDeleted()->count()]);
             $thread->removeFromIndex();
             event(new ThreadWasTrashedEvent($thread));
             DB::commit();

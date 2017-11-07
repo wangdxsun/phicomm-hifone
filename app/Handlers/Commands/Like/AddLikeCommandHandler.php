@@ -68,7 +68,7 @@ class AddLikeCommandHandler
                 event(new LikeWasRemovedEvent(Auth::user()));
                 event(new LikedWasRemovedEvent($user));
             });
-        } elseif ($target->likes()->forUser(Auth::id())->WithDown()->count()) {
+        } elseif ($target->likes()->forUser(Auth::id())->WithDown()->sharedLock()->count()) {
             // user already clicked unlike once
             $target->likes()->forUser(Auth::id())->WithDown()->delete();
             $target->likes()->create(['user_id' => Auth::id(), 'rating' => Like::LIKE]);
