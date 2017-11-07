@@ -24,6 +24,7 @@ use Hifone\Http\Bll\ThreadBll;
 use Hifone\Models\Section;
 use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
+use Hifone\Models\User;
 use Hifone\Repositories\Criteria\Thread\BelongsToNode;
 use Config;
 use Hifone\Services\Filter\WordsFilter;
@@ -121,6 +122,8 @@ class ThreadController extends Controller
     {
         if (Auth::user()->hasRole('NoComment')) {
             return Redirect::back()->withErrors('您已被系统管理员禁言');
+        } elseif (!Auth::user()->can('manage_threads') && Auth::user()->score < 0) {
+            return Redirect::route('thread.index')->withErrors('对不起，你所在的用户组无法发言');
         }
         $this->validate(request(), [
             'thread.title' => 'required|min:5|max:80',
@@ -178,7 +181,8 @@ class ThreadController extends Controller
         return $this->view('threads.create_edit')
             ->withThread($thread)
             ->withSections($sections)
-            ->withNode($thread->node);
+            ->withNode($thread->node)
+            ->withSubNode($thread->subNode);
     }
 
     /**
@@ -311,8 +315,8 @@ class ThreadController extends Controller
         DB::beginTransaction();
         try {
             $thread->status = Thread::DELETED;
-            $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
-            $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
+            $thread->node->update(['thread_count' => $thread->node->threads()->visibleAndDeleted()->count()]);
+            $thread->user->update(['thread_count' => $thread->user->threads()->visibleAndDeleted()->count()]);
             $this->updateOpLog($thread, '删除帖子', trim(request('reason')));
             $thread->removeFromIndex();
             DB::commit();

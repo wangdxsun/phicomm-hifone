@@ -22,8 +22,10 @@ use Hifone\Events\Image\ImageWasUploadedEvent;
 use Hifone\Events\Like\LikeWasRemovedEvent;
 use Hifone\Events\Reply\ReplyWasAddedEvent;
 use Hifone\Events\Reply\RepliedWasAddedEvent;
+use Hifone\Events\Reply\ReplyWasTrashedEvent;
 use Hifone\Events\Report\ReportWasPassedEvent;
 use Hifone\Events\Thread\ThreadWasAddedEvent;
+use Hifone\Events\Thread\ThreadWasTrashedEvent;
 use Hifone\Events\User\UserWasAddedEvent;
 use Hifone\Events\User\UserWasLoggedinEvent;
 use Hifone\Events\Favorite\FavoriteWasAddedEvent;
@@ -49,8 +51,14 @@ class AddCreditHandler
         if ($event instanceof ThreadWasAddedEvent) {
             $action = 'thread_new';
             $user = $event->thread->user;
+        } elseif ($event instanceof ThreadWasTrashedEvent) {
+            $action = 'thread_removed';
+            $user = $event->thread->user;
         } elseif ($event instanceof ReplyWasAddedEvent) {
             $action = 'reply_new';
+            $user = $event->reply->user;
+        } elseif ($event instanceof ReplyWasTrashedEvent) {
+            $action = 'reply_removed';
             $user = $event->reply->user;
         } elseif ($event instanceof RepliedWasAddedEvent) {
             $action = 'replied';

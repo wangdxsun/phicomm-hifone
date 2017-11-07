@@ -425,5 +425,4 @@ class Thread extends BaseModel implements TaggableInterface
     {
         return $this->favorites()->where('user_id',$thread->user_id)->count();
     }
-
 }

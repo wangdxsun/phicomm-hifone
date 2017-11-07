@@ -183,7 +183,7 @@ class ThreadBll extends BaseBll
 
     public function replies(Thread $thread)
     {
-        $replies = $thread->replies()->whereIn('status',[0,-3])->with(['user', 'reply.user'])->pinAndRecent()->paginate();
+        $replies = $thread->replies()->visibleAndDeleted()->with(['user', 'reply.user'])->pinAndRecent()->paginate();
         foreach ($replies as &$reply) {
             $reply['liked'] = Auth::check() ? Auth::user()->hasLikeReply($reply) : false;
             $reply['reported'] = Auth::check() ? Auth::user()->hasReportReply($reply) : false;
@@ -200,11 +200,11 @@ class ThreadBll extends BaseBll
             $thread->status = Thread::VISIBLE;
             $thread->addToIndex();
             $this->updateOpLog($thread, '自动审核通过');
-            $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
+            $thread->node->update(['thread_count' => $thread->node->threads()->visibleAndDeleted()->count()]);
             if ($thread->subNode) {
-                $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);
+                $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visibleAndDeleted()->count()]);
             }
-            $thread->user->update(['thread_count' => $thread->user->threads()->visible()->count()]);
+            $thread->user->update(['thread_count' => $thread->user->threads()->visibleAndDeleted()->count()]);
             event(new ThreadWasAuditedEvent($thread));
             DB::commit();
         } catch (\Exception $e) {
