@@ -22,15 +22,17 @@
                     <tbody>
                     <tr class="head">
                         <td style="width: 30px;"><input id="selectAll" type="checkbox"></td>
-                        <td style="width: 70px;">#</td>
-                        <td style="width: 250px;">标题</td>
+                        <td style="width: 50px;">#</td>
+                        <td style="width: 180px;">标题</td>
                         <td style="width: 250px;">帖子内容</td>
                         <td style="width: 70px;">敏感词</td>
                         <td style="width: 70px;">主版块</td>
                         <td style="width: 70px;">子版块</td>
-                        <td style="width: 100px;">发帖人</td>
+                        <td style="width: 70px;">发帖人</td>
+                        <td style="width: 60px;">来源</td>
+                        <td style="width: 90px;">用户设备信息</td>
                         <td style="width: 100px;">IP地址</td>
-                        <td style="width: 90px;">发贴时间</td>
+                        <td style="width: 80px;">发贴时间</td>
                         <td style="width: 70px;">操作</td>
                     </tr>
                     @foreach($threads as $thread)
@@ -63,6 +65,8 @@
                                     <a href="{{ $thread->user->url }}" target="_blank">{{ $thread->user->username }}</a>
                                 @endif
                             </td>
+                            <td>{{ $thread->channel == 0 ? "社区" : "意见反馈" }}</td>
+                            <td>{{ $thread->dev_info }}</td>
                             <td>{{ $thread->ip }}</td>
                             <td>{{ $thread->created_time }}</td>
                             <td>
