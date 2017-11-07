@@ -15,7 +15,7 @@ use Hifone\Events\Reply\ReplyWasAddedEvent;
 use Hifone\Events\Reply\ReplyWasAuditedEvent;
 use Hifone\Models\Reply;
 use Hifone\Services\Filter\WordsFilter;
-use Illuminate\Support\Facades\DB;
+use DB;
 use Input;
 use Auth;
 use Config;
@@ -77,15 +77,16 @@ class ReplyBll extends BaseBll
     public function auditReply($reply, WordsFilter $wordsFilter)
     {
         $badWord = '';
-        if (Config::get('setting.auto_audit', 0) == 0  || ($badWord = $wordsFilter->filterWord($reply->body)) || $this->isContainsImageOrUrl($reply->body)) {
+        $needManAudit = Config::get('setting.auto_audit', 0) == 0  || ($badWord = $wordsFilter->filterWord($reply->body)) || $this->isContainsImageOrUrl($reply->body);
+        $reply->body = app('parser.at')->parse($reply->body);
+        $reply->body = app('parser.emotion')->parse($reply->body);
+        if ($needManAudit) {
             $reply->bad_word = $badWord;
             $msg = $this->getMsg($reply->reply_id, false);
         } else {
             $this->AutoAudit($reply);
             $msg = $this->getMsg($reply->reply_id, true);
         }
-        $reply->body = app('parser.at')->parse($reply->body);
-        $reply->body = app('parser.emotion')->parse($reply->body);
         $reply->save();
         return [
             'msg' => $msg,
@@ -106,7 +107,7 @@ class ReplyBll extends BaseBll
             $reply->thread->node->increment('reply_count', 1);//版块回帖数+1
             $reply->thread->subNode->increment('reply_count', 1);//子版块回帖数+1
             $reply->thread->update(['reply_count' => $reply->thread->replies()->visibleAndDeleted()->count()]);
-            $reply->user->update(['reply_count' => $reply->user->replies()->visibleAndDeleted()->coutn()]);
+            $reply->user->update(['reply_count' => $reply->user->replies()->visibleAndDeleted()->count()]);
             $reply->thread->updateIndex();
 
             $reply->status = Reply::VISIBLE;
@@ -123,13 +124,13 @@ class ReplyBll extends BaseBll
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
-            throw new \Exception('系统错误！');
+            throw new \Exception($e->getMessage());
         }
     }
 
-    public function getMsg($reply_id, $isAudit)
+    public function getMsg($reply_id, $isAutoAudit)
     {
-        if (!$isAudit) {
+        if (!$isAutoAudit) {
             if ($reply_id) {
                 return $msg = '回复已提交，待审核';
             } else {
