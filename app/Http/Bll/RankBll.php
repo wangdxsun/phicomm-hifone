@@ -1,6 +1,7 @@
 <?php
 namespace Hifone\Http\Bll;
 
+use Carbon\Carbon;
 use Hifone\Models\Rank;
 use Hifone\Models\User;
 use Auth;
@@ -10,7 +11,8 @@ class RankBll extends BaseBll
 {
     public function ranks()
     {
-        $ranks = Rank::orderBy('id','desc')->limit(10)->get()->load('user');
+        $lastMonday = Carbon::today()->previousWeekendDay()->subDay(6)->toDateTimeString();
+        $ranks = Rank::where('start_date',$lastMonday)->orderBy('id')->get()->load('user');
         foreach ($ranks as $rank) {
             $rank['followed'] = User::hasFollowUser(User::find($rank->user_id));
         }
