@@ -81,7 +81,7 @@ class ReplyBll extends BaseBll
             $reply->bad_word = $badWord;
             $msg = $this->getMsg($reply->reply_id, false);
         } else {
-            $this->replyPassAutoAudit($reply);
+            $this->AutoAudit($reply);
             $msg = $this->getMsg($reply->reply_id, true);
         }
         $reply->body = app('parser.at')->parse($reply->body);
@@ -93,7 +93,7 @@ class ReplyBll extends BaseBll
         ];
     }
 
-    public function replyPassAutoAudit($reply)
+    public function AutoAudit($reply)
     {
         $thread = $reply->thread;
         $thread->last_reply_user_id = $reply->user_id;

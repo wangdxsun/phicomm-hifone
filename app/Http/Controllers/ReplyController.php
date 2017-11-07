@@ -41,7 +41,7 @@ class ReplyController extends Controller
             $reply->body = app('parser.at')->parse($reply->body);
             $reply->body = app('parser.emotion')->parse($reply->body);
             $reply->save();
-            $replyBll->replyPassAutoAudit($reply);
+            $replyBll->AutoAudit($reply);
             return Redirect::back()->withSuccess('审核通过，发表成功！');
 
         } catch (\Exception $e) {

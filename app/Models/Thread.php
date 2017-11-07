@@ -33,6 +33,13 @@ class Thread extends BaseModel implements TaggableInterface
     const AUDIT = -2;//待审核 or 审核中
     const DELETED = -3;//已删除
 
+    //发帖渠道，-1:意见反馈；0:H5发帖；1：Android；2：iOS；3：Web
+    const FEEDBACK = -1;
+    const H5 = 0;
+    const ANDROID = 1;
+    const IOS = 2;
+    const WEB = 3;
+
     // manually maintain
     public $timestamps = false;
 
@@ -44,6 +51,8 @@ class Thread extends BaseModel implements TaggableInterface
         'body',
         'excerpt',
         'channel',
+        'dev_info',
+        'contact',
         'body_original',
         'user_id',
         'node_id',
@@ -257,6 +266,11 @@ class Thread extends BaseModel implements TaggableInterface
     public function scopeExcellent($query)
     {
         return $query->where('is_excellent', '=', true);
+    }
+
+    public function scopeFeedback($query)
+    {
+        return $query->where('channel', STATIC::FEEDBACK);
     }
 
     public static function makeExcerpt($body)

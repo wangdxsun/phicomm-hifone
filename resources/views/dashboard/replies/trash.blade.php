@@ -48,7 +48,7 @@
                     <tbody>
                     <tr class="head">
                         <td style="width:60px">#</td>
-                        <td >回帖内容</td>
+                        <td style="width: 250px;">回帖内容</td>
                         <td style="width:200px">帖子标题</td>
                         <td style="width: 100px">回帖人</td>
                         <td style="width: 110px">IP地址</td>
