@@ -45,7 +45,7 @@ class SubNode extends BaseModel
         'order'     => 'int',
         'status'    => 'int',
         'prompt'    => 'string|min:10|max:40',
-        'description'    => 'string|min:10|max:40',
+        'description'    => 'string|min:0|max:100',
     ];
 
     public $validationMessages = [

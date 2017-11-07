@@ -19,6 +19,19 @@
                 @include('partials.errors')
                 <fieldset>
                     <div class="form-group">
+                        <label>是否在意见反馈显示</label>
+                        <el-tooltip  placement="hidden" >
+                            <el-switch
+                                    v-model="valueFeedback"
+                                    on-color="#13ce66"
+                                    off-color="#ff4949"
+                                    on-value=1
+                                    off-value=0>
+                            </el-switch>
+                        </el-tooltip>
+                        <el-input  v-model="valueFeedback" type="hidden" name="subNode[is_feedback]"></el-input>
+                    </div>
+                    <div class="form-group">
                         <label>{{ trans('dashboard.nodes.sub_name') }}</label>
                         {!! Form::text('subNode[name]', isset($subNode) ? $subNode->name : null, ['class' => 'form-control']) !!}
                     </div>
@@ -76,6 +89,7 @@
         data: function () {
             return {
                 valuePrompt:"{{  $subNode->is_prompt or 0  }}",
+                valueFeedback:"{{  $subNode->is_feedback or 0  }}",
             };
         }
     })

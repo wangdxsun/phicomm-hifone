@@ -80,7 +80,6 @@ class ValidatingObserver
     protected function validate(Model $model)
     {
         $attributes = $model->getAttributes();
-
         $messages = isset($model->validationMessages) ? $model->validationMessages : [];
 
         $validator = $this->factory->make($attributes, $model->rules, $messages);
