@@ -37,7 +37,7 @@ class AddFollowCommandHandler
     protected function followAction($target)
     {
         DB::transaction(function () use ($target) {
-            if ($target->followers()->forUser(Auth::id())->count()) {
+            if ($target->followers()->forUser(Auth::id())->sharedLock()->count()) {
                 $target->followers()->forUser(Auth::id())->delete();
                 $target->decrement('follower_count', 1);
                 $target->updateIndex();
