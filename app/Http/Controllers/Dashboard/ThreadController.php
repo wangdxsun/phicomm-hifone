@@ -52,6 +52,9 @@ class ThreadController extends Controller
     public function index()
     {
         $search = $this->filterEmptyValue(Input::get('thread'));
+        if (array_key_exists('sub_node_id',$search) && array_key_exists('node_id',$search) && $search['node_id'] != SubNode::find($search['sub_node_id'])->node->id) {
+            return Redirect::route('dashboard.thread.index')->withErrors('主板块信息和子版块信息不一致！');
+        }
         $threads = Thread::visible()->search($search)->with('node', 'user', 'lastOpUser')->orderBy('last_op_time', 'desc')->paginate(20);
         $sections = Section::orderBy('order')->get();
         $nodes = Node::orderBy('order')->get();

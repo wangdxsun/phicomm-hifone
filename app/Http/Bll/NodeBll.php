@@ -73,7 +73,6 @@ class NodeBll extends BaseBll
         }])->get()->filter(function ($node) {
             return $node->subNodes->count() > 0;
         })->values();
-
         return $nodes;
     }
 
