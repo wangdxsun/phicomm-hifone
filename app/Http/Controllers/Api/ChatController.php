@@ -30,6 +30,8 @@ class ChatController extends ApiController
     {
         if (Auth::user()->hasRole('NoComment')) {
             throw new \Exception('对不起，你已被管理员禁止发言');
+        } elseif (!Auth::user()->can('manage_threads') && Auth::user()->score < 0) {
+            throw new \Exception('对不起，你所在的用户组无法发言');
         }
         $res = $chatBll->newMessage($user);
         return $res;
