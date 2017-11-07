@@ -106,13 +106,14 @@ class ReplyBll extends BaseBll
         try {
             $reply->thread->node->increment('reply_count', 1);//版块回帖数+1
             $reply->thread->subNode->increment('reply_count', 1);//子版块回帖数+1
-            $reply->thread->update(['reply_count' => $reply->thread->replies()->visibleAndDeleted()->count()]);
+
+            $reply->thread->update(['reply_count' => $reply->thread->replies()->visible()->count()]);
             $reply->user->update(['reply_count' => $reply->user->replies()->visibleAndDeleted()->count()]);
             $reply->thread->updateIndex();
 
             $reply->status = Reply::VISIBLE;
-            $this->updateOpLog($reply, '自动审核通过');
 
+            $this->updateOpLog($reply, '自动审核通过');
             //把当前回复的创建时间和回复所属的帖子的修改时间进行比对
             //如果回复创建时间更新，则替换到帖子修改时间。否则，什么也不做。
             if ($reply->created_at > $reply->thread->updated_at) {

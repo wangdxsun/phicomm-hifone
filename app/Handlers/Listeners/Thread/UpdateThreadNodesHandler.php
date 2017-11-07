@@ -23,12 +23,12 @@ class UpdateThreadNodesHandler
         $targetSubNode = $thread->subNode;
         $originalSubNode = $event->originalSubNode;
 
-        $targetSubNode->update(['thread_count' => $targetSubNode->threads()->visibleAndDeleted()->count()]);
-        $originalSubNode->update(['thread_count' => $originalSubNode->threads()->visibleAndDeleted()->count()]);
+        $targetSubNode->update(['thread_count' => $targetSubNode->threads()->visible()->count()]);
+        $originalSubNode->update(['thread_count' => $originalSubNode->threads()->visible()->count()]);
 
         if ($targetSubNode->node != $originalSubNode->node) {
-            $targetSubNode->node->update(['thread_count' => $targetSubNode->node->threads()->visibleAndDeleted()->count()]);
-            $originalSubNode->node->update(['thread_count' => $originalSubNode->node->threads()->visibleAndDeleted()->count()]);
+            $targetSubNode->node->update(['thread_count' => $targetSubNode->node->threads()->visible()->count()]);
+            $originalSubNode->node->update(['thread_count' => $originalSubNode->node->threads()->visible()->count()]);
         }
 
     }

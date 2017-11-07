@@ -255,7 +255,7 @@ class ThreadController extends Controller
             $this->updateOpLog($thread, '审核通过');
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
             if ($thread->subNode) {
-                $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visibleAndDeleted()->count()]);
+                $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);
             }
             $thread->user->update(['thread_count' => $thread->user->threads()->visibleAndDeleted()->count()]);
             event(new ThreadWasAuditedEvent($thread));
@@ -275,8 +275,8 @@ class ThreadController extends Controller
         DB::beginTransaction();
         try {
             $this->delete($thread);
-            $thread->node->update(['thread_count' => $thread->node->threads()->visibleAndDeleted()->count()]);
-            $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visibleAndDeleted()->count()]);
+            $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
+            $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);
             $thread->user->update(['thread_count' => $thread->user->threads()->visibleAndDeleted()->count()]);
             $thread->removeFromIndex();
             event(new ThreadWasTrashedEvent($thread));

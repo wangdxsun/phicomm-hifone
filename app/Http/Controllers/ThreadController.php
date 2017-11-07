@@ -315,7 +315,7 @@ class ThreadController extends Controller
         DB::beginTransaction();
         try {
             $thread->status = Thread::DELETED;
-            $thread->node->update(['thread_count' => $thread->node->threads()->visibleAndDeleted()->count()]);
+            $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
             $thread->user->update(['thread_count' => $thread->user->threads()->visibleAndDeleted()->count()]);
             $this->updateOpLog($thread, '删除帖子', trim(request('reason')));
             $thread->removeFromIndex();

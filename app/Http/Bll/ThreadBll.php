@@ -200,9 +200,9 @@ class ThreadBll extends BaseBll
             $thread->status = Thread::VISIBLE;
             $thread->addToIndex();
             $this->updateOpLog($thread, '自动审核通过');
-            $thread->node->update(['thread_count' => $thread->node->threads()->visibleAndDeleted()->count()]);
+            $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
             if ($thread->subNode) {
-                $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visibleAndDeleted()->count()]);
+                $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);
             }
             $thread->user->update(['thread_count' => $thread->user->threads()->visibleAndDeleted()->count()]);
             event(new ThreadWasAuditedEvent($thread));

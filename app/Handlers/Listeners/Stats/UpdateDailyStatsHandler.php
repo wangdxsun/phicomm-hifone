@@ -36,6 +36,7 @@ class UpdateDailyStatsHandler
                 $node->dailyStats()->create(['date' => $today]);
             }
             $node->dailyStats()->where('date', $today)->increment('reply_count', 1);
+
         } else if ($event instanceof ThreadWasTrashedEvent) {//删除帖子（移入垃圾箱）
             $node = $event->thread->node;
             if (0 == $node->dailyStats()->where('date', $today)->count()) {
