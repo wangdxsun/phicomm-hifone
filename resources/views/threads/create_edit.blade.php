@@ -23,16 +23,15 @@
                             {!! Form::text('thread[title]', isset($thread) ? $thread->title : null, ['class' => 'form-control', 'id' => 'thread_title', 'placeholder' => trans('hifone.threads.title')]) !!}
                         </div>
 
-
                         <div class="form-group">
                             <select class="form-control selectpicker" name="thread[sub_node_id]">
                                 @foreach ($sections as $section)
                                     @if(isset($section->nodes))
-                                        @foreach ($section->nodes as $item)
-                                            <option disabled value="{{ $item->id }}" style="font-size:15px;font-weight:600">{{ $item->name }}</option>
-                                            @foreach($item->subNodes as $subItem)
-                                                <option value="{{ $subItem->id }}" {!! (Input::old('thread')['sub_node_id'] == $subItem->id || (isset($subNode) && $subNode->id==$subItem->id)) ? 'selected' : '' !!} >
-                                                    -- {{ $subItem->name }}</option>
+                                        @foreach ($section->nodes as $node)
+                                            <option disabled value="{{ $node->id }}" style="font-size:15px;font-weight:600">{{ $node->name }}</option>
+                                            @foreach($node->subNodes as $subNode)
+                                                <option value="{{ $subNode->id }}" {!! (Input::old('thread')['sub_node_id'] == $subNode->id || (isset($sub_node) && $sub_node->id==$subNode->id)) ? 'selected' : '' !!} >
+                                                    -- {{ $subNode->name }}</option>
                                             @endforeach
                                         @endforeach
                                     @endif

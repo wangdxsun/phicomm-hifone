@@ -26,6 +26,8 @@ class ReplyBll extends BaseBll
     {
         if (Auth::user()->hasRole('NoComment')) {
             throw new \Exception('对不起，你已被管理员禁止发言');
+        } elseif (!Auth::user()->can('manage_threads') && Auth::user()->score < 0) {
+            throw new \Exception('对不起，你所在的用户组无法发言');
         }
         $replyData = request('reply');
         $images = '';
@@ -50,6 +52,8 @@ class ReplyBll extends BaseBll
     {
         if (Auth::user()->hasRole('NoComment')) {
             throw new \Exception('对不起，你已被管理员禁止发言');
+        } elseif (!Auth::user()->can('manage_threads') && Auth::user()->score < 0) {
+            throw new \Exception('对不起，你所在的用户组无法发言');
         }
         $replyData = request('reply');
         $images = '';
@@ -77,7 +81,7 @@ class ReplyBll extends BaseBll
             $reply->bad_word = $badWord;
             $msg = $this->getMsg($reply->reply_id, false);
         } else {
-            $this->replyPassAutoAudit($reply);
+            $this->AutoAudit($reply);
             $msg = $this->getMsg($reply->reply_id, true);
         }
         $reply->body = app('parser.at')->parse($reply->body);
@@ -89,7 +93,7 @@ class ReplyBll extends BaseBll
         ];
     }
 
-    public function replyPassAutoAudit($reply)
+    public function AutoAudit($reply)
     {
         $thread = $reply->thread;
         $thread->last_reply_user_id = $reply->user_id;

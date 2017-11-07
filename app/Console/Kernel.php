@@ -12,6 +12,7 @@
 namespace Hifone\Console;
 
 use Hifone\Console\Commands\GetRank;
+use Hifone\Console\Commands\InitNodesThreadAndReplyCount;
 use Hifone\Console\Commands\GetThumbnails;
 use Hifone\Console\Commands\InitSubNode;
 use Hifone\Console\Commands\SearchImport;
@@ -34,6 +35,7 @@ class Kernel extends ConsoleKernel
         SearchImport::class,
         InitSubNode::class,
         GetThumbnails::class,
+        InitNodesThreadAndReplyCount::class
     ];
 
     /**

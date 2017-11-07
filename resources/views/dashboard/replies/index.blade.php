@@ -57,7 +57,7 @@
                     <tbody>
                     <tr class="head">
                         <td style="width: 60px;">#</td>
-                        <td>回帖内容</td>
+                        <td style="width: 250px;">回帖内容</td>
                         <td style="width: 250px">帖子标题</td>
                         <td style="width: 70px;">版块</td>
                         <td style="width: 100px">回帖人</td>
@@ -90,13 +90,7 @@
                             </td>
                             <td>{{ $reply->created_at }}</td>
                             <td>{{ $reply->ip }}</td>
-                            <td>
-                                @if(!isset($reply->last_op_user))
-                                    {{'自动审核'}}
-                                @else
-                                    {{ $reply->last_op_user->username }}
-                                @endif
-                            </td>
+                            <td>{{ $reply->lastOpUser->username }}</td>
                             <td>{{ $reply->last_op_time }}</td>
                             <td>
                                 <a href="/dashboard/reply/{{ $reply->id }}/edit" title="编辑"><i class="fa fa-pencil"></i></a>

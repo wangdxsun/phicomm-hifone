@@ -24,7 +24,7 @@
                         <td style="width: 30px;"><input id="selectAll" type="checkbox"></td>
                         <td style="width: 70px;">#</td>
                         <td style="width: 250px;">标题</td>
-                        <td >帖子内容</td>
+                        <td style="width: 250px;">帖子内容</td>
                         <td style="width: 70px;">敏感词</td>
                         <td style="width: 70px;">主版块</td>
                         <td style="width: 70px;">子版块</td>

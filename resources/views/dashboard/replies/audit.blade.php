@@ -23,7 +23,7 @@
             <tr class="head">
                 <td style="width: 30px;"><input id="selectAll" type="checkbox"></td>
                 <td style="width: 60px">#</td>
-                <td >回帖内容</td>
+                <td style="width: 250px;">回帖内容</td>
                 <td style="width: 80px">敏感词</td>
                 <td style="width: 250px">帖子标题</td>
                 <td style="width: 80px;">回帖人</td>

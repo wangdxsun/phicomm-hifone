@@ -61,7 +61,7 @@
                     <tbody>
                     <tr class="head">
                         <td style="width: 70px;">#</td>
-                        <td>标题</td>
+                        <td style="width: 250px;">标题</td>
                         <td style="width: 80px;">版块</td>
                         <td style="width: 120px;">发帖人</td>
                         <td style="width: 100px;">IP地址</td>

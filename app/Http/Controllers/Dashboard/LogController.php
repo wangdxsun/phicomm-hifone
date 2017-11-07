@@ -43,7 +43,7 @@ class LogController extends Controller
         $userIds = Log::distinct()->get(['user_id'])->toArray();//用户id
         $search = $this->filterEmptyValue(Input::get('log'));
 
-        $logs = Log::with(['user'])->search($search)->orderBy('created_at')->paginate(20);
+        $logs = Log::with(['user'])->search($search)->orderBy('created_at', 'desc')->paginate(20);
         return view('dashboard.logs.index')
             ->withLogs($logs)
             ->withLogableTypes($logableTypes)
