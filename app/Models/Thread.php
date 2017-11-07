@@ -102,6 +102,7 @@ class Thread extends BaseModel implements TaggableInterface
         'user_id'    => '发帖人',
         'heat'       => '热度值',
         'updated_at' => '最后回复时间',
+        'channel'    => '来源',
     ];
 
     public function likes()
