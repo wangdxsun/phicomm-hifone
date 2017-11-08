@@ -29,8 +29,9 @@ class UserController extends AppController
         return success('创建成功');
     }
 
-    public function show()
+    public function me()
     {
+
         if (empty(Auth::phicommId())) {
             throw new \Exception('缺少token');
         }

@@ -15,7 +15,7 @@ class AppRoutes
     public function map(Registrar $router)
     {
         $router->group(['namespace' => 'App\V1', 'prefix' => 'app/v1', 'middleware' => 'api', 'as' => 'app.'], function ($router) {
-            $router->get('user/info', 'UserController@show');
+            $router->get('user/info', 'UserController@me');
             $router->post('user/bind', 'UserController@bind');
 
             $router->get('nodes', 'NodeController@index');
