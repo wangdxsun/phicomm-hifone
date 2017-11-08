@@ -73,7 +73,7 @@ class UserGroupController extends Controller
         }
         $roleData = Input::get('role');
         $roleData['user_id'] = \Auth::user()->id;
-        $permissions = Input::get('permissions');
+        $permissions = null == Input::get('permissions') ? [] : Input::get('permissions');
         try {
             \DB::transaction(function () use ($roleData, $permissions) {
                 $role = Role::create($roleData);
@@ -103,7 +103,7 @@ class UserGroupController extends Controller
             return Redirect::back()->withErrors('您没有修改管理组的权限');
         }
         $roleData = Input::get('role');
-        $permissions = Input::get('permissions');
+        $permissions = null == Input::get('permissions') ? [] : Input::get('permissions');
         try {
             \DB::transaction(function () use ($role, $roleData, $permissions) {
                 $role->update($roleData);
