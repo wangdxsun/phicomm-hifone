@@ -2,6 +2,7 @@
 namespace Hifone\Console\Commands;
 
 use Carbon\Carbon;
+use Hifone\Models\Reply;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
 use Illuminate\Console\Command;
@@ -22,9 +23,12 @@ class GetRank extends Command
     public function handle()
     {
         $lastMonday = Carbon::today()->previousWeekendDay()->subDay(6)->toDateTimeString();
-        $lastSunday = Carbon::today()->previousWeekendDay()->addDays(1)->toDateTimeString();
+        $lastSunday = Carbon::today()->previousWeekendDay()->addDay(1)->toDateTimeString();
         $threads = Thread::visible()->whereBetween('created_at',[$lastMonday,$lastSunday])
             ->with('user')->get()->groupBy('user_id');
+        $replies = Reply::visible()->whereBetween('created_at',[$lastMonday,$lastSunday])->where('like_count', '>', 0)
+            ->with('user')->get()->groupBy('user_id');
+
         $userRankCount = [];
         $week_rank = 0;
         //对于这一段时间的活跃用户，计算被点赞数，被评论数，被收藏数
@@ -44,17 +48,41 @@ class GetRank extends Command
                 $selfFavoriteCount += $userThread->selfFavoriteCount($userThread);
             }
             if (!User::find($userId)->can('manage_threads')) {
-                array_push($userRankCount, [
-                    'favoriteCount' => $favoriteCount - $selfFavoriteCount,
+                $userRankCount[$userId] = [
+                    'favoriteCount' => $favoriteCount,
                     'likeCount'     => $likeCount - $selfLikeCount,
-                    'replyCount'    => $replyCount - $selfReplyCount,
-                    'all_count'     => $replyCount - $selfReplyCount + $favoriteCount - $selfFavoriteCount + $likeCount - $selfLikeCount,
+                    'replyCount'    => $replyCount,
+                    'all_count'     => $likeCount,
                     'user_id'       => $userId,
                     'score'         => User::find($userId)->score,
                     'week_rank'     => $week_rank,
-                ]);
+                ];
             }
         }
+        foreach ($replies as $userId => $userReplies) {
+            $likeCount = 0;
+            $replyCount = 0;
+            $favoriteCount = 0;
+            $selfLikeCount = 0;
+            foreach ($userReplies as $userReply) {
+                $likeCount += $userReply->like_count;
+                $selfLikeCount += $userReply->selfLikeCount($userReply);
+            }
+            if (!User::find($userId)->can('manage_threads') && !array_key_exists($userId, $userRankCount)) {
+                $userRankCount[$userId] = [
+                    'favoriteCount' => $favoriteCount,
+                    'likeCount'     => $likeCount - $selfLikeCount,
+                    'replyCount'    => $replyCount,
+                    'all_count'     => $likeCount,
+                    'user_id'       => $userId,
+                    'score'         => User::find($userId)->score,
+                    'week_rank'     => $week_rank,
+                ];
+            } else {
+                $userRankCount[$userId]['likeCount'] += $likeCount - $selfLikeCount;
+            }
+        }
+
         $userRankCount = collect($userRankCount)->sortByDesc(function ($user) {
             return $user['all_count'] * 100 + $user['score'] / 100;
         })->values()->all();
