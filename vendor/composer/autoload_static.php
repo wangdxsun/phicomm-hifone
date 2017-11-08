@@ -116,6 +116,8 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
         'J' => 
         array (
             'Jenssegers\\Date\\' => 16,
+            'Jenssegers\\Agent\\' => 17,
+            'Jaybizzle\\CrawlerDetect\\' => 24,
         ),
         'I' => 
         array (
@@ -379,6 +381,14 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
         array (
             0 => __DIR__ . '/..' . '/jenssegers/date/src',
         ),
+        'Jenssegers\\Agent\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jenssegers/agent/src',
+        ),
+        'Jaybizzle\\CrawlerDetect\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jaybizzle/crawler-detect/src',
+        ),
         'Intervention\\Image\\' => 
         array (
             0 => __DIR__ . '/..' . '/intervention/image/src/Intervention/Image',
@@ -609,6 +619,10 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
             array (
                 0 => __DIR__ . '/..' . '/phpspec/php-diff/lib',
             ),
+            'Detection' => 
+            array (
+                0 => __DIR__ . '/..' . '/mobiledetect/mobiledetectlib/namespaced',
+            ),
         ),
         'C' => 
         array (
@@ -627,9 +641,7 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
     );
 
     public static $classMap = array (
-        'AddNullableToLastReadInParticipantsTable' => __DIR__ . '/../..' . '/database/migrations/2014_11_10_083449_add_nullable_to_last_read_in_participants_table.php',
         'AddPhicommIdToUsersTable' => __DIR__ . '/../..' . '/database/migrations/2017_01_19_142026_add_phicomm_id_to_users_table.php',
-        'AddSoftDeletesToParticipantsTable' => __DIR__ . '/../..' . '/database/migrations/2014_11_03_154831_add_soft_deletes_to_participants_table.php',
         'AddSoftdeletesToThreadsTable' => __DIR__ . '/../..' . '/database/migrations/2014_12_04_124531_add_softdeletes_to_threads_table.php',
         'AlterLastReadInParticipantsTable' => __DIR__ . '/../..' . '/database/migrations/2014_11_20_131739_alter_last_read_in_participants_table.php',
         'AlterTableTagsAddCountColumn' => __DIR__ . '/../..' . '/database/migrations/2016_06_29_120100_alter_table_tags_add_count_column.php',
@@ -656,20 +668,18 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
         'CreateNodesTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_29_013301_create_nodes_table.php',
         'CreateNotificationsTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_29_013615_create_notifications_table.php',
         'CreatePagesTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_23_153224_create_pages_table.php',
-        'CreateParticipantsTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_28_180224_create_participants_table.php',
-        'CreatePasswordResetsTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
         'CreatePhotosTable' => __DIR__ . '/../..' . '/database/migrations/2016_06_08_180211_create_photos_table.php',
         'CreatePmMetasTable' => __DIR__ . '/../..' . '/database/migrations/2016_06_22_171904_create_pm_metas_table.php',
         'CreatePmsTable' => __DIR__ . '/../..' . '/database/migrations/2016_06_22_171748_create_pms_table.php',
         'CreateRepliesTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_29_013326_create_replies_table.php',
-        'CreateRevisionsTable' => __DIR__ . '/../..' . '/database/migrations/2013_04_09_062329_create_revisions_table.php',
+        'CreateRevisionsTable' => __DIR__ . '/..' . '/venturecraft/revisionable/src/migrations/2013_04_09_062329_create_revisions_table.php',
         'CreateSectionsTable' => __DIR__ . '/../..' . '/database/migrations/2016_06_08_131239_create_sections_table.php',
         'CreateSettingsTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_10_085536_create_settings_table.php',
         'CreateStatsTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_29_012617_create_stats_table.php',
         'CreateTableReports' => __DIR__ . '/../..' . '/database/migrations/2017_03_23_090434_create_table_reports.php',
         'CreateTaggablesTable' => __DIR__ . '/../..' . '/database/migrations/2016_06_22_211501_create_taggables_table.php',
         'CreateTagsTable' => __DIR__ . '/../..' . '/database/migrations/2016_06_22_211408_create_tags_table.php',
-        'CreateThreadsTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_28_175635_create_threads_table.php',
+        'CreateThreadsTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_29_013243_create_threads_table.php',
         'CreateTipsTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_29_013448_create_tips_table.php',
         'CreateUsersTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_29_013222_create_users_table.php',
         'DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeds/DatabaseSeeder.php',
@@ -775,6 +785,7 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
         'Maatwebsite\\Excel\\Readers\\LaravelExcelReader' => __DIR__ . '/..' . '/maatwebsite/excel/src/Maatwebsite/Excel/Readers/LaravelExcelReader.php',
         'Maatwebsite\\Excel\\Writers\\CellWriter' => __DIR__ . '/..' . '/maatwebsite/excel/src/Maatwebsite/Excel/Writers/CellWriter.php',
         'Maatwebsite\\Excel\\Writers\\LaravelExcelWriter' => __DIR__ . '/..' . '/maatwebsite/excel/src/Maatwebsite/Excel/Writers/LaravelExcelWriter.php',
+        'Mobile_Detect' => __DIR__ . '/..' . '/mobiledetect/mobiledetectlib/Mobile_Detect.php',
         'MockApp' => __DIR__ . '/..' . '/barryvdh/laravel-cors/tests/CorsServiceTest.php',
         'OriginMatcherTest' => __DIR__ . '/..' . '/barryvdh/laravel-cors/tests/OriginMatcherTest.php',
         'PHPUnit\\Framework\\TestCase' => __DIR__ . '/..' . '/phpunit/phpunit/src/ForwardCompatibility/TestCase.php',

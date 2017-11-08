@@ -42,7 +42,8 @@
         "predis/predis": "^1.1",
         "overtrue/laravel-ueditor": "1.1.0",
         "overtrue/laravel-filesystem-qiniu": "^0.0.3",
-        "elasticquent/elasticquent": "dev-master"
+        "elasticquent/elasticquent": "dev-master",
+        "jenssegers/agent": "^2.5"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.5",

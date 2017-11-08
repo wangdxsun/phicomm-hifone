@@ -23,6 +23,7 @@ return array(
     'Doctrine\\Common\\Inflector\\' => array($vendorDir . '/doctrine/inflector/lib'),
     'Doctrine\\Common\\Collections\\' => array($vendorDir . '/doctrine/collections/lib'),
     'Diff' => array($vendorDir . '/phpspec/php-diff/lib'),
+    'Detection' => array($vendorDir . '/mobiledetect/mobiledetectlib/namespaced'),
     'Cmgmyr\\Messenger\\' => array($vendorDir . '/cmgmyr/messenger/src'),
     'Barryvdh' => array($vendorDir . '/barryvdh/reflection-docblock/src'),
 );
