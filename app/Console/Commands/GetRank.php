@@ -55,7 +55,9 @@ class GetRank extends Command
                 ]);
             }
         }
-        $userRankCount = collect($userRankCount)->sortByDesc('score')->sortByDesc('all_count')->values()->all();
+        $userRankCount = collect($userRankCount)->sortByDesc(function ($user) {
+            return $user['all_count'] * 100 + $user['score'] / 100;
+        })->values()->all();
         $userRankCount = array_slice($userRankCount,0,10);
         Rank::where('start_date',$lastMonday)->delete();
 
