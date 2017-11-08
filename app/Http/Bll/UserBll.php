@@ -56,10 +56,10 @@ class UserBll extends BaseBll
     }
 
     //查看自己反馈历史记录
-    public function getFeedbacks(User $user)
+    public function getFeedbacks()
     {
-        if (Auth::check() && $user->id == Auth::id()){
-            $feedbacks = $user->threads()->feedback()->recent()->paginate();
+        if (Auth::check()){
+            $feedbacks = Auth::user()->threads()->feedback()->recent()->paginate();
         } else {
             $feedbacks = [];
         }
