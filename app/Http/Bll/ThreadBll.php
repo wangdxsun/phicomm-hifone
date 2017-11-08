@@ -198,8 +198,8 @@ class ThreadBll extends BaseBll
         DB::beginTransaction();
         try {
             $thread->status = Thread::VISIBLE;
-            $thread->addToIndex();
             $this->updateOpLog($thread, '自动审核通过');
+            $thread->addToIndex();
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
             if ($thread->subNode) {
                 $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);
