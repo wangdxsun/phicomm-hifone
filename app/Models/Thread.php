@@ -427,4 +427,12 @@ class Thread extends BaseModel implements TaggableInterface
     {
         return $this->favorites()->where('user_id',$thread->user_id)->count();
     }
+
+    public function getDevInfoAttribute($value)
+    {
+        if ($value) {
+            return json_decode($value, true);
+        }
+        return [];
+    }
 }
