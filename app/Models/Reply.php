@@ -190,4 +190,10 @@ class Reply extends BaseModel
         }
     }
 
+    //计算回复自己点赞数
+    public function selfLikeCount(Reply $reply)
+    {
+        return $this->likes()->where('user_id',$reply->user_id)->count();
+    }
+
 }

@@ -49,6 +49,6 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('queue:work --sleep=3 --tries=3')->everyMinute();
         $schedule->command('heat:update')->everyFiveMinutes();
-        $schedule->command('get:rank')->weekly()->mondays()->at('8:59');
+        $schedule->command('get:rank')->weekly()->mondays()->at('0:0');
     }
 }

@@ -48,7 +48,7 @@ class AppRoutes
                 $router->post('report/reply/{reply}', 'ReportController@reply');
                 $router->post('favorite/thread/{thread}', 'FavoriteController@createOrDeleteFavorite');
                 $router->get('users/{user}/favorites', 'UserController@favorites');
-                $router->get('users/{user}/feedbacks', 'UserController@feedbacks');
+                $router->get('user/feedbacks', 'UserController@feedbacks');
             });
         });
     }

@@ -66,7 +66,13 @@
                                 @endif
                             </td>
                             <td>{{ $thread->channel == 0 ? "社区" : "意见反馈" }}</td>
-                            <td>{{ $thread->dev_info }}</td>
+                            <td>
+                                @foreach($thread->dev_info as $info)
+                                    @foreach($info as $key => $item)
+                                        {{$key." : ".$item}}<br>
+                                    @endforeach
+                                @endforeach
+                            </td>
                             <td>{{ $thread->ip }}</td>
                             <td>{{ $thread->created_time }}</td>
                             <td>

@@ -191,6 +191,7 @@ return [
         Barryvdh\Cors\ServiceProvider::class,
         Overtrue\LaravelUEditor\UEditorServiceProvider::class,
         Elasticquent\ElasticquentServiceProvider::class,
+        Jenssegers\Agent\AgentServiceProvider::class,
     ],
 
     /*
@@ -252,6 +253,7 @@ return [
         'StringBlade'  => Hifone\StringBlade\Facades\StringBlade::class,
         'Excel'        => Maatwebsite\Excel\Facades\Excel::class,
         'Es'           => Elasticquent\ElasticquentElasticsearchFacade::class,
+        'Agent'        => Jenssegers\Agent\Facades\Agent::class,
     ],
 
 ];

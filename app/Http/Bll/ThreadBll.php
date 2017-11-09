@@ -115,27 +115,25 @@ class ThreadBll extends BaseBll
         $sub_node_id = isset($threadData['sub_node_id']) ? $threadData['sub_node_id'] : null;
         $node_id = SubNode::find($sub_node_id)->node_id;
         $tags = isset($threadData['tags']) ? $threadData['tags'] : '';
-        $json_bodies = json_decode($threadData['body'], true);
-        $body = '';
-        foreach ($json_bodies as $json_body) {
-            if ($json_body['type'] == 'text') {
-                $body.= "<p>".$json_body['content']."</p>";
-            } elseif ($json_body['type'] == 'image') {
-                $body.= "<img src='".$json_body['content']."'/>";
+        $images = '';
+        if (Input::has('images')) {
+            foreach ($threadImages = json_decode(Input::get('images'), true) as $image) {
+                $images.= "<img src='".$image['image']."'/>";
             }
         }
+
         $channel = Thread::FEEDBACK;
         $dev_info = $threadData['dev_info'];
         $contact  = isset($threadData['contact']) ? $threadData['contact'] : null;
 
         $threadTemp = dispatch(new AddThreadCommand(
             $threadData['title'],
-            $body,
+            $threadData['body'],
             Auth::id(),
             $node_id,
             $sub_node_id,
             $tags,
-            '',
+            $images,
             $channel,
             $dev_info,
             $contact
@@ -198,8 +196,8 @@ class ThreadBll extends BaseBll
         DB::beginTransaction();
         try {
             $thread->status = Thread::VISIBLE;
-            $thread->addToIndex();
             $this->updateOpLog($thread, '自动审核通过');
+            $thread->addToIndex();
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
             if ($thread->subNode) {
                 $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);
