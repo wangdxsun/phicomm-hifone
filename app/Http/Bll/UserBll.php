@@ -23,12 +23,8 @@ class UserBll extends BaseBll
 
     public function getThreads(User $user)
     {
-        //自己或管理员查看帖子，接口信息包括所有贴子
-        if (Auth::check() && ($user->id == Auth::id() || Auth::user()->can('view_thread'))) {
-            $threads = $user->threads()->with(['user', 'node'])->recent()->paginate();
-        } else {
-            $threads = $user->threads()->visibleAndDeleted()->with(['user', 'node'])->recent()->paginate();
-        }
+        //自己或管理员查看帖子，接口信息只包括审核通过和审核通过被删除的贴子
+        $threads = $user->threads()->visibleAndDeleted()->with(['user', 'node'])->recent()->paginate();
         return $threads;
     }
 
