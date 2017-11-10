@@ -8,6 +8,8 @@
 
 namespace Hifone\Http\Controllers\App\V1;
 
+use Hifone\Http\Bll\CommonBll;
+use Hifone\Http\Bll\FollowBll;
 use Hifone\Http\Bll\PhicommBll;
 use Hifone\Http\Bll\UserBll;
 use Hifone\Http\Controllers\App\AppController;
@@ -17,6 +19,24 @@ use Auth;
 
 class UserController extends AppController
 {
+    /**
+     * 获取当前用户信息
+     * @return mixed
+     * @throws \Exception
+     */
+    public function me()
+    {
+        if (empty(Auth::phicommId())) {
+            throw new \Exception('缺少token');
+        }
+        $user = User::findUserByPhicommId(Auth::phicommId());
+        if (!$user) {
+            throw new \Exception('请先关联社区账号');
+        }
+        return $user;
+    }
+
+    //绑定社区用户
     public function bind(PhicommBll $phicommBll, WordsFilter $wordsFilter)
     {
         $this->validate(request(), [
@@ -29,25 +49,71 @@ class UserController extends AppController
         return success('创建成功');
     }
 
-    public function me()
+    public function show(User $user)
     {
-
-        if (empty(Auth::phicommId())) {
-            throw new \Exception('缺少token');
-        }
-        $user = User::findUserByPhicommId(Auth::phicommId());
-        if (!$user) {
-            throw new \Exception('请先关联社区账号');
-        }
+        $user['followed'] = User::hasFollowUser($user);
         return $user;
     }
 
-    public function search()
+    public function follows(User $user, FollowBll $followBll)
     {
-        $users = User::searchUser(request('q'));
-        foreach ($users as $user) {
-            $user['followed'] = User::hasFollowUser($user);
+        $follows = $followBll->follows($user);
+        foreach ($follows as $follow) {
+            $follow['followed'] = User::hasFollowUser($follow['follower']);
         }
+
+        return $follows;
+    }
+
+    public function followers(User $user, FollowBll $followBll)
+    {
+        $followers = $followBll->followers($user);
+        foreach ($followers as $follower) {
+            if (isset($follower['user'])) {
+                $follower['followed'] = User::hasFollowUser($follower['user']);
+            }
+        }
+
+        return $followers;
+    }
+
+    public function threads(User $user, UserBll $userBll)
+    {
+        $threads = $userBll->getThreads($user);
+
+        return $threads;
+    }
+
+    public function replies(User $user, UserBll $userBll)
+    {
+        $replies = $userBll->getReplies($user);
+
+        return $replies;
+    }
+
+    public function credit(UserBll $userBll, CommonBll $commonBll)
+    {
+        $commonBll->login();
+        $credits = $userBll->getCredits();
+
+        return $credits;
+    }
+
+    //上传头像
+    public function upload(CommonBll $commonBll, PhicommBll $phicommBll)
+    {
+        $avatar = $commonBll->upload();
+        Auth::user()->update(['avatar_url' => $avatar['filename']]);
+        Auth::user()->updateIndex();
+        $phicommBll->upload($avatar['localFile']);
+        unset($avatar['localFile']);
+
+        return $avatar;
+    }
+
+    public function search(UserBll $userBll)
+    {
+        $users = $userBll->search();
         return $users;
     }
 

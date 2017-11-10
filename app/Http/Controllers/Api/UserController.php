@@ -53,7 +53,7 @@ class UserController extends ApiController
     public function follows(User $user, FollowBll $followBll)
     {
         $follows = $followBll->follows($user);
-        foreach ($follows as &$follow) {
+        foreach ($follows as $follow) {
             $follow['followed'] = User::hasFollowUser($follow['follower']);
         }
 
@@ -63,7 +63,7 @@ class UserController extends ApiController
     public function followers(User $user, FollowBll $followBll)
     {
         $followers = $followBll->followers($user);
-        foreach ($followers as &$follower) {
+        foreach ($followers as $follower) {
             if (isset($follower['user'])) {
                 $follower['followed'] = User::hasFollowUser($follower['user']);
             }
@@ -79,19 +79,19 @@ class UserController extends ApiController
         return $threads;
     }
 
+    public function replies(User $user, UserBll $userBll)
+    {
+        $replies = $userBll->getReplies($user);
+
+        return $replies;
+    }
+
     public function credit(UserBll $userBll, CommonBll $commonBll)
     {
         $commonBll->login();
         $credits = $userBll->getCredits();
 
         return $credits;
-    }
-
-    public function replies(User $user, UserBll $userBll)
-    {
-        $replies = $userBll->getReplies($user);
-
-        return $replies;
     }
 
     //上传头像
@@ -106,13 +106,9 @@ class UserController extends ApiController
         return $avatar;
     }
 
-    public function search()
+    public function search(UserBll $userBll)
     {
-        $users = User::searchUser(request('q'));
-        foreach ($users as $user) {
-            $user['followed'] = User::hasFollowUser($user);
-        }
-
+        $users = $userBll->search();
         return $users;
     }
 

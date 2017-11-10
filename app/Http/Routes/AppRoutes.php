@@ -15,9 +15,17 @@ class AppRoutes
     public function map(Registrar $router)
     {
         $router->group(['namespace' => 'App\V1', 'prefix' => 'app/v1', 'middleware' => 'api', 'as' => 'app.'], function ($router) {
+            //个人中心
             $router->get('user/info', 'UserController@me');
             $router->post('user/bind', 'UserController@bind');
+            $router->get('users/{user}', 'UserController@show')->where('user', '[0-9]+');
+            $router->get('users/{user}/follows', 'UserController@follows');
+            $router->get('users/{user}/followers', 'UserController@followers');
+            $router->get('users/{user}/threads', 'UserController@threads');
+            $router->get('users/{user}/replies', 'UserController@replies');
+            $router->get('users/{user}/favorites', 'UserController@favorites');
 
+            //内容相关
             $router->get('nodes', 'NodeController@index');
             $router->get('sections', 'NodeController@sections');
             $router->get('subNodes', 'NodeController@subNodes');
@@ -31,7 +39,6 @@ class AppRoutes
             $router->get('users/search', 'UserController@search');
             $router->get('threads/{thread}', 'ThreadController@show')->where('thread', '[0-9]+');
             $router->get('threads/{thread}/replies', 'ThreadController@replies')->where('thread', '[0-9]+');
-
 
             // Authorization Required
             $router->group(['middleware' => 'auth:hifone'], function ($router) {
@@ -47,8 +54,9 @@ class AppRoutes
                 $router->post('report/thread/{thread}', 'ReportController@thread');
                 $router->post('report/reply/{reply}', 'ReportController@reply');
                 $router->post('favorite/thread/{thread}', 'FavoriteController@createOrDeleteFavorite');
-                $router->get('users/{user}/favorites', 'UserController@favorites');
                 $router->get('user/feedbacks', 'UserController@feedbacks');
+                $router->get('user/credit', 'UserController@credit');
+                $router->post('user/avatar', 'UserController@upload');
             });
         });
     }
