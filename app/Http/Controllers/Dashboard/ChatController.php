@@ -10,6 +10,7 @@ use View;
 use Request;
 use Auth;
 use Input;
+use DB;
 use Hifone\Http\Bll\ChatBll;
 
 class ChatController extends Controller
@@ -33,6 +34,8 @@ class ChatController extends Controller
 
     public function chatStore(ChatBll $chatBll)
     {
+        ini_set('memory_limit', '-1');
+        ini_set('max_execution_time', 0);
         $data = Request::get('chat');
         if (empty($data['userType'])) {
             return Redirect::route('dashboard.chat.send')
@@ -42,10 +45,11 @@ class ChatController extends Controller
                 ->withErrors('文字、图片不能同时为空');
         } elseif ($data['userType'] == 3) {
             //为所有用户发送私信
-            $users = User::where('id', '<>', Auth::user()->id)->get();
-            foreach ($users as $user) {
-                $chatBll->newMessage($user);
-            }
+            User::where('id', '<>', Auth::user()->id)->chunk(100, function($users) use ($chatBll){
+                $chatBll->batchNewMessage($users);
+            });
+            DB::table('users')->where('id', '<>', Auth::user()->id)->increment('notification_chat_count',1);
+            DB::table('users')->where('id', '<>', Auth::user()->id)->increment('notification_count',1);
             return Redirect::route('dashboard.chat.send')
                 ->withSuccess('成功为所有用户发送私信');
         } elseif ($data['userType'] == 6) {
