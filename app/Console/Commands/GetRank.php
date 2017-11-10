@@ -23,7 +23,7 @@ class GetRank extends Command
     public function handle()
     {
         $lastMonday = Carbon::today()->previousWeekendDay()->subDay(6)->toDateTimeString();
-        $lastSunday = Carbon::today()->previousWeekendDay()->addDay(1)->toDateTimeString();
+        $lastSunday = Carbon::today()->previousWeekendDay()->subSecond()->subSecond()->toDateTimeString();
         $userRankCount = [];
         $week_rank = 0;
         //处理点赞逻辑，首先拿到上个星期被点赞了的帖子和回复，以及对应的用户信息
