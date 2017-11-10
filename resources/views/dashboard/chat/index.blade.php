@@ -15,11 +15,11 @@
                         <div><el-radio :label="3">社区全体用户</el-radio></div>
                         <div>
                             <el-radio :label="6">具体帖子内的回复用户</el-radio>
-                            <el-input v-model="threadId" name="chat[thread_id]" placeholder="请输入帖子ID" width="100px"></el-input>
+                            <el-input name="chat[thread_id]" placeholder="请输入帖子ID" resize="both" style="width: 200px; height: 10px;" value="{{ Input::old('chat[thread_id]') }}"></el-input>
                             <el-date-picker type="datetime" placeholder="开始时间" v-model="date_start" name="chat[date_start]"></el-date-picker>
                             <el-date-picker type="datetime" placeholder="结束时间" v-model="date_end"  name="chat[date_end]"></el-date-picker>
-                            <el-input :value="date_start_str" placeholder="请输入内容" type="hidden" resize="both"  style="width: 60px; height: 10px;" name="chat[date_start]"></el-input>
-                            <el-input :value="date_end_str" placeholder="请输入内容" type="hidden" resize="both"  style="width: 60px; height: 10px;" name="chat[date_end]"></el-input>
+                            <el-input :value="date_start_str" type="hidden" name="chat[date_start]"></el-input>
+                            <el-input :value="date_end_str" type="hidden" name="chat[date_end]"></el-input>
                         </div>
                         <div>
                             <el-radio :label="9">自主选择用户</el-radio>
@@ -35,7 +35,7 @@
             <div class="form-group">
                 <label class="col-sm-1 control-label">消息内容：</label>
                 <div class="col-sm-6">
-                    <el-input name="message" type="textarea" :rows="10" placeholder="文字、图片不能同时为空" v-model="chatBody"></el-input>
+                    <el-input name="message" type="textarea" :rows="10" placeholder="文字、图片不能同时为空" value="{{ Input::old('message') }}"></el-input>
                 </div>
             </div>
             <div class="form-group">
@@ -68,8 +68,6 @@
             data: function () {
                 return {
                     usersType: '',
-                    chatBody:'',
-                    threadId: null,
                     dialogImageUrl: '',
                     dialogVisible: false,
                     loading:false,

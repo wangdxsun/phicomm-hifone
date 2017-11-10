@@ -58,8 +58,12 @@ class ChatBll extends BaseBll
             $message = "<img src='{$imageUrl}' class='message_image'/>";
         }
         if (Input::has('message')) {
-            $message = Input::get('message');
-//            $message = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse(request('message')));
+            if (Auth::user()->can('manage_threads')) {
+                $message = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse(request('message')));
+            } else {
+                $message = Input::get('message');
+            }
+
         }
         return $message;
     }

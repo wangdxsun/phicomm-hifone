@@ -19,7 +19,6 @@ class ChatController extends Controller
     {
         return View::make('dashboard.chat.index')
             ->withCurrentMenu('send');
-
     }
 
     public function chatLists()
@@ -39,10 +38,12 @@ class ChatController extends Controller
         $data = Request::get('chat');
         if (empty($data['userType'])) {
             return Redirect::route('dashboard.chat.send')
-                ->withErrors('没有选择用户类型');
+                ->withErrors('没有选择用户类型')
+                ->withInput();
         } elseif (empty(Request::get('message')) && empty(Request::get('imageUrl'))) {
             return Redirect::route('dashboard.chat.send')
-                ->withErrors('文字、图片不能同时为空');
+                ->withErrors('文字、图片不能同时为空')
+                ->withInput();
         } elseif ($data['userType'] == 3) {
             //为所有用户发送私信
             User::where('id', '<>', Auth::user()->id)->chunk(100, function($users) use ($chatBll){
@@ -51,20 +52,23 @@ class ChatController extends Controller
             DB::table('users')->where('id', '<>', Auth::user()->id)->increment('notification_chat_count',1);
             DB::table('users')->where('id', '<>', Auth::user()->id)->increment('notification_count',1);
             return Redirect::route('dashboard.chat.send')
-                ->withSuccess('成功为所有用户发送私信');
+                ->withSuccess('成功为所有用户发送私信')
+                ->withInput();
         } elseif ($data['userType'] == 6) {
             //为特定帖子内满足条件的用户发送私信
             $thread = Thread::find($data['thread_id']);
             if (null == $thread) {
                 return Redirect::route('dashboard.chat.send')
-                    ->withErrors('请输入有效的帖子ID');
+                    ->withErrors('请输入有效的帖子ID')
+                    ->withInput();
             }
             $replies = $thread->replies()->visible()->search($data)->where('user_id', '<>', Auth::user()->id)->get()->unique('user_id');
             foreach ($replies as $reply) {
                 $chatBll->newMessage($reply->user);
             }
             return Redirect::route('dashboard.chat.send')
-                ->withSuccess('成功为帖子'.$data['thread_id']. '内满足条件的所有用户发送私信');
+                ->withSuccess('成功为帖子'.$data['thread_id']. '内满足条件的所有用户发送私信')
+                ->withInput();
         } elseif ($data['userType'] == 9) {
             foreach (explode(',',$data['userIds']) as $user_id) {
                 if ($user_id == Auth::user()->id) {
@@ -76,7 +80,8 @@ class ChatController extends Controller
                 ->withSuccess('成功为满足条件的所有用户发送私信');
         } else {
             return Redirect::route('dashboard.chat.send')
-                ->withErrors('用户类型选择错误');
+                ->withErrors('用户类型选择错误')
+                ->withInput();
         }
     }
 }
