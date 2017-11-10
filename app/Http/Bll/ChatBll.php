@@ -8,6 +8,7 @@
 
 namespace Hifone\Http\Bll;
 
+use Carbon\Carbon;
 use Hifone\Commands\Image\UploadBase64ImageCommand;
 use Hifone\Events\Chat\NewChatMessageEvent;
 use Hifone\Models\Chat;
@@ -82,6 +83,8 @@ class ChatBll extends BaseBll
                 'to_user_id' => $to->id,
                 'from_to' => $from->id * $to->id,
                 'message' => $message,
+                'created_at'    => Carbon::now()->toDateTimeString(),
+                'updated_at'    => Carbon::now()->toDateTimeString(),
             ];
         }
         Chat::insert($insert);//批量创建
