@@ -57,6 +57,8 @@ class AppRoutes
                 $router->get('user/feedbacks', 'UserController@feedbacks');
                 $router->get('user/credit', 'UserController@credit');
                 $router->post('user/avatar', 'UserController@upload');
+
+
             });
         });
     }
