@@ -18,6 +18,7 @@ class ReplyController extends ApiController
     {
         $reply = $replyBll->createReply();
         $result = $replyBll->auditReply($reply, $wordsFilter);
+
         return $result;
     }
 }

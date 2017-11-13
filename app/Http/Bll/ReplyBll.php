@@ -88,6 +88,10 @@ class ReplyBll extends BaseBll
             $msg = $this->getMsg($reply->reply_id, true);
         }
         $reply->save();
+        $reply = Reply::find($reply->id);
+        $reply->load(['user', 'reply.user']);
+        $reply['liked'] = Auth::check() ? Auth::user()->hasLikeReply($reply) : false;
+        $reply['reported'] = Auth::check() ? Auth::user()->hasReportReply($reply) : false;
         return [
             'msg' => $msg,
             'reply' => $reply
