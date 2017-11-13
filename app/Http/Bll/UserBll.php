@@ -43,9 +43,14 @@ class UserBll extends BaseBll
         return $replies;
     }
 
-    public function search()
+    public function search($keyword)
     {
-        return [];
+        $users = User::searchUser($keyword)->paginate(15);
+        foreach ($users as $user) {
+            $user['followed'] = User::hasFollowUser($user);
+        }
+
+        return $users;
     }
 
     //个人收藏帖子列表

@@ -106,12 +106,9 @@ class UserController extends ApiController
         return $avatar;
     }
 
-    public function search()
+    public function search($keyword, UserBll $userBll)
     {
-        $users = User::searchUser(request('q'));
-        foreach ($users as $user) {
-            $user['followed'] = User::hasFollowUser($user);
-        }
+        $users = $userBll->search($keyword);
 
         return $users;
     }

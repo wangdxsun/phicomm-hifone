@@ -30,9 +30,9 @@ class ThreadController extends ApiController
         return $threads;
     }
 
-    public function search(ThreadBll $threadBll)
+    public function search($keyword, ThreadBll $threadBll)
     {
-        $threads = $threadBll->search();
+        $threads = $threadBll->search($keyword);
 
         return $threads;
     }
