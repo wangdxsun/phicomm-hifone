@@ -26,15 +26,22 @@ class ChatBll extends BaseBll
         return $messages;
     }
 
+    //for h5
     public function messages(User $user)
     {
         return Chat::chatWith($user)->with('from', 'to')->latest()->paginate();
     }
 
+    //for app
+    public function recentMessages(User $user, Chat $chat)
+    {
+        return Chat::chatWith($user)->new($chat)->with('from', 'to')->latest()->paginate();
+    }
+
     public function newMessage(User $to)
     {
         $from = Auth::user();
-        $message = $this->newMessageBll();
+        $message = $this->parseMessageBody();
         event(new NewChatMessageEvent($from, $to, $message));
         $to->increment('notification_chat_count', 1);
         $to->increment('notification_count', 1);
@@ -45,7 +52,7 @@ class ChatBll extends BaseBll
         ];
     }
 
-    public function newMessageBll()
+    public function parseMessageBody()
     {
         $message = '';
         if (Input::has('image')) {
@@ -72,7 +79,7 @@ class ChatBll extends BaseBll
             if (empty($to)) {
                 continue;
             }
-            $message = $this->newMessageBll();
+            $message = $this->parseMessageBody();
             $insert[] = [
                 'from_user_id' => $from->id,
                 'to_user_id' => $to->id,

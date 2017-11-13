@@ -79,4 +79,9 @@ class Chat extends BaseModel
             }
         }
     }
+
+    public function scopeNew($query, Chat $chat)
+    {
+        return $query->where('id', '>', $chat->id);
+    }
 }

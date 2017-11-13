@@ -10,19 +10,23 @@ namespace Hifone\Http\Controllers\App\V1;
 
 use Auth;
 use Hifone\Http\Bll\ChatBll;
+use Hifone\Http\Controllers\App\AppController;
+use Hifone\Models\Chat;
 use Hifone\Models\User;
 
 class ChatController extends AppController
 {
+    //私信列表
     public function chats(ChatBll $chatBll)
     {
         $chats = $chatBll->chats();
         return $chats;
     }
 
-    public function messages(User $user, ChatBll $chatBll)
+    //聊天记录
+    public function messages(User $user, Chat $chat, ChatBll $chatBll)
     {
-        $messages = $chatBll->messages($user);
+        $messages = $chatBll->recentMessages($user, $chat);
         return $messages;
     }
 
