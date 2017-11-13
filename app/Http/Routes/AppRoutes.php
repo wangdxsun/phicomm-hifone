@@ -58,7 +58,14 @@ class AppRoutes
                 $router->get('user/credit', 'UserController@credit');
                 $router->post('user/avatar', 'UserController@upload');
 
-
+                $router->get('chats', 'ChatController@chats');
+                $router->get('chat/{user}', 'ChatController@messages');
+                $router->post('chat/{user}', 'ChatController@store');
+                $router->get('notification', 'NotificationController@index');
+                $router->get('notification/reply', 'NotificationController@reply');
+                $router->get('notification/at', 'NotificationController@at');
+                $router->get('notification/system', 'NotificationController@system');
+                $router->get('notification/watch', 'NotificationController@watch');
             });
         });
     }

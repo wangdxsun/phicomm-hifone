@@ -60,7 +60,7 @@ class UserBll extends BaseBll
         return $threads;
     }
 
-    //查看自己反馈历史记录
+    //查看自己反馈历史记录（含所有状态）
     public function getFeedbacks()
     {
         if (Auth::check()){
