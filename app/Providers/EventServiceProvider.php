@@ -41,15 +41,15 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
-        //帖子被取消收藏
+        //帖子被取消收藏,发帖人相关逻辑
         \Hifone\Events\Favorite\FavoriteWasRemovedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
-        //帖子被取消收藏
+        //收藏帖子，收藏人的相关逻辑
         \Hifone\Events\Favorite\FavoriteThreadWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
-        //帖子被取消收藏
+        //取消对帖子的收藏，收藏人的相关逻辑
         \Hifone\Events\Favorite\FavoriteThreadWasRemovedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
