@@ -23,7 +23,7 @@ class GetRank extends Command
     public function handle()
     {
         $lastMonday = Carbon::today()->previousWeekendDay()->subDay(6)->toDateTimeString();
-        $lastSunday = Carbon::today()->previousWeekendDay()->addDay(1)->toDateTimeString();
+        $lastSunday = Carbon::today()->previousWeekendDay()->subSecond()->subSecond()->toDateTimeString();
         $userRankCount = [];
         $week_rank = 0;
         //处理点赞逻辑，首先拿到上个星期被点赞了的帖子和回复，以及对应的用户信息
@@ -44,7 +44,7 @@ class GetRank extends Command
         $replies = Reply::whereBetween('created_at',[$lastMonday,$lastSunday])->with('thread.user')->get();
         foreach ($replies as $reply) {
             if ($reply->user_id !== $reply->thread->user_id && !$reply->thread->user->can('manage_threads')) {
-                if (isset($userRankCount[$reply->thread->user_id]) && isset($userRankCount[$reply->thread->user_id]['reply'])) {
+                if (isset($userRankCount[$reply->thread->user_id])) {
                     $userRankCount[$reply->thread->user_id]['reply'] += 1;
                 } else {
                     $userRankCount[$reply->thread->user_id]['user_id'] = $reply->thread->user_id;
@@ -58,7 +58,7 @@ class GetRank extends Command
         $favorites = Favorite::whereBetween('created_at',[$lastMonday,$lastSunday])->with('thread.user')->get();
         foreach ($favorites as $favorite) {
             if ($favorite->user_id !== $favorite->thread->user_id && !$favorite->thread->user->can('manage_threads')) {
-                if (isset($userRankCount[$favorite->thread->user_id]) && isset($userRankCount[$favorite->thread->user_id]['favorite'])) {
+                if (isset($userRankCount[$favorite->thread->user_id])) {
                     $userRankCount[$favorite->thread->user_id]['favorite'] += 1;
                 } else {
                     $userRankCount[$favorite->thread->user_id]['user_id'] = $favorite->thread->user_id;
