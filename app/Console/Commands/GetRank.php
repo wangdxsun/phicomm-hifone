@@ -2,8 +2,9 @@
 namespace Hifone\Console\Commands;
 
 use Carbon\Carbon;
-use Hifone\Models\Thread;
-use Hifone\Models\User;
+use Hifone\Models\Favorite;
+use Hifone\Models\Like;
+use Hifone\Models\Reply;
 use Illuminate\Console\Command;
 use Hifone\Models\Rank;
 
@@ -22,51 +23,64 @@ class GetRank extends Command
     public function handle()
     {
         $lastMonday = Carbon::today()->previousWeekendDay()->subDay(6)->toDateTimeString();
-        $lastSunday = Carbon::today()->previousWeekendDay()->addDays(1)->toDateTimeString();
-        $threads = Thread::visible()->whereBetween('created_at',[$lastMonday,$lastSunday])
-            ->with('user')->get()->groupBy('user_id');
+        $lastSunday = Carbon::today()->previousWeekendDay()->subSecond()->subSecond()->toDateTimeString();
         $userRankCount = [];
         $week_rank = 0;
-        //对于这一段时间的活跃用户，计算被点赞数，被评论数，被收藏数
-        foreach ($threads as  $userId => $userThreads) {
-            $favoriteCount = 0;
-            $likeCount = 0;
-            $replyCount = 0;
-            $selfReplyCount = 0;
-            $selfLikeCount = 0;
-            $selfFavoriteCount = 0;
-            foreach ($userThreads as $userThread) {
-                $favoriteCount += $userThread->favorite_count;
-                $likeCount += $userThread->like_count;
-                $replyCount += $userThread->reply_count;
-                $selfReplyCount += $userThread->selfReplyCount($userThread);
-                $selfLikeCount += $userThread->selfLikeCount($userThread);
-                $selfFavoriteCount += $userThread->selfFavoriteCount($userThread);
-            }
-            if (!User::find($userId)->can('manage_threads')) {
-                array_push($userRankCount, [
-                    'favoriteCount' => $favoriteCount - $selfFavoriteCount,
-                    'likeCount'     => $likeCount - $selfLikeCount,
-                    'replyCount'    => $replyCount - $selfReplyCount,
-                    'all_count'     => $replyCount - $selfReplyCount + $favoriteCount - $selfFavoriteCount + $likeCount - $selfLikeCount,
-                    'user_id'       => $userId,
-                    'score'         => User::find($userId)->score,
-                    'week_rank'     => $week_rank,
-                ]);
+        //处理点赞逻辑，首先拿到上个星期被点赞了的帖子和回复，以及对应的用户信息
+        $likes = Like::whereBetween('created_at',[$lastMonday,$lastSunday])->with('likeable')->get();
+        foreach ($likes as $like) {
+            if ($like->user_id !== $like->likeable->user_id && !$like->likeable->user->can('manage_threads')) {
+                if (isset($userRankCount[$like->likeable->user_id])) {
+                    $userRankCount[$like->likeable->user_id]['like'] += 1;
+                } else {
+                    $userRankCount[$like->likeable->user_id]['user_id'] = $like->likeable->user_id;
+                    $userRankCount[$like->likeable->user_id]['like'] = 1;
+                    $userRankCount[$like->likeable->user_id]['favorite'] = 0;
+                    $userRankCount[$like->likeable->user_id]['reply'] = 0;
+                    $userRankCount[$like->likeable->user_id]['score'] = $like->likeable->user->score;
+                }
             }
         }
+        $replies = Reply::whereBetween('created_at',[$lastMonday,$lastSunday])->with('thread.user')->get();
+        foreach ($replies as $reply) {
+            if ($reply->user_id !== $reply->thread->user_id && !$reply->thread->user->can('manage_threads')) {
+                if (isset($userRankCount[$reply->thread->user_id]) && isset($userRankCount[$reply->thread->user_id]['reply'])) {
+                    $userRankCount[$reply->thread->user_id]['reply'] += 1;
+                } else {
+                    $userRankCount[$reply->thread->user_id]['user_id'] = $reply->thread->user_id;
+                    $userRankCount[$reply->thread->user_id]['reply'] = 1;
+                    $userRankCount[$reply->thread->user_id]['like'] = 0;
+                    $userRankCount[$reply->thread->user_id]['favorite'] = 0;
+                    $userRankCount[$reply->thread->user_id]['score'] = $reply->thread->user->score;
+                }
+            }
+        }
+        $favorites = Favorite::whereBetween('created_at',[$lastMonday,$lastSunday])->with('thread.user')->get();
+        foreach ($favorites as $favorite) {
+            if ($favorite->user_id !== $favorite->thread->user_id && !$favorite->thread->user->can('manage_threads')) {
+                if (isset($userRankCount[$favorite->thread->user_id]) && isset($userRankCount[$favorite->thread->user_id]['favorite'])) {
+                    $userRankCount[$favorite->thread->user_id]['favorite'] += 1;
+                } else {
+                    $userRankCount[$favorite->thread->user_id]['user_id'] = $favorite->thread->user_id;
+                    $userRankCount[$favorite->thread->user_id]['favorite'] = 1;
+                    $userRankCount[$favorite->thread->user_id]['like'] = 0;
+                    $userRankCount[$favorite->thread->user_id]['reply'] = 0;
+                    $userRankCount[$favorite->thread->user_id]['score'] = $favorite->thread->user->score;
+                }
+            }
+        }
+
         $userRankCount = collect($userRankCount)->sortByDesc(function ($user) {
-            return $user['all_count'] * 100 + $user['score'] / 100;
+            return ($user['like'] + $user['favorite'] +$user['reply']) * 100 + $user['score'] / 100;
         })->values()->all();
         $userRankCount = array_slice($userRankCount,0,10);
         Rank::where('start_date',$lastMonday)->delete();
 
-
         foreach ($userRankCount as $data) {
             Rank::create([
-                'favorite_count' => $data['favoriteCount'],
-                'like_count'     => $data['likeCount'],
-                'reply_count'    => $data['replyCount'],
+                'favorite_count' => $data['favorite'],
+                'like_count'     => $data['like'],
+                'reply_count'    => $data['reply'],
                 'user_id'        => $data['user_id'],
                 'start_date'     => $lastMonday,
                 'end_date'       => $lastSunday,

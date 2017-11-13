@@ -34,22 +34,8 @@ class ChatBll extends BaseBll
     public function newMessage(User $to)
     {
         $from = Auth::user();
-        if (Input::has('image')) {
-            $image = Input::get('image');
-            $res = dispatch(new UploadBase64ImageCommand($image));
-            $message = "<img src='{$res["filename"]}' class='message_image'/>";
-            event(new NewChatMessageEvent($from, $to, $message));
-        }
-        if (Input::has('imageUrl')) {
-            $imageUrl = Input::get('imageUrl');
-            $message = "<img src='{$imageUrl}' class='message_image'/>";
-            event(new NewChatMessageEvent($from, $to, $message));
-        }
-        if (Input::has('message')) {
-            $message = Input::get('message');
-//            $message = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse(request('message')));
-            event(new NewChatMessageEvent($from, $to, $message));
-        }
+        $message = $this->newMessageBll();
+        event(new NewChatMessageEvent($from, $to, $message));
         $to->increment('notification_chat_count', 1);
         $to->increment('notification_count', 1);
         return [
@@ -57,5 +43,44 @@ class ChatBll extends BaseBll
             'to' => $to->username,
             'message' => $message,
         ];
+    }
+
+    public function newMessageBll()
+    {
+        $message = '';
+        if (Input::has('image')) {
+            $image = Input::get('image');
+            $res = dispatch(new UploadBase64ImageCommand($image));
+            $message = "<img src='{$res["filename"]}' class='message_image'/>";
+        }
+        if (Input::has('imageUrl')) {
+            $imageUrl = Input::get('imageUrl');
+            $message = "<img src='{$imageUrl}' class='message_image'/>";
+        }
+        if (Input::has('message')) {
+            $message = Input::get('message');
+//            $message = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse(request('message')));
+        }
+        return $message;
+    }
+
+    public function batchNewMessage($toUsers)
+    {
+        $from = Auth::user();
+        $insert = [];
+        foreach ($toUsers as $to) {
+            if (empty($to)) {
+                continue;
+            }
+            $message = $this->newMessageBll();
+            $insert[] = [
+                'from_user_id' => $from->id,
+                'to_user_id' => $to->id,
+                'from_to' => $from->id * $to->id,
+                'message' => $message,
+            ];
+        }
+        Chat::insert($insert);//批量创建
+
     }
 }

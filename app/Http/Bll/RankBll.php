@@ -24,6 +24,16 @@ class RankBll extends BaseBll
         $rankData = Input::get('rank_status');
         $user =  Auth::user();
         $user->update(['rank_status' => $rankData]);
+        if ($rankData == 1) {
+            $msg = '加油加油~期待您下周榜上有名';
+        } elseif ($rankData == 2) {
+            $msg = '欢迎您下次光临哦~';
+        } else {
+            $msg = '受伤了~，不过我们会更加努力哒~';
+        }
+        return [
+          'msg'  => $msg
+        ];
     }
 
 

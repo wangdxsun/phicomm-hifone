@@ -108,8 +108,8 @@ class NodeBll extends BaseBll
 
     public function showOfSubNode(SubNode $subNode, NodeBll $nodeBll)
     {
-        $hot = $nodeBll->recentThreadsOfSubNode($subNode);
-        $recent = $nodeBll->hotThreadsOfSubNode($subNode);
+        $hot = $nodeBll->hotThreadsOfSubNode($subNode);
+        $recent = $nodeBll->recentThreadsOfSubNode($subNode);
         $moderators = $subNode->node->moderators()->with(['user'])->get();
 
         $node['hot'] = $hot;

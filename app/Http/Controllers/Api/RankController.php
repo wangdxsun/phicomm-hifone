@@ -15,8 +15,7 @@ class RankController extends ApiController
 
     public function rankStatus(RankBll $rankBll)
     {
-        $rankBll->rankStatus();
-        return 'success';
+        return $rankBll->rankStatus();
     }
 
     public function count(RankBll $rankBll)

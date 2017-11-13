@@ -69,7 +69,7 @@ return [
         'more'           => 'mehr',
         'noitem'         => 'Keine Threads vorhanden',
         'is_excellent'   => 'Dieser Thread hat sehr viele Antworten',
-        'login_needed'   => 'Um Antworten zu verfassen, musst du dich <a class="btn btn-success" href="/auth/login">Anmelden</a>. Wenn du noch keinen Account hast, <a class="btn btn-primary" href="/auth/register">Registriere</a> dich.',
+        'login_needed'   => 'Um Antworten zu verfassen, musst du dich <a class="btn btn-success" href="/phicomm/login">Anmelden</a>. Wenn du noch keinen Account hast, <a class="btn btn-primary" href="/phicomm/register">Registriere</a> dich.',
         'thread_count'   => 'Ingesamt :threads Threads',
 
         // Share
