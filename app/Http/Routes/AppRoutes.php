@@ -60,7 +60,7 @@ class AppRoutes
 
                 $router->get('chats', 'ChatController@chats');
                 $router->get('chat/{user}/after/{chat}', 'ChatController@messages');
-                $router->post('chats/{user}', 'ChatController@store');
+                $router->post('chat/{user}', 'ChatController@store');
                 $router->get('notification', 'NotificationController@index');
                 $router->get('notification/reply', 'NotificationController@reply');
                 $router->get('notification/at', 'NotificationController@at');
