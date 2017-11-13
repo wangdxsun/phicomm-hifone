@@ -430,9 +430,12 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function getDevInfoAttribute($value)
     {
-        if ($value) {
+        if (!$value) {
+            return [];
+        }
+        if (!is_array($value)) {
             return json_decode($value, true);
         }
-        return [];
+        return $value;
     }
 }
