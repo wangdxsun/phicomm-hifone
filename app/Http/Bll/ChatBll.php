@@ -8,6 +8,7 @@
 
 namespace Hifone\Http\Bll;
 
+use Carbon\Carbon;
 use Hifone\Commands\Image\UploadBase64ImageCommand;
 use Hifone\Events\Chat\NewChatMessageEvent;
 use Hifone\Models\Chat;
@@ -65,8 +66,12 @@ class ChatBll extends BaseBll
             $message = "<img src='{$imageUrl}' class='message_image'/>";
         }
         if (Input::has('message')) {
-            $message = Input::get('message');
-//            $message = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse(request('message')));
+            if (Auth::user()->can('manage_threads')) {
+                $message = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse(request('message')));
+            } else {
+                $message = Input::get('message');
+            }
+
         }
         return $message;
     }
@@ -85,6 +90,8 @@ class ChatBll extends BaseBll
                 'to_user_id' => $to->id,
                 'from_to' => $from->id * $to->id,
                 'message' => $message,
+                'created_at'    => Carbon::now()->toDateTimeString(),
+                'updated_at'    => Carbon::now()->toDateTimeString(),
             ];
         }
         Chat::insert($insert);//批量创建
