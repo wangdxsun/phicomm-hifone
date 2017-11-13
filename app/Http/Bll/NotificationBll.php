@@ -24,6 +24,9 @@ class NotificationBll extends BaseBll
                 $notification->object->user;
             }
         }
+        $data = $notifications->values();
+        $notifications = $notifications->toArray();
+        $notifications['data'] = $data;
         Auth::user()->notification_follow_count = 0;
         Auth::user()->save();
 
