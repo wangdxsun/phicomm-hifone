@@ -111,9 +111,9 @@ class UserController extends AppController
         return $avatar;
     }
 
-    public function search(UserBll $userBll)
+    public function search($keyword, UserBll $userBll)
     {
-        $users = $userBll->search();
+        $users = $userBll->search($keyword);
         return $users;
     }
 
