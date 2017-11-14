@@ -44,9 +44,9 @@ class UserBll extends BaseBll
     }
 
     //全局搜索用户
-    public function search()
+    public function search($keyword)
     {
-        $users = User::searchUser(request('q'));
+        $users = User::searchUser($keyword)->paginate(15);
         foreach ($users as $user) {
             $user['followed'] = User::hasFollowUser($user);
         }

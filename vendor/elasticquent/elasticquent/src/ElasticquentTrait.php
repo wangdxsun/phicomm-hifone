@@ -284,10 +284,10 @@ trait ElasticquentTrait
     {
         $instance = new static;
 
-        $params = $instance->getBasicEsParams();
+        $offset = (request('page', 1) -1) * 15;
+        $params = $instance->getBasicEsParams(true, true, true, 15, $offset);
 
         $params['body'] = [
-            'size' => 50,
             'query' => [
                 'multi_match' => [
                     'query' => $term,
@@ -317,10 +317,10 @@ trait ElasticquentTrait
     {
         $instance = new static;
 
-        $params = $instance->getBasicEsParams();
+        $offset = (request('page', 1) -1) * 15;
+        $params = $instance->getBasicEsParams(true, true, true, 15, $offset);
 
         $params['body'] = [
-            'size' => 50,
             'query' => [
                 'multi_match' => [
                     'query' => $term,

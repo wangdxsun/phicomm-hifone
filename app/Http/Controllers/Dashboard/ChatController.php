@@ -46,11 +46,11 @@ class ChatController extends Controller
                 ->withInput();
         } elseif ($data['userType'] == 3) {
             //为所有用户发送私信
-            User::where('id', '<>', Auth::user()->id)->chunk(100, function($users) use ($chatBll){
+            User::where('id', '<>', Auth::user()->id)->chunk(1000, function($users) use ($chatBll){
                 $chatBll->batchNewMessage($users);
             });
-            DB::table('users')->where('id', '<>', Auth::user()->id)->increment('notification_chat_count',1);
-            DB::table('users')->where('id', '<>', Auth::user()->id)->increment('notification_count',1);
+            User::where('id', '<>', Auth::user()->id)->increment('notification_chat_count',1);
+            User::where('id', '<>', Auth::user()->id)->increment('notification_count',1);
             return Redirect::route('dashboard.chat.send')
                 ->withSuccess('成功为所有用户发送私信')
                 ->withInput();
