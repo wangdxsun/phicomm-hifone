@@ -69,7 +69,7 @@ class NodeBll extends BaseBll
     public function subNodesInFeedback()
     {
         //意见反馈处显示的子版块
-        $subNodes = SubNode::feedback()->with('node')->get()->groupBy('name');
+        $subNodes = SubNode::feedback()->with('node')->get()->groupBy('name')->values();
 
         return $subNodes;
     }
