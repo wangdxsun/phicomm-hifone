@@ -15,6 +15,7 @@ use Input;
 
 class CommonController extends AppController
 {
+    //上传图片Base64编码
     public function uploadBase64()
     {
         $images = [];
@@ -27,6 +28,7 @@ class CommonController extends AppController
         return $images;
     }
 
+    //上传图片文件
     public function upload()
     {
         $images = [];

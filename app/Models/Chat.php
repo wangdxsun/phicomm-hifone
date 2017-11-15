@@ -80,8 +80,17 @@ class Chat extends BaseModel
         }
     }
 
-    public function scopeNew($query, Chat $chat)
+    public function scopeAfter($query, Chat $chat)
     {
-        return $query->where('id', '>', $chat->id);
+        if ($chat->exists){
+            return $query->where('id', '>', $chat->id);
+        }
+    }
+
+    public function scopeBefore($query, Chat $chat)
+    {
+        if ($chat->exists){
+            return $query->where('id', '<', $chat->id);
+        }
     }
 }

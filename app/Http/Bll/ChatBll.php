@@ -34,9 +34,13 @@ class ChatBll extends BaseBll
     }
 
     //for app
-    public function recentMessages(User $user, Chat $chat)
+    public function recentMessages(User $user, $scope, Chat $chat)
     {
-        return Chat::chatWith($user)->new($chat)->with('from', 'to')->latest()->paginate();
+        if ($scope == 'after') {
+            return Chat::chatWith($user)->after($chat)->with('from', 'to')->latest()->paginate();
+        } else {
+            return Chat::chatWith($user)->before($chat)->with('from', 'to')->latest()->paginate();
+        }
     }
 
     public function newMessage(User $to)

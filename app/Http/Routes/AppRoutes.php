@@ -47,19 +47,20 @@ class AppRoutes
                 $router->post('threads', 'ThreadController@store');
                 $router->post('feedbacks', 'ThreadController@feedback');
                 $router->post('replies', 'ReplyController@store');
-                $router->post('follow/user/{user}', 'FollowController@user');
-                $router->post('follow/thread/{thread}', 'FollowController@thread');
-                $router->post('like/thread/{thread}', 'LikeController@thread');
-                $router->post('like/reply/{reply}', 'LikeController@reply');
-                $router->post('report/thread/{thread}', 'ReportController@thread');
-                $router->post('report/reply/{reply}', 'ReportController@reply');
-                $router->post('favorite/thread/{thread}', 'FavoriteController@createOrDeleteFavorite');
+                $router->post('follow/user/{user}', 'FollowController@user')->where('user', '[0-9]+');
+                $router->post('follow/thread/{thread}', 'FollowController@thread')->where('thread', '[0-9]+');
+                $router->post('like/thread/{thread}', 'LikeController@thread')->where('thread', '[0-9]+');
+                $router->post('like/reply/{reply}', 'LikeController@reply')->where('reply', '[0-9]+');
+                $router->post('report/thread/{thread}', 'ReportController@thread')->where('thread', '[0-9]+');
+                $router->post('report/reply/{reply}', 'ReportController@reply')->where('reply', '[0-9]+');
+                $router->post('favorite/thread/{thread}', 'FavoriteController@createOrDeleteFavorite')->where('thread', '[0-9]+');
                 $router->get('user/feedbacks', 'UserController@feedbacks');
                 $router->get('user/credit', 'UserController@credit');
                 $router->post('user/avatar', 'UserController@upload');
 
                 $router->get('chats', 'ChatController@chats');
-                $router->get('chat/{user}/after/{chat}', 'ChatController@messages');
+                $router->get('chat/{user}/{scope}/{chat?}', 'ChatController@messages')->where('user', '[0-9]+')
+                    ->where('scope', 'after|before')->where('chat', '[0-9]+');
                 $router->post('chat/{user}', 'ChatController@store');
                 $router->get('notification', 'NotificationController@index');
                 $router->get('notification/reply', 'NotificationController@reply');

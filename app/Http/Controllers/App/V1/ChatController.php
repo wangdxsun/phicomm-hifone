@@ -24,9 +24,9 @@ class ChatController extends AppController
     }
 
     //聊天记录
-    public function messages(User $user, Chat $chat, ChatBll $chatBll)
+    public function messages(User $user, $scope, Chat $chat, ChatBll $chatBll)
     {
-        $messages = $chatBll->recentMessages($user, $chat);
+        $messages = $chatBll->recentMessages($user, $scope, $chat);
         return $messages;
     }
 
