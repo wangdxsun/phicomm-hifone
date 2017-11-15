@@ -46,6 +46,18 @@ class ThreadBll extends BaseBll
         return $threads;
     }
 
+    public function webSearch()
+    {
+        $threads = Thread::searchThread(request('q'));
+        foreach ($threads as $thread) {
+            unset($thread['node']);
+            unset($thread['user']);
+        }
+        $threads = $threads->load(['user', 'node', 'lastReplyUser']);
+
+        return $threads;
+    }
+
     public function createThread()
     {
         $threadData = Input::get('thread');
