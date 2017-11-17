@@ -20,7 +20,8 @@ class ChatBll extends BaseBll
 {
     public function chats()
     {
-        $messages = Chat::my()->latest()->get()->unique('from_to')->load(['from', 'to']);
+        $chatIds = Chat::my()->selectRaw('max(id) as id')->groupBy('from_to')->pluck('id');
+        $messages = Chat::whereIn('id', $chatIds)->with(['from', 'to'])->recent()->paginate();
         Auth::user()->notification_chat_count = 0;
         Auth::user()->save();
 

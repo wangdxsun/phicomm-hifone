@@ -1,3 +1,4 @@
 .env
 .idea/
 app/Http/Controllers/TestController.php
+resources/views/test.blade.php
