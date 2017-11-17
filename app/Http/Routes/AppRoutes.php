@@ -60,7 +60,7 @@ class AppRoutes
 
                 $router->get('chats', 'ChatController@chats');
                 $router->get('chat/{user}/{scope}/{chat?}', 'ChatController@messages')->where('user', '[0-9]+')
-                    ->where('scope', 'after|before')->where('chat', '[0-9]+');
+                    ->where('scope', 'after|before')->where('chat', '[0-9]+')->name('chat.message');
                 $router->post('chat/{user}', 'ChatController@store');
                 $router->get('notification', 'NotificationController@index');
                 $router->get('notification/reply', 'NotificationController@reply');
