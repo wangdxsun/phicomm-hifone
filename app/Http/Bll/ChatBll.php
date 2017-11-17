@@ -57,7 +57,7 @@ class ChatBll extends BaseBll
             'outline' => substr($message,0,26),
             'title' => $from->username,
             'uid' => $to->phicomm_id,
-            'url' => route('app.chat.message', ['user' => 1, 'scope' => 'after']),
+            'url' => route('app.chat.message', ['user' => $from->id, 'scope' => 'after']),
         );
         $this->pushMessage($data);
 
@@ -119,7 +119,7 @@ class ChatBll extends BaseBll
      * callbackurl	回调url	string	根据该url告知推送方推送结果
      * coverimg	封面图片	string	封面图片
      * mode	证书模式	string	0：测试（开发）模式, 1：生产模式；默认为1. 注：该字段IOS App为必选，安卓App 为非必选
-     * msgcontent	推送消息内容	string	长度:400个字符,200个汉字；编码:URLEncord
+     * msgcontent	推送消息内容	string	长度:400个字符,200个汉字；编码:URLEncord json格式
      * msgkind	消息类型	string	一种APP的不同的应用消息，默认为0，参考消息类型列表j接口
      * msgtype	推送消息类型	string	0.通知，1.消息。注：该字段为1时，安卓为消息推送，IOS为静默推送
      * outline	推送消息概要	string	长度待定
