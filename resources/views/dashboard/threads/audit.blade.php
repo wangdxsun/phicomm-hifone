@@ -45,8 +45,8 @@
                                     {!! $thread->body !!}
                                 </div>
                                 @if(Str::length($thread->body) > 26 || Str::contains($thread->body,['<img']))
-                                    <a data-toggle="collapse" href="#thread{{ $thread->id }}" aria-expanded="false">查看更多</a>
-                                    <div class="collapse well" id="thread{{ $thread->id }}">{!! $thread->body !!}</div>
+                                    <a  data-toggle="collapse" href="#thread{{ $thread->id }}" aria-expanded="false">查看更多</a>
+                                    <div  class="collapse well" id="thread{{ $thread->id }}">{!! $thread->body !!}</div>
                                 @endif
                             </td>
                             <td>{{ $thread->bad_word }}</td>
