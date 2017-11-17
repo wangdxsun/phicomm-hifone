@@ -36,57 +36,55 @@ class ChatBll extends BaseBll
     public function newMessage(User $to)
     {
         $from = Auth::user();
-        $message = $this->newMessageBll();
-        event(new NewChatMessageEvent($from, $to, $message));
+        $messages = $this->getMessages();
+        event(new NewChatMessageEvent($from, $to, $messages[0]));
         $to->increment('notification_chat_count', 1);
         $to->increment('notification_count', 1);
         return [
             'from' => $from->username,
             'to' => $to->username,
-            'message' => $message,
+            'message' => $messages[0],
         ];
     }
 
-    public function newMessageBll()
+    public function getMessages()
     {
-        $message = '';
+        $messages = [];
         if (Input::has('image')) {
             $image = Input::get('image');
             $res = dispatch(new UploadBase64ImageCommand($image));
-            $message = "<img src='{$res["filename"]}' class='message_image'/>";
+            $messages[] = "<img src='{$res["filename"]}' class='message_image'/>";
         }
         if (Input::has('imageUrl')) {
             $imageUrl = Input::get('imageUrl');
-            $message = "<img src='{$imageUrl}' class='message_image'/>";
+            $messages[] = "<img src='{$imageUrl}' class='message_image'/>";
         }
         if (Input::has('message')) {
             if (Auth::user()->can('manage_threads')) {
-                $message = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse(request('message')));
+                $messages[] = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse(request('message')));
             } else {
-                $message = Input::get('message');
+                $messages[] = Input::get('message');
             }
-
         }
-        return $message;
+        return $messages;
     }
 
     public function batchNewMessage($toUsers)
     {
         $from = Auth::user();
         $insert = [];
+        $messages = $this->getMessages();
         foreach ($toUsers as $to) {
-            if (empty($to)) {
-                continue;
+            foreach ($messages as $message) {
+                $insert[] = [
+                    'from_user_id' => $from->id,
+                    'to_user_id' => $to->id,
+                    'from_to' => $from->id * $to->id,
+                    'message' => $message,
+                    'created_at'    => Carbon::now()->toDateTimeString(),
+                    'updated_at'    => Carbon::now()->toDateTimeString(),
+                ];
             }
-            $message = $this->newMessageBll();
-            $insert[] = [
-                'from_user_id' => $from->id,
-                'to_user_id' => $to->id,
-                'from_to' => $from->id * $to->id,
-                'message' => $message,
-                'created_at'    => Carbon::now()->toDateTimeString(),
-                'updated_at'    => Carbon::now()->toDateTimeString(),
-            ];
         }
         Chat::insert($insert);//批量创建
 
