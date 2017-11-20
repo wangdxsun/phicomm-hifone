@@ -11,6 +11,7 @@ namespace Hifone\Http\Controllers\Dashboard;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Carousel;
 use Hifone\Models\Node;
+use Hifone\Models\User;
 
 class StatController extends Controller
 {
@@ -23,6 +24,16 @@ class StatController extends Controller
     {
         $carousels = Carousel::recent()->paginate(10);
         return view('dashboard.stats.banner')->withCurrentMenu('banner')->withCarousels($carousels);
+    }
+
+    public function userCount()
+    {
+        $users = User::selectRaw('substr(created_at, 1, 10) as date, count(*) as cnt')->groupBy('date')->recent()->take(30)->get();
+        $usersCount = User::count();
+        return view('dashboard.stats.user')
+            ->withCurrentMenu('user')
+            ->with('users', $users)
+            ->with('usersCount', $usersCount);
     }
 
     public function node()

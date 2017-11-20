@@ -29,16 +29,16 @@ body.dashboard {
                 margin-top: 60px;
             }
             .replyContent {
+                overflow: hidden;
+                text-overflow:ellipsis;
+                white-space: nowrap;
+                display: block;
+                max-height: 150px;
                 img {
                     max-width: 50px !important;
                     max-height: 50px !important;
                 }
-                p {
-                    overflow: hidden;
-                    text-overflow:ellipsis;
-                    white-space: nowrap;
-                    display: block;
-                }
+
             }
             .collapse {
                 img {
