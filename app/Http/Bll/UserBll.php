@@ -34,7 +34,7 @@ class UserBll extends BaseBll
 
     public function getReplies(User $user)
     {
-        $replies = $user->replies()->visibleAndDeleted()->with(['thread','reply'])->recent()->paginate();
+        $replies = $user->replies()->visibleAndDeleted()->with(['thread','reply.user'])->recent()->paginate();
         foreach ($replies as $key => $reply) {
             if (!$reply->thread->visible) {
                 unset($replies[$key]);
