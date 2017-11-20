@@ -86,8 +86,8 @@ class ChatBll extends BaseBll
             } else {
                 $message = Input::get('message');
             }
-
         }
+
         return $message;
     }
 
