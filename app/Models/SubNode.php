@@ -58,7 +58,8 @@ class SubNode extends BaseModel
         'description.max' => '子版块描述最多100个字符',
     ];
 
-    public function node(){
+    public function node()
+    {
         return $this->belongsTo(Node::class);
     }
 
