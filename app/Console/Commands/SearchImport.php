@@ -20,7 +20,7 @@ class SearchImport extends Command
      *
      * @var string
      */
-    protected $signature = 'search:import';
+    protected $signature = 'search:import {type?}';
 
     /**
      * The console command description.
@@ -48,26 +48,51 @@ class SearchImport extends Command
     {
         ini_set('memory_limit', '-1');
         ini_set('max_execution_time', 0);
+        $type = $this->argument('type');
+        if ($type == 'users') {
+            User::chunk(5000, function ($users) {
+                $users->removeFromIndex();
+            });
+            User::rebuildMapping();
+            User::chunk(5000, function ($users) {
+                foreach ($users as $user) {
+                    unset($user['roles']);
+                }
+                $users->addToIndex();
+            });
 
-        Thread::deleteIndex();
-        Thread::createIndex();
-        User::putMapping();
-        User::chunk(5000, function ($users) {
-            foreach ($users as $user) {
-                unset($user['roles']);
-            }
-            $users->addToIndex();
-        });
+            echo 'Import Users into ElasticSearch Successfully';
+        } elseif ($type == 'threads') {
+            Thread::visible()->chunk(1000, function ($threads) {
+                $threads->removeFromIndex();
+            });
+            Thread::rebuildMapping();
+            Thread::visible()->chunk(1000, function ($threads) {
+                foreach ($threads as $thread) {
+                    $thread->body = strip_tags($thread->body);
+                }
+                $threads->addToIndex();
+            });
 
-        Thread::visible()->chunk(1000, function ($threads) {
-            $threads = Thread::visible()->get();
-            foreach ($threads as $thread) {
-                $thread->body = strip_tags($thread->body);
-            }
-            $threads->addToIndex();
-        });
-        echo 'Import Data into ElasticSearch Successfully';
-
+            echo 'Import Threads into ElasticSearch Successfully';
+        } else {
+            Thread::deleteIndex();
+            Thread::createIndex();
+            User::putMapping();
+            User::chunk(5000, function ($users) {
+                foreach ($users as $user) {
+                    unset($user['roles']);
+                }
+                $users->addToIndex();
+            });
+            Thread::visible()->chunk(1000, function ($threads) {
+                foreach ($threads as $thread) {
+                    $thread->body = strip_tags($thread->body);
+                }
+                $threads->addToIndex();
+            });
+            echo 'Import Data into ElasticSearch Successfully';
+        }
         return;
     }
 }
