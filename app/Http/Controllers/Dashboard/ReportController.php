@@ -11,18 +11,15 @@
 
 namespace Hifone\Http\Controllers\Dashboard;
 
-use AltThree\Validator\ValidationException;
+use Hifone\Events\Reply\ReplyWasTrashedEvent;
 use Hifone\Events\Report\ReportWasPassedEvent;
+use Hifone\Events\Thread\ThreadWasTrashedEvent;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Report;
-use Hifone\Models\Role;
 use Hifone\Models\Thread;
-use Hifone\Models\User;
 use Redirect;
 use View;
 use Input;
-use Auth;
-use DB;
 
 class ReportController extends Controller
 {
@@ -70,17 +67,20 @@ class ReportController extends Controller
             $operation = '删除帖子';
             $target->node->update(['thread_count' => $target->node->threads()->visible()->count()]);
             $target->user->update(['thread_count' => $target->user->threads()->visibleAndDeleted()->count()]);
+            event(new ThreadWasTrashedEvent($target));
         } else {
             $operation = '删除回复';
             $target->thread->update(['reply_count' => $target->thread->replies()->visibleAndDeleted()->count()]);
             $target->user->update(['reply_count' => $target->user->replies()->visibleAndDeleted()->count()]);
+            event(new ReplyWasTrashedEvent($target));
         }
         $this->updateOpLog($target, $operation, trim(request('reason')));
-
-        $report->status = Report::DELETE;
+        $reports = Report::where('reportable_id', $report->reportable_id)->where('reportable_type', $report->reportable_type)->get();
         $this->updateOpLog($report, '处理举报', trim(request('reason')));
-
-        event(new ReportWasPassedEvent($report));
+        foreach ($reports as $report) {
+            $report->status = Report::DELETE;
+            event(new ReportWasPassedEvent($report)); //给每个举报人加分
+        }
         return Redirect::back()->withSuccess('删除成功');
     }
 
