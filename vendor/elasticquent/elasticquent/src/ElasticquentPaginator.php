@@ -45,7 +45,6 @@ class ElasticquentPaginator extends Paginator
             'prev_page_url' => $this->previousPageUrl(),
             'from'          => $this->firstItem(),
             'to'            => $this->lastItem(),
-            'hits'          => $this->hits,
             'data'          => $this->items->toArray(),
         ];
     }
