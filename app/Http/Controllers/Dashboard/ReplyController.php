@@ -244,11 +244,11 @@ class ReplyController extends Controller
             $this->delete($reply);
             $reply->thread->node->decrement('reply_count', 1);//版块回帖数-1
             $reply->thread->subNode->decrement('reply_count', 1);//子版块回帖数-1
-            $reply->thread->decrement('reply_count', 1);
+            $reply->thread->update(['reply_count' => $reply->thread->replies()->visibleAndDeleted()->count()]);
+            $reply->user->update(['reply_count' => $reply->user->replies()->visibleAndDeleted()->count()]);
             if ($reply->thread->status == 0) {
                 $reply->thread->updateIndex();
             }
-            $reply->user->decrement('reply_count', 1);
             event(new ReplyWasTrashedEvent($reply));
             DB::commit();
         } catch (\Exception $e) {

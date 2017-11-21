@@ -75,10 +75,7 @@ class Reply extends BaseModel
 
     public function user()
     {
-        return $this->belongsTo(User::class)
-            ->select(['id', 'username', 'avatar_url','password','score',
-            'notification_reply_count','notification_at_count',
-                'notification_system_count','notification_chat_count','notification_follow_count']);
+        return $this->belongsTo(User::class)->select(['id', 'username', 'avatar_url']);
     }
 
     public function lastOpUser()
@@ -170,6 +167,8 @@ class Reply extends BaseModel
         foreach ($searches as $key => $value) {
             if ($key == 'thread_title') {
                 $query->whereHas('thread', function ($query) use ($value){
+                    $value = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse($value));
+                    $value = substr($value, 3, sizeof($value)-5);
                     $query->where('title', 'like', "%$value%");
                 });
             } elseif ($key == 'username') {
@@ -177,6 +176,8 @@ class Reply extends BaseModel
                     $query->where('username','like',"%$value%");
                 });
             } elseif ($key == 'body') {
+                $value = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse($value));
+                $value = substr($value, 3, sizeof($value)-5);
                 $query->where('body', 'LIKE', "%$value%");
             } elseif ($key == 'date_start' && null != $value ) {
                 $query->where('created_at', '>=', $value);

@@ -148,8 +148,7 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function user()
     {
-        return $this->belongsTo(User::class)->select(['id', 'username', 'avatar_url', 'role','score','password','thread_count','score',
-            'notification_reply_count','notification_at_count','notification_system_count','notification_chat_count','notification_follow_count']);
+        return $this->belongsTo(User::class)->select(['id', 'username', 'avatar_url']);
     }
 
     public function lastOpUser()
@@ -159,7 +158,7 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function lastReplyUser()
     {
-        return $this->belongsTo(User::class, 'last_reply_user_id');
+        return $this->belongsTo(User::class, 'last_reply_user_id')->select(['id', 'username', 'avatar_url']);
     }
 
     public function replies()
@@ -353,8 +352,12 @@ class Thread extends BaseModel implements TaggableInterface
                     $query->where('username', 'like',"%$value%");
                 });
             } elseif ($key == 'body') {
+                $value = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse($value));
+                $value = substr($value, 3, sizeof($value)-5);
                 $query->where('body', 'LIKE', "%$value%");
             } elseif ($key == 'title') {
+                $value = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse($value));
+                $value = substr($value, 3, sizeof($value)-5);
                 $query->where('title', 'LIKE', "%$value%");
             } elseif ($key == 'date_start') {
                 $query->where('created_at', '>=', $value);

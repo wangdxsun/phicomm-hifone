@@ -63,19 +63,19 @@ class ChatController extends Controller
                     ->withInput();
             }
             $replies = $thread->replies()->visible()->search($data)->where('user_id', '<>', Auth::user()->id)->get()->unique('user_id');
+            $userIds = [];
             foreach ($replies as $reply) {
-                $chatBll->newMessage($reply->user);
+                $userIds[] = $reply->user->id;
             }
+            $users = User::whereIn('id',$userIds)->whereNotIn('id', [Auth::user()->id])->get();
+            $chatBll->batchNewMessage($users);
             return Redirect::route('dashboard.chat.send')
                 ->withSuccess('成功为帖子'.$data['thread_id']. '内满足条件的所有用户发送私信')
                 ->withInput();
         } elseif ($data['userType'] == 9) {
-            foreach (explode(',',$data['userIds']) as $user_id) {
-                if ($user_id == Auth::user()->id) {
-                    continue;
-                }
-                $chatBll->newMessage(User::find($user_id));
-            }
+            $userIds = explode(',',$data['userIds']);
+            $users = User::whereIn('id', $userIds)->whereNotIn('id', [Auth::user()->id])->get();
+            $chatBll->batchNewMessage($users);
             return Redirect::route('dashboard.chat.send')
                 ->withSuccess('成功为满足条件的所有用户发送私信');
         } else {

@@ -43,6 +43,12 @@ class StatMenuComposer
                 'icon'   => 'fa fa-sitemap',
                 'active' => false,
             ],
+            'user' => [
+                'title'  => '新增用户',
+                'url'    => route('dashboard.stat.user'),
+                'icon'   => 'fa fa-user',
+                'active' => false,
+            ],
         ];
 
         $view->withSubMenu($subMenu);

@@ -17,12 +17,14 @@ class ChatController extends ApiController
     public function chats(ChatBll $chatBll)
     {
         $chats = $chatBll->chats();
+
         return $chats;
     }
 
     public function messages(User $user, ChatBll $chatBll)
     {
         $messages = $chatBll->messages($user);
+
         return $messages;
     }
 
@@ -34,6 +36,7 @@ class ChatController extends ApiController
             throw new \Exception('对不起，你所在的用户组无法发言');
         }
         $res = $chatBll->newMessage($user);
+
         return $res;
     }
 

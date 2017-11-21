@@ -41,7 +41,14 @@ class ThreadBll extends BaseBll
 
     public function search($keyword)
     {
-        $threads = Thread::searchThread($keyword)->load(['user', 'node', 'lastReplyUser'])->paginate(15);
+        $threads = Thread::searchThread($keyword)->load(['user', 'node'])->paginate(15);
+
+        return $threads;
+    }
+
+    public function webSearch()
+    {
+        $threads = Thread::searchThread(request('q'))->load(['user', 'node', 'lastReplyUser']);
 
         return $threads;
     }

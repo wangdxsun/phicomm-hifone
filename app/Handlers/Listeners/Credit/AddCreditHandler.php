@@ -40,6 +40,7 @@ use Hifone\Events\Like\LikeWasAddedEvent;
 use Hifone\Events\Like\LikedWasAddedEvent;
 use Hifone\Events\Like\LikedWasRemovedEvent;
 use Hifone\Events\Image\AvatarWasUploadedEvent;
+use Hifone\Models\Report;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
 

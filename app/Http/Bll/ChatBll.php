@@ -20,7 +20,8 @@ class ChatBll extends BaseBll
 {
     public function chats()
     {
-        $messages = Chat::my()->latest()->get()->unique('from_to')->load(['from', 'to']);
+        $chatIds = Chat::my()->selectRaw('max(id) as id')->groupBy('from_to')->pluck('id');
+        $messages = Chat::whereIn('id', $chatIds)->with(['from', 'to'])->recent()->paginate();
         Auth::user()->notification_chat_count = 0;
         Auth::user()->save();
 
@@ -46,15 +47,16 @@ class ChatBll extends BaseBll
     public function newMessage(User $to)
     {
         $from = Auth::user();
-        $message = $this->parseMessageBody();
-        event(new NewChatMessageEvent($from, $to, $message));
+
+        $messages = $this->getMessages();
+        event(new NewChatMessageEvent($from, $to, $messages[0]));
         $to->increment('notification_chat_count', 1);
         $to->increment('notification_count', 1);
         //TODO 友盟消息推送
         $data = array(
-            'message' => $message,
+            'message' => $messages[0],
             'msg_type' => '0',//推送消息类型 0.通知,1.消息
-            'outline' => substr($message,0,26),
+            'outline' => substr($messages[0], 0, 26),
             'title' => $from->username,
             'uid' => $to->phicomm_id,
             'url' => route('app.chat.message', ['user' => $from->id, 'scope' => 'after']),
@@ -64,55 +66,54 @@ class ChatBll extends BaseBll
         return [
             'from' => $from->username,
             'to' => $to->username,
-            'message' => $message,
+            'message' => $messages[0],
         ];
     }
 
-    public function parseMessageBody()
+
+    public function getMessages()
     {
-        $message = '';
+        $messages = [];
         if (Input::has('image')) {
             $image = Input::get('image');
             $res = dispatch(new UploadBase64ImageCommand($image));
-            $message = "<img src='{$res["filename"]}' class='message_image'/>";
+            $messages[] = "<img src='{$res["filename"]}' class='message_image'/>";
         }
         if (Input::has('imageUrl')) {
             $imageUrl = Input::get('imageUrl');
-            $message = "<img src='{$imageUrl}' class='message_image'/>";
+            $messages[] = "<img src='{$imageUrl}' class='message_image'/>";
         }
         if (Input::has('message')) {
             if (Auth::user()->can('manage_threads')) {
                 $message = app('parser.at')->parse(request('message'));
                 $message = app('parser.emotion')->parse($message);
-                $message = app('parser.markdown')->convertMarkdownToHtml($message);
+                $messages[] = app('parser.markdown')->convertMarkdownToHtml($message);
             } else {
-                $message = app('parser.emotion')->parse(request('message'));
+                $messages[] = app('parser.emotion')->parse(request('message'));
             }
         }
 
-        return $message;
+        return $messages;
     }
 
     public function batchNewMessage($toUsers)
     {
         $from = Auth::user();
         $insert = [];
+        $messages = $this->getMessages();
         foreach ($toUsers as $to) {
-            if (empty($to)) {
-                continue;
+            foreach ($messages as $message) {
+                $insert[] = [
+                    'from_user_id' => $from->id,
+                    'to_user_id' => $to->id,
+                    'from_to' => $from->id * $to->id,
+                    'message' => $message,
+                    'created_at'    => Carbon::now()->toDateTimeString(),
+                    'updated_at'    => Carbon::now()->toDateTimeString(),
+                ];
             }
-            $message = $this->parseMessageBody();
-            $insert[] = [
-                'from_user_id' => $from->id,
-                'to_user_id' => $to->id,
-                'from_to' => $from->id * $to->id,
-                'message' => $message,
-                'created_at'    => Carbon::now()->toDateTimeString(),
-                'updated_at'    => Carbon::now()->toDateTimeString(),
-            ];
         }
         Chat::insert($insert);//批量创建
-
     }
 
     /**

@@ -96,9 +96,9 @@
                 getUser(query) {
                     if (query !== '') {
                         this.loading = true;
-                        axios.get('/api/v1/user/search?q=' + query).then(response => {
+                        axios.get('/api/v1/user/search/' + query).then(response => {
                             this.loading = false;
-                            this.users = response.data
+                            this.users = response.data.data
                         })
                     } else {
                         this.users = [];

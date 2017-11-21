@@ -45,8 +45,8 @@
                                     {!! $thread->body !!}
                                 </div>
                                 @if(Str::length($thread->body) > 26 || Str::contains($thread->body,['<img']))
-                                    <a data-toggle="collapse" href="#thread{{ $thread->id }}" aria-expanded="false">查看更多</a>
-                                    <div class="collapse well" id="thread{{ $thread->id }}">{!! $thread->body !!}</div>
+                                    <a  data-toggle="collapse" href="#thread{{ $thread->id }}" aria-expanded="false">查看更多</a>
+                                    <div  class="collapse well" id="thread{{ $thread->id }}">{!! $thread->body !!}</div>
                                 @endif
                             </td>
                             <td>{{ $thread->bad_word }}</td>
@@ -67,11 +67,16 @@
                             </td>
                             <td>{{ $thread->channel == 0 ? "社区" : "意见反馈" }}</td>
                             <td>
-                                @foreach($thread->dev_info as $info)
-                                    @foreach($info as $key => $item)
-                                        {{$key." : ".$item}}<br>
-                                    @endforeach
-                                @endforeach
+                                @if(sizeof($thread->dev_info) > 0)
+                                    <a data-toggle="collapse" href="#dev_info{{ $thread->id }}" aria-expanded="false">查看更多</a>
+                                    <div class="collapse well" id="dev_info{{ $thread->id }}" style="min-width: 230px">
+                                        @foreach($thread->dev_info as $info)
+                                            @foreach($info as $key => $item)
+                                                {{$key." : ".$item}}<br>
+                                            @endforeach
+                                        @endforeach
+                                    </div>
+                                @endif
                             </td>
                             <td>{{ $thread->ip }}</td>
                             <td>{{ $thread->created_time }}</td>
