@@ -65,14 +65,15 @@ class ReportController extends Controller
     public function trash(Report $report)
     {
         $target = $report->reportable;
-        $target->status = Thread::TRASH;
+        $target->status = Thread::DELETED;
         if ($target instanceof Thread) {
             $operation = '删除帖子';
             $target->node->update(['thread_count' => $target->node->threads()->visible()->count()]);
             $target->user->update(['thread_count' => $target->user->threads()->visibleAndDeleted()->count()]);
         } else {
             $operation = '删除回复';
-            $target->user->decrement('reply_count', 1);
+            $target->thread->update(['reply_count' => $target->thread->replies()->visibleAndDeleted()->count()]);
+            $target->user->update(['reply_count' => $target->user->replies()->visibleAndDeleted()->count()]);
         }
         $this->updateOpLog($target, $operation, trim(request('reason')));
 
