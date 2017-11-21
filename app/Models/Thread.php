@@ -353,8 +353,12 @@ class Thread extends BaseModel implements TaggableInterface
                     $query->where('username', 'like',"%$value%");
                 });
             } elseif ($key == 'body') {
+                $value = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse($value));
+                $value = substr($value, 3, sizeof($value)-5);
                 $query->where('body', 'LIKE', "%$value%");
             } elseif ($key == 'title') {
+                $value = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse($value));
+                $value = substr($value, 3, sizeof($value)-5);
                 $query->where('title', 'LIKE', "%$value%");
             } elseif ($key == 'date_start') {
                 $query->where('created_at', '>=', $value);

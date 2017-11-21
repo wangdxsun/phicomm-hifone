@@ -170,6 +170,8 @@ class Reply extends BaseModel
         foreach ($searches as $key => $value) {
             if ($key == 'thread_title') {
                 $query->whereHas('thread', function ($query) use ($value){
+                    $value = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse($value));
+                    $value = substr($value, 3, sizeof($value)-5);
                     $query->where('title', 'like', "%$value%");
                 });
             } elseif ($key == 'username') {
@@ -177,6 +179,8 @@ class Reply extends BaseModel
                     $query->where('username','like',"%$value%");
                 });
             } elseif ($key == 'body') {
+                $value = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse($value));
+                $value = substr($value, 3, sizeof($value)-5);
                 $query->where('body', 'LIKE', "%$value%");
             } elseif ($key == 'date_start' && null != $value ) {
                 $query->where('created_at', '>=', $value);
