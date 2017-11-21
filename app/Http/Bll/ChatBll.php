@@ -53,7 +53,7 @@ class ChatBll extends BaseBll
         //TODO 友盟消息推送
         $data = array(
             'message' => $message,
-            'msg_type' => '1',
+            'msg_type' => '0',//推送消息类型 0.通知,1.消息
             'outline' => substr($message,0,26),
             'title' => $from->username,
             'uid' => $to->phicomm_id,
@@ -82,9 +82,11 @@ class ChatBll extends BaseBll
         }
         if (Input::has('message')) {
             if (Auth::user()->can('manage_threads')) {
-                $message = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse(request('message')));
+                $message = app('parser.at')->parse(request('message'));
+                $message = app('parser.emotion')->parse($message);
+                $message = app('parser.markdown')->convertMarkdownToHtml($message);
             } else {
-                $message = Input::get('message');
+                $message = app('parser.emotion')->parse(request('message'));
             }
         }
 
@@ -143,11 +145,12 @@ class ChatBll extends BaseBll
             'callbackmsginfo' => '',
             'callbackurl' => '',
             'coverimg' => '',
-            'mode' => '1',
+            'mode' => '0',//0.develop, 1.production
             'msgcontent' => $json_message,
             'msgkind' => '0',
             'msgtype' => $data['msg_type'],
             'outline' => $data['outline'],
+            'saveRecord' => '0',
             'source' => '1',
             'ticker' => $ticker,
             'timestamp' => date('Y-m-d H:i', strtotime('now')),
