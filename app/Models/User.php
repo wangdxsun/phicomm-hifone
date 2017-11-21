@@ -70,8 +70,7 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
     protected $mappingProperties = [
         'username' => [
             'type' => 'string',
-            'analyzer' => 'ik_max_word',
-            'search_analyzer' => 'ik_max_word',
+            'analyzer' => 'standard'
         ],
         'score' => [
             'type' => 'integer'
