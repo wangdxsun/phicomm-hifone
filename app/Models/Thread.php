@@ -148,8 +148,7 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function user()
     {
-        return $this->belongsTo(User::class)->select(['id', 'username', 'avatar_url', 'role','score','password','thread_count','score',
-            'notification_reply_count','notification_at_count','notification_system_count','notification_chat_count','notification_follow_count']);
+        return $this->belongsTo(User::class)->select(['id', 'username', 'avatar_url']);
     }
 
     public function lastOpUser()
@@ -159,7 +158,7 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function lastReplyUser()
     {
-        return $this->belongsTo(User::class, 'last_reply_user_id');
+        return $this->belongsTo(User::class, 'last_reply_user_id')->select(['id', 'username', 'avatar_url']);
     }
 
     public function replies()
