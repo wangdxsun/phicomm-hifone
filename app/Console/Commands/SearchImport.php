@@ -46,7 +46,7 @@ class SearchImport extends Command
      */
     public function handle()
     {
-        ini_set('memory_limit', '-1');
+        ini_set('memory_limit', -1);
         ini_set('max_execution_time', 0);
         $type = $this->argument('type');
         if ($type == 'users') {
@@ -61,7 +61,7 @@ class SearchImport extends Command
                 $users->addToIndex();
             });
 
-            echo 'Import Users into ElasticSearch Successfully';
+            $this->info('Import Users into ElasticSearch Successfully');
         } elseif ($type == 'threads') {
             Thread::visible()->chunk(1000, function ($threads) {
                 $threads->removeFromIndex();
@@ -74,24 +74,30 @@ class SearchImport extends Command
                 $threads->addToIndex();
             });
 
-            echo 'Import Threads into ElasticSearch Successfully';
+            $this->info('Import Threads into ElasticSearch Successfully');
         } else {
+            $this->line('Delete Indices...');
             Thread::deleteIndex();
+            $this->line('Create Indices...');
             Thread::createIndex();
             User::putMapping();
-            User::chunk(5000, function ($users) {
-                foreach ($users as $user) {
-                    unset($user['roles']);
-                }
+            $this->line('Import Users...');
+            $bar = $this->output->createProgressBar(ceil(User::count()/2000));
+            User::chunk(2000, function ($users) use ($bar) {
                 $users->addToIndex();
+                $bar->advance();
             });
-            Thread::visible()->chunk(1000, function ($threads) {
+            $this->info("\r\nImport Users into ElasticSearch Successfully!");
+            $this->line('Import Threads...');
+            $bar = $this->output->createProgressBar(ceil(Thread::visible()->count()/1000));
+            Thread::visible()->chunk(1000, function ($threads) use ($bar) {
                 foreach ($threads as $thread) {
                     $thread->body = strip_tags($thread->body);
                 }
                 $threads->addToIndex();
+                $bar->advance();
             });
-            echo 'Import Data into ElasticSearch Successfully';
+            $this->info("\r\nImport Threads into ElasticSearch Successfully!");
         }
         return;
     }
