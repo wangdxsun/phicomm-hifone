@@ -3,6 +3,7 @@
 namespace Elasticquent;
 
 use Exception;
+use Hifone\Models\Thread;
 use ReflectionMethod;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -384,11 +385,15 @@ trait ElasticquentTrait
 
     /**
      * Partial Update to Indexed Document
-     *
-     * @return array
      */
     public function updateIndex()
     {
+        if ($this instanceof Thread) {
+            if ($this->status !== Thread::VISIBLE) {
+                return false;
+            }
+            $this->body = strip_tags($this->body);
+        }
         $params = $this->getBasicEsParams();
 
         // Get our document body data.

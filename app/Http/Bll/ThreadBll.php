@@ -170,7 +170,7 @@ class ThreadBll extends BaseBll
         if ($thread->inVisible()) {
             throw new NotFoundHttpException('帖子状态不可见');
         }
-        event(new ThreadWasViewedEvent($thread));
+        event(new ThreadWasViewedEvent(clone $thread));
 
         $thread = $thread->load(['user', 'node']);
         $thread['followed'] = User::hasFollowUser($thread->user);
