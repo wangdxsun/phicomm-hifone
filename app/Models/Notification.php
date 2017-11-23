@@ -76,7 +76,12 @@ class Notification extends BaseModel implements HasPresenter
 
     public function scopeWatch($query)
     {
-        return $query->whereIn('type', ['followed_user_new_thread']);
+        return $query->where('type', 'followed_user_new_thread');
+    }
+
+    public function scopeReply($query)
+    {
+        return $query->where('type', 'thread_new_reply');
     }
 
     public function scopeSystem($query)
@@ -88,6 +93,16 @@ class Notification extends BaseModel implements HasPresenter
         //thread_pin 帖子被置顶
         //user_follow 用户关注
         return $query->whereIn('type', ['reply_like', 'thread_like', 'thread_mark_excellent', 'user_follow', 'thread_pin']);
+    }
+
+    public function thread()
+    {
+        return $this->belongsTo(Thread::class, 'object_id');
+    }
+
+    public function reply()
+    {
+        return $this->belongsTo(Reply::class, 'object_id');
     }
 
     /**

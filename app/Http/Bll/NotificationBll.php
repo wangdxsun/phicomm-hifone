@@ -15,18 +15,9 @@ class NotificationBll extends BaseBll
 {
     public function watch()
     {
-        $notifications = Notification::forUser(Auth::id())->watch()->recent()->with(['object'])->paginate();
-        foreach ($notifications as $key => &$notification) {
-            if (!$notification->object->visible) {
-                unset($notifications[$key]);
-            } else {
-                $notification->object->node;
-                $notification->object->user;
-            }
-        }
-        $data = $notifications->values();
-        $notifications = $notifications->toArray();
-        $notifications['data'] = $data;
+        $notifications = Notification::forUser(Auth::id())->watch()->whereHas('thread', function ($query) {
+            $query->visibleAndDeleted();
+        })->with(['thread.user', 'thread.node'])->recent()->paginate();
         Auth::user()->notification_follow_count = 0;
         Auth::user()->save();
 
