@@ -26,12 +26,11 @@ class NotificationBll extends BaseBll
 
     public function reply()
     {
-        $notifications = Notification::forUser(Auth::id())->ofType('thread_new_reply')->recent()->with(['object', 'author'])->paginate();
-        foreach ($notifications as $key => &$notification) {
-            if (empty($notification->object) || !$notification->object->visible || !$notification->object->thread->visible) {//兼容回收站帖子-1状态的老数据
-                unset($notifications[$key]);
-            }
-        }
+        $notifications = Notification::forUser(Auth::id())->reply()->whereHas('reply', function ($query) {
+            $query->visibleAndDeleted();
+        })->whereHas('reply.thread', function ($query) {
+            $query->visibleAndDeleted();
+        })->with(['reply.thread', 'reply.user'])->recent()->paginate();
         Auth::user()->notification_reply_count = 0;
         Auth::user()->save();
 
@@ -40,12 +39,11 @@ class NotificationBll extends BaseBll
 
     public function at()
     {
-        $notifications = Notification::forUser(Auth::id())->at()->recent()->with(['object', 'author'])->paginate();
-        foreach ($notifications as $key => &$notification) {
-            if (!$notification->object->visible || ($notification->object_type == 'Hifone\Models\Reply' && !$notification->object->thread->visible)) {
-                unset($notifications[$key]);
-            }
-        }
+        $notifications = Notification::forUser(Auth::id())->at()->whereHas('reply', function ($query) {
+            $query->visibleAndDeleted();
+        })->whereHas('reply.thread', function ($query) {
+            $query->visibleAndDeleted();
+        })->with(['reply.thread', 'reply.user'])->recent()->paginate();
         Auth::user()->notification_at_count = 0;
         Auth::user()->save();
 
