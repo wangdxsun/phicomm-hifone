@@ -49,8 +49,7 @@ class ChatController extends Controller
             User::where('id', '<>', Auth::user()->id)->chunk(1000, function($users) use ($chatBll){
                 $chatBll->batchNewMessage($users);
             });
-            User::where('id', '<>', Auth::user()->id)->increment('notification_chat_count',1);
-            User::where('id', '<>', Auth::user()->id)->increment('notification_count',1);
+            User::where('id', '<>', Auth::user()->id)->increment('notification_chat_count', 1);
             return Redirect::route('dashboard.chat.send')
                 ->withSuccess('成功为所有用户发送私信')
                 ->withInput();
@@ -68,6 +67,7 @@ class ChatController extends Controller
                 $userIds[] = $reply->user->id;
             }
             $users = User::whereIn('id',$userIds)->whereNotIn('id', [Auth::user()->id])->get();
+            User::whereIn('id', $userIds)->increment('notification_chat_count', 1);
             $chatBll->batchNewMessage($users);
             return Redirect::route('dashboard.chat.send')
                 ->withSuccess('成功为帖子'.$data['thread_id']. '内满足条件的所有用户发送私信')
@@ -75,6 +75,7 @@ class ChatController extends Controller
         } elseif ($data['userType'] == 9) {
             $userIds = explode(',',$data['userIds']);
             $users = User::whereIn('id', $userIds)->whereNotIn('id', [Auth::user()->id])->get();
+            User::whereIn('id', $userIds)->increment('notification_chat_count', 1);
             $chatBll->batchNewMessage($users);
             return Redirect::route('dashboard.chat.send')
                 ->withSuccess('成功为满足条件的所有用户发送私信');
