@@ -79,6 +79,7 @@ class ReportController extends Controller
         $this->updateOpLog($report, '处理举报', trim(request('reason')));
         foreach ($reports as $report) {
             $report->status = Report::DELETE;
+            $report->save();
             event(new ReportWasPassedEvent($report)); //给每个举报人加分
         }
         return Redirect::back()->withSuccess('删除成功');
