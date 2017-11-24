@@ -39,13 +39,6 @@ class AddFavoriteCommandHandler
         $this->dates = $dates;
     }
 
-    /**
-     * Handle the report avorite command.
-     *
-     * @param \Hifone\Commands\Thread\AddThreadCommand $command
-     *
-     * @return \Hifone\Models\Thread
-     */
     public function handle(AddFavoriteCommand $command)
     {
         $this->favoriteAction($command->target);

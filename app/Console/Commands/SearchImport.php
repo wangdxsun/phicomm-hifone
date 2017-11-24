@@ -8,6 +8,7 @@
 
 namespace Hifone\Console\Commands;
 
+use Carbon\Carbon;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
 use Illuminate\Console\Command;
@@ -46,8 +47,8 @@ class SearchImport extends Command
      */
     public function handle()
     {
-        ini_set('memory_limit', -1);
-        ini_set('max_execution_time', 0);
+//        ini_set('memory_limit', -1);
+//        ini_set('max_execution_time', 0);
         $type = $this->argument('type');
         if ($type == 'users') {
             User::chunk(5000, function ($users) {
@@ -76,21 +77,22 @@ class SearchImport extends Command
 
             $this->info('Import Threads into ElasticSearch Successfully');
         } else {
+            $start = Carbon::now();
             $this->line('Delete Indices...');
             Thread::deleteIndex();
             $this->line('Create Indices...');
             Thread::createIndex();
             User::putMapping();
             $this->line('Import Users...');
-            $bar = $this->output->createProgressBar(ceil(User::count()/2000));
-            User::chunk(2000, function ($users) use ($bar) {
+            $bar = $this->output->createProgressBar(ceil(User::count()/1000));
+            User::chunk(1000, function ($users) use ($bar) {
                 $users->addToIndex();
                 $bar->advance();
             });
             $this->info("\r\nImport Users into ElasticSearch Successfully!");
             $this->line('Import Threads...');
-            $bar = $this->output->createProgressBar(ceil(Thread::visible()->count()/1000));
-            Thread::visible()->chunk(1000, function ($threads) use ($bar) {
+            $bar = $this->output->createProgressBar(ceil(Thread::visible()->count()/200));
+            Thread::visible()->chunk(200, function ($threads) use ($bar) {
                 foreach ($threads as $thread) {
                     $thread->body = strip_tags($thread->body);
                 }
@@ -98,6 +100,8 @@ class SearchImport extends Command
                 $bar->advance();
             });
             $this->info("\r\nImport Threads into ElasticSearch Successfully!");
+            $end = Carbon::now();
+            $this->line('共计用时：'.$end->diffInSeconds($start).'秒');
         }
         return;
     }

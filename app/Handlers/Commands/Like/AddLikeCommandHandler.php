@@ -24,30 +24,6 @@ use Hifone\Services\Dates\DateFactory;
 
 class AddLikeCommandHandler
 {
-    /**
-     * The date factory instance.
-     *
-     * @var \Hifone\Services\Dates\DateFactory
-     */
-    protected $dates;
-
-    /**
-     * Create a new report issue command handler instance.
-     *
-     * @param \Hifone\Services\Dates\DateFactory $dates
-     */
-    public function __construct(DateFactory $dates)
-    {
-        $this->dates = $dates;
-    }
-
-    /**
-     * Handle the report avorite command.
-     *
-     * @param \Hifone\Commands\Thread\AddThreadCommand $command
-     *
-     * @return \Hifone\Models\Thread
-     */
     public function handle(AddLikeCommand $command)
     {
         if ($command->action == 'like') {
