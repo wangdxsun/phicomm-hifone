@@ -13,6 +13,7 @@ use Hifone\Commands\Reply\AddReplyCommand;
 use Hifone\Events\Reply\RepliedWasAddedEvent;
 use Hifone\Events\Reply\ReplyWasAddedEvent;
 use Hifone\Events\Reply\ReplyWasAuditedEvent;
+use Hifone\Exceptions\HifoneException;
 use Hifone\Models\Reply;
 use Hifone\Services\Filter\WordsFilter;
 use DB;
@@ -25,9 +26,9 @@ class ReplyBll extends BaseBll
     public function createReply()
     {
         if (Auth::user()->hasRole('NoComment')) {
-            throw new \Exception('对不起，你已被管理员禁止发言');
+            throw new HifoneException('对不起，你已被管理员禁止发言');
         } elseif (!Auth::user()->can('manage_threads') && Auth::user()->score < 0) {
-            throw new \Exception('对不起，你所在的用户组无法发言');
+            throw new HifoneException('对不起，你所在的用户组无法发言');
         }
         $replyData = request('reply');
         $images = '';
@@ -51,9 +52,9 @@ class ReplyBll extends BaseBll
     public function createReplyApp()
     {
         if (Auth::user()->hasRole('NoComment')) {
-            throw new \Exception('对不起，你已被管理员禁止发言');
+            throw new HifoneException('对不起，你已被管理员禁止发言');
         } elseif (!Auth::user()->can('manage_threads') && Auth::user()->score < 0) {
-            throw new \Exception('对不起，你所在的用户组无法发言');
+            throw new HifoneException('对不起，你所在的用户组无法发言');
         }
         $replyData = request('reply');
         $images = '';
@@ -127,7 +128,7 @@ class ReplyBll extends BaseBll
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
-            throw new \Exception($e->getMessage());
+            throw new HifoneException($e->getMessage());
         }
     }
 

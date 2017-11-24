@@ -10,10 +10,9 @@ namespace Hifone\Http\Bll;
 
 use GuzzleHttp\Client;
 use Hifone\Events\User\UserWasAddedEvent;
-use Hifone\Models\Keyword;
+use Hifone\Exceptions\HifoneException;
 use Hifone\Models\User;
 use Auth;
-use Hifone\Models\Word;
 use Hifone\Services\Filter\WordsFilter;
 use Session;
 
@@ -45,18 +44,18 @@ class PhicommBll extends BaseBll
                 case 0:
                     return $output;break;
                 case 1:
-                    throw new \Exception('验证码错误！');
+                    throw new HifoneException('验证码错误！');
                 case 2:
-                    throw new \Exception('验证码过期，请重新获取！');
+                    throw new HifoneException('验证码过期，请重新获取！');
                 case 14:
-                    throw new \Exception('账户已存在！');
+                    throw new HifoneException('账户已存在！');
                 case 23:
-                    throw new \Exception('验证码已被使用！');
+                    throw new HifoneException('验证码已被使用！');
                 default:
-                    throw new \Exception('服务器异常！', 500);
+                    throw new HifoneException('服务器异常！', 500);
             }
         } else {
-            throw new \Exception('服务器异常！', 500);
+            throw new HifoneException('服务器异常！', 500);
         }
     }
 
@@ -70,7 +69,7 @@ class PhicommBll extends BaseBll
         $url = env('PHICLOUND_DOMAIN') . 'login';
         $output = json_decode(curlPost($url, $data), true);
         if ($output['error'] > 0) {
-            throw new \Exception('手机号或密码错误');
+            throw new HifoneException('手机号或密码错误');
         }
         Session::set('access_token', $output['access_token']);
         Session::set('phicommId', $output['uid']);
@@ -111,12 +110,12 @@ class PhicommBll extends BaseBll
                 case 0:
                     return true;
                 case 14:
-                    throw new \Exception('该手机号已注册！');
+                    throw new HifoneException('该手机号已注册！');
                 default:
-                    throw new \Exception('操作失败，请联系客服！');
+                    throw new HifoneException('操作失败，请联系客服！', 500);
             }
         }else{
-            throw new \Exception('操作失败，请联系客服！');
+            throw new HifoneException('操作失败，请联系客服！', 500);
         }
     }
 
@@ -135,20 +134,20 @@ class PhicommBll extends BaseBll
                 case 0:
                     return $output;
                 case 1:
-                    throw new \Exception('验证码错误！');
+                    throw new HifoneException('验证码错误！');
                 case 2:
-                    throw new \Exception('验证码已过期！');
+                    throw new HifoneException('验证码已过期！');
                 case 7:
-                    throw new \Exception('您还未注册，请先注册！');
+                    throw new HifoneException('您还未注册，请先注册！');
                 case 32:
-                    throw new \Exception('密码格式错误');
+                    throw new HifoneException('密码格式错误');
                 case 50:
-                    throw new \Exception('服务器异常！');
+                    throw new HifoneException('服务器异常！', 500);
                 default:
-                    throw new \Exception($output['message']);
+                    throw new HifoneException($output['message']);
             }
         } else {
-            throw new \Exception('密码重置失败!');
+            throw new HifoneException('密码重置失败!', 500);
         }
     }
 
@@ -163,7 +162,7 @@ class PhicommBll extends BaseBll
         $url = env('PHICLOUND_DOMAIN') . 'verificationCode?' . http_build_query($data);
         $res = json_decode(curlGet($url), true);
         if ($res && $res['error'] > 0) {
-            throw new \Exception('验证码发送失败！');
+            throw new HifoneException('验证码发送失败！');
         }
     }
 
@@ -176,13 +175,13 @@ class PhicommBll extends BaseBll
             'regip' => getClientIp(),
         ];
         if (User::where('username', request('username'))->count() > 0) {
-            throw new \Exception('该昵称已被使用');
+            throw new HifoneException('该昵称已被使用');
         }
         if (User::where('phicomm_id', $userData['phicomm_id'])->count() > 0) {
-            throw new \Exception('请勿重复关联');
+            throw new HifoneException('请勿重复关联');
         }
         if ($wordsFilter->filterWord(request('username')) || $wordsFilter->filterKeyWord(request('username'))) {
-            throw new \Exception('昵称包含被系统屏蔽字符');
+            throw new HifoneException('昵称包含被系统屏蔽字符');
         }
         $user = User::create($userData);//直接通过create返回的用户信息不全
         $user = User::find($user->id);
@@ -210,16 +209,16 @@ class PhicommBll extends BaseBll
                 case 0:
                     return $res;
                 case 18:
-                    throw new \Exception('图片格式错误！');
+                    throw new HifoneException('图片格式错误！');
                 case 19:
-                    throw new \Exception('图片为空！');
+                    throw new HifoneException('图片为空！');
                 case 50:
-                    throw new \Exception('服务器异常！');
+                    throw new HifoneException('服务器异常！');
                 default:
-                    throw new \Exception($res['message']);
+                    throw new HifoneException($res['message']);
             }
         } else {
-            throw new \Exception('服务器异常！');
+            throw new HifoneException('服务器异常！');
         }
     }
 

@@ -9,6 +9,7 @@
 namespace Hifone\Http\Controllers\App\V1;
 
 use Hifone\Events\Thread\ThreadWasViewedEvent;
+use Hifone\Exceptions\HifoneException;
 use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\ThreadBll;
 use Hifone\Http\Controllers\App\AppController;
@@ -38,7 +39,7 @@ class ThreadController extends AppController
     public function store(ThreadBll $threadBll, WordsFilter $wordsFilter)
     {
         if (Auth::user()->hasRole('NoComment')) {
-            throw new \Exception('对不起，你已被管理员禁止发言');
+            throw new HifoneException('对不起，你已被管理员禁止发言');
         }
         $thread = $threadBll->createThreadInApp();
         $result = $threadBll->auditThread($thread, $wordsFilter);
@@ -61,7 +62,7 @@ class ThreadController extends AppController
     public function feedback(ThreadBll $threadBll, WordsFilter $wordsFilter)
     {
         if (Auth::user()->hasRole('NoComment')) {
-            throw new \Exception('对不起，你已被管理员禁止发言');
+            throw new HifoneException('对不起，你已被管理员禁止发言');
         }
         $thread = $threadBll->createFeedback();
         $result = $threadBll->auditThread($thread, $wordsFilter);

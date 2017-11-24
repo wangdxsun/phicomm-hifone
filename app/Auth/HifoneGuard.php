@@ -8,6 +8,7 @@
 
 namespace Hifone\Auth;
 
+use Hifone\Exceptions\HifoneException;
 use Illuminate\Auth\GuardHelpers;
 use Illuminate\Auth\SessionGuard;
 use Illuminate\Contracts\Auth\Guard;
@@ -95,7 +96,7 @@ class HifoneGuard extends SessionGuard implements Guard
     private function getIdFromToken($token) {
         $tokens = explode('.', $token);
         if (! is_array($tokens) || count($tokens) <> 3) {
-            throw new \Exception('token格式不正确');
+            throw new HifoneException('token格式不正确');
         }
         $tokenInfo = json_decode(base64_decode($tokens[1]), true);
         return $tokenInfo['uid'];

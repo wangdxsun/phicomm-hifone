@@ -11,6 +11,7 @@
 
 namespace Hifone\Http\Controllers\Api;
 
+use Hifone\Exceptions\HifoneException;
 use Hifone\Models\Emotion;
 
 class GeneralController extends ApiController
@@ -27,7 +28,7 @@ class GeneralController extends ApiController
 
     public function exception()
     {
-        throw new \Exception('myException', 444);
+        throw new HifoneException('myException', 444);
     }
 
     public static function emotion()

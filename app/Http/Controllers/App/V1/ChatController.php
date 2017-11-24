@@ -9,6 +9,7 @@
 namespace Hifone\Http\Controllers\App\V1;
 
 use Auth;
+use Hifone\Exceptions\HifoneException;
 use Hifone\Http\Bll\ChatBll;
 use Hifone\Http\Controllers\App\AppController;
 use Hifone\Models\Chat;
@@ -33,9 +34,9 @@ class ChatController extends AppController
     public function store(User $user, ChatBll $chatBll)
     {
         if (Auth::user()->hasRole('NoComment')) {
-            throw new \Exception('对不起，你已被管理员禁止发言');
+            throw new HifoneException('对不起，你已被管理员禁止发言');
         } elseif (!Auth::user()->can('manage_threads') && Auth::user()->score < 0) {
-            throw new \Exception('对不起，你所在的用户组无法发言');
+            throw new HifoneException('对不起，你所在的用户组无法发言');
         }
         $res = $chatBll->newMessage($user);
 

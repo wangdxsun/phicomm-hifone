@@ -12,6 +12,7 @@ use Auth;
 use Hifone\Commands\Image\UploadBase64ImageCommand;
 use Hifone\Events\Image\AvatarWasUploadedEvent;
 use Hifone\Events\User\UserWasLoggedinEvent;
+use Hifone\Exceptions\HifoneException;
 use Input;
 
 class CommonBll extends BaseBll
@@ -40,7 +41,7 @@ class CommonBll extends BaseBll
 
             return $upload;
         } else {
-            throw new \Exception('没有上传图片');
+            throw new HifoneException('没有上传图片');
         }
     }
 }

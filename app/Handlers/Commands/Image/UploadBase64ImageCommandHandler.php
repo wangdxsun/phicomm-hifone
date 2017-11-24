@@ -13,6 +13,7 @@ namespace Hifone\Handlers\Commands\Image;
 
 use Hifone\Commands\Image\UploadBase64ImageCommand;
 use Hifone\Events\Image\ImageWasUploadedEvent;
+use Hifone\Exceptions\HifoneException;
 
 class UploadBase64ImageCommandHandler
 {
@@ -23,7 +24,7 @@ class UploadBase64ImageCommandHandler
         if(preg_match('/^(data:\s*image\/(\w+);base64,)/', $file, $result)){
             $extension = $result[2];
             if (!in_array($extension, $allowed_extensions)) {
-                throw new \Exception('只支持 png, jpg, jpeg 和 gif');
+                throw new HifoneException('只支持 png, jpg, jpeg 和 gif');
             }
 
             $folderName = '/uploads/images/'.date('Y/m/d');
@@ -40,7 +41,7 @@ class UploadBase64ImageCommandHandler
 
             return $data;
         } else {
-            throw new \Exception('文件错误');
+            throw new HifoneException('文件错误');
         }
     }
 }

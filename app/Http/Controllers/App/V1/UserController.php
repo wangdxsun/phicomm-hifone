@@ -8,6 +8,7 @@
 
 namespace Hifone\Http\Controllers\App\V1;
 
+use Hifone\Exceptions\HifoneException;
 use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\FollowBll;
 use Hifone\Http\Bll\PhicommBll;
@@ -27,11 +28,11 @@ class UserController extends AppController
     public function me()
     {
         if (empty(Auth::phicommId())) {
-            throw new \Exception('缺少token');
+            throw new HifoneException('缺少token');
         }
         $user = User::findUserByPhicommId(Auth::phicommId());
         if (!$user) {
-            throw new \Exception('请先关联社区账号');
+            throw new HifoneException('请先关联社区账号');
         }
         return $user;
     }

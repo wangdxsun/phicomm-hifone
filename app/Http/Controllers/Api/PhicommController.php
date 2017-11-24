@@ -8,6 +8,7 @@
 
 namespace Hifone\Http\Controllers\Api;
 
+use Hifone\Exceptions\HifoneException;
 use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\PhicommBll;
 use Hifone\Models\User;
@@ -103,7 +104,7 @@ class PhicommController extends ApiController
         } elseif (request('type') == 'reset') {
             try {
                 $this->phicommBll->checkPhoneAvailable(request('phone'));
-                throw new \Exception('该手机号还没有注册');
+                throw new HifoneException('该手机号还没有注册');
             } catch (\Exception $e) {
                 if ($e->getMessage() <> '该手机号已注册！') {
                     throw $e;
