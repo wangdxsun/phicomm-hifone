@@ -9,8 +9,8 @@
 namespace Hifone\Http\Bll;
 
 use Auth;
-use Exception;
 use Hifone\Commands\Follow\AddFollowCommand;
+use Hifone\Exceptions\HifoneException;
 use Hifone\Models\User;
 
 class FollowBll extends BaseBll
@@ -18,7 +18,7 @@ class FollowBll extends BaseBll
     public function followUser($user)
     {
         if ($user->id == Auth::id()) {
-            throw new Exception('不能关注自己');
+            throw new HifoneException('不能关注自己');
         }
         dispatch(new AddFollowCommand($user));
 
@@ -28,7 +28,7 @@ class FollowBll extends BaseBll
     public function followThread($thread)
     {
         if ($thread->user->id == Auth::id()) {
-            throw new Exception('自己的帖子无需关注');
+            throw new HifoneException('自己的帖子无需关注');
         }
         dispatch(new AddFollowCommand($thread));
 
