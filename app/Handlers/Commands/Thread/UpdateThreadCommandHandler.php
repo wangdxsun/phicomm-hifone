@@ -51,7 +51,6 @@ class UpdateThreadCommandHandler
         }
         //过滤数据中的空字段，并且更新帖子
         $thread->update($this->filter($command->data));
-        $thread->updateIndex();
 
         // The thread was added successfully, so now let's deal with the tags.
         $tags = isset($command->data['tags']) ? $command->data['tags'] : [];
@@ -65,6 +64,7 @@ class UpdateThreadCommandHandler
             $originalSubNode = SubNode::find($original_subNode_id);
             event(new ThreadWasMovedEvent($command->thread, $originalSubNode));
         }
+        $thread->updateIndex();
 
         return $thread;
     }

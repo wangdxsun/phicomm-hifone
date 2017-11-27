@@ -114,7 +114,6 @@ class ReplyBll extends BaseBll
             $reply->thread->subNode->increment('reply_count', 1);//子版块回帖数+1
             $reply->thread->update(['reply_count' => $reply->thread->replies()->visible()->count()]);
             $reply->user->update(['reply_count' => $reply->user->replies()->visibleAndDeleted()->count()]);
-            $reply->thread->updateIndex();
 
             $this->updateOpLog($reply, '自动审核通过');
             //把当前回复的创建时间和回复所属的帖子的修改时间进行比对
@@ -125,6 +124,7 @@ class ReplyBll extends BaseBll
             }
 
             event(new ReplyWasAuditedEvent($reply));
+            $reply->thread->updateIndex();
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
