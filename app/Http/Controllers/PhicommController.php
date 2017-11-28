@@ -91,14 +91,21 @@ class PhicommController extends Controller
         $user = User::findUserByPhicommId($phicommId);
         if ($user) {
             if ($user->hasRole('NoLogin')) {
-                return Redirect::back()
-                    ->withInput(Input::except('password'))
-                    ->withError('您已被系统管理员禁止登录');
+                return Redirect::back()->withInput(Input::except('password'))->withError('您已被系统管理员禁止登录');
             }
             Auth::login($user);
             $commonBll->login();
-            return Redirect::intended('/')
-                ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.login.success')));
+            $cloudUser = $this->phicomm->userInfo();
+            if ($cloudUser['img'] && $user->avatar_url != $cloudUser['img'] && $cloudUser['img'] != 'Uploads/default/default.jpg') {
+                $user->avatar_url = $cloudUser['img'];
+                $user->save();
+                $user->updateIndex();
+            }
+            if ($cloudUser['phonenumber'] !== $user->phone) {
+                $user->phone = $cloudUser['phonenumber'];
+                $user->save();
+            }
+            return Redirect::intended('/')->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.login.success')));
         } else {
             return Redirect::to('/phicomm/bind');
         }
