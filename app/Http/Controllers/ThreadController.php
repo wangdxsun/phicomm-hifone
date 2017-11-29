@@ -221,6 +221,7 @@ class ThreadController extends Controller
     public function update(Thread $thread)
     {
         $threadData = Input::get('thread');
+        $threadData['node_id'] = SubNode::find($threadData['sub_node_id'])->node->id;
 
         $this->needAuthorOrAdminPermission($thread->user_id);
 
