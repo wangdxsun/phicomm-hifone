@@ -51,6 +51,6 @@ class ThreadController extends WebController
 
     public function replies(Thread $thread, ThreadBll $threadBll)
     {
-        return $threadBll->replies($thread);
+        return $threadBll->replies($thread, 'web');
     }
 }

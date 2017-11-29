@@ -181,10 +181,14 @@ class ThreadBll extends BaseBll
         return $thread;
     }
 
-    public function replies(Thread $thread)
+    public function replies(Thread $thread, $source = '')
     {
-        $replies = $thread->replies()->visibleAndDeleted()->with(['user', 'reply.user'])->pinAndRecent()->paginate();
-        foreach ($replies as &$reply) {
+        if ($source == 'web') {
+            $replies = $thread->replies()->visible()->with(['user', 'reply.user'])->pinAndRecent()->paginate();
+        } else {
+            $replies = $thread->replies()->visibleAndDeleted()->with(['user', 'reply.user'])->pinAndRecent()->paginate();
+        }
+        foreach ($replies as $reply) {
             $reply['liked'] = Auth::check() ? Auth::user()->hasLikeReply($reply) : false;
             $reply['reported'] = Auth::check() ? Auth::user()->hasReportReply($reply) : false;
         }
