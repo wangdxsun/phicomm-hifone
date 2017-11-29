@@ -32,6 +32,10 @@ class UserController extends ApiController
                 $user->save();
                 $user->updateIndex();
             }
+            if ($cloudUser['phonenumber'] !== $user->phone) {
+                $user->phone = $cloudUser['phonenumber'];
+                $user->save();
+            }
             return $user;
         } else {
             return 'PhicommNoLogin';

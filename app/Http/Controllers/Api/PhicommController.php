@@ -61,7 +61,6 @@ class PhicommController extends ApiController
             $commonBll->login();
             return $user;
         } else {
-            Session::set('phicommId', $phicommId);
             return 'Unbind';
         }
     }

@@ -213,7 +213,6 @@ class ReplyController extends Controller
             }
 
             $reply->thread->increment('reply_count', 1);
-            $reply->thread->updateIndex();
             if ($reply->user) {
                 $reply->user->increment('reply_count', 1);
             }
@@ -228,6 +227,7 @@ class ReplyController extends Controller
             }
 
             event(new ReplyWasAuditedEvent($reply));
+            $reply->thread->updateIndex();
             DB::commit();
         } catch (ValidationException $e) {
             DB::rollback();
