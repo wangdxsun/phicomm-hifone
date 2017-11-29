@@ -50,6 +50,7 @@ class UpdateThreadCommandHandler
             $command->data['body'] = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse($command->data['body']));
         }
         //过滤数据中的空字段，并且更新帖子
+        $command->data['node_id'] = SubNode::find($command->data['sub_node_id'])->node->id;
         $thread->update($this->filter($command->data));
 
         // The thread was added successfully, so now let's deal with the tags.
