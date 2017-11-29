@@ -21,7 +21,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Response;
 use McCool\LaravelAutoPresenter\Facades\AutoPresenter;
 
-abstract class ApiController extends Controller
+abstract class WebController extends Controller
 {
     use DispatchesJobs, ValidatesRequests;
     /**
@@ -85,31 +85,5 @@ abstract class ApiController extends Controller
         return $this;
     }
 
-    /**
-     * Set the response meta data.
-     *
-     * @param array $data
-     *
-     * @return $this
-     */
-    protected function setData($data)
-    {
-        $this->data = $data;
 
-        return $this;
-    }
-
-    /**
-     * Set the response status code.
-     *
-     * @param int $statusCode
-     *
-     * @return $this
-     */
-    protected function setStatusCode($statusCode)
-    {
-        $this->statusCode = $statusCode;
-
-        return $this;
-    }
 }
