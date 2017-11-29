@@ -33,8 +33,10 @@ class Thread extends BaseModel implements TaggableInterface
     const AUDIT = -2;//待审核 or 审核中
     const DELETED = -3;//已删除
 
-    //发帖渠道，-1:意见反馈；0:H5发帖；1：Android；2：iOS；3：Web
+    //发帖渠道channel -1:意见反馈；0:社区
     const FEEDBACK = -1;
+
+    //发帖设备device 0:H5；1：Android；2：iOS；3：Web
     const H5 = 0;
     const ANDROID = 1;
     const IOS = 2;
