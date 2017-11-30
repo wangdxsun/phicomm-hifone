@@ -20,6 +20,7 @@ use Hifone\Events\Thread\ThreadWasViewedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Pin\SinkWasAddedEvent;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
+use Hifone\Exceptions\HifoneException;
 use Hifone\Http\Bll\ThreadBll;
 use Hifone\Models\Section;
 use Hifone\Models\SubNode;
@@ -127,7 +128,7 @@ class ThreadController extends Controller
         }
         $this->validate(request(), [
             'thread.title' => 'required|min:5|max:80',
-            'thread.body' => 'required|min:5|max:10000',
+            'thread.body' => 'required|min:5',
             'thread.sub_node_id' => 'required',
         ], [
             'thread.title.required' => '帖子标题必填',
@@ -135,8 +136,10 @@ class ThreadController extends Controller
             'thread.title.max' => '帖子标题不得多于80个字符',
             'thread.body.required' => '帖子内容必填',
             'thread.body.min' => '帖子内容不得少于5个字符',
-            'thread.body.max' => '帖子内容不得多于10000个字符',
         ]);
+        if (count(strip_tags(array_get(request('thread'), 'body'))) > 10000) {
+            throw new HifoneException('帖子内容不得多于10000个字符');
+        }
         try {
             $thread = $threadBll->createThread();
             $thread->heat = $thread->heat_compute;
