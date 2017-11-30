@@ -11,7 +11,7 @@ class BannerController extends WebController
     {
         $carousels = Carousel::visible()->orderBy('order')->get();
         foreach ($carousels as $carousel) {
-            $carousel['statistic'] = route('api.banner.show', $carousel->id);
+            $carousel['statistic'] = route('web.banner.show', $carousel->id);
         }
         return $carousels;
     }
