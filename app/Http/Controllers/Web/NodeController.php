@@ -5,16 +5,17 @@ namespace Hifone\Http\Controllers\Web;
 use Hifone\Http\Bll\NodeBll;
 use Hifone\Models\Node;
 use Hifone\Models\SubNode;
+use Hifone\Models\Thread;
 
 class NodeController extends WebController
 {
     public function index()
     {
-        return Node::orderBy('order')->get();
+        return Node::orderBy('order')->has('subNodes')->get();
     }
 
     /**
-     * 版块列表
+     * 版块列表(含分类）
      * @param NodeBll $nodeBll
      * @return mixed
      */
