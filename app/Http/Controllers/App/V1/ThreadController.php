@@ -41,7 +41,7 @@ class ThreadController extends AppController
         if (Auth::user()->hasRole('NoComment')) {
             throw new HifoneException('对不起，你已被管理员禁止发言');
         }
-        $thread = $threadBll->createThreadInApp();
+        $thread = $threadBll->createThreadImageMixed();
         $result = $threadBll->auditThread($thread, $wordsFilter);
         return $result;
     }

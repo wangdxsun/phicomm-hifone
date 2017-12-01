@@ -53,6 +53,7 @@ class ThreadBll extends BaseBll
         return $threads;
     }
 
+    //H5端发帖图文分开
     public function createThread()
     {
         $threadData = Input::get('thread');
@@ -83,7 +84,8 @@ class ThreadBll extends BaseBll
         return $thread;
     }
 
-    public function createThreadInApp()
+    //APP和Web发帖支持图文混排
+    public function createThreadImageMixed()
     {
         $threadData = Input::get('thread');
         $sub_node_id = isset($threadData['sub_node_id']) ? $threadData['sub_node_id'] : null;
