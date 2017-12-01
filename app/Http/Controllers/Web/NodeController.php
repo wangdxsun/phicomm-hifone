@@ -66,7 +66,7 @@ class NodeController extends WebController
      */
     public function recommendThreadsOfNode(Node $node)
     {
-        $threads = Thread::visible()->ofNode($node)->hot()->with(['user', 'subNode'])->limit(5)->get();
+        $threads = Thread::visible()->ofNode($node)->hot()->limit(5)->get();
 
         return $threads;
     }
