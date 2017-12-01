@@ -38,7 +38,8 @@ class WebRoutes
             $router->get('nodes', 'NodeController@index');
             $router->get('sections', 'NodeController@sections');
             $router->get('subNodes', 'NodeController@subNodes');
-            $router->get('nodes/{node}', 'NodeController@show');
+            $router->get('nodes/{node}', 'NodeController@show')->where('node', '[0-9]+');;
+            $router->get('nodes/{node}/recommend', 'NodeController@recommendThreadsOfNode')->where('node', '[0-9]+');;
             $router->get('subNodes/{subNode}', 'NodeController@showOfSubNode');
             $router->get('nodes/{node}/subNodes','SubNodeController@index');
             $router->get('banners', 'BannerController@index');

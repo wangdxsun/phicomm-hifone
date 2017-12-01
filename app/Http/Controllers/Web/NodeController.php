@@ -59,4 +59,15 @@ class NodeController extends WebController
         $node = $nodeBll->showOfSubNode($subNode, $nodeBll);
         return $node;
     }
+
+    /**
+     * 版块热帖推荐
+     * @param Node $node
+     */
+    public function recommendThreadsOfNode(Node $node)
+    {
+        $threads = Thread::visible()->ofNode($node)->hot()->with(['user', 'subNode'])->limit(5)->get();
+
+        return $threads;
+    }
 }
