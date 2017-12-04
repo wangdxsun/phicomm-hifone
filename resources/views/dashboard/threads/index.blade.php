@@ -62,6 +62,11 @@
                                 <option value="{{ $key }}">{{ $orderType }}</option>
                             @endforeach
                         </select>
+                        <select class="form-control " name="thread[channel]">
+                            <option value="" selected>发帖来源</option>
+                            <option value="0">社区</option>
+                            <option value="-1">意见反馈</option>
+                        </select>
                         <button class="btn btn-default">搜索</button>
                         <el-input :value="date_end_str" placeholder="请输入内容"  type="hidden" resize=" both"  style="width: 60px; height: 10px;" name="thread[date_end]"></el-input>
                         <el-input :value="date_start_str" placeholder="请输入内容"  type="hidden" resize=" both"  style="width: 60px; height: 10px;" name="thread[date_start]"></el-input>
