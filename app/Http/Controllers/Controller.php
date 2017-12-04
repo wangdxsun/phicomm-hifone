@@ -67,7 +67,7 @@ abstract class Controller extends BaseController
     {
         $input = $input ?: [];
         return array_filter($input, function($value) {
-            return !empty($value);
+            return $value != '';
         });
     }
 
