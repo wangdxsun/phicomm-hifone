@@ -71,7 +71,7 @@ class Notification extends BaseModel implements HasPresenter
 
     public function scopeAt($query)
     {
-        return $query->where('type', 'reply_mention');
+        return $query->whereIn('type', ['reply_mention', 'reply_reply']);
     }
 
     public function scopeWatch($query)

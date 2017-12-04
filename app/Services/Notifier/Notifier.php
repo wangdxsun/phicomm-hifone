@@ -14,6 +14,7 @@ namespace Hifone\Services\Notifier;
 use Carbon\Carbon;
 use Hifone\Models\Notification;
 use Hifone\Models\Reply;
+use Hifone\Models\Thread;
 use Hifone\Models\User;
 
 class Notifier
@@ -31,7 +32,7 @@ class Notifier
         $data = [
             'author_id'     => $author->id,
             'user_id'       => $toUser->id,
-            'body'          => isset($object->body) ? $object->body : '',
+            'body'          => ($object instanceof Thread) ? '': (isset($object->body) ? $object->body : ''),
             'type'          => $type,
             'created_at'    => $nowTimestamp,
             'updated_at'    => $nowTimestamp,

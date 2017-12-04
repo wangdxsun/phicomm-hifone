@@ -30,7 +30,7 @@ class NotificationBll extends BaseBll
             $query->visibleAndDeleted();
         })->whereHas('reply.thread', function ($query) {
             $query->visibleAndDeleted();
-        })->with(['reply.thread', 'reply.user'])->recent()->paginate();
+        })->with(['reply.thread', 'reply.user', 'reply.reply.user'])->recent()->paginate();
         Auth::user()->notification_reply_count = 0;
         Auth::user()->save();
 
@@ -43,7 +43,7 @@ class NotificationBll extends BaseBll
             $query->visibleAndDeleted();
         })->whereHas('reply.thread', function ($query) {
             $query->visibleAndDeleted();
-        })->with(['reply.thread', 'reply.user'])->recent()->paginate();
+        })->with(['reply.thread', 'reply.user', 'reply.reply.user'])->recent()->paginate();
         Auth::user()->notification_at_count = 0;
         Auth::user()->save();
 
@@ -53,12 +53,10 @@ class NotificationBll extends BaseBll
     public function system()
     {
         $notifications = Notification::forUser(Auth::id())->system()->recent()->with(['object', 'author'])->paginate();
-        foreach ($notifications as $key => &$notification) {
-            if ($notification->type <> 'user_follow' && !$notification->object->visible) {
-                unset($notifications[$key]);
-            }
-            if ($notification->type == 'reply_like' && !$notification->object->thread->visible) {
-                unset($notifications[$key]);
+        foreach ($notifications as $notification) {
+            if ($notification->type == 'reply_like' && $notification->object->reply) {
+                $notification->object->thread;
+                $notification->object->reply->user;
             }
         }
         Auth::user()->notification_system_count = 0;
