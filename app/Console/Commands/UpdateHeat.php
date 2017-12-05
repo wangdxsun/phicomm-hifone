@@ -38,12 +38,11 @@ class UpdateHeat extends Command
      */
     public function handle()
     {
-        $threads = Thread::visible()->get();
-        foreach ($threads as $thread) {
-            if ($thread->heat > -50000 || empty($thread->heat)) {
+        Thread::visible()->heat()->chunck(200, function ($threads) {
+            foreach ($threads as $thread) {
                 $thread->heat = $thread->heat_compute;
                 $thread->save();
             }
-        }
+        });
     }
 }
