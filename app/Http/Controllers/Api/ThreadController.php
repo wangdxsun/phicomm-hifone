@@ -53,6 +53,20 @@ class ThreadController extends ApiController
         } elseif (!Auth::user()->can('manage_threads') && Auth::user()->score < 0) {
             throw new HifoneException('对不起，你所在的用户组无法发言');
         }
+        $this->validate(request(), [
+            'thread.title' => 'required|min:5|max:40',
+            'thread.body' => 'required|min:5',
+            'thread.sub_node_id' => 'required',
+        ], [
+            'thread.title.required' => '帖子标题必填',
+            'thread.title.min' => '帖子标题不得少于5个字符',
+            'thread.title.max' => '帖子标题不得多于40个字符',
+            'thread.body.required' => '帖子内容必填',
+            'thread.body.min' => '帖子内容不得少于5个字符',
+        ]);
+        if (count(strip_tags(array_get(request('thread'), 'body'))) > 10000) {
+            throw new HifoneException('帖子内容不得多于10000个字符');
+        }
         $thread = $threadBll->createThread();
         $result = $threadBll->auditThread($thread, $wordsFilter);
         return $result;
