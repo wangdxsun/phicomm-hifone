@@ -28,7 +28,7 @@ class ReplyController extends Controller
 
     public function store(ReplyBll $replyBll, WordsFilter $wordsFilter)
     {
-        try{
+        try {
             $reply = $replyBll->createReply();
             $badWord = '';
             if (Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($reply->body)) || $replyBll->isContainsImageOrUrl($reply->body)) {
@@ -42,12 +42,10 @@ class ReplyController extends Controller
             $reply->body = app('parser.emotion')->parse($reply->body);
             $reply->save();
             $replyBll->autoAudit($reply);
-            return Redirect::back()->withSuccess('审核通过，发表成功！');
 
+            return Redirect::back()->withSuccess('审核通过，发表成功！');
         } catch (\Exception $e) {
-            return Redirect::back()
-                ->withInput(Input::all())
-                ->withErrors($e->getMessageBag());
+            return Redirect::back()->withInput(Input::all())->withErrors($e->getMessageBag());
         }
     }
 

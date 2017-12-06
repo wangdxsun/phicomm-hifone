@@ -48,7 +48,7 @@ class ParseAt
         $usernames = [];
 
         foreach ($atlist_tmp[1] as $k => $v) {
-            if (strlen($v) > 25) {
+            if (strlen($v) == 0 || strlen($v) > 25 ) {
                 continue;
             }
             $usernames[] = $v;
