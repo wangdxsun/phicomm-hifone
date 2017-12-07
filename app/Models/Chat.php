@@ -49,7 +49,7 @@ class Chat extends BaseModel
 
     public function scopeChatWith($query, User $user)
     {
-        return $query->where('from_to', \Auth::id() * $user->id);
+        return $query->where('from_to', auth()->id() * $user->id + auth()->id() + $user->id);
     }
 
     public function scopeMy($query)

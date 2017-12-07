@@ -21,7 +21,7 @@ class NewChatMessageHandler
         Chat::create([
             'from_user_id' => $event->from->id,
             'to_user_id' => $event->to->id,
-            'from_to' => $event->from->id * $event->to->id,
+            'from_to' => $event->from->id * $event->to->id + $event->from->id + $event->to->id,
             'message' => $event->message,
         ]);
     }
