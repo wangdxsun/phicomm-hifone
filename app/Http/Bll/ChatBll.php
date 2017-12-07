@@ -51,7 +51,6 @@ class ChatBll extends BaseBll
         $messages = $this->getMessages();
         event(new NewChatMessageEvent($from, $to, $messages[0]));
         $to->increment('notification_chat_count', 1);
-        $to->increment('notification_count', 1);
         //TODO 友盟消息推送
         $data = array(
             'message' => $messages[0],
