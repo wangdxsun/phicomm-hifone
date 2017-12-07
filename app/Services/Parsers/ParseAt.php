@@ -36,14 +36,14 @@ class ParseAt
     {
         foreach ($this->users as $user) {
             $search = '@'.$user->username;
-            $replace = "<a href='/user/{$user->id}'>$search</a>";
-            $this->body = preg_replace("/".$search."[@<\r\n\s]/", $replace, $this->body);
+            $replace = "<a href='/user/{$user->id}'>$search</a>$1";
+            $this->body = preg_replace("/$search([@<\s]*)/", $replace, $this->body);
         }
     }
 
     protected function getUserNames()
     {
-        preg_match_all("/@([^@<\r\n\s]*)/i", $this->body, $names);
+        preg_match_all("/@([^@<\s]*)/i", $this->body, $names);
         $userNames = [];
         foreach ($names[1] as $name) {
             if (strlen($name) == 0 || strlen($name) > 25 ) {
