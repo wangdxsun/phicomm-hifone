@@ -105,7 +105,7 @@ class ChatBll extends BaseBll
                 $insert[] = [
                     'from_user_id' => $from->id,
                     'to_user_id' => $to->id,
-                    'from_to' => $from->id * $to->id,
+                    'from_to' => $from->id * $to->id + $from->id + $to->id,
                     'message' => $message,
                     'created_at'    => Carbon::now()->toDateTimeString(),
                     'updated_at'    => Carbon::now()->toDateTimeString(),
