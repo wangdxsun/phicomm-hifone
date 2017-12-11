@@ -87,7 +87,7 @@ class ThreadController extends Controller
         $repository->pushCriteria(new BelongsToNode($thread->node_id));
         $nodeThreads = $repository->model(Thread::class)->getThreadList(5);
 
-        event(new ThreadWasViewedEvent($thread));
+        event(new ThreadWasViewedEvent(clone $thread));
         return $this->view('threads.show')
             ->withThread($thread)
             ->withReplies($replies)
