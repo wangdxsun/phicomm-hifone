@@ -223,6 +223,7 @@ class ThreadController extends Controller
         $this->needAuthorOrAdminPermission($thread->user_id);
 
         try {
+            $this->updateOpLog($thread, '修改帖子');
             dispatch(new UpdateThreadCommand($thread, $threadData));
         } catch (ValidationException $e) {
             return Redirect::route('thread.edit', $thread->id)

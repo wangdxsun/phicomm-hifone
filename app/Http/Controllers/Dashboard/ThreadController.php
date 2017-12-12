@@ -133,8 +133,8 @@ class ThreadController extends Controller
         $threadData['excerpt'] = Thread::makeExcerpt($threadData['body']);
 
         try {
-            dispatch(new UpdateThreadCommand($thread, $threadData));
             $this->updateOpLog($thread, '修改帖子');
+            dispatch(new UpdateThreadCommand($thread, $threadData));
         } catch (ValidationException $e) {
             return Redirect::route('dashboard.thread.edit', $thread->id)
                 ->withInput($threadData)
