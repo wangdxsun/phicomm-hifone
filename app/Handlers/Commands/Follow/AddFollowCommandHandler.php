@@ -38,7 +38,6 @@ class AddFollowCommandHandler
                     Auth::user()->decrement('follow_count', 1);
                     Auth::user()->updateIndex();
                 }
-
                 event(new FollowWasRemovedEvent($target));
                 event(new FollowedWasRemovedEvent($target));
             } else {
