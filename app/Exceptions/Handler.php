@@ -35,7 +35,7 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $e)
     {
-        if (env('APP_DEBUG') == 'false') {
+        if (!env('APP_DEBUG')) {
             $guzzle = new Client();
             $guzzle->post('http://192.168.61.98:8080/IMServer/qy/send', [
                 'form_params' => [
@@ -45,7 +45,7 @@ class Handler extends ExceptionHandler
                     'line' => $e->getLine(),
                     'msg' => $e->getMessage(),
                     'time' => time(),
-                    'toUser' => 'FX008135'
+                    'toUser' => 'FX008135|FX008759|FX008747'
                 ]
             ]);
         }
