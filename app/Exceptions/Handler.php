@@ -3,6 +3,7 @@
 namespace Hifone\Exceptions;
 
 use Exception;
+use GuzzleHttp\Client;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -34,6 +35,20 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $e)
     {
+        if (env('APP_DEBUG') == 'false') {
+            $guzzle = new Client();
+            $guzzle->post('http://192.168.61.98:8080/IMServer/qy/send', [
+                'form_params' => [
+                    'domain' => request()->getSchemeAndHttpHost(),
+                    'errorTrack' => $e->getTraceAsString(),
+                    'fileName' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'msg' => $e->getMessage(),
+                    'time' => time(),
+                    'toUser' => 'FX008135'
+                ]
+            ]);
+        }
         parent::report($e);
     }
 
