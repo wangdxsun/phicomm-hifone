@@ -3,10 +3,15 @@
 @section('content')
     <div class="content-wrapper">
         <div class="header sub-header">
-        <span class="uppercase">
-            <i class="fa fa-file-text-o"></i> {{ trans('dashboard.content.content') }}
-        </span>
+            <span class="uppercase">
+                <i class="fa fa-file-text-o"></i> {{ trans('dashboard.content.content') }}
+            </span>
             <div class="clearfix"></div>
+        </div>
+        <div class="uppercase pull-right">
+            <span class="uppercase">
+                截止当前列表的回帖总数：{{ $replyCount }}
+            </span>
         </div>
         @if(isset($sub_menu))
             @include('dashboard.partials.sub-nav')

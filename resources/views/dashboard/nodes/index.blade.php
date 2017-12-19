@@ -20,6 +20,9 @@
                 <div class="col-xs-1">
                     <span class="drag-handle"><i class="fa fa-navicon"></i></span>
                 </div>
+                <div class="col-xs-1">
+                    <span>{{ $node->id }}</span>
+                </div>
                 <div class="col-xs-2 drag-handle">
                     <img src="{{ $node->icon }}" alt="" style="max-width: 200px; max-height: 50px;">
                 </div>
@@ -29,7 +32,7 @@
                 <div class="col-xs-2 drag-handle">
                     <a href="/dashboard/section/{{ $node->section->id }}">{{ $node->section->name }}</a>
                 </div>
-                <div class="col-xs-3 drag-handle">
+                <div class="col-xs-2 drag-handle">
                     {{ $node->description }}
                 </div>
                 {{--<div class="col-xs-2 drag-handle">--}}

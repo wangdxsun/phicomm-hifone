@@ -49,6 +49,24 @@ class StatMenuComposer
                 'icon'   => 'fa fa-user',
                 'active' => false,
             ],
+            'thread' => [
+                'title'  => '新增发帖',
+                'url'    => route('dashboard.stat.daily.threads.count'),
+                'icon'   => 'fa fa-file',
+                'active' => false,
+            ],
+            'reply' => [
+                'title'  => '新增回帖',
+                'url'    => route('dashboard.stat.daily.replies.count'),
+                'icon'   => 'fa fa-file',
+                'active' => false,
+            ],
+            'zeroReply' => [
+                'title'  => '零回复统计',
+                'url'    => route('dashboard.stat.zeroReply'),
+                'icon'   => 'fa fa-file',
+                'active' => false,
+            ],
         ];
 
         $view->withSubMenu($subMenu);
