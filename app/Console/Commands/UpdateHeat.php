@@ -38,7 +38,7 @@ class UpdateHeat extends Command
      */
     public function handle()
     {
-        Thread::visible()->heat()->chunck(200, function ($threads) {
+        Thread::visible()->heat()->chunk(200, function ($threads) {
             foreach ($threads as $thread) {
                 $thread->heat = $thread->heat_compute;
                 $thread->save();
