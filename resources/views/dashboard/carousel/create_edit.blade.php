@@ -1,13 +1,6 @@
 @extends('layouts.dashboard')
-
 @section('content')
-@if(isset($sub_menu))
-@include('dashboard.partials.sub-sidebar')
-@endif
 <div class="content-wrapper">
-    <div class="header sub-header" id="nodes">
-        <span>{{ $page_title }}</span>
-    </div>
     <div class="row">
         <div class="col-sm-12">
             @include('partials.errors')
