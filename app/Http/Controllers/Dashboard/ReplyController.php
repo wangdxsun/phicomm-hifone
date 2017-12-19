@@ -49,9 +49,11 @@ class ReplyController extends Controller
             ->orderBy('last_op_time', 'desc')->paginate(20);
         $orderTypes = Reply::$orderTypes;
         $orderByThreadId = Reply::$orderByThreadId;
+        $replyCount = Reply::visible()->count();
         return View::make('dashboard.replies.index')
             ->withPageTitle(trans('dashboard.replies.replies').' - '.trans('dashboard.dashboard'))
             ->withReplies($replies)
+            ->with('replyCount', $replyCount)
             ->with('orderTypes',$orderTypes)
             ->withSearch($search)
             ->with('orderByThreadId',$orderByThreadId)
@@ -61,16 +63,20 @@ class ReplyController extends Controller
     public function audit()
     {
         $replies = Reply::audit()->with('thread', 'user')->orderBy('created_at', 'desc')->paginate(20);
+        $replyCount = Reply::audit()->count();
 
         return View::make('dashboard.replies.audit')
             ->withPageTitle(trans('dashboard.replies.replies').' - '.trans('dashboard.dashboard'))
-            ->withReplies($replies)->withCurrentMenu('audit');
+            ->withReplies($replies)
+            ->with('replyCount', $replyCount)
+            ->withCurrentMenu('audit');
     }
 
     public function trashView()
     {
         $search = $this->filterEmptyValue(Input::get('reply'));
         $replies = Reply::trash()->search($search)->with('thread', 'user', 'lastOpUser')->orderBy('last_op_time', 'desc')->paginate(20);
+        $replyCount = Reply::trash()->count();
         $replyAll = Reply::trash()->get()->toArray();
         $threadIds = array_unique(array_column($replyAll, 'thread_id'));
         $userIds = array_unique(array_column($replyAll, 'user_id'));
@@ -82,6 +88,7 @@ class ReplyController extends Controller
             ->withPageTitle('回复回收站')
             ->with('orderTypes',$orderTypes)
             ->withSearch($search)
+            ->with('replyCount', $replyCount)
             ->withReplies($replies)->withCurrentMenu('trash')
             ->withThreads(Thread::find($threadIds))
             ->withUsers(User::find($userIds))

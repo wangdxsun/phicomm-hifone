@@ -14,6 +14,7 @@ namespace Hifone\Providers;
 use Hifone\Composers\AppComposer;
 use Hifone\Composers\CurrentUserComposer;
 use Hifone\Composers\Dashboard\AdvertisementMenuComposer;
+use Hifone\Composers\Dashboard\BannerMenuComposer;
 use Hifone\Composers\Dashboard\ContentMenuComposer;
 use Hifone\Composers\Dashboard\NodeMenuComposer;
 use Hifone\Composers\Dashboard\ReplyMenuComposer;
@@ -52,6 +53,7 @@ class ComposerServiceProvider extends ServiceProvider
         $factory->composer(['dashboard.stats.*'], StatMenuComposer::class);
         $factory->composer(['dashboard.tips.*', 'dashboard.links.*', 'dashboard.locations.*', 'dashboard.settings.*', ], SettingMenuComposer::class);
         $factory->composer(['dashboard.chat.*'], ChatsMenuComposer::class);
+        $factory->composer(['dashboard.carousel.*'], BannerMenuComposer::class);
     }
 
     /**

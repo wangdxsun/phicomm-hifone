@@ -106,6 +106,7 @@ class Thread extends BaseModel implements TaggableInterface
         'heat'       => '热度值',
         'updated_at' => '最后回复时间',
         'channel'    => '发帖来源',
+        'reply_count'=> '回复数量',
     ];
 
     public function likes()
@@ -372,6 +373,9 @@ class Thread extends BaseModel implements TaggableInterface
             } elseif ($key == 'date_end') {
                 $query->where('created_at', '<=', $value);
             } elseif ($key == 'orderType'){
+                if ($value == 'reply_count') {
+                    $query->orderBy($value);
+                }
                 $query->orderBy($value,'desc');
             } elseif ($key == 'channel') {
                 $query->where('channel', '=', $value);

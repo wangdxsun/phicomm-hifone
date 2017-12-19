@@ -37,12 +37,24 @@ class CarouselController extends Controller
      */
     public function index()
     {
-        $carousels  = Carousel::orderBy('order')->get();
+        $carousels  = Carousel::orderBy('order')->where('visible', 1)->get();
 
         return View::make('dashboard.carousel.index')
             ->withPageTitle('banner管理')
-            ->withCarousels($carousels);
+            ->withCarousels($carousels)
+            ->withCurrentMenu('index');
     }
+
+    public function hideBanners()
+    {
+        $carousels  = Carousel::orderBy('order')->where('visible', 0)->get();
+
+        return View::make('dashboard.carousel.index')
+            ->withPageTitle('banner管理')
+            ->withCarousels($carousels)
+            ->withCurrentMenu('hide');
+    }
+
 
     public function show(Carousel $carousel)
     {
