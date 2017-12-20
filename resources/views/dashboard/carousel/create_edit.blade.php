@@ -36,7 +36,7 @@
                     <div class="col-xs-12">
                         <div class="form-group">
                             <button type="submit" class="btn btn-success">{{ trans('forms.save') }}</button>
-                            <a class="btn btn-default" href="{{ back_url('dashboard.node.index') }}">{{ trans('forms.cancel') }}</a>
+                            <a class="btn btn-default" href="{{ back_url() }}">{{ trans('forms.cancel') }}</a>
                         </div>
                     </div>
                 </div>

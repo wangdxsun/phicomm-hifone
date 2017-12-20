@@ -128,7 +128,7 @@ class CarouselController extends Controller
                 ->withErrors($e->getMessageBag());
         }
 
-        return Redirect::route('dashboard.carousel.index', ['id' => $carousel->id])
+        return Redirect::route('dashboard.carousel.index')
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.notices.edit.success')));
     }
 
