@@ -45,7 +45,7 @@ class Handler extends ExceptionHandler
                     'line' => $e->getLine(),
                     'msg' => $e->getMessage(),
                     'time' => time(),
-                    'toUser' => 'FX008135|FX008759|FX008747'
+                    'toUser' => env('WX_ALERT', 'FX008135|FX008759|FX008747')
                 ]
             ]);
         }
