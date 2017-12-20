@@ -35,7 +35,7 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $e)
     {
-        if (!env('APP_DEBUG')) {
+        if ($this->shouldntReport($e) && !env('APP_DEBUG')) {
             $guzzle = new Client();
             $guzzle->post('http://192.168.61.98:8080/IMServer/qy/send', [
                 'form_params' => [
