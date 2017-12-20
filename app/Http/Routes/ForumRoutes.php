@@ -36,6 +36,7 @@ class ForumRoutes
             $router->get('/go/{slug}', 'NodeController@showBySlug')->name('go');
             $router->get('/test', 'TestController@test')->name('test');
             $router->get('/test/redis', 'TestController@testRedis')->name('test.redis');
+            $router->get('/test/initRedis', 'TestController@initRedis')->name('test.init.redis');
             $router->get('/reset', 'TestController@reset')->name('reset');
 
             // 兼容老社区

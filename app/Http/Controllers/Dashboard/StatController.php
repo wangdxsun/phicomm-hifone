@@ -96,6 +96,7 @@ class StatController extends Controller
 
     public function node_detail(Node $node)
     {
+
         $search = $this->filterEmptyValue(Input::get('node'));
         $search['date_start'] = isset($search['date_start']) ? $search['date_start'] : substr(Thread::visible()->where('node_id',$node->id)->orderBy('id')->first()->created_at, 0,10);
         $search['date_end'] = isset($search['date_end']) ? $search['date_end'] :  substr(Thread::visible()->where('node_id',$node->id)->orderBy('id','desc')->first()->created_at, 0,10);

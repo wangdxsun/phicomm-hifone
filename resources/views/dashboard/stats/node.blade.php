@@ -27,7 +27,13 @@
                             <td>{{ $node->name }}</td>
                             <td>{{ $node->thread_count }}</td>
                             <td>{{ $node->reply_count }}</td>
-                            <td><a href="/dashboard/stat/node/{{ $node->id }}">详情</a></td>
+                            <td>
+                                @if ($node->thread_count > 0)
+                                    <a href="/dashboard/stat/node/{{ $node->id }}">详情</a>
+                                @else
+                                暂无详情
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 </table>

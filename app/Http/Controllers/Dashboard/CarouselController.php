@@ -47,7 +47,7 @@ class CarouselController extends Controller
 
     public function hideBanners()
     {
-        $carousels  = Carousel::orderBy('order')->where('visible', 0)->get();
+        $carousels  = Carousel::orderBy('order')->recent()->where('visible', 0)->get();
 
         return View::make('dashboard.carousel.index')
             ->withPageTitle('banner管理')
