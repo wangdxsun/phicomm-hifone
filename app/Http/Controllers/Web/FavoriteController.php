@@ -1,9 +1,8 @@
 <?php
 
-namespace Hifone\Http\Controller\Web;
+namespace Hifone\Http\Controllers\Web;
 
 use Hifone\Http\Bll\FavoriteBll;
-use Hifone\Http\Controllers\Web\WebController;
 use Hifone\Models\Thread;
 
 class FavoriteController extends WebController
