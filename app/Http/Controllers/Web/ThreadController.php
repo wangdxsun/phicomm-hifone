@@ -22,6 +22,12 @@ class ThreadController extends WebController
         return $threads;
     }
 
+    public function recent()
+    {
+        $threads = Thread::visible()->with(['user', 'node'])->recent()->paginate();
+        return $threads;
+    }
+
     public function search($keyword, ThreadBll $threadBll)
     {
         $threads = $threadBll->search($keyword);

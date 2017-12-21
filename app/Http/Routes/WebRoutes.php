@@ -31,6 +31,7 @@ class WebRoutes
 
             //内容相关
             $router->get('threads', 'ThreadController@index');
+            $router->get('threads/recent', 'ThreadController@recent');
             $router->get('thread/search/{keyword}', 'ThreadController@search');
             $router->get('user/search/{keyword}', 'UserController@search');
             $router->get('threads/{thread}', 'ThreadController@show');
