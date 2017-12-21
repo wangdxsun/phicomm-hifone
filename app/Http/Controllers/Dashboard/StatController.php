@@ -75,8 +75,10 @@ class StatController extends Controller
             ->visible()->where('reply_count', 0)->groupBy('date')->recent()->take(30)->get();
 
         $statsArr = array();
+        $recentZeroReplyThreadCount = 0;
         foreach ($dailyZeroThreadCount as $threadCount) {
             $statsArr[$threadCount['date']] = $threadCount->toArray();
+            $recentZeroReplyThreadCount += $threadCount['total'];
         }
 
         $allZeroReplyThreadCount = Thread::where('reply_count', 0)->count();
@@ -84,6 +86,7 @@ class StatController extends Controller
         return view('dashboard.stats.zeroReply')
             ->withCurrentMenu('zeroReply')
             ->with('allZeroReplyThreadCount', $allZeroReplyThreadCount)
+            ->with('recentZeroReplyThreadCount', $recentZeroReplyThreadCount)
             ->with('statsArr', $statsArr);
     }
 

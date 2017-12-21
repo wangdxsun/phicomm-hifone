@@ -13,11 +13,22 @@
         <div class="row">
             <div class="col-sm-12">
                 @include('partials.errors')
-                <div class="pull-right">
-                    <span class="header sub-header uppercase">
-                          截止现在零回复帖子总数:{{ $allZeroReplyThreadCount }}
+                <div class="row">
+                    <div class="pull-right">
+                    <span class="uppercase">
+                        当前页零回复帖子总数:{{ $recentZeroReplyThreadCount }}
                     </span>
+                    </div>
                 </div>
+
+                <div class="row">
+                    <div class="pull-right">
+                        <span class="uppercase">
+                            截止现在零回复帖子总数:{{ $allZeroReplyThreadCount }}
+                        </span>
+                    </div>
+                </div>
+
                 <table class="table table-bordered table-striped table-condensed">
                     <tr class="head">
                         <td>日期</td>
