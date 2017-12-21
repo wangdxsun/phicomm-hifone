@@ -100,16 +100,22 @@ class StatController extends Controller
         $search = $this->filterEmptyValue(Input::get('node'));
         $search['date_start'] = isset($search['date_start']) ? $search['date_start'] : substr(Thread::visible()->where('node_id',$node->id)->orderBy('id')->first()->created_at, 0,10);
         $search['date_end'] = isset($search['date_end']) ? $search['date_end'] :  substr(Thread::visible()->where('node_id',$node->id)->orderBy('id','desc')->first()->created_at, 0,10);
-        $dailyThreadCount = DB::select("select substr(t.created_at, 1, 10) as date, count(DISTINCT t.id) as thread_cnt, count(r.id) as reply_cnt 
+        $dailyThreadCount = DB::select("select stat.date, count(stat.tid) as thread_cnt, count(stat.rid) as reply_cnt from 
+                                                (select t.id as tid, null as rid, substr(t.created_at, 1, 10) as date, t.node_id
                                                 from threads as t
-                                                LEFT JOIN (select * from replies where status = 0) as r
+                                                where t.`status` = 0
+                                                union all
+                                                select null as tid, r.id as rid, substr(r.created_at, 1, 10) as date, t.node_id
+                                                from replies as r
+                                                join threads as t
                                                 on r.thread_id = t.id
-                                                where t.node_id = ?
-                                                and t.`status` = 0
-                                                and substr(t.created_at, 1, 10) >= ?
-                                                and substr(t.created_at, 1, 10) <= ?
-                                                group by date order by date desc limit 30",
-                                                [$node->id, $search['date_start'], $search['date_end'] ]);
+                                                where r.`status` = 0) as stat
+                                                where stat.date >= ?
+                                                and stat.date <= ?
+                                                and stat.node_id = ?
+                                                group by stat.date
+                                                order by stat.date desc limit 30",
+                                                [$search['date_start'], $search['date_end'],$node->id]);
         $statsArr = array();
         foreach ($dailyThreadCount as $threadCount) {
             $statsArr[$threadCount->date] = [
