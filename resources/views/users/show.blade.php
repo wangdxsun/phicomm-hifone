@@ -40,8 +40,8 @@
                 <ul class="status">
                   <li><a href="{{ route('user.threads', $user->id) }}"><strong>{{ $user->thread_count }}</strong>{{ trans('hifone.threads.threads') }}</a></li>
                   <li><a href="{{ route('user.replies', $user->id) }}"><strong>{{ $user->reply_count }}</strong>{{ trans('hifone.replies.replies') }}</a></li>
-                  <li><a href="{{ route('user.follows', $user->id) }}"><strong>{{ $user->follow_count }}</strong>{{ trans('hifone.follow') }}</a></li>
-                  <li><a href={{ route('user.followers', $user->id) }}><strong>{{ $user->follower_count }}</strong>{{ trans('hifone.users.followers') }}</a></li>
+                    <li><strong>{{ $user->follow_count }}</strong>{{ trans('hifone.follow') }}</li>
+                  <li><strong>{{ $user->follower_count }}</strong>{{ trans('hifone.users.followers') }}</li>
                 </ul>
                 <div class="footer">
                 {{ $user->bio }}
