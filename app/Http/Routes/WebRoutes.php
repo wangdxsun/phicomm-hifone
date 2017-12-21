@@ -30,7 +30,7 @@ class WebRoutes
             $router->get('emotions', 'GeneralController@emotion');
 
             //内容相关
-            $router->get('threads', 'ThreadController@index');
+            $router->get('threads/hot', 'ThreadController@index');
             $router->get('threads/recent', 'ThreadController@recent');
             $router->get('thread/search/{keyword}', 'ThreadController@search');
             $router->get('user/search/{keyword}', 'UserController@search');
