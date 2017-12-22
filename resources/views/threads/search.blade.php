@@ -74,7 +74,7 @@
                                             <span> • </span>
                                         @endif
 
-                                        @if(!isset($node))
+                                        @if(isset($node))
                                             <a href="{{ $thread->node->url }}" title="{{ $thread->node->name }}" {{ $thread->like_count == 0 || 'class="remove-padding-left"'}}>
                                                 {{ $thread->node->name }}
                                             </a>
