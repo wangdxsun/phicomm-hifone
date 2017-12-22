@@ -26,12 +26,12 @@ class PhicommController extends Controller
 {
     use ThrottlesLogins, AuthenticatesAndRegistersUsers;
 
-    private $phicomm;
+    private $phicommBll;
 
-    public function __construct(PhicommBll $phicomm)
+    public function __construct(PhicommBll $phicommBll)
     {
         $this->middleware('guest', ['except' => ['logout', 'getLogout']]);
-        $this->phicomm = $phicomm;
+        $this->phicommBll = $phicommBll;
 
         parent::__construct();
     }
@@ -53,9 +53,9 @@ class PhicommController extends Controller
         ]);
         $password = strtoupper(md5($request->get('password')));
         try {
-            $this->phicomm->checkPhoneAvailable($request->phone);
-            $this->phicomm->register($request->phone, $password, $request->verifyCode);
-            $phicommId = $this->phicomm->login($request->phone, $password);
+            $this->phicommBll->checkPhoneAvailable($request->phone);
+            $this->phicommBll->register($request->phone, $password, $request->verifyCode);
+            $phicommId = $this->phicommBll->login($request->phone, $password);
             Session::set('phicommId', $phicommId);
         } catch (\Exception $e) {
             return Redirect::back()->withInput(Input::except('password'))->withErrors($e->getMessage());
@@ -84,18 +84,19 @@ class PhicommController extends Controller
         $phone = request()->get('phone');
         $password = strtoupper(md5(request()->get('password')));
         try {
-            $phicommId = $this->phicomm->login($phone, $password);
+            $phicommId = $this->phicommBll->login($phone, $password);
         } catch (\Exception $e) {
             return Redirect::back()->withInput(Input::except('password'))->withErrors($e->getMessage());
         }
         $user = User::findUserByPhicommId($phicommId);
+
         if ($user) {
             if ($user->hasRole('NoLogin')) {
                 return Redirect::back()->withInput(Input::except('password'))->withError('您已被系统管理员禁止登录');
             }
             Auth::login($user);
             $commonBll->login();
-            $cloudUser = $this->phicomm->userInfo();
+            $cloudUser = $this->phicommBll->userInfo();
             if ($cloudUser['img'] && $user->avatar_url != $cloudUser['img'] && $cloudUser['img'] != 'Uploads/default/default.jpg') {
                 $user->avatar_url = $cloudUser['img'];
                 $user->save();
@@ -149,7 +150,7 @@ class PhicommController extends Controller
         ]);
         $password = strtoupper(md5(request('password')));
         try {
-            $this->phicomm->reset(request('phone'), $password, request('verify'));
+            $this->phicommBll->reset(request('phone'), $password, request('verify'));
         } catch (\Exception $e) {
             return back()->withInput(Input::except('password'))->withErrors($e->getMessage());
         }
@@ -166,7 +167,7 @@ class PhicommController extends Controller
         ]);
         $phone = request('phone');
         try {
-            $this->phicomm->sendVerifyCode($phone);
+            $this->phicommBll->sendVerifyCode($phone);
         } catch (\Exception $e) {
             return ['code' => 1, 'msg' => $e->getMessage()];
         }

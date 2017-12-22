@@ -71,6 +71,7 @@ class PhicommBll extends BaseBll
         if ($output['error'] > 0) {
             throw new HifoneException('手机号或密码错误');
         }
+
         Session::set('access_token', $output['access_token']);
         Session::set('phicommId', $output['uid']);
 
