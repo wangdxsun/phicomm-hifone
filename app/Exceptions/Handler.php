@@ -39,7 +39,7 @@ class Handler extends ExceptionHandler
             $guzzle = new Client();
             $guzzle->post('http://192.168.61.98:8080/IMServer/qy/send', [
                 'form_params' => [
-                    'domain' => request()->getSchemeAndHttpHost(),
+                    'domain' => request()->fullUrl(),
                     'errorTrack' => $e->getTraceAsString(),
                     'fileName' => $e->getFile(),
                     'line' => $e->getLine(),
