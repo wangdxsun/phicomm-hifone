@@ -58,7 +58,7 @@ class Notifier
             ];
             if ($type == 'thread_new_reply') {
                 $toUser->increment('notification_reply_count');
-            } elseif ($type = 'reply_mention') {
+            } elseif ($type == 'reply_mention') {
                 $toUser->increment('notification_at_count');
             } elseif ($type == 'followed_user_new_thread') {
                 $toUser->increment('notification_follow_count');
