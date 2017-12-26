@@ -28,7 +28,7 @@ class AddThreadCommandHandler
      */
     public function handle(AddThreadCommand $command)
     {
-        $thumbnails = $this->getFirstImageUrl($command->body.$command->images);
+        $thumbnails = getFirstImageUrl($command->body.$command->images);
         $body = app('parser.markdown')->convertMarkdownToHtml($command->body);
         $body .= $command->images;
         $data = [
@@ -54,22 +54,5 @@ class AddThreadCommandHandler
         app(AddTag::class)->attach($thread, $command->tags);
 
         return $thread;
-    }
-
-    public function getFirstImageUrl($body) {
-        preg_match_all('/src=["\']{1}([^"^\']*)["\']/i', $body, $images);
-        $imgUrls = [];
-        if (count($images) > 0) {
-            foreach ($images[1] as $k => $v) {
-                $imgUrls[] = $v;
-            }
-        }
-        $imgUrl = array_first($imgUrls,function($key,$value) {
-            if (!(Str::contains($value, 'icon_apk')) && !(Str::contains($value, 'icon_bin')) && !(Str::contains($value, 'icon_word'))) {
-                return $value;
-            }
-            return null;
-        });
-        return $imgUrl;
     }
 }

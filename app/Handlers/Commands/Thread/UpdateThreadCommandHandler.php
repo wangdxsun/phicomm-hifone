@@ -18,6 +18,7 @@ use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
 use Hifone\Services\Dates\DateFactory;
 use Hifone\Services\Tag\AddTag;
+use Illuminate\Support\Str;
 
 class UpdateThreadCommandHandler
 {
@@ -50,6 +51,7 @@ class UpdateThreadCommandHandler
             $command->data['body'] = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse($command->data['body']));
         }
         //过滤数据中的空字段，并且更新帖子
+        $command->data['thumbnails'] = getFirstImageUrl($command->data['body_original']);
         $thread->update($this->filter($command->data));
 
         // The thread was added successfully, so now let's deal with the tags.
@@ -64,6 +66,8 @@ class UpdateThreadCommandHandler
             $originalSubNode = SubNode::find($original_subNode_id);
             event(new ThreadWasMovedEvent($command->thread, $originalSubNode));
         }
+
+
         $thread->updateIndex();
 
         return $thread;

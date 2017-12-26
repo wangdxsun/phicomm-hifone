@@ -19,7 +19,6 @@ use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Pin\SinkWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasMarkedExcellentEvent;
-use Hifone\Events\Thread\ThreadWasMovedEvent;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Node;
 use Hifone\Models\Section;

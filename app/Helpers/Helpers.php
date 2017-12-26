@@ -53,6 +53,25 @@ if (!function_exists('set_active')) {
     }
 }
 
+if (!function_exists('getFirstImageUrl')) {
+    function getFirstImageUrl($body) {
+        preg_match_all('/src=["\']{1}([^"^\']*)["\']/i', $body, $images);
+        $imgUrls = [];
+        if (count($images) > 0) {
+            foreach ($images[1] as $k => $v) {
+                $imgUrls[] = $v;
+            }
+        }
+        $imgUrl = array_first($imgUrls,function($key,$value) {
+            if (!(Str::contains($value, 'icon_apk')) && !(Str::contains($value, 'icon_bin')) && !(Str::contains($value, 'icon_word'))) {
+                return $value;
+            }
+            return null;
+        });
+        return $imgUrl;
+    }
+}
+
 if (!function_exists('thread_filter')) {
     /**
      * Create a node url by filter.
