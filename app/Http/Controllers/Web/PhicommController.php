@@ -47,11 +47,13 @@ class PhicommController extends WebController
         $phicommId = $this->phicommBll->login($phone, $password);
 
         $user = User::findUserByPhicommId($phicommId);
+
         if ($user) {
             if ($user->hasRole('NoLogin')) {
                 return response('对不起，你已被管理员禁止登录', 403);
             }
-            Auth::login($user);
+            // 登录并且「记住」用户
+            Auth::login($user, true);
             $commonBll->login();
             return $user;
         } else {

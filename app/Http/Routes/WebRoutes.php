@@ -14,6 +14,7 @@ namespace Hifone\Http\Routes;
 use Illuminate\Contracts\Routing\Registrar;
 
 /**
+ * 社区Web端（前后端分离）路由
  * This is the api routes class.
  */
 class WebRoutes
