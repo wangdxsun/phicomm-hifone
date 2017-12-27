@@ -27,7 +27,7 @@
                     <img src="{{ $node->icon }}" alt="" style="max-width: 200px; max-height: 50px;">
                 </div>
                 <div class="col-xs-2 drag-handle">
-                    <a href="/dashboard/node/{{ $node->id }}">{!! $node->name !!}</a>
+                    <a href="/dashboard/node/{{ $node->id }}">{{ $node->name }}</a>
                 </div>
                 <div class="col-xs-2 drag-handle">
                     <a href="/dashboard/section/{{ $node->section->id }}">{{ $node->section->name }}</a>

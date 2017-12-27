@@ -9,12 +9,12 @@
       <span class="meta">
 
         
-          {!! $credit->rule->name !!}
+          {{ $credit->rule->name }}
 
         <span> • </span>
-        {!! $credit->balance !!}
+        {{ $credit->balance }}
         <span> • </span>
-        <span class="timeago">{!! $credit->created_at !!}</span>
+        <span class="timeago">{{ $credit->created_at }}</span>
 
       </span>
 

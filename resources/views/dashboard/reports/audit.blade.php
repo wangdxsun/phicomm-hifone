@@ -31,11 +31,11 @@
                             <td>{{ $report->type }}</td>
                             <td>
                                 <div class="replyContent">
-                                    <a href="{{ $report->reportable->url }}" target="_blank">{!! $report->reportable->report !!} </a>
+                                    <a href="{{ $report->reportable->url }}" target="_blank">{{ $report->reportable->report }}</a>
                                 </div>
                                 @if(Str::length($report->reportable->report) > 50 || Str::contains($report->reportable->report, ['<img']))
                                     <a data-toggle="collapse" href="#report{{ $report->id }}" aria-expanded="false">查看更多</a>
-                                    <div class="collapse well" id="report{{ $report->id }}">{!! $report->reportable->report !!}</div>
+                                    <div class="collapse well" id="report{{ $report->id }}">{{ $report->reportable->report }}</div>
                                 @endif
                             </td>
                             <td><a href="{{ $report->user->url }}">{{ $report->user->username }}</a></td>
