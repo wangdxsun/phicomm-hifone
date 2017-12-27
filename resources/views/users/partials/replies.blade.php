@@ -4,7 +4,7 @@
    <li class="list-group-item">
 
     @if (count($reply->thread))
-      <a href="{!! route('thread.show', [$reply->thread_id]) !!}" title="{{ $reply->thread->title }}" class="remove-padding-left">
+      <a href="{{ route('thread.show', [$reply->thread_id]) }}" title="{{ $reply->thread->title }}" class="remove-padding-left">
           {{ $reply->thread->title }}
       </a>
       <span class="meta">
@@ -14,7 +14,7 @@
 {!! $reply->body !!}
       </div>
     @else
-      <div class="deleted text-center">{!! trans('hifone.deleted') !!}</div>
+      <div class="deleted text-center">{{ trans('hifone.deleted') }}</div>
     @endif
 
   </li>

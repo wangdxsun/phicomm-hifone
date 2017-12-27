@@ -38,7 +38,7 @@
 					</form>
 				</div>
 				<div class="panel-footer">
-					{!! trans('hifone.login.account_available') !!}
+					{{ trans('hifone.login.account_available') }}
 				</div>
 			</div>
 		</div>

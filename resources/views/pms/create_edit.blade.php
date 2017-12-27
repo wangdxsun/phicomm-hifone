@@ -67,7 +67,7 @@
                             <p>{{ trans('hifone.threads.posting_tips.pt2_desc') }}</p>
                         </li>
                         <li>{{ trans('hifone.threads.posting_tips.pt3_title') }}
-                            <p>{!! trans('hifone.threads.posting_tips.pt3_desc') !!}</p>
+                            <p>{{ trans('hifone.threads.posting_tips.pt3_desc') }}</p>
                         </li>
                     </ul>
                 </div>

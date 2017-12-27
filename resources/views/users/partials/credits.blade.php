@@ -4,7 +4,7 @@
    <li class="list-group-item" >
 
 
-        {!! str_limit($credit->name, '100') !!}
+        {{ str_limit($credit->name, '100') }}
 
       <span class="meta">
 
