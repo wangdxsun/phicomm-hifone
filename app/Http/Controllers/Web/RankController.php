@@ -3,7 +3,6 @@
 namespace Hifone\Http\Controllers\Web;
 
 use Hifone\Http\Bll\RankBll;
-use Hifone\Models\User;
 
 class RankController extends WebController
 {
