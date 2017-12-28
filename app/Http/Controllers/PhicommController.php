@@ -95,7 +95,7 @@ class PhicommController extends Controller
                 return Redirect::back()->withInput(Input::except('password'))->withError('您已被系统管理员禁止登录');
             }
             // 登录并且「记住」用户
-            Auth::login($user, true);
+            Auth::login($user, request()->has('remember'));
             $commonBll->login();
             $cloudUser = $this->phicommBll->userInfo();
             if ($cloudUser['img'] && $user->avatar_url != $cloudUser['img'] && $cloudUser['img'] != 'Uploads/default/default.jpg') {

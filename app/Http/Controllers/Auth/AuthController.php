@@ -97,7 +97,8 @@ class AuthController extends Controller
         if (Auth::validate($loginData)) {
 
             // We probably want to add support for "Remember me" here.
-            Auth::attempt($loginData, false);
+            // 登录并且「记住」用户
+            Auth::attempt($loginData, request()->has('remember'));
 
             if (Session::has('connect_data')) {
                 $connect_data = Session::get('connect_data');

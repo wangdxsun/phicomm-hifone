@@ -26,8 +26,12 @@ class WebRoutes
      */
     public function map(Registrar $router)
     {
-        $router->group(['namespace' => 'Web', 'prefix' => 'web/v1', 'middleware' => 'api', 'as' => 'web.'], function ($router) {
-
+        $router->group([
+            'namespace' => 'Web',
+            'prefix' => 'web/v1',
+            'middleware' => ['web', 'localize'],
+            'as' => 'web.'
+        ], function ($router) {
             $router->get('emotions', 'GeneralController@emotion');
 
             //内容相关
