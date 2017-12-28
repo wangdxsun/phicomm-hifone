@@ -58,9 +58,8 @@ class ThreadBll extends BaseBll
         return $threads;
     }
 
-    public function createThread()
+    public function createThread($threadData)
     {
-        $threadData = Input::get('thread');
         $node_id = SubNode::find($threadData['sub_node_id'])->node_id;
 
         $tags = isset($threadData['tags']) ? $threadData['tags'] : '';

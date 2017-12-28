@@ -141,7 +141,7 @@ class ThreadController extends Controller
             return Redirect::back()->withInput()->withErrors('帖子内容不得多于10000个字符');
         }
         try {
-            $thread = $threadBll->createThread();
+            $thread = $threadBll->createThread(request('thread'));
             $thread->heat = $thread->heat_compute;
             $post = $thread->title . $thread->body;
             $badWord = '';
