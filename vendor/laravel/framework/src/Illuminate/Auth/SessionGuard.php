@@ -549,7 +549,8 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
     protected function createRecaller($value)
     {
         //记住我 一个月
-        return $this->getCookieJar()->make($this->getRecallerName(), $value, 60*24*30);
+        $rememberDay = env('REMEMBER_DAY')? : 1;
+        return $this->getCookieJar()->make($this->getRecallerName(), $value, 60*24*$rememberDay);
     }
 
     /**
