@@ -18,7 +18,7 @@
                             {{--@endif--}}
                             <a class="fa fa-reply btn-reply2reply" data-floor={{ $index + 1 }} data-username="{{ $reply->user->username }}" href="#" title="回复 {{ $reply->user->username }}"></a>
                         </span>
-                        <a class="likeable fa fa-thumbs-o-up" data-action="like" data-url="{{ route('like.store') }}" data-type="Reply" data-id="{{ $reply->id }}" data-count="{{ $reply->like_count ?: 0 }}" href="javascript:void(0);" title="{{ trans('hifone.like') }} "> {{ $reply->like_count ?: '' }}</a>
+                        <a class="likeable fa fa-thumbs-o-up" data-action="like" data-url="{{ route('like.store') }}" data-type="Reply" data-id="{{ $reply->id }}" data-count="{{ $reply->like_count ?: 0 }}" href="javascript:void(0);" title="{{ trans('hifone.like') }}"> {{ $reply->like_count ?: '' }}</a>
                     </span>
                 </div>
                 <div class="media-body markdown-reply content-body">{!! $reply->body !!}</div>

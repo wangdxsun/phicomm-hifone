@@ -43,7 +43,7 @@
 <div class="clearfix"></div>
 @if (Auth::check())
   @if (Auth::user() && (Auth::user()->id == $user->id || Entrust::can('manage_users')))
-    <a class="btn btn-primary btn-block" href="{{ route('user.edit', $user->id) }} " id="user-edit-button">
+    <a class="btn btn-primary btn-block" href="{{ route('user.edit', $user->id) }}" id="user-edit-button">
       <i class="fa fa-edit"></i> {{ trans('hifone.users.edit.title') }}
     </a>
     @if(isset($providers))
