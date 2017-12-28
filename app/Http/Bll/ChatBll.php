@@ -88,7 +88,7 @@ class ChatBll extends BaseBll
                 $message = app('parser.emotion')->parse($message);
                 $messages[] = app('parser.markdown')->convertMarkdownToHtml($message);
             } else {
-                $messages[] = app('parser.emotion')->parse(request('message'));
+                $messages[] = app('parser.emotion')->parse(e(request('message')));
             }
         }
 
