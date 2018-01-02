@@ -2,3 +2,4 @@
 .idea/
 app/Http/Controllers/TestController.php
 resources/views/test.blade.php
+app/Http/Controllers/Demo
