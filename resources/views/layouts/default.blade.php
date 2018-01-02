@@ -39,15 +39,6 @@
                 'dislike' : '{{ trans('hifone.unlike') }}'
             };
         </script>
-        <script src="//cdn.bootcss.com/socket.io/1.4.5/socket.io.min.js"></script>
-        <script>
-            $().ready(function() {
-                var socket = io('{{ env('SOCKET_HOST') }}:{{ env('SOCKET_PORT') }}');
-                socket.on('messages:newMessage', function(data) {
-                    console.log(data);
-                });
-            });
-        </script>
         @if($stylesheet)
 		<style type="text/css">
 		{!! $stylesheet !!}

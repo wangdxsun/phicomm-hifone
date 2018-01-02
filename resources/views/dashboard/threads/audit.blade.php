@@ -8,6 +8,11 @@
             </span>
             <div class="clearfix"></div>
         </div>
+        <div class="uppercase pull-right">
+            <span class="uppercase">
+                截止当前列表的帖子总数：{{ $threadCount }}
+            </span>
+        </div>
         @if(isset($sub_menu))
             @include('dashboard.partials.sub-nav')
         @endif

@@ -48,17 +48,20 @@ class ThreadBll extends BaseBll
 
     public function webSearch()
     {
-        $threads = Thread::searchThread(request('q'))->load(['user', 'node', 'lastReplyUser']);
+        $threads = Thread::searchThread(request('q'));
+        foreach ($threads as $thread) {
+            unset($thread['node']);
+            unset($thread['user']);
+        }
+        $threads = $threads->load(['user', 'node', 'lastReplyUser']);
 
         return $threads;
     }
 
     //H5端发帖图文分开 Web发帖富文本图文混排
-    public function createThread()
+    public function createThread($threadData)
     {
-        $threadData = Input::get('thread');
-        $sub_node_id = isset($threadData['sub_node_id']) ? $threadData['sub_node_id'] : null;
-        $node_id = SubNode::find($sub_node_id)->node_id;
+        $node_id = SubNode::find($threadData['sub_node_id'])->node_id;
 
         $tags = isset($threadData['tags']) ? $threadData['tags'] : '';
         $images = '';
@@ -75,7 +78,7 @@ class ThreadBll extends BaseBll
             $threadData['body'],
             Auth::id(),
             $node_id,
-            $sub_node_id,
+            $threadData['sub_node_id'],
             $tags,
             $images
         ));

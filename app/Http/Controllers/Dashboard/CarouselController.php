@@ -37,12 +37,24 @@ class CarouselController extends Controller
      */
     public function index()
     {
-        $carousels  = Carousel::orderBy('order')->get();
+        $carousels  = Carousel::orderBy('order')->recent()->where('visible', 1)->get();
 
         return View::make('dashboard.carousel.index')
             ->withPageTitle('banner管理')
-            ->withCarousels($carousels);
+            ->withCarousels($carousels)
+            ->withCurrentMenu('index');
     }
+
+    public function hideBanners()
+    {
+        $carousels  = Carousel::orderBy('order')->recent()->where('visible', 0)->get();
+
+        return View::make('dashboard.carousel.index')
+            ->withPageTitle('banner管理')
+            ->withCarousels($carousels)
+            ->withCurrentMenu('hide');
+    }
+
 
     public function show(Carousel $carousel)
     {
@@ -116,7 +128,7 @@ class CarouselController extends Controller
                 ->withErrors($e->getMessageBag());
         }
 
-        return Redirect::route('dashboard.carousel.index', ['id' => $carousel->id])
+        return Redirect::route('dashboard.carousel.index')
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.notices.edit.success')));
     }
 

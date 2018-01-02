@@ -16,7 +16,7 @@
       <div class="media-heading">
         {{ trans('hifone.credits.balance_current') }}
        <span class="coin_list" data-toggle="tooltip", data-placement="bottom" title="{{ $current_user->score }}">
-        {!! $current_user->score !!}
+        {{ $current_user->score }}
         </span>
         </div>
       </div>
@@ -34,7 +34,7 @@
             <td>{{ $credit->id }}</td>
             <td class="timeago">{{ $credit->created_at }}</td>
              <td>{{ $credit->rule->name }}</td>
-            <td>{!! $credit->reward !!}</td>
+            <td>{{ $credit->reward }}</td>
             <td>{{ $credit->balance }}</td>
           </tr>
           @endforeach

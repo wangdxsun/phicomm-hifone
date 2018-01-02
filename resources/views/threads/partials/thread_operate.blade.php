@@ -48,18 +48,18 @@
         @endif
 
         @if (Auth::user() && Auth::user()->can("manage_threads") )
-            <a data-method="post" id="thread-recommend-button" data-url="{{ route('thread.excellent', [$thread->id]) }}" class="admin {!! $thread->is_excellent ? 'active' :''!!}" title="{{ trans('hifone.threads.mark_excellent') }}">
+            <a data-method="post" id="thread-recommend-button" data-url="{{ route('thread.excellent', [$thread->id]) }}" class="admin {{ $thread->is_excellent ? 'active' :'' }}" title="{{ trans('hifone.threads.mark_excellent') }}">
                 <i class="fa fa-trophy"></i>
             </a>
 
             @if ($thread->order >= 0)
-                <a data-method="post" id="thread-pin-button" data-url="{{ route('thread.pin', [$thread->id]) }}" class="admin {!! $thread->order > 0 ? 'active' : '' !!}" title="{{ trans('hifone.threads.mark_stick') }}">
+                <a data-method="post" id="thread-pin-button" data-url="{{ route('thread.pin', [$thread->id]) }}" class="admin {{ $thread->order > 0 ? 'active' : '' }}" title="{{ trans('hifone.threads.mark_stick') }}">
                     <i class="fa fa-thumb-tack"></i>
                 </a>
             @endif
 
             @if ($thread->order <= 0)
-                <a data-method="post" id="thread-sink-button" data-url="{{ route('thread.sink', [$thread->id]) }}" class="admin {!! $thread->order < 0 ? 'active' : '' !!}" title="{{ trans('hifone.threads.mark_sink') }}">
+                <a data-method="post" id="thread-sink-button" data-url="{{ route('thread.sink', [$thread->id]) }}" class="admin {{ $thread->order < 0 ? 'active' : '' }}" title="{{ trans('hifone.threads.mark_sink') }}">
                     <i class="fa fa-anchor"></i>
                 </a>
             @endif

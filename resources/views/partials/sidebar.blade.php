@@ -80,7 +80,7 @@
                                     <a href="{{ route('user.home',$user->username) }}">{{ $user->username }}</a>
                                {{--@endif--}}
                             <td>
-                            <td style="vertical-align: middle;"><small data-toggle="tooltip" data-placement="top" title="{{ $user->score }}">{!! $user->score !!}</small></td>
+                            <td style="vertical-align: middle;"><small data-toggle="tooltip" data-placement="top" title="{{ $user->score }}">{{ $user->score }}</small></td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -125,7 +125,7 @@
                     @foreach ($node_threads as $nodeThread)
                         <li>
                             <a href="{!! route('thread.show', $nodeThread->id) !!}">
-                                {!! $nodeThread->title !!}
+                                {{ $nodeThread->title }}
                             </a>
                         </li>
                     @endforeach

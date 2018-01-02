@@ -23,7 +23,7 @@ class ParseAt
     public function parse($body)
     {
         $this->body = $body;
-        $this->usernames = $this->getUsernames();
+        $this->usernames = $this->getUserNames();
 
         count($this->usernames) > 0 && $this->users = User::whereIn('username', $this->usernames)->get();
 
@@ -36,25 +36,23 @@ class ParseAt
     {
         foreach ($this->users as $user) {
             $search = '@'.$user->username;
-            $place = "<a href='/user/{$user->id}'>$search</a>";
-
-            $this->body = str_replace($search, $place, $this->body);
+            $replace = "<a href='/user/{$user->id}'>$search</a>$1";
+            $this->body = preg_replace("/$search([@<\s]+|$)/", $replace, $this->body);
         }
     }
 
-    protected function getUsernames()
+    protected function getUserNames()
     {
-        preg_match_all("/\@([^@<\r\n\s]*)/i", $this->body, $atlist_tmp);
-        $usernames = [];
-
-        foreach ($atlist_tmp[1] as $k => $v) {
-            if (strlen($v) > 25) {
+        preg_match_all("/@([^@<\s]*)/i", $this->body, $names);
+        $userNames = [];
+        foreach ($names[1] as $name) {
+            if (strlen($name) == 0 || strlen($name) > 25 ) {
                 continue;
             }
-            $usernames[] = $v;
+            $userNames[] = $name;
         }
 
-        return array_unique($usernames);
+        return array_unique($userNames);
     }
 
 }

@@ -2,7 +2,7 @@
 
     <ul class="list-group row thread-list">
         @foreach ($threads as $thread)
-            <li class="list-group-item media {!! !$column ?'':'col-sm-6' !!}" style="margin-top: 0px;">
+            <li class="list-group-item media {{ !$column ? '' : 'col-sm-6' }}" style="margin-top: 0px;">
 
                 <a class="pull-right" href="{{ route('messages.show', [$thread->id]) }}">
 

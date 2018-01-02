@@ -130,7 +130,6 @@ class AddCreditHandler
                 $action = 'followed_user';
                 $user = $event->target;
             }
-
         } elseif ($event instanceof FollowedWasRemovedEvent) {
             if ($event->target instanceof Thread) {
                 $action = 'followed_thread_removed';

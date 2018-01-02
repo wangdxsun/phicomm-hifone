@@ -69,6 +69,9 @@ class DashboardRoutes
             $router->get('stat/node/{node}', 'StatController@node_detail')->name('stat.node.show');
             $router->get('stat/banner', 'StatController@banner')->name('stat.banner');
             $router->get('stat/user', 'StatController@userCount')->name('stat.user');
+            $router->get('stat/threads/count', 'StatController@dailyThreadCount')->name('stat.daily.threads.count');
+            $router->get('stat/replies/count', 'StatController@dailyReplyCount')->name('stat.daily.replies.count');
+            $router->get('stat/zeroReply', 'StatController@zeroReplyCount')->name('stat.zeroReply');
             $router->get('stat/banner/{carousel}', 'StatController@banner_detail')->name('stat.banner.show');
 
             $router->get('wordsExcel/export','WordsExcelController@export')->name('wordsExcel.export');
@@ -80,6 +83,8 @@ class DashboardRoutes
             $router->get('chat/send','ChatController@sendChat')->name('chat.send');
             $router->get('chat/lists','ChatController@chatLists')->name('chat.lists');
             $router->post('chat/store','ChatController@chatStore')->name('chat.store');
+
+            $router->get('carousel/hide', 'CarouselController@hideBanners')->name('carousel.hide');
 
             // Settings
             $router->group(['as' => 'settings.', 'prefix' => 'settings'], function (Registrar $router) {

@@ -1,13 +1,6 @@
 @extends('layouts.dashboard')
-
 @section('content')
-@if(isset($sub_menu))
-@include('dashboard.partials.sub-sidebar')
-@endif
 <div class="content-wrapper">
-    <div class="header sub-header" id="nodes">
-        <span>{{ $page_title }}</span>
-    </div>
     <div class="row">
         <div class="col-sm-12">
             @include('partials.errors')
@@ -43,7 +36,7 @@
                     <div class="col-xs-12">
                         <div class="form-group">
                             <button type="submit" class="btn btn-success">{{ trans('forms.save') }}</button>
-                            <a class="btn btn-default" href="{{ back_url('dashboard.node.index') }}">{{ trans('forms.cancel') }}</a>
+                            <a class="btn btn-default" href="{{ back_url() }}">{{ trans('forms.cancel') }}</a>
                         </div>
                     </div>
                 </div>

@@ -51,7 +51,6 @@ class ChatBll extends BaseBll
         $messages = $this->getMessages();
         event(new NewChatMessageEvent($from, $to, $messages[0]));
         $to->increment('notification_chat_count', 1);
-        $to->increment('notification_count', 1);
         //TODO 友盟消息推送
         $data = array(
             'message' => $messages[0],
@@ -89,7 +88,7 @@ class ChatBll extends BaseBll
                 $message = app('parser.emotion')->parse($message);
                 $messages[] = app('parser.markdown')->convertMarkdownToHtml($message);
             } else {
-                $messages[] = app('parser.emotion')->parse(request('message'));
+                $messages[] = app('parser.emotion')->parse(e(request('message')));
             }
         }
 
@@ -106,7 +105,7 @@ class ChatBll extends BaseBll
                 $insert[] = [
                     'from_user_id' => $from->id,
                     'to_user_id' => $to->id,
-                    'from_to' => $from->id * $to->id,
+                    'from_to' => $from->id * $to->id + $from->id + $to->id,
                     'message' => $message,
                     'created_at'    => Carbon::now()->toDateTimeString(),
                     'updated_at'    => Carbon::now()->toDateTimeString(),

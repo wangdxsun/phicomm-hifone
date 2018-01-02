@@ -19,7 +19,6 @@ use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Pin\SinkWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasMarkedExcellentEvent;
-use Hifone\Events\Thread\ThreadWasMovedEvent;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Node;
 use Hifone\Models\Section;
@@ -58,8 +57,10 @@ class ThreadController extends Controller
         $sections = Section::orderBy('order')->get();
         $nodes = Node::orderBy('order')->get();
         $orderTypes = Thread::$orderTypes;
+        $threadCount = Thread::visible()->count();
         return View::make('dashboard.threads.index')
             ->withThreads($threads)
+            ->with('threadCount', $threadCount)
             ->with('orderTypes', $orderTypes)
             ->withCurrentMenu('index')
             ->withSearch($search)
@@ -74,10 +75,12 @@ class ThreadController extends Controller
     public function audit()
     {
         $threads = Thread::audit()->with('node', 'user', 'lastOpUser', 'subNode')->orderBy('created_at', 'desc')->paginate(20);
+        $threadCount = Thread::audit()->count();
 
         return view('dashboard.threads.audit')
             ->withPageTitle(trans('dashboard.threads.threads').' - '.trans('dashboard.dashboard'))
             ->withThreads($threads)
+            ->with('threadCount', $threadCount)
             ->withCurrentMenu('audit');
     }
 
@@ -89,6 +92,7 @@ class ThreadController extends Controller
     {
         $search = $this->filterEmptyValue(Input::get('thread'));
         $threads = Thread::trash()->search($search)->with('node', 'user', 'lastOpUser')->orderBy('last_op_time', 'desc')->paginate(20);
+        $threadCount = Thread::trash()->count();
         $threadAll = Thread::trash()->get();
         $userIds = array_unique(array_column($threadAll->toArray(), 'user_id'));
         $operators = array_unique(array_column($threadAll->toArray(), 'last_op_user_id'));
@@ -97,6 +101,7 @@ class ThreadController extends Controller
 
         return view('dashboard.threads.trash')
             ->withPageTitle(trans('dashboard.threads.threads').' - '.trans('dashboard.dashboard'))
+            ->with('threadCount', $threadCount)
             ->withThreads($threads)
             ->withThreadAll($threadAll)
             ->with('orderTypes',$orderTypes)
@@ -133,8 +138,8 @@ class ThreadController extends Controller
         $threadData['excerpt'] = Thread::makeExcerpt($threadData['body']);
 
         try {
-            dispatch(new UpdateThreadCommand($thread, $threadData));
             $this->updateOpLog($thread, '修改帖子');
+            dispatch(new UpdateThreadCommand($thread, $threadData));
         } catch (ValidationException $e) {
             return Redirect::route('dashboard.thread.edit', $thread->id)
                 ->withInput($threadData)

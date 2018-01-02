@@ -39,6 +39,10 @@ return [
     'photos' => [
         'photos' => '图片',
     ],
+    'banner' => [
+        'show' => '正在展现的banner',
+        'hide' => '已关闭的banner',
+    ],
     'threads'  => [
         'threads' => '话题',
         'add'     => [

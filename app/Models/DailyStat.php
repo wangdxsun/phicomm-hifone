@@ -14,4 +14,14 @@ class DailyStat extends BaseModel
         return $this->morphTo();
     }
 
+    public function scopeSearch($query, $searches = [])
+    {
+        foreach ($searches as $key => $value) {
+            if ($key == 'date_start') {
+                $query->where('created_at', '>=', $value);
+            } elseif ($key == 'date_end') {
+                $query->where('created_at', '<=', $value);
+            }
+        }
+    }
 }

@@ -59,7 +59,7 @@
                         {{ trans('dashboard.words.edit.batch_del') }}
                     </div>
                     @if (isset($word_count))
-                        <label>{!! '共计'.$word_count.'条' !!}</label>
+                        <label>{{ '共计'.$word_count.'条' }}</label>
                     @endif
 
                     @include('partials.errors')

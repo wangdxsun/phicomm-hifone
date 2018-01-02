@@ -82,7 +82,7 @@ class UserController extends Controller
     public function update(User $user)
     {
         $this->needAuthorOrAdminPermission($user->id);
-        $data = Input::only('nickname', 'company', 'website', 'signature', 'bio', 'locale');
+        $data = Input::only('nickname', 'company', 'website', 'signature', 'bio', 'location');
         try {
             $user->update($data);
             $user->updateIndex();

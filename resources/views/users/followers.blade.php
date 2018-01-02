@@ -1,4 +1,4 @@
-threads.blade.php@extends('layouts.default')
+@extends('layouts.default')
 
 @section('title')
 {{ $user->username }}} {{ trans('hifone.threads.list') }}_@parent
@@ -20,15 +20,6 @@ threads.blade.php@extends('layouts.default')
 
     <div class="panel-body">
       @include('users.partials.infonav')
-      @if (count($threads))
-	    @include('users.partials.threads')
-	    <div class="pull-right add-padding-vertically">
-	        {{ $threads->render() }}
-	    </div>
-      @else
-        <div class="empty-block">{{ trans('hifone.threads.noitem') }}</div>
-      @endif
-
     </div>
 
   </div>

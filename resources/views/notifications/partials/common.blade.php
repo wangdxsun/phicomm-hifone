@@ -11,7 +11,7 @@
      •
     {{ $notification->labelUp }}
     <a href="{{ route('thread.show', [$notification->object->id]) }}" title="{{ $notification->object->title }}">
-      {!! str_limit($notification->object->title, '100') !!}
+      {{ str_limit($notification->object->title, '100') }}
     </a>
   </div>
     <div class="media-content summary markdown-reply">

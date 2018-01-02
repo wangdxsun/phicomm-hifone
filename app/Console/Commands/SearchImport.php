@@ -21,7 +21,7 @@ class SearchImport extends Command
      *
      * @var string
      */
-    protected $signature = 'search:import {type?}';
+    protected $signature = 'search:import {type?} {--id=}';
 
     /**
      * The console command description.
@@ -49,21 +49,39 @@ class SearchImport extends Command
     {
         $type = $this->argument('type');
         if ($type == 'users') {
-            User::chunk(5000, function ($users) {
-                $users->removeFromIndex();
+            $id = $this->option('id');
+            if ($id) {
+                $user = User::find($id);
+                $user->removeFromIndex();
+                $user->addToIndex();
+                $this->info("Import user $id into ElasticSearch Successfully");
+                return;
+            }
+            User::chunk(1000, function ($users) {
+                foreach ($users as $user) {
+                    $user->removeFromIndex();
+                }
             });
             User::rebuildMapping();
-            User::chunk(5000, function ($users) {
-                foreach ($users as $user) {
-                    unset($user['roles']);
-                }
+            User::chunk(1000, function ($users) {
                 $users->addToIndex();
             });
 
             $this->info('Import Users into ElasticSearch Successfully');
         } elseif ($type == 'threads') {
+            $id = $this->option('id');
+            if ($id) {
+                $thread = Thread::find($id);
+                $thread->removeFromIndex();
+                $thread->body = strip_tags($thread->body);
+                $thread->addToIndex();
+                $this->info("Import thread $id into ElasticSearch Successfully");
+                return;
+            }
             Thread::visible()->chunk(1000, function ($threads) {
-                $threads->removeFromIndex();
+                foreach ($threads as $thread) {
+                    $thread->removeFromIndex();
+                }
             });
             Thread::rebuildMapping();
             Thread::visible()->chunk(1000, function ($threads) {

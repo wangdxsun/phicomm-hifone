@@ -20,7 +20,6 @@
         <ul class="nav nav-tabs" role="tablist">
           <li @if(!$tab) class="active" @endif><a href="{{ route('user.edit',['id'=>$user->id]) }}">{{ trans('hifone.users.info') }}</a></li>
           <li @if($tab=='avatar') class="active" @endif><a href="{{ route('user.edit',['id'=>$user->id,'tab'=>'avatar']) }}">{{ trans('hifone.users.avatar') }}</a></li>
-          {{--<li @if($tab=='password') class="active" @endif><a href="{{ route('user.edit',['id'=>$user->id,'tab'=>'password']) }}">{{ trans('hifone.users.password') }}</a></li>--}}
         </ul>
         @if($tab == 'avatar')
         <form class="form-horizontal" method="post" action="/settings/update-avatar" enctype="multipart/form-data" id="avatar-form">
@@ -44,31 +43,6 @@
                     </div>
                 </div>
         </form>
-        @elseif($tab == 'password')
-        <form class="form-horizontal" method="post" action="/settings/resetPassword" enctype="multipart/form-data">
-            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <h5><i class="fa fa-wrench"></i>&nbsp;&nbsp;{{ trans('hifone.users.password_settings') }}</h5><hr>
-            <div class="form-group">
-                <div class="col-sm-4">
-                <input type="password" name="old_password" placeholder="{{ trans('hifone.users.password_current') }}" class="form-control">
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-4">
-                <input type="password" name="password" placeholder="{{ trans('hifone.users.password_new') }}" class="form-control">
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-4">
-                <input type="password" name="password_confirmation" placeholder="{{ trans('hifone.users.password_new_confirmation') }}" class="form-control">
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-4 status-post-submit">
-                <button type="submit" class="btn btn-primary" id="update-password">{{ trans('hifone.users.password_update') }}</button>
-                </div>
-            </div>
-      </form>
       @else
       {!! Form::model($user, ['route' => ['user.update', $user->id], 'method' => 'patch']) !!}
           <h5><i class="fa fa-tasks"></i>&nbsp;&nbsp;{{ trans('hifone.users.info') }}</h5>
