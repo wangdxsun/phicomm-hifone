@@ -119,13 +119,6 @@ class UserController extends ApiController
     public function favorites(User $user, UserBll $userBll)
     {
         $threads = $userBll->getFavorites($user);
-
         return $threads;
-    }
-
-    public function excellentUsers(UserBll $userBll)
-    {
-        $users = $userBll->getExcellentUsers();
-        return $users;
     }
 }
