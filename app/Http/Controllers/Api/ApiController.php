@@ -11,15 +11,9 @@
 
 namespace Hifone\Http\Controllers\Api;
 
-use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Contracts\Support\Arrayable;
+use Hifone\Http\Controllers\Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Response;
-use McCool\LaravelAutoPresenter\Facades\AutoPresenter;
 
 abstract class ApiController extends Controller
 {

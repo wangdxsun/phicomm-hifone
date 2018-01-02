@@ -37,6 +37,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
 //            \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class,
             \Hifone\Http\Middleware\Pjax::class,
+            \Barryvdh\Cors\HandleCors::class,
         ],
         'api' => [
             \Illuminate\Cookie\Middleware\EncryptCookies::class,

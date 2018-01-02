@@ -10,9 +10,8 @@ namespace Hifone\Http\Bll;
 
 use Auth;
 use Hifone\Commands\Image\UploadBase64ImageCommand;
-use Hifone\Events\Image\AvatarWasUploadedEvent;
+use Hifone\Commands\Image\UploadImageCommand;
 use Hifone\Events\User\UserWasLoggedinEvent;
-use Hifone\Exceptions\HifoneException;
 use Input;
 
 class CommonBll extends BaseBll
@@ -34,14 +33,26 @@ class CommonBll extends BaseBll
 
     public function upload()
     {
-        if (Input::has('image')) {
-            $image = Input::get('image');
-            $upload = dispatch(new UploadBase64ImageCommand($image));
-            event(new AvatarWasUploadedEvent(Auth::user()));
-
-            return $upload;
-        } else {
-            throw new HifoneException('没有上传图片');
+        $images = [];
+        if (Input::hasFile('images')) {
+            $files = Input::file('images');
+            foreach ($files as $image) {
+                $upload = dispatch(new UploadImageCommand($image));
+                $images[] = $upload["filename"];
+            }
         }
+        return $images;
+    }
+
+    public function uploadBase64()
+    {
+        $images = [];
+        if (Input::has('images')) {
+            foreach (Input::get('images') as $image) {
+                $upload = dispatch(new UploadBase64ImageCommand($image));
+                $images[] = $upload["filename"];
+            }
+        }
+        return $images;
     }
 }

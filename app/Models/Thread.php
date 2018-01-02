@@ -390,11 +390,6 @@ class Thread extends BaseModel implements TaggableInterface
         return $value ?: '点击查看更多';
     }
 
-    public function getThumbnailsAttribute($value)
-    {
-        return $value ?: request()->getSchemeAndHttpHost().'/images/share.png';
-    }
-
     //动态计算热度值
     public function getHeatComputeAttribute()
     {
@@ -455,4 +450,20 @@ class Thread extends BaseModel implements TaggableInterface
         }
         return $value;
     }
+
+//    public function getDeviceAttribute($value)
+//    {
+//        switch ($value) {
+//            case Thread::H5:
+//                return 'H5';
+//            case Thread::ANDROID:
+//                return 'Android';
+//            case Thread::IOS:
+//                return 'iOS';
+//            case Thread::WEB:
+//                return 'Web';
+//            default:
+//                return '未知';
+//        }
+//    }
 }

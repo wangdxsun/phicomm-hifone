@@ -22,7 +22,7 @@ class NodeController extends ApiController
     }
 
     /**
-     * 版块列表
+     * 版块列表(含分类）
      * @param NodeBll $nodeBll
      * @return mixed
      */

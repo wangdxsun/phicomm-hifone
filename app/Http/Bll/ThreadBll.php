@@ -58,6 +58,7 @@ class ThreadBll extends BaseBll
         return $threads;
     }
 
+    //H5端发帖图文分开 Web发帖富文本图文混排
     public function createThread($threadData)
     {
         $node_id = SubNode::find($threadData['sub_node_id'])->node_id;
@@ -86,7 +87,8 @@ class ThreadBll extends BaseBll
         return $thread;
     }
 
-    public function createThreadInApp()
+    //APP发帖支持图文混排
+    public function createThreadImageMixed()
     {
         $threadData = Input::get('thread');
         $sub_node_id = isset($threadData['sub_node_id']) ? $threadData['sub_node_id'] : null;
@@ -184,10 +186,14 @@ class ThreadBll extends BaseBll
         return $thread;
     }
 
-    public function replies(Thread $thread)
+    public function replies(Thread $thread, $source = '')
     {
-        $replies = $thread->replies()->visibleAndDeleted()->with(['user', 'reply.user'])->pinAndRecent()->paginate();
-        foreach ($replies as &$reply) {
+        if ($source == 'web') {
+            $replies = $thread->replies()->visible()->with(['user', 'reply.user'])->pinAndRecent()->paginate();
+        } else {
+            $replies = $thread->replies()->visibleAndDeleted()->with(['user', 'reply.user'])->pinAndRecent()->paginate();
+        }
+        foreach ($replies as $reply) {
             $reply['liked'] = Auth::check() ? Auth::user()->hasLikeReply($reply) : false;
             $reply['reported'] = Auth::check() ? Auth::user()->hasReportReply($reply) : false;
         }

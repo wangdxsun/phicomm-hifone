@@ -14,6 +14,7 @@ namespace Hifone\Http\Routes;
 use Illuminate\Contracts\Routing\Registrar;
 
 /**
+ * 社区Web端（前后端分离）路由
  * This is the api routes class.
  */
 class WebRoutes
@@ -25,12 +26,17 @@ class WebRoutes
      */
     public function map(Registrar $router)
     {
-        $router->group(['namespace' => 'Web', 'prefix' => 'web/v1', 'middleware' => 'api', 'as' => 'web.'], function ($router) {
-
+        $router->group([
+            'namespace' => 'Web',
+            'prefix' => 'web/v1',
+            'middleware' => ['web', 'localize'],
+            'as' => 'web.'
+        ], function ($router) {
             $router->get('emotions', 'GeneralController@emotion');
 
             //内容相关
-            $router->get('threads', 'ThreadController@index');
+            $router->get('threads/hot', 'ThreadController@index');
+            $router->get('threads/recent', 'ThreadController@recent');
             $router->get('thread/search/{keyword}', 'ThreadController@search');
             $router->get('user/search/{keyword}', 'UserController@search');
             $router->get('threads/{thread}', 'ThreadController@show');
@@ -38,7 +44,8 @@ class WebRoutes
             $router->get('nodes', 'NodeController@index');
             $router->get('sections', 'NodeController@sections');
             $router->get('subNodes', 'NodeController@subNodes');
-            $router->get('nodes/{node}', 'NodeController@show');
+            $router->get('nodes/{node}', 'NodeController@show')->where('node', '[0-9]+');;
+            $router->get('nodes/{node}/recommend', 'NodeController@recommendThreadsOfNode')->where('node', '[0-9]+');;
             $router->get('subNodes/{subNode}', 'NodeController@showOfSubNode');
             $router->get('nodes/{node}/subNodes','SubNodeController@index');
             $router->get('banners', 'BannerController@index');
@@ -65,6 +72,8 @@ class WebRoutes
 
             // Authorization Required
             $router->group(['middleware' => 'auth:hifone'], function ($router) {
+                $router->post('upload', 'CommonController@upload');
+                $router->post('upload/base64', 'CommonController@uploadBase64');
                 $router->post('threads', 'ThreadController@store');
                 $router->post('replies', 'ReplyController@store');
                 $router->post('follow/users/{user}', 'FollowController@user');
@@ -88,6 +97,13 @@ class WebRoutes
                 $router->get('notification/at', 'NotificationController@at');
                 $router->get('notification/system', 'NotificationController@system');
                 $router->post('logout', 'PhicommController@logout');
+            });
+
+            //后台管理员
+            $router->group(['middleware' => ['auth', 'role:Admin|Founder|NodeMaster']], function ($router) {
+                $router->post('threads/{thread}/excellent', 'ThreadController@excellent');
+                $router->post('threads/{thread}/pin', 'ThreadController@pin');
+                $router->post('threads/{thread}/sink', 'ThreadController@sink');
             });
         });
     }

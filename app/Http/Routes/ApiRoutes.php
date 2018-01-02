@@ -36,16 +36,16 @@ class ApiRoutes
             $router->get('threads', 'ThreadController@index');
             $router->get('thread/search/{keyword}', 'ThreadController@search');
             $router->get('user/search/{keyword}', 'UserController@search');
-            $router->get('threads/{thread}', 'ThreadController@show');
-            $router->get('threads/{thread}/replies', 'ThreadController@replies');
+            $router->get('threads/{thread}', 'ThreadController@show')->where('thread', '[0-9]+');
+            $router->get('threads/{thread}/replies', 'ThreadController@replies')->where('thread', '[0-9]+');
             $router->get('nodes', 'NodeController@index');
             $router->get('sections', 'NodeController@sections');
             $router->get('subNodes', 'NodeController@subNodes');
-            $router->get('nodes/{node}', 'NodeController@show');
-            $router->get('subNodes/{subNode}', 'NodeController@showOfSubNode');
-            $router->get('nodes/{node}/subNodes','SubNodeController@index');
+            $router->get('nodes/{node}', 'NodeController@show')->where('node', '[0-9]+');
+            $router->get('subNodes/{subNode}', 'NodeController@showOfSubNode')->where('subNode', '[0-9]+');
+            $router->get('nodes/{node}/subNodes','SubNodeController@index')->where('node', '[0-9]+');
             $router->get('banners', 'BannerController@index');
-            $router->get('banners/{carousel}', 'BannerController@show')->name('banner.show');
+            $router->get('banners/{carousel}', 'BannerController@show')->name('banner.show')->where('carousel', '[0-9]+');
             $router->get('report/reason', 'ReportController@reason');
 
             //登录相关
@@ -59,24 +59,26 @@ class ApiRoutes
             $router->get('user/me', 'UserController@me');
             $router->get('u/{username}', 'UserController@showByUsername');
             $router->get('users/{user}', 'UserController@show')->where('user', '[0-9]+');
-            $router->get('users/{user}/follows', 'UserController@follows');
-            $router->get('users/{user}/followers', 'UserController@followers');
-            $router->get('users/{user}/threads', 'UserController@threads');
-            $router->get('users/{user}/replies', 'UserController@replies');
-            $router->get('users/{user}/favorites', 'UserController@favorites');
+            $router->get('users/{user}/follows', 'UserController@follows')->where('user', '[0-9]+');
+            $router->get('users/{user}/followers', 'UserController@followers')->where('user', '[0-9]+');
+            $router->get('users/{user}/threads', 'UserController@threads')->where('user', '[0-9]+');
+            $router->get('users/{user}/replies', 'UserController@replies')->where('user', '[0-9]+');
+            $router->get('users/{user}/favorites', 'UserController@favorites')->where('user', '[0-9]+');
             $router->get('rank', 'RankController@ranks');
 
             // Authorization Required
             $router->group(['middleware' => 'auth:hifone'], function ($router) {
+                $router->post('upload/base64', 'CommonController@uploadBase64');
+                $router->post('upload', 'CommonController@upload');
                 $router->post('threads', 'ThreadController@store');
                 $router->post('replies', 'ReplyController@store');
-                $router->post('follow/users/{user}', 'FollowController@user');
-                $router->post('follow/threads/{thread}', 'FollowController@thread');
-                $router->post('like/threads/{thread}', 'LikeController@thread');
-                $router->post('like/replies/{reply}', 'LikeController@reply');
-                $router->post('favorite/threads/{thread}', 'FavoriteController@threadFavorite');
-                $router->post('report/threads/{thread}', 'ReportController@thread');
-                $router->post('report/replies/{reply}', 'ReportController@reply');
+                $router->post('follow/users/{user}', 'FollowController@user')->where('user', '[0-9]+');
+                $router->post('follow/threads/{thread}', 'FollowController@thread')->where('thread', '[0-9]+');
+                $router->post('like/threads/{thread}', 'LikeController@thread')->where('thread', '[0-9]+');
+                $router->post('like/replies/{reply}', 'LikeController@reply')->where('reply', '[0-9]+');
+                $router->post('favorite/threads/{thread}', 'FavoriteController@threadFavorite')->where('thread', '[0-9]+');
+                $router->post('report/threads/{thread}', 'ReportController@thread')->where('thread', '[0-9]+');
+                $router->post('report/replies/{reply}', 'ReportController@reply')->where('reply', '[0-9]+');
                 $router->get('notification', 'NotificationController@index');
                 $router->get('user/watch', 'NotificationController@watch');
                 $router->get('user/credit', 'UserController@credit');
@@ -85,8 +87,8 @@ class ApiRoutes
                 $router->get('rank/count', 'RankController@count');
 
                 $router->get('chats', 'ChatController@chats');
-                $router->get('chat/{user}', 'ChatController@messages');
-                $router->post('chat/{user}', 'ChatController@store');
+                $router->get('chat/{user}', 'ChatController@messages')->where('user', '[0-9]+');
+                $router->post('chat/{user}', 'ChatController@store')->where('user', '[0-9]+');
                 $router->get('notification/reply', 'NotificationController@reply');
                 $router->get('notification/at', 'NotificationController@at');
                 $router->get('notification/system', 'NotificationController@system');

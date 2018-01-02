@@ -57,7 +57,7 @@ class ThreadController extends AppController
         if (count(strip_tags(array_get(request('thread'), 'body'))) > 10000) {
             throw new HifoneException('帖子内容不得多于10000个字符');
         }
-        $thread = $threadBll->createThreadInApp();
+        $thread = $threadBll->createThreadImageMixed();
         $result = $threadBll->auditThread($thread, $wordsFilter);
         return $result;
     }

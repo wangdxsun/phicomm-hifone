@@ -19,21 +19,21 @@ class AppRoutes
             $router->get('user/info', 'UserController@me');
             $router->post('user/bind', 'UserController@bind');
             $router->get('users/{user}', 'UserController@show')->where('user', '[0-9]+');
-            $router->get('users/{user}/follows', 'UserController@follows');
-            $router->get('users/{user}/followers', 'UserController@followers');
-            $router->get('users/{user}/threads', 'UserController@threads');
-            $router->get('users/{user}/replies', 'UserController@replies');
-            $router->get('users/{user}/favorites', 'UserController@favorites');
+            $router->get('users/{user}/follows', 'UserController@follows')->where('user', '[0-9]+');
+            $router->get('users/{user}/followers', 'UserController@followers')->where('user', '[0-9]+');
+            $router->get('users/{user}/threads', 'UserController@threads')->where('user', '[0-9]+');
+            $router->get('users/{user}/replies', 'UserController@replies')->where('user', '[0-9]+');
+            $router->get('users/{user}/favorites', 'UserController@favorites')->where('user', '[0-9]+');
 
             //内容相关
             $router->get('nodes', 'NodeController@index');
             $router->get('sections', 'NodeController@sections');
             $router->get('subNodes', 'NodeController@subNodes');
             $router->get('subNodes/feedback', 'NodeController@subNodesInFeedback');
-            $router->get('nodes/{node}', 'NodeController@show')->name('node.show');
-            $router->get('subNodes/{subNode}', 'NodeController@showOfSubNode');
+            $router->get('nodes/{node}', 'NodeController@show')->name('node.show')->where('node', '[0-9]+');
+            $router->get('subNodes/{subNode}', 'NodeController@showOfSubNode')->where('subNode', '[0-9]+');
             $router->get('banners', 'BannerController@index');
-            $router->get('banners/{carousel}', 'BannerController@bannerViewCount')->name('banner.show');
+            $router->get('banners/{carousel}', 'BannerController@bannerViewCount')->name('banner.show')->where('carousel', '[0-9]+');
             $router->get('threads', 'ThreadController@index');
             $router->get('threads/search/{keyword}', 'ThreadController@search');
             $router->get('users/search/{keyword}', 'UserController@search');
@@ -42,8 +42,6 @@ class AppRoutes
 
             // Authorization Required
             $router->group(['middleware' => 'auth:hifone'], function ($router) {
-                $router->post('upload/base64', 'CommonController@uploadBase64');
-                $router->post('upload', 'CommonController@upload');
                 $router->post('threads', 'ThreadController@store');
                 $router->post('feedbacks', 'ThreadController@feedback');
                 $router->post('replies', 'ReplyController@store');
@@ -61,7 +59,7 @@ class AppRoutes
                 $router->get('chats', 'ChatController@chats');
                 $router->get('chat/{user}/{scope}/{chat?}', 'ChatController@messages')->where('user', '[0-9]+')
                     ->where('scope', 'after|before')->where('chat', '[0-9]+')->name('chat.message');
-                $router->post('chat/{user}', 'ChatController@store');
+                $router->post('chat/{user}', 'ChatController@store')->where('user', '[0-9]+');
                 $router->get('notification', 'NotificationController@index');
                 $router->get('notification/reply', 'NotificationController@reply');
                 $router->get('notification/at', 'NotificationController@at');

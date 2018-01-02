@@ -1,18 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: qiuling.jiang
- * Date: 2017/5/16
- * Time: 15:48
- */
 
-namespace Hifone\Http\Controllers\App\V1;
+namespace Hifone\Http\Controllers\Web;
 
 use Hifone\Http\Bll\ChatBll;
 use Hifone\Http\Bll\NotificationBll;
-use Hifone\Http\Controllers\App\AppController;
 
-class NotificationController extends AppController
+class NotificationController extends WebController
 {
     public function index(NotificationBll $notificationBll, ChatBll $chatBll)
     {
@@ -29,33 +22,31 @@ class NotificationController extends AppController
         return $notifications;
     }
 
-    //关注动态
-    public function watch(NotificationBll $notificationBll)
+    public function watch(NotificationBll $bll)
     {
-        $watches = $notificationBll->watch();
+        $watches = $bll->watch();
 
         return $watches;
     }
 
-    public function reply(NotificationBll $notificationBll)
+    public function reply(NotificationBll $bll)
     {
-        $replies = $notificationBll->reply();
+        $replies = $bll->reply();
 
         return $replies;
     }
 
-    public function at(NotificationBll $notificationBll)
+    public function at(NotificationBll $bll)
     {
-        $ats = $notificationBll->at();
+        $ats = $bll->at();
 
         return $ats;
     }
 
-    public function system(NotificationBll $notificationBll)
+    public function system(NotificationBll $bll)
     {
-        $systems = $notificationBll->system();
+        $systems = $bll->system();
 
         return $systems;
     }
-
 }
