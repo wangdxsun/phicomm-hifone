@@ -96,6 +96,13 @@ class WebRoutes
                 $router->get('notification/system', 'NotificationController@system');
                 $router->post('logout', 'PhicommController@logout');
             });
+
+            //后台管理员
+            $router->group(['middleware' => ['auth', 'role:Admin|Founder|NodeMaster']], function ($router) {
+                $router->post('threads/{thread}/excellent', 'ThreadController@excellent');
+                $router->post('threads/{thread}/pin', 'ThreadController@pin');
+                $router->post('threads/{thread}/sink', 'ThreadController@sink');
+            });
         });
     }
 }

@@ -71,4 +71,59 @@ class ThreadController extends WebController
     {
         return $threadBll->replies($thread, 'web');
     }
+
+    public function excellent(Thread $thread)
+    {
+        if($thread->is_excellent > 0) {
+            $thread->decrement('is_excellent', 1);
+            $this->updateOpLog($thread, '取消精华');
+        } else {
+            $thread->increment('is_excellent', 1);
+            $this->updateOpLog($thread, '精华');
+            event(new ExcellentWasAddedEvent($thread->user));
+            event(new ThreadWasMarkedExcellentEvent($thread));
+        }
+        //更新热度值
+        $thread->heat = $thread->heat_compute;
+        $thread->save();
+        return ['excellent' => $thread->is_excellent > 0 ? true : false];
+    }
+
+    public function pin(Thread $thread)
+    {
+        if($thread->order > 0) {
+            $thread->decrement('order', 1);
+            $this->updateOpLog($thread, '取消置顶');
+        } elseif($thread->order == 0) {
+            $thread->increment('order', 1);
+            $this->updateOpLog($thread, '置顶');
+            event(new ThreadWasPinnedEvent($thread));
+            event(new PinWasAddedEvent($thread->user, 'Thread'));
+        } elseif($thread->order < 0) {
+            $thread->increment('order', 2);
+            $this->updateOpLog($thread, '置顶');
+            event(new ThreadWasPinnedEvent($thread));
+            event(new PinWasAddedEvent($thread->user, 'Thread'));
+        }
+
+        return ['pin' => $thread->order > 0 ? true : false];
+    }
+
+    public function sink(Thread $thread)
+    {
+        if($thread->order > 0) {
+            $thread->decrement('order', 2);
+            $this->updateOpLog($thread, '下沉');
+            event(new SinkWasAddedEvent($thread->user));
+        } elseif($thread->order == 0) {
+            $thread->decrement('order', 1);
+            $this->updateOpLog($thread, '下沉');
+            event(new SinkWasAddedEvent($thread->user));
+        } elseif($thread->order < 0) {
+            $thread->increment('order', 1);
+            $this->updateOpLog($thread, '取消下沉');
+        }
+        return ['sink' => $thread->order < 0 ? true : false];
+    }
+
 }
