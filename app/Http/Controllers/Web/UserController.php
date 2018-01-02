@@ -3,6 +3,9 @@
 namespace Hifone\Http\Controllers\Web;
 
 use Auth;
+use Hifone\Commands\Image\UploadBase64ImageCommand;
+use Hifone\Events\Image\AvatarWasUploadedEvent;
+use Hifone\Exceptions\HifoneException;
 use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\FollowBll;
 use Hifone\Http\Bll\PhicommBll;
@@ -95,10 +98,14 @@ class UserController extends WebController
     //上传头像
     public function upload(CommonBll $commonBll, PhicommBll $phicommBll)
     {
-        $avatar = $commonBll->upload();
+        if (!request()->has('image')) {
+            throw new HifoneException('没有上传图片');
+        }
+        $avatar = dispatch(new UploadBase64ImageCommand(request('image')));
         Auth::user()->update(['avatar_url' => $avatar['filename']]);
         Auth::user()->updateIndex();
         $phicommBll->upload($avatar['localFile']);
+        event(new AvatarWasUploadedEvent(Auth::user()));
         unset($avatar['localFile']);
 
         return $avatar;

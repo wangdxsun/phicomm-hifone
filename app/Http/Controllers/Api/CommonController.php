@@ -19,10 +19,8 @@ class CommonController extends ApiController
         return $commonBll->upload();
     }
 
-    public function search(ThreadBll $threadBll, UserBll $userBll)
+    public function uploadBase64(CommonBll $commonBll)
     {
-        $threads = $threadBll->search();
-
-        return $threads;
+        return $commonBll->uploadBase64();
     }
 }

@@ -68,6 +68,8 @@ class ApiRoutes
 
             // Authorization Required
             $router->group(['middleware' => 'auth:hifone'], function ($router) {
+                $router->post('upload/base64', 'CommonController@uploadBase64');
+                $router->post('upload', 'CommonController@upload');
                 $router->post('threads', 'ThreadController@store');
                 $router->post('replies', 'ReplyController@store');
                 $router->post('follow/users/{user}', 'FollowController@user')->where('user', '[0-9]+');
