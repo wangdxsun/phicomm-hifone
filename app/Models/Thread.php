@@ -390,11 +390,6 @@ class Thread extends BaseModel implements TaggableInterface
         return $value ?: '点击查看更多';
     }
 
-    public function getThumbnailsAttribute($value)
-    {
-        return $value ?: request()->getSchemeAndHttpHost().'/images/share.png';
-    }
-
     //动态计算热度值
     public function getHeatComputeAttribute()
     {
