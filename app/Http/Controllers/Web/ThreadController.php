@@ -3,6 +3,11 @@
 namespace Hifone\Http\Controllers\Web;
 
 use Auth;
+use Hifone\Events\Excellent\ExcellentWasAddedEvent;
+use Hifone\Events\Pin\PinWasAddedEvent;
+use Hifone\Events\Pin\SinkWasAddedEvent;
+use Hifone\Events\Thread\ThreadWasMarkedExcellentEvent;
+use Hifone\Events\Thread\ThreadWasPinnedEvent;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\ThreadBll;
