@@ -11,9 +11,9 @@
 
 namespace Hifone\Http\Controllers\Web;
 
+use Hifone\Http\Controllers\Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Routing\Controller;
 
 abstract class WebController extends Controller
 {
