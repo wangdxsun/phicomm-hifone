@@ -12,12 +12,9 @@
 namespace Hifone\Http\Controllers\Api;
 
 use Hifone\Http\Controllers\Controller;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
 
-abstract class ApiController extends Controller
+class ApiController extends Controller
 {
-    use DispatchesJobs, ValidatesRequests;
     /**
      * The HTTP response headers.
      *

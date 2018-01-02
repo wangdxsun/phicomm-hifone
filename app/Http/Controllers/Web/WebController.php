@@ -12,12 +12,9 @@
 namespace Hifone\Http\Controllers\Web;
 
 use Hifone\Http\Controllers\Controller;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
 
-abstract class WebController extends Controller
+class WebController extends Controller
 {
-    use DispatchesJobs, ValidatesRequests;
     /**
      * The HTTP response headers.
      *
