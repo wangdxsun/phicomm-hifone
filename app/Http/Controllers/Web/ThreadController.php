@@ -3,14 +3,11 @@
 namespace Hifone\Http\Controllers\Web;
 
 use Auth;
-use Config;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\ThreadBll;
 use Hifone\Models\Thread;
-use Hifone\Models\User;
 use Hifone\Services\Filter\WordsFilter;
-use DB;
 
 class ThreadController extends WebController
 {
@@ -74,7 +71,7 @@ class ThreadController extends WebController
 
     public function excellent(Thread $thread)
     {
-        if($thread->is_excellent > 0) {
+        if ($thread->is_excellent > 0) {
             $thread->decrement('is_excellent', 1);
             $this->updateOpLog($thread, '取消精华');
         } else {
@@ -91,15 +88,15 @@ class ThreadController extends WebController
 
     public function pin(Thread $thread)
     {
-        if($thread->order > 0) {
+        if ($thread->order > 0) {
             $thread->decrement('order', 1);
             $this->updateOpLog($thread, '取消置顶');
-        } elseif($thread->order == 0) {
+        } elseif ($thread->order == 0) {
             $thread->increment('order', 1);
             $this->updateOpLog($thread, '置顶');
             event(new ThreadWasPinnedEvent($thread));
             event(new PinWasAddedEvent($thread->user, 'Thread'));
-        } elseif($thread->order < 0) {
+        } elseif ($thread->order < 0) {
             $thread->increment('order', 2);
             $this->updateOpLog($thread, '置顶');
             event(new ThreadWasPinnedEvent($thread));
@@ -111,15 +108,15 @@ class ThreadController extends WebController
 
     public function sink(Thread $thread)
     {
-        if($thread->order > 0) {
+        if ($thread->order > 0) {
             $thread->decrement('order', 2);
             $this->updateOpLog($thread, '下沉');
             event(new SinkWasAddedEvent($thread->user));
-        } elseif($thread->order == 0) {
+        } elseif ($thread->order == 0) {
             $thread->decrement('order', 1);
             $this->updateOpLog($thread, '下沉');
             event(new SinkWasAddedEvent($thread->user));
-        } elseif($thread->order < 0) {
+        } elseif ($thread->order < 0) {
             $thread->increment('order', 1);
             $this->updateOpLog($thread, '取消下沉');
         }
