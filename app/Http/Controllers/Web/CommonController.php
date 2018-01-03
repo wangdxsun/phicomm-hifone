@@ -17,7 +17,7 @@ class CommonController extends WebController
 {
 
     //上传图片文件
-    public function upload(CommonBll $commonBll)
+    public function upload()
     {
         if (!request()->hasFile('image')) {
             throw new HifoneException('没有上传图片');
@@ -29,7 +29,7 @@ class CommonController extends WebController
     }
 
     //上传图片Base64编码
-    public function uploadBase64(CommonBll $commonBll)
+    public function uploadBase64()
     {
         if (!request()->hasFile('image')) {
             throw new HifoneException('没有上传图片');

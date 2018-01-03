@@ -151,7 +151,7 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function user()
     {
-        return $this->belongsTo(User::class)->select(['id', 'username', 'avatar_url', 'role', 'password', 'thread_count', 'score',
+        return $this->belongsTo(User::class)->select(['id', 'phicomm_id', 'username', 'avatar_url', 'role', 'password', 'thread_count', 'score',
             'notification_reply_count', 'notification_at_count', 'notification_system_count', 'notification_chat_count', 'notification_follow_count']);
     }
 
