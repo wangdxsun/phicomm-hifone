@@ -35,6 +35,7 @@ class UploadImageCommandHandler
         $random_string = str_random(10);
         //Path to Thread Size
         $safeName = $random_string.'.'.$extension;
+        $localFile = $destinationPath.'/'.$safeName;
         //Path to Original Size
         $safeNameOrig = $random_string.'_orig.'.$extension;
         //Path to LightBox Size
@@ -75,6 +76,7 @@ class UploadImageCommandHandler
         }
 
         $data['filename'] = request()->getSchemeAndHttpHost().$folderName.'/'.$safeName;
+        $data['localFile'] = $localFile;
 
         event(new ImageWasUploadedEvent($data));
 

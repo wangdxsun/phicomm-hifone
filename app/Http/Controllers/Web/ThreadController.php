@@ -64,7 +64,7 @@ class ThreadController extends WebController
             'thread.body.min' => '帖子内容不得少于5个字符',
             'thread.body.max' => '帖子内容不得多于10000个字符',
         ]);
-        $thread = $threadBll->createThread();
+        $thread = $threadBll->createThread(request('thread'));
         $result = $threadBll->auditThread($thread, $wordsFilter);
         return $result;
     }
