@@ -55,6 +55,13 @@ class BaseBll
      * title	推送消息标题	string	25个汉字，50个字符
      * uid	接收消息的斐讯云账户ID	string	等于all时 会进行广播
      * url	信息的URL 	string  私信类消息的对话页面链接   帖子类消息的帖子链接  系统提示类消息链接为空
+     *
+     * $data['type'] 消息类型 社区定义如下：
+     * 1001 —— 评论帖子
+     * 1002 —— 回复帖子的评论
+     * 1003 —— 管理员操作 （帖子置顶、高亮、提升到首页）
+     * 1004 —— 私信
+     * 1005 —— 系统提示
      */
     public function pushMessage($data)
     {

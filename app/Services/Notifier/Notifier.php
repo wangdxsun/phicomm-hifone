@@ -39,12 +39,12 @@ class Notifier
             $toUser->increment('notification_at_count', 1);
 
             //消息推送
-            $this->push($author, $toUser, "1002", $data['body']);
+            $this->push($author, $toUser, "1002", $object);
         } elseif ($type == 'thread_new_reply') {
             $toUser->increment('notification_reply_count', 1);
 
             //消息推送
-            $this->push($author, $toUser, "1001", $data['body']);
+            $this->push($author, $toUser, "1001", $object);
         }
 
         $object->notifications()->create($data);
@@ -67,12 +67,12 @@ class Notifier
                 $toUser->increment('notification_reply_count');
 
                 //消息推送
-                $this->push($author, $toUser, "1001", $data['body']);
+                $this->push($author, $toUser, "1001", $object);
             } elseif ($type == 'reply_mention') {
                 $toUser->increment('notification_at_count');
 
                 //消息推送
-                $this->push($author, $toUser, "1002", $data['body']);
+                $this->push($author, $toUser, "1002", $object);
             } elseif ($type == 'followed_user_new_thread') {
                 $toUser->increment('notification_follow_count');
             }
@@ -109,18 +109,21 @@ class Notifier
      * @param $from
      * @param $to
      * @param $type thread_new_reply:1001; reply_reply, reply_mention:1002;
-     * @param $content
+     * @param $object reply
      */
-    protected function push($from, $to, $type, $content)
+    protected function push($from, $to, $type, $object)
     {
+        $content = ($object instanceof Thread) ? '': (isset($object->body) ? $object->body : '');
+        $content_original = ($object instanceof Thread) ? '': (isset($object->body_original) ? $object->body_original : '');
+
         $data = array(
             'message' => $content,
             'type' => $type,
             'msg_type' => '0',//推送消息类型 0.通知,1.消息
-            'outline' => substr($content, 0, 26),
+            'outline' => substr($content_original, 0, 26),
             'title' => $from->username,
             'uid' => $to->phicomm_id,
-            'url' => route('app.chat.message', ['user' => $from->id, 'scope' => 'after']),
+            'url' => $object->thread->id,
         );
 
         (new BaseBll())->pushMessage($data);
