@@ -11,12 +11,20 @@ namespace Hifone\Http\Controllers\App\V1;
 use Hifone\Events\Banner\BannerWasViewedEvent;
 use Hifone\Http\Controllers\App\AppController;
 use Hifone\Models\Carousel;
+use Jenssegers\Agent\Facades\Agent;
 
 class BannerController extends AppController
 {
     public function index()
     {
-        $carousels = Carousel::visible()->orderBy('order')->get();
+        if (Agent::is('iPhone')) {
+            $carousels = Carousel::orderBy('order')->whereIn('system', ['ios','android/ios'])->visible()->get();
+        } elseif (Agent::is('Android')) {
+            $carousels = Carousel::orderBy('order')->whereIn('system', ['android','android/ios'])->visible()->get();
+        } else {
+            return null;
+        }
+
         foreach ($carousels as $carousel) {
             $carousel['statistic'] = route('app.banner.show', $carousel->id);
         }

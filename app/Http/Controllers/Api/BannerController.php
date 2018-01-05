@@ -15,7 +15,7 @@ class BannerController extends ApiController
 {
     public function index()
     {
-        $carousels = Carousel::visible()->orderBy('order')->get();
+        $carousels = Carousel::orderBy('order')->whereIn('system', ['h5','web/h5'])->visible()->get();
         foreach ($carousels as $carousel) {
             $carousel['statistic'] = route('api.banner.show', $carousel->id);
         }
