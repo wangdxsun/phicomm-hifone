@@ -10,21 +10,33 @@ namespace Hifone\Http\Controllers\Web;
 
 use Hifone\Commands\Image\UploadBase64ImageCommand;
 use Hifone\Commands\Image\UploadImageCommand;
+use Hifone\Exceptions\HifoneException;
 use Hifone\Http\Bll\CommonBll;
-use Input;
 
 class CommonController extends WebController
 {
 
     //上传图片文件
-    public function upload(CommonBll $commonBll)
+    public function upload()
     {
-        return $commonBll->upload();
+        if (!request()->hasFile('image')) {
+            throw new HifoneException('没有上传图片');
+        }
+        $upload = dispatch(new UploadImageCommand(request()->file('image')));
+        unset($upload['localFile']);
+
+        return $upload;
     }
 
     //上传图片Base64编码
-    public function uploadBase64(CommonBll $commonBll)
+    public function uploadBase64()
     {
-        return $commonBll->uploadBase64();
+        if (!request()->hasFile('image')) {
+            throw new HifoneException('没有上传图片');
+        }
+        $upload = dispatch(new UploadBase64ImageCommand(request()->file('image')));
+        unset($upload['localFile']);
+
+        return $upload;
     }
 }

@@ -204,6 +204,11 @@ class CarouselController extends Controller
             if (!$thread) {
                 return Redirect::back()->withErrors('您所配置的帖子不可见或不存在');
             }
+        } else {
+            $linkUrl = $carouselData['url'];
+            if ((string)($linkUrl + 0) == $linkUrl) {//链接输入为纯数字
+                return Redirect::back()->withErrors('您所配置的跳转链接有误');
+            }
         }
         try {
             $carousel = Carousel::create($carouselData);
@@ -251,6 +256,11 @@ class CarouselController extends Controller
             $thread = Thread::visible()->find($thread_id);
             if (!$thread) {
                 return Redirect::back()->withErrors('您所配置的帖子不可见或不存在');
+            }
+        } else {
+            $linkUrl = $carouselData['url'];
+            if ((string)($linkUrl + 0) == $linkUrl) {//链接输入为纯数字
+                return Redirect::back()->withErrors('您所配置的跳转链接有误');
             }
         }
         try {

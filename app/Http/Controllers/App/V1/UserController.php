@@ -103,12 +103,12 @@ class UserController extends AppController
     }
 
     //上传头像
-    public function upload(CommonBll $commonBll, PhicommBll $phicommBll)
+    public function upload(PhicommBll $phicommBll)
     {
-        if (!request()->has('image')) {
+        if (!request()->hasFile('image')) {
             throw new HifoneException('没有上传图片');
         }
-        $avatar = dispatch(new UploadImageCommand(request('image')));
+        $avatar = dispatch(new UploadImageCommand(request()->file('image')));
         Auth::user()->update(['avatar_url' => $avatar['filename']]);
         Auth::user()->updateIndex();
         $phicommBll->upload($avatar['localFile']);

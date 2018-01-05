@@ -234,46 +234,4 @@ class PhicommBll extends BaseBll
         return null;
     }
 
-    /**
-     * 参数说明：
-     * $msg_type 0，通知（会响）， 1，消息
-     * source   1——论坛 2——商场  3——路由器  4——APP
-     * title    消息列表中消息标题
-     * outline  消息列表中消息概括
-     * type     1001——评论帖子  1002——帖子评论回复  1003——管理员操作（帖子置顶、高亮、提升等）
-     *          1004——私信  1005——系统提示（帖子审核通过、成为超级会员等）
-     * in_title 消息详情的标题
-     * message  消息内容
-     * uid      接收消息的斐讯云账户ID
-     * url      私信类消息的对话页面链接   帖子类消息的帖子链接  系统提示类消息链接为空
-     *
-     */
-    public function pushMessage($msg_type, $title, $outline, $in_title, $type, $message, $uid, $url = null)
-    {
-        $ticker = '';
-        if($msg_type == '0'){
-            $ticker = 'ticker';
-        }
-
-        $json_data = '{"avatar":"avatarUrl","coverImg":"coverImgUrl","content":"' . $message . '","source":1,"time":"'
-            . date('Y-m-d H:i', strtotime('now')) . '","title":"'.$in_title.'","type":' . $type . ',"url":"' . $url . '"}';
-        $parameter = array(
-            'msgtype' => $msg_type,
-            'source' => '1',
-            'ticker' => $ticker,
-            'timestamp' => date('Y-m-d H:i', strtotime('now')),
-            'uid' => $uid,
-            'outline' => $outline,
-            'msgcontent' => $json_data,
-            'title' => $title,
-            'url' => '',
-            'coverimg' => '',
-        );
-        //$output = json_decode(curlPost(env('PHICLOUD_MESSAGE_PUSH'), $parameter),true);
-
-        $output = json_decode(curlPost('https://phideliver.phicomm.com/PhiPushServiceV1/newmessage', $parameter),true);
-
-        return $output;
-
-    }
 }

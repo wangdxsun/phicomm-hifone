@@ -3,6 +3,11 @@
 namespace Hifone\Http\Controllers\Web;
 
 use Auth;
+use Hifone\Events\Excellent\ExcellentWasAddedEvent;
+use Hifone\Events\Pin\PinWasAddedEvent;
+use Hifone\Events\Pin\SinkWasAddedEvent;
+use Hifone\Events\Thread\ThreadWasMarkedExcellentEvent;
+use Hifone\Events\Thread\ThreadWasPinnedEvent;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\ThreadBll;
@@ -59,7 +64,7 @@ class ThreadController extends WebController
             'thread.body.min' => '帖子内容不得少于5个字符',
             'thread.body.max' => '帖子内容不得多于10000个字符',
         ]);
-        $thread = $threadBll->createThread();
+        $thread = $threadBll->createThread(request('thread'));
         $result = $threadBll->auditThread($thread, $wordsFilter);
         return $result;
     }
