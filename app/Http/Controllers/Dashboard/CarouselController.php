@@ -31,18 +31,70 @@ class CarouselController extends Controller
         ]);
     }
     /**
-     * Shows the carousels view.
+     * app端正在展现的banner
      *
-     * @return \Illuminate\View\View
      */
     public function index()
     {
-        $carousels  = Carousel::orderBy('order')->recent()->where('visible', 1)->get();
+        $carousels  = Carousel::orderBy('order')->recent()->whereIn('system', ['android','ios','android/ios'])->visible()->get();
 
         return View::make('dashboard.carousel.index')
             ->withPageTitle('banner管理')
             ->withCarousels($carousels)
-            ->withCurrentMenu('index');
+            ->withSrc('app')
+            ->withCurrentMenu('app')
+            ->withCurrentTap('app_show');
+    }
+
+    public function appShow()
+    {
+        $carousels  = Carousel::orderBy('order')->recent()->whereIn('system', ['android','ios','android/ios'])->visible()->get();
+
+        return View::make('dashboard.carousel.index')
+            ->withPageTitle('banner管理')
+            ->withCarousels($carousels)
+            ->withSrc('app')
+            ->withCurrentMenu('app')
+            ->withCurrentTap('app_show');
+
+    }
+
+    public function appHideBanners()
+    {
+        $carousels  = Carousel::orderBy('order')->recent()->whereIn('system', ['android','ios','android/ios'])->hide()->get();
+
+        return View::make('dashboard.carousel.index')
+            ->withPageTitle('banner管理')
+            ->withCarousels($carousels)
+            ->withSrc('app')
+            ->withCurrentMenu('app')
+            ->withCurrentTap('app_hide');
+
+    }
+
+    public function webShow()
+    {
+        $carousels  = Carousel::orderBy('order')->recent()->whereIn('system', ['web','h5','web/h5'])->visible()->get();
+
+        return View::make('dashboard.carousel.index')
+            ->withPageTitle('banner管理')
+            ->withCarousels($carousels)
+            ->withSrc('web')
+            ->withCurrentMenu('web')
+            ->withCurrentTap('web_show');
+    }
+
+    public function webHideBanners()
+    {
+        $carousels  = Carousel::orderBy('order')->recent()->whereIn('system', ['web','h5','web/h5'])->hide()->get();
+
+        return View::make('dashboard.carousel.index')
+            ->withPageTitle('banner管理')
+            ->withCarousels($carousels)
+            ->withSrc('web')
+            ->withCurrentMenu('web')
+            ->withCurrentTap('web_hide');
+
     }
 
     public function hideBanners()
@@ -55,30 +107,96 @@ class CarouselController extends Controller
             ->withCurrentMenu('hide');
     }
 
-
     public function show(Carousel $carousel)
     {
         return redirect($carousel->jump_url);
     }
 
-    /**
-     * Shows the create carousel view.
-     *
-     * @return \Illuminate\View\View
-     */
+
+    //web、h5端添加banner
     public function create()
     {
         return View::make('dashboard.carousel.create_edit')
-            ->withPageTitle('添加banner');
+            ->withPageTitle('添加banner')
+            ->withCurrentMenu('web');
     }
 
     /**
-     * Stores a new carousel.
-     * @return \Illuminate\Http\RedirectResponse
+     * app端添加banner
+     */
+    public function createApp()
+    {
+        return View::make('dashboard.carousel.app_create_edit')
+            ->withPageTitle('添加banner')
+            ->withCurrentMenu('app');
+    }
+
+    /**
+     *
      */
     public function store()
     {
         $carouselData = Request::get('carousel');
+        if ( $carouselData['h5_icon'] == "" && $carouselData['web_icon'] == "") {
+            return Redirect::back()->withErrors('请至少上传一张图片');
+        } elseif($carouselData['h5_icon'] != "" && $carouselData['web_icon'] != "") {
+            $carouselData['system'] = "h5/web";
+        } else {
+            $carouselData['system'] = $carouselData['h5_icon'] != "" ?  'h5' : 'web';
+        }
+        $carouselData['image'] = $carouselData['h5_icon'] != "" ?  $carouselData['h5_icon'] : $carouselData['web_icon'];
+
+        if ($carouselData['type'] == 1) {
+            $thread_id = $carouselData['url'];
+            $thread = Thread::visible()->find($thread_id);
+            if (!$thread) {
+                return Redirect::back()->withErrors('您所配置的帖子不可见或不存在');
+            }
+        }
+        try {
+            $carousel = Carousel::create($carouselData);
+            $this->updateOpLog($carousel, '添加banner');
+        } catch (ValidationException $e) {
+            return Redirect::route('dashboard.carousel.create')
+                ->withInput(Request::all())
+                ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.notices.add.failure')))
+                ->withErrors($e->getMessageBag());
+        }
+
+        return Redirect::route('dashboard.carousel.web.show')
+            ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.notices.add.success')));
+    }
+
+    public function storeApp()
+    {
+        $carouselData = Request::get('carousel');
+        if ( $carouselData['android_icon'] == "" && $carouselData['ios_icon'] == "") {
+            return Redirect::back()->withErrors('请至少上传一张图片');
+        } elseif($carouselData['android_icon'] != "" && $carouselData['ios_icon'] != "") {
+            $carouselData['system'] = "android/ios";
+        } else {
+            $carouselData['system'] = $carouselData['android_icon'] != "" ?  'android' : 'ios';
+        }
+        $carouselData['image'] = $carouselData['android_icon'] != "" ?  $carouselData['android_icon'] : $carouselData['ios_icon'];
+
+        if (empty($carouselData['version'])) {
+            return Redirect::route('dashboard.carousel.create.app')
+                ->withErrors('没有选择版本类型')
+                ->withInput();
+        } elseif ($carouselData['version'] == 3) {
+            $carouselData['start_version'] = '全部版本';
+        } elseif ($carouselData['version'] == 6) {
+            if ($carouselData['start_version'] == "" || $carouselData['end_version'] == "") {
+                return Redirect::route('dashboard.carousel.create.app')
+                    ->withErrors('自定义版本请选择起止版本号')
+                    ->withInput();
+            }
+
+        } else {
+            return Redirect::route('dashboard.carousel.create.app')
+                ->withErrors('版本选择错误')
+                ->withInput();
+        }
 
         if ($carouselData['type'] == 1) {
             $thread_id = $carouselData['url'];
@@ -110,12 +228,29 @@ class CarouselController extends Controller
     {
         return View::make('dashboard.carousel.create_edit')
             ->withPageTitle('编辑banner')
-            ->withCarousel($carousel);
+            ->withCarousel($carousel)
+            ->withCurrentMenu('web');
+    }
+
+    public function editApp(Carousel $carousel)
+    {
+        return View::make('dashboard.carousel.app_create_edit')
+            ->withPageTitle('编辑banner')
+            ->withCarousel($carousel)
+            ->withCurrentMenu('app');
     }
 
     public function update(Carousel $carousel)
     {
         $carouselData = Request::get('carousel');
+        if ( $carouselData['h5_icon'] == "" && $carouselData['web_icon'] == "") {
+            return Redirect::back()->withErrors('请至少上传一张图片');
+        } elseif($carouselData['h5_icon'] != "" && $carouselData['web_icon'] != "") {
+            $carouselData['system'] = "h5/web";
+        } else {
+            $carouselData['system'] = $carouselData['h5_icon'] != "" ?  'h5' : 'web';
+        }
+        $carouselData['image'] = $carouselData['h5_icon'] != "" ?  $carouselData['h5_icon'] : $carouselData['web_icon'];
         if ($carouselData['type'] == 1) {
             $thread_id = $carouselData['url'];
             $thread = Thread::visible()->find($thread_id);
@@ -138,7 +273,59 @@ class CarouselController extends Controller
                 ->withErrors($e->getMessageBag());
         }
 
-        return Redirect::route('dashboard.carousel.index')
+        return Redirect::route('dashboard.carousel.web.show')
+            ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.notices.edit.success')));
+    }
+
+    public function updateApp(Carousel $carousel)
+    {
+        $carouselData = Request::get('carousel');
+        if ( $carouselData['android_icon'] == "" && $carouselData['ios_icon'] == "") {
+            return Redirect::back()->withErrors('请至少上传一张图片');
+        } elseif($carouselData['android_icon'] != "" && $carouselData['ios_icon'] != "") {
+            $carouselData['system'] = "android/ios";
+        } else {
+            $carouselData['system'] = $carouselData['android_icon'] != "" ?  'android' : 'ios';
+        }
+        $carouselData['image'] = $carouselData['android_icon'] != "" ?  $carouselData['android_icon'] : $carouselData['ios_icon'];
+
+        if (empty($carouselData['version'])) {
+            return Redirect::route('dashboard.carousel.create.app')
+                ->withErrors('没有选择版本类型')
+                ->withInput();
+        } elseif ($carouselData['version'] == 3) {
+            $carouselData['start_version'] = '全部版本';
+        } elseif ($carouselData['version'] == 6) {
+            if ($carouselData['start_version'] == "" || $carouselData['end_version'] == "") {
+                return Redirect::route('dashboard.carousel.create.app')
+                    ->withErrors('自定义版本请选择起止版本号')
+                    ->withInput();
+            }
+
+        } else {
+            return Redirect::route('dashboard.carousel.create.app')
+                ->withErrors('版本选择错误')
+                ->withInput();
+        }
+
+        if ($carouselData['type'] == 1) {
+            $thread_id = $carouselData['url'];
+            $thread = Thread::visible()->find($thread_id);
+            if (!$thread) {
+                return Redirect::back()->withErrors('您所配置的帖子不可见或不存在');
+            }
+        }
+        try {
+            $carousel->update($carouselData);
+            $this->updateOpLog($carousel, '修改banner');
+        } catch (ValidationException $e) {
+            return Redirect::route('dashboard.carousel.edit', ['id' => $carousel->id])
+                ->withInput(Request::all())
+                ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.notices.edit.failure')))
+                ->withErrors($e->getMessageBag());
+        }
+
+        return Redirect::route('dashboard.carousel.web.show')
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.notices.edit.success')));
     }
 
