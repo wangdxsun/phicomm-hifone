@@ -69,10 +69,14 @@ class DashboardRoutes
             $router->get('stat/node/{node}', 'StatController@node_detail')->name('stat.node.show');
             $router->get('stat/banner', 'StatController@banner')->name('stat.banner');
             $router->get('stat/user', 'StatController@userCount')->name('stat.user');
+            $router->get('stat/user/app', 'StatController@userCountApp')->name('stat.user.app');
+            $router->get('stat/user/web', 'StatController@userCountWeb')->name('stat.user.web');
+            $router->get('stat/user/h5', 'StatController@userCountH5')->name('stat.user.h5');
             $router->get('stat/threads/count', 'StatController@dailyThreadCount')->name('stat.daily.threads.count');
             $router->get('stat/replies/count', 'StatController@dailyReplyCount')->name('stat.daily.replies.count');
             $router->get('stat/zeroReply', 'StatController@zeroReplyCount')->name('stat.zeroReply');
             $router->get('stat/banner/{carousel}', 'StatController@banner_detail')->name('stat.banner.show');
+            $router->get('stat/interaction', 'StatController@userInteraction')->name('stat.interaction');
 
             $router->get('wordsExcel/export','WordsExcelController@export')->name('wordsExcel.export');
             $router->post('wordsExcel/import','WordsExcelController@import');
