@@ -18,11 +18,11 @@ class BannerController extends AppController
     public function index()
     {
         if (Agent::is('iPhone')) {
-            $carousels = Carousel::orderBy('order')->whereIn('device', [8,12])->visible()->get();
+            $carousels = Carousel::orderBy('order')->whereIn('device', [Carousel::IOS, Carousel::IOS + Carousel::ANDROID])->visible()->get();
         } elseif (Agent::is('Android')) {
-            $carousels = Carousel::orderBy('order')->whereIn('device', [4,12])->visible()->get();
+            $carousels = Carousel::orderBy('order')->whereIn('device', [Carousel::ANDROID, Carousel::ANDROID + Carousel::IOS])->visible()->get();
         } else {
-            return null;
+            return [];
         }
 
         foreach ($carousels as $carousel) {

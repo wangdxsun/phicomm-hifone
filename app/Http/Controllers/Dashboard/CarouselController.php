@@ -36,7 +36,8 @@ class CarouselController extends Controller
      */
     public function index()
     {
-        $carousels  = Carousel::orderBy('order')->recent()->whereIn('device', [4,8,12])->visible()->get();
+        $carousels  = Carousel::orderBy('order')->recent()
+            ->whereIn('device', [Carousel::ANDROID, Carousel::IOS, Carousel::ANDROID + Carousel::IOS])->visible()->get();
 
         return View::make('dashboard.carousel.index')
             ->withPageTitle('banner管理')
@@ -48,7 +49,8 @@ class CarouselController extends Controller
 
     public function appShow()
     {
-        $carousels  = Carousel::orderBy('order')->recent()->whereIn('device', [4,8,12])->visible()->get();
+        $carousels  = Carousel::orderBy('order')->recent()
+            ->whereIn('device', [Carousel::ANDROID, Carousel::IOS, Carousel::ANDROID + Carousel::IOS])->visible()->get();
 
         return View::make('dashboard.carousel.index')
             ->withPageTitle('banner管理')
@@ -56,12 +58,12 @@ class CarouselController extends Controller
             ->withSrc('app')
             ->withCurrentMenu('app')
             ->withCurrentTap('app_show');
-
     }
 
     public function appHideBanners()
     {
-        $carousels  = Carousel::orderBy('order')->recent()->whereIn('device', [4,8,12])->hide()->get();
+        $carousels  = Carousel::orderBy('order')->recent()
+            ->whereIn('device', [Carousel::ANDROID, Carousel::IOS, Carousel::ANDROID + Carousel::IOS])->hide()->get();
 
         return View::make('dashboard.carousel.index')
             ->withPageTitle('banner管理')
@@ -74,7 +76,8 @@ class CarouselController extends Controller
 
     public function webShow()
     {
-        $carousels  = Carousel::orderBy('order')->recent()->whereIn('device', [1,2,3])->visible()->get();
+        $carousels  = Carousel::orderBy('order')->recent()
+            ->whereIn('device', [Carousel::H5, Carousel::WEB, Carousel::H5 + Carousel::WEB])->visible()->get();
 
         return View::make('dashboard.carousel.index')
             ->withPageTitle('banner管理')
@@ -86,7 +89,8 @@ class CarouselController extends Controller
 
     public function webHideBanners()
     {
-        $carousels  = Carousel::orderBy('order')->recent()->whereIn('device', [1,2,3])->hide()->get();
+        $carousels  = Carousel::orderBy('order')->recent()
+            ->whereIn('device', [Carousel::H5, Carousel::WEB, Carousel::H5 + Carousel::WEB])->hide()->get();
 
         return View::make('dashboard.carousel.index')
             ->withPageTitle('banner管理')
@@ -140,9 +144,9 @@ class CarouselController extends Controller
         if ( $carouselData['h5_icon'] == "" && $carouselData['web_icon'] == "") {
             return Redirect::back()->withErrors('请至少上传一张图片');
         } elseif($carouselData['h5_icon'] != "" && $carouselData['web_icon'] != "") {
-            $carouselData['device'] = 3;
+            $carouselData['device'] = Carousel::H5 + Carousel::WEB;
         } else {
-            $carouselData['device'] = $carouselData['h5_icon'] != "" ?  1 : 2;
+            $carouselData['device'] = $carouselData['h5_icon'] != "" ?  Carousel::H5 : Carousel::WEB;
         }
         $carouselData['image'] = $carouselData['h5_icon'] != "" ?  $carouselData['h5_icon'] : $carouselData['web_icon'];
 
@@ -174,9 +178,9 @@ class CarouselController extends Controller
         if ( $carouselData['android_icon'] == "" && $carouselData['ios_icon'] == "") {
             return Redirect::back()->withErrors('请至少上传一张图片');
         } elseif($carouselData['android_icon'] != "" && $carouselData['ios_icon'] != "") {
-            $carouselData['device'] = 12;
+            $carouselData['device'] = Carousel::ANDROID + Carousel::IOS;
         } else {
-            $carouselData['device'] = $carouselData['android_icon'] != "" ?  4 : 8;
+            $carouselData['device'] = $carouselData['android_icon'] != "" ?  Carousel::ANDROID : Carousel::IOS;
         }
         $carouselData['image'] = $carouselData['android_icon'] != "" ?  $carouselData['android_icon'] : $carouselData['ios_icon'];
 
@@ -247,9 +251,9 @@ class CarouselController extends Controller
         if ( $carouselData['h5_icon'] == "" && $carouselData['web_icon'] == "") {
             return Redirect::back()->withErrors('请至少上传一张图片');
         } elseif($carouselData['h5_icon'] != "" && $carouselData['web_icon'] != "") {
-            $carouselData['device'] = 3;
+            $carouselData['device'] = Carousel::H5 + Carousel::WEB;
         } else {
-            $carouselData['device'] = $carouselData['h5_icon'] != "" ?  1 : 2;
+            $carouselData['device'] = $carouselData['h5_icon'] != "" ?  Carousel::H5 : Carousel::WEB;
         }
         $carouselData['image'] = $carouselData['h5_icon'] != "" ?  $carouselData['h5_icon'] : $carouselData['web_icon'];
         if ($carouselData['type'] == 1) {
@@ -284,9 +288,9 @@ class CarouselController extends Controller
         if ( $carouselData['android_icon'] == "" && $carouselData['ios_icon'] == "") {
             return Redirect::back()->withErrors('请至少上传一张图片');
         } elseif($carouselData['android_icon'] != "" && $carouselData['ios_icon'] != "") {
-            $carouselData['device'] = 12;
+            $carouselData['device'] = Carousel::ANDROID + Carousel::IOS;
         } else {
-            $carouselData['device'] = $carouselData['android_icon'] != "" ?  4 : 8;
+            $carouselData['device'] = $carouselData['android_icon'] != "" ?  Carousel::ANDROID : Carousel::IOS;
         }
         $carouselData['image'] = $carouselData['android_icon'] != "" ?  $carouselData['android_icon'] : $carouselData['ios_icon'];
 
