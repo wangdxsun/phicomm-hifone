@@ -209,6 +209,8 @@ class PhicommBll extends BaseBll
             switch($res['error']){
                 case 0:
                     return $res;
+                case 5:
+                    throw new HifoneException('token过期！');
                 case 18:
                     throw new HifoneException('图片格式错误！');
                 case 19:
