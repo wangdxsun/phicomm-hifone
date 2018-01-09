@@ -9,7 +9,7 @@ class BannerController extends WebController
 {
     public function index()
     {
-        $carousels = Carousel::orderBy('order')->whereIn('system', ['web','web/h5'])->visible()->get();;
+        $carousels = Carousel::orderBy('order')->whereIn('device', [2,3])->visible()->get();;
         foreach ($carousels as $carousel) {
             $carousel['statistic'] = route('web.banner.show', $carousel->id);
         }

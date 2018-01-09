@@ -29,20 +29,27 @@
                 <div class="col-xs-2">
                     <a href="{{ $carousel->url }}" target="_blank"><img src="{{ $carousel->image }}" style="max-width: 200px; max-height: 50px;"></a>
                 </div>
+                @if ($carousel->device == 4 || $carousel->device == 8 || $carousel->device == 12)
+                    <div class="col-xs-2">{{ '描述 ：'  }}<br>{{ $carousel->description }}
+                        <a href="{{ $carousel->url }}" target="_blank">{{ $carousel->jump_url }}</a>
+                    </div>
+                @else
+                    <div class="col-xs-3">{{ '描述 ：'  }}<br>{{ $carousel->description }}
+                        <a href="{{ $carousel->url }}" target="_blank">{{ $carousel->jump_url }}</a>
+                    </div>
+                @endif
 
-                <div class="col-xs-2">{{ '描述 ：'  }}<br>{{ $carousel->description }}
-                    <a href="{{ $carousel->url }}" target="_blank">{{ $carousel->jump_url }}</a>
-                </div>
 
                 <div class="col-xs-2">
                     {{ '展现时间段 ： ' }}<br>{{ $carousel->start_display }}<br>{{ '~' }}<br>{{ $carousel->end_display }}
                 </div>
+                @if ($carousel->device == 4 || $carousel->device == 8 || $carousel->device == 12)
+                    <div class="col-xs-1">
+                        {{ '版本区间 ： ' }}<br>{{ $carousel->start_version == '全部版本' ? $carousel->start_version : $carousel->start_version. '~' . $carousel->end_version }}
+                    </div>
+                @endif
                 <div class="col-xs-1">
-                    {{ '版本区间 ： ' }}<br>{{ $carousel->start_version == '全部版本' ? $carousel->start_version : $carousel->start_version. '~' . $carousel->end_version }}
-                </div>
-
-                <div class="col-xs-1">
-                    {{ '适用系统 ： ' . $carousel->system }}<br>
+                    {{ '适用系统 ： ' . $carousel->device }}<br>
                 </div>
 
                 <div class="col-xs-1">
