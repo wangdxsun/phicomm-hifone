@@ -29,7 +29,7 @@
                         </div>
 
                         <div class="col-xs-6">
-                            <label>{{ 'Ios端图片:' }}</label><br>
+                            <label>{{ 'iOS端图片:' }}</label><br>
                             <el-upload
                                     class="avatar-uploader"
                                     action="/upload_image"

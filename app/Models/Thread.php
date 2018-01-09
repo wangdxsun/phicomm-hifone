@@ -35,6 +35,7 @@ class Thread extends BaseModel implements TaggableInterface
 
     //发帖渠道channel -1:意见反馈；0:社区
     const FEEDBACK = -1;
+    const THREAD = 0;
 
     //发帖设备device 0:H5；1：Android；2：iOS；3：Web
     const H5 = 0;
