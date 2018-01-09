@@ -17,9 +17,9 @@ class BannerController extends AppController
 {
     public function index()
     {
-        if (Agent::is('iPhone')) {
+        if (Agent::match('PhiWifiNative') && Agent::match('iPhone')) {
             $carousels = Carousel::orderBy('order')->whereIn('device', [Carousel::IOS, Carousel::IOS + Carousel::ANDROID])->visible()->get();
-        } elseif (Agent::is('Android')) {
+        } elseif (Agent::match('PhiWifiNative') && Agent::match('Android')) {
             $carousels = Carousel::orderBy('order')->whereIn('device', [Carousel::ANDROID, Carousel::ANDROID + Carousel::IOS])->visible()->get();
         } else {
             return [];
