@@ -5,28 +5,22 @@
         @include('dashboard.partials.sub-sidebar')
     @endif
     <div class="content-wrapper">
-        @if(isset($sub_nav))
-            @include('dashboard.stats.sub-nav')
-        @endif
         <div class="row">
             <div class="col-sm-12">
-
                 @include('partials.errors')
                 <table class="table table-bordered table-striped table-condensed">
                     <tr class="head">
                         <td>日期</td>
-                        <td>每日新增用户</td>
-                        <td>每日发帖用户</td>
-                        <td>每日回帖用户</td>
-                        <td>每日贡献内容用户</td>
+                        <td>每日收藏数</td>
+                        <td>每日点赞数</td>
+                        <td>每日累计关注(粉丝)数</td>
                     </tr>
                     @foreach ($statArr as $key => $value)
                         <tr>
                             <td>{{ $value['date'] }}</td>
-                            <td>{{ $value['user_count'] }}</td>
-                            <td>{{ $value['thread_user_count'] }}</td>
-                            <td>{{ $value['reply_user_count'] }}</td>
-                            <td>{{ $value['contribute_user_count'] }}</td>
+                            <td>{{ $value['favorite_count'] }}</td>
+                            <td>{{ $value['like_count'] }}</td>
+                            <td>{{ $value['follow_count'] }}</td>
                         </tr>
                     @endforeach
                 </table>

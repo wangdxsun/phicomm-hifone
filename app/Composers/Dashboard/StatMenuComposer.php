@@ -44,7 +44,7 @@ class StatMenuComposer
                 'active' => false,
             ],
             'user' => [
-                'title'  => '新增用户',
+                'title'  => '用户统计',
                 'url'    => route('dashboard.stat.user'),
                 'icon'   => 'fa fa-user',
                 'active' => false,
@@ -67,9 +67,41 @@ class StatMenuComposer
                 'icon'   => 'fa fa-file',
                 'active' => false,
             ],
+            'userInteraction' => [
+                'title'  => '用户互动',
+                'url'    => route('dashboard.stat.interaction'),
+                'icon'   => 'fa fa-user',
+                'active' => false,
+            ],
         ];
-
+        $subNav = [
+            'basic' => [
+                'title'  => '用户基本情况',
+                'url'    => route('dashboard.stat.user'),
+                'active' => false,
+                'src'    => 'basic'
+            ],
+            'app'   => [
+                'title'  => 'App活跃用户',
+                'url'    => route('dashboard.stat.user.app'),
+                'active' => false,
+                'src'    => 'app'
+            ],
+            'web'   => [
+                'title'  => 'WEB活跃用户',
+                'url'    => route('dashboard.stat.user.web'),
+                'active' => false,
+                'src'    => 'web'
+            ],
+            'H5'    => [
+                'title'  => 'H5活跃用户',
+                'url'    => route('dashboard.stat.user.h5'),
+                'active' => false,
+                'src'    => 'h5'
+            ]
+        ];
         $view->withSubMenu($subMenu);
+        $view->withSubNav($subNav);
         $view->withSubTitle('数据统计');
     }
 }
