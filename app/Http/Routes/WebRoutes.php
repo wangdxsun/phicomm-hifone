@@ -33,6 +33,7 @@ class WebRoutes
             'as' => 'web.'
         ], function ($router) {
             $router->get('emotions', 'GeneralController@emotion');
+            $router->get('captcha', 'CommonController@captcha')->name('captcha');
 
             //内容相关
             $router->get('threads/hot', 'ThreadController@index');
