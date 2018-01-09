@@ -43,7 +43,7 @@ class CommonController extends WebController
 
     public function captcha(CaptchaBuilder $builder)
     {
-        $builder->build($width = 100, $height = 34, $font = null);
+        $builder->build($width = 170, $height = 50, $font = null);
 
         Session::put('phrase', $builder->getPhrase());
 
