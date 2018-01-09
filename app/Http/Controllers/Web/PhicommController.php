@@ -10,6 +10,9 @@ use Hifone\Services\Filter\WordsFilter;
 use Illuminate\Http\Request;
 use Auth;
 use Session;
+use Config;
+use Redirect;
+use Input;
 
 class PhicommController extends WebController
 {
@@ -44,6 +47,11 @@ class PhicommController extends WebController
         ]);
         $phone = request('phone');
         $password = strtoupper(md5(request('password')));
+        $verifycode = request('verifycode');
+        if (!Config::get('setting.captcha_login_disabled') && $verifycode != Session::get('phrase')) {
+            // instructions if user phrase is good
+            return 'Captcha Wrong';
+        }
 
         $phicommId = $this->phicommBll->login($phone, $password);
 
