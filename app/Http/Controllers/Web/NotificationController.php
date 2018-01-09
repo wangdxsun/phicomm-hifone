@@ -22,30 +22,30 @@ class NotificationController extends WebController
         return $notifications;
     }
 
-    public function watch(NotificationBll $bll)
+    public function watch(NotificationBll $notificationBll)
     {
-        $watches = $bll->watch();
+        $watches = $notificationBll->watch();
 
         return $watches;
     }
 
-    public function reply(NotificationBll $bll)
+    public function reply(NotificationBll $notificationBll)
     {
-        $replies = $bll->reply();
+        $replies = $notificationBll->reply();
 
         return $replies;
     }
 
-    public function at(NotificationBll $bll)
+    public function at(NotificationBll $notificationBll)
     {
-        $ats = $bll->at();
+        $ats = $notificationBll->at();
 
         return $ats;
     }
 
-    public function system(NotificationBll $bll)
+    public function system(NotificationBll $notificationBll)
     {
-        $systems = $bll->system();
+        $systems = $notificationBll->system();
 
         return $systems;
     }

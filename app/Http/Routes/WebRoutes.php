@@ -93,10 +93,14 @@ class WebRoutes
 
                 $router->get('chats', 'ChatController@chats');
                 $router->get('chat/{user}', 'ChatController@messages');
-                $router->post('chat/{user}', 'ChatController@store');
+                $router->post('chat/{user}', 'ChatController@store')->where('user', '[0-9]+');
+
+                $router->get('notification', 'NotificationController@index');
                 $router->get('notification/reply', 'NotificationController@reply');
                 $router->get('notification/at', 'NotificationController@at');
                 $router->get('notification/system', 'NotificationController@system');
+                $router->get('notification/watch', 'NotificationController@watch');
+
                 $router->post('logout', 'PhicommController@logout');
             });
 
