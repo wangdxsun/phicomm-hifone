@@ -60,7 +60,7 @@ class WebRoutes
             $router->post('bind', 'PhicommController@bind');
 
             //个人中心
-            $router->get('user/me', 'UserController@me');
+            $router->get('user/info', 'UserController@me');
             $router->get('u/{username}', 'UserController@showByUsername');
             $router->get('users/{user}', 'UserController@show')->where('user', '[0-9]+');
             $router->get('users/{user}/follows', 'UserController@follows');
