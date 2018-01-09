@@ -36,7 +36,7 @@ class CarouselController extends Controller
      */
     public function index()
     {
-        $carousels  = Carousel::orderBy('order')->recent()->whereIn('system', ['android','ios','android/ios'])->visible()->get();
+        $carousels  = Carousel::orderBy('order')->recent()->whereIn('device', [4,8,12])->visible()->get();
 
         return View::make('dashboard.carousel.index')
             ->withPageTitle('banner管理')
@@ -48,7 +48,7 @@ class CarouselController extends Controller
 
     public function appShow()
     {
-        $carousels  = Carousel::orderBy('order')->recent()->whereIn('system', ['android','ios','android/ios'])->visible()->get();
+        $carousels  = Carousel::orderBy('order')->recent()->whereIn('device', [4,8,12])->visible()->get();
 
         return View::make('dashboard.carousel.index')
             ->withPageTitle('banner管理')
@@ -61,7 +61,7 @@ class CarouselController extends Controller
 
     public function appHideBanners()
     {
-        $carousels  = Carousel::orderBy('order')->recent()->whereIn('system', ['android','ios','android/ios'])->hide()->get();
+        $carousels  = Carousel::orderBy('order')->recent()->whereIn('device', [4,8,12])->hide()->get();
 
         return View::make('dashboard.carousel.index')
             ->withPageTitle('banner管理')
@@ -74,7 +74,7 @@ class CarouselController extends Controller
 
     public function webShow()
     {
-        $carousels  = Carousel::orderBy('order')->recent()->whereIn('system', ['web','h5','web/h5'])->visible()->get();
+        $carousels  = Carousel::orderBy('order')->recent()->whereIn('device', [1,2,3])->visible()->get();
 
         return View::make('dashboard.carousel.index')
             ->withPageTitle('banner管理')
@@ -86,7 +86,7 @@ class CarouselController extends Controller
 
     public function webHideBanners()
     {
-        $carousels  = Carousel::orderBy('order')->recent()->whereIn('system', ['web','h5','web/h5'])->hide()->get();
+        $carousels  = Carousel::orderBy('order')->recent()->whereIn('device', [1,2,3])->hide()->get();
 
         return View::make('dashboard.carousel.index')
             ->withPageTitle('banner管理')
@@ -140,9 +140,9 @@ class CarouselController extends Controller
         if ( $carouselData['h5_icon'] == "" && $carouselData['web_icon'] == "") {
             return Redirect::back()->withErrors('请至少上传一张图片');
         } elseif($carouselData['h5_icon'] != "" && $carouselData['web_icon'] != "") {
-            $carouselData['system'] = "h5/web";
+            $carouselData['device'] = 3;
         } else {
-            $carouselData['system'] = $carouselData['h5_icon'] != "" ?  'h5' : 'web';
+            $carouselData['device'] = $carouselData['h5_icon'] != "" ?  1 : 2;
         }
         $carouselData['image'] = $carouselData['h5_icon'] != "" ?  $carouselData['h5_icon'] : $carouselData['web_icon'];
 
@@ -170,12 +170,13 @@ class CarouselController extends Controller
     public function storeApp()
     {
         $carouselData = Request::get('carousel');
+
         if ( $carouselData['android_icon'] == "" && $carouselData['ios_icon'] == "") {
             return Redirect::back()->withErrors('请至少上传一张图片');
         } elseif($carouselData['android_icon'] != "" && $carouselData['ios_icon'] != "") {
-            $carouselData['system'] = "android/ios";
+            $carouselData['device'] = 12;
         } else {
-            $carouselData['system'] = $carouselData['android_icon'] != "" ?  'android' : 'ios';
+            $carouselData['device'] = $carouselData['android_icon'] != "" ?  4 : 8;
         }
         $carouselData['image'] = $carouselData['android_icon'] != "" ?  $carouselData['android_icon'] : $carouselData['ios_icon'];
 
@@ -183,9 +184,9 @@ class CarouselController extends Controller
             return Redirect::route('dashboard.carousel.create.app')
                 ->withErrors('没有选择版本类型')
                 ->withInput();
-        } elseif ($carouselData['version'] == 3) {
+        } elseif ($carouselData['version'] == 1) {
             $carouselData['start_version'] = '全部版本';
-        } elseif ($carouselData['version'] == 6) {
+        } elseif ($carouselData['version'] == 2) {
             if ($carouselData['start_version'] == "" || $carouselData['end_version'] == "") {
                 return Redirect::route('dashboard.carousel.create.app')
                     ->withErrors('自定义版本请选择起止版本号')
@@ -246,9 +247,9 @@ class CarouselController extends Controller
         if ( $carouselData['h5_icon'] == "" && $carouselData['web_icon'] == "") {
             return Redirect::back()->withErrors('请至少上传一张图片');
         } elseif($carouselData['h5_icon'] != "" && $carouselData['web_icon'] != "") {
-            $carouselData['system'] = "h5/web";
+            $carouselData['device'] = 3;
         } else {
-            $carouselData['system'] = $carouselData['h5_icon'] != "" ?  'h5' : 'web';
+            $carouselData['device'] = $carouselData['h5_icon'] != "" ?  1 : 2;
         }
         $carouselData['image'] = $carouselData['h5_icon'] != "" ?  $carouselData['h5_icon'] : $carouselData['web_icon'];
         if ($carouselData['type'] == 1) {
@@ -283,9 +284,9 @@ class CarouselController extends Controller
         if ( $carouselData['android_icon'] == "" && $carouselData['ios_icon'] == "") {
             return Redirect::back()->withErrors('请至少上传一张图片');
         } elseif($carouselData['android_icon'] != "" && $carouselData['ios_icon'] != "") {
-            $carouselData['system'] = "android/ios";
+            $carouselData['device'] = 12;
         } else {
-            $carouselData['system'] = $carouselData['android_icon'] != "" ?  'android' : 'ios';
+            $carouselData['device'] = $carouselData['android_icon'] != "" ?  4 : 8;
         }
         $carouselData['image'] = $carouselData['android_icon'] != "" ?  $carouselData['android_icon'] : $carouselData['ios_icon'];
 
@@ -293,9 +294,9 @@ class CarouselController extends Controller
             return Redirect::route('dashboard.carousel.create.app')
                 ->withErrors('没有选择版本类型')
                 ->withInput();
-        } elseif ($carouselData['version'] == 3) {
+        } elseif ($carouselData['version'] == 1) {
             $carouselData['start_version'] = '全部版本';
-        } elseif ($carouselData['version'] == 6) {
+        } elseif ($carouselData['version'] == 2) {
             if ($carouselData['start_version'] == "" || $carouselData['end_version'] == "") {
                 return Redirect::route('dashboard.carousel.create.app')
                     ->withErrors('自定义版本请选择起止版本号')

@@ -19,7 +19,7 @@ class Carousel extends BaseModel
         'end_display',
         'start_version',
         'end_version',
-        'system',
+        'device',
         'web_icon',
         'h5_icon',
         'ios_icon',
@@ -53,6 +53,33 @@ class Carousel extends BaseModel
     public function scopeHide($query)
     {
         return $query->where('start_display', '>=', Carbon::now())->orWhere('end_display', '<=', Carbon::now());
+    }
+
+    public function getDeviceAttribute($value)
+    {
+        $system= '';
+        switch($value)
+        {
+            case 1:
+                $system = 'h5';
+                break;
+            case 2:
+                $system = 'web';
+                break;
+            case 3:
+                $system = 'h5/web';
+                break;
+            case 4:
+                $system = 'android';
+                break;
+            case 8:
+                $system = 'ios';
+                break;
+            case 12:
+                $system = 'android/ios';
+                break;
+        }
+        return $system;
     }
 
 }

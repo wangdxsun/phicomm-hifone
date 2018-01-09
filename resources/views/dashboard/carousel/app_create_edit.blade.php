@@ -51,9 +51,9 @@
                     <div class="form-group">
                         <label>版本选择：</label>
                         <el-radio-group v-model="version" name="carousel[version]">
-                            <div><el-radio :label="3">默认全部版本</el-radio></div>
+                            <div><el-radio :label="1">默认全部版本</el-radio></div>
                             <div>
-                                <el-radio :label="6">自定义版本</el-radio><br>
+                                <el-radio :label="2">自定义版本</el-radio><br>
                                 <el-input name="carousel[start_version]" placeholder="起始版本" resize="both" style="width: 100px; height: 10px;" value="{{ Input::old('carousel[start_version]') }}"></el-input>
                                 <el-input name="carousel[end_version]"  placeholder="截止版本" resize="both" style="width: 100px; height: 10px;" value="{{ Input::old('carousel[end_version]') }}"></el-input>
 
