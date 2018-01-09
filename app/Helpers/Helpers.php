@@ -8,6 +8,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+use Jenssegers\Agent\Facades\Agent;
+use Hifone\Models\Thread;
 
 if (!function_exists('back_url')) {
     /**
@@ -290,6 +292,23 @@ if (!function_exists('curl_form_post')) {
     }
 }
 
+if (!function_exists('get_request_agent')) {
+    function get_request_agent()
+    {
+        if (Agent::match('PhiWifiNative') && Agent::match('iPhone')) {
+            $agent = Thread::IOS;
+        } elseif (Agent::match('PhiWifiNative') && Agent::match('Android')) {
+            $agent = Thread::ANDROID;
+        } elseif (Agent::match('iPhone') || Agent::match('Android')) {
+            $agent = Thread::H5;
+        } else {
+            $agent = Thread::WEB;
+        }
+
+        return $agent;
+    }
+}
+
 function correct_image_orientation($target) {
     $exif = @exif_read_data($target);
     if($exif && isset($exif['Orientation']) && $exif['Orientation'] != 1) {
@@ -362,4 +381,5 @@ function getChars($utf8_str)
         }
     }
     return $chars;
+
 }
