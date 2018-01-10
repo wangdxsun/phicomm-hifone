@@ -44,13 +44,14 @@ class PhicommController extends WebController
         $this->validate(request(), [
             'phone' => 'required|phone',
             'password' => 'required',
+            'captcha' => 'required',//图形验证码必填
         ]);
         $phone = request('phone');
         $password = strtoupper(md5(request('password')));
-        $verifycode = request('verifycode');
-        if (!Config::get('setting.captcha_login_disabled') && $verifycode != Session::get('phrase')) {
+        $captcha = request('captcha');//图形验证码
+        if (!Config::get('setting.captcha_login_disabled') && $captcha != Session::get('phrase')) {
             // instructions if user phrase is good
-            return 'Captcha Wrong';
+            return 'Captcha wrong';
         }
 
         $phicommId = $this->phicommBll->login($phone, $password);

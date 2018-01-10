@@ -28,7 +28,7 @@ class ChatBll extends BaseBll
         return $messages;
     }
 
-    //for h5
+    //for h5 and new web
     public function messages(User $user)
     {
         return Chat::chatWith($user)->with('from', 'to')->latest()->paginate();
