@@ -23,6 +23,24 @@ class PhicommController extends WebController
         $this->phicommBll = $phicommBll;
     }
 
+    public function preRegister(Request $request)
+    {
+        //验证当前手机号是否可注册，并验证图形验证码
+        $this->validate($request, [
+            'phone' => 'required|phone',
+            'captcha' => 'required',
+        ]);
+        $this->phicommBll->checkPhoneAvailable($request->phone);
+        $captcha = request('captcha');
+        if (!Config::get('setting.captcha_login_disabled') && $captcha != Session::get('phrase')) {
+            // instructions if user phrase is good
+            return 'Captcha wrong';
+        }
+
+        return 'Success';
+
+    }
+
     public function register(Request $request)
     {
         $this->validate($request, [
@@ -48,7 +66,7 @@ class PhicommController extends WebController
         ]);
         $phone = request('phone');
         $password = strtoupper(md5(request('password')));
-        $captcha = request('captcha');//图形验证码
+        $captcha = request('captcha');
         if (!Config::get('setting.captcha_login_disabled') && $captcha != Session::get('phrase')) {
             // instructions if user phrase is good
             return 'Captcha wrong';

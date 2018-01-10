@@ -54,6 +54,7 @@ class WebRoutes
             $router->get('report/reason', 'ReportController@reason');
 
             //登录相关
+            $router->post('register/pre', 'PhicommController@preRegister');
             $router->post('register', 'PhicommController@register');
             $router->post('login', 'PhicommController@login');
             $router->post('reset', 'PhicommController@reset');
