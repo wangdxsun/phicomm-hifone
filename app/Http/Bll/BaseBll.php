@@ -76,6 +76,8 @@ class BaseBll
             "type" => $data['type'],
             "source" => '1',
             "producer" => '2',
+            "isBroadcast" => '0',
+            "isMulticast" => '0',
             "avatar" => $data['avatar'],
             "title" => $data['title'],
             "time" => $data['time'],
