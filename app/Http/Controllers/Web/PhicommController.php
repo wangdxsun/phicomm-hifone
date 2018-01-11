@@ -38,7 +38,6 @@ class PhicommController extends WebController
         }
 
         return 'Success';
-
     }
 
     public function register(Request $request)

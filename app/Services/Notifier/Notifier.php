@@ -113,17 +113,22 @@ class Notifier
      */
     protected function push($from, $to, $type, $object)
     {
-        $content = ($object instanceof Thread) ? '': (isset($object->body) ? $object->body : '');
-        $content_original = ($object instanceof Thread) ? '': (isset($object->body_original) ? $object->body_original : '');
+        $replyBody = ($object instanceof Thread) ? '': (isset($object->body) ? $object->body : '');
+        $replyBodyOriginal = ($object instanceof Thread) ? '': (isset($object->body_original) ? $object->body_original : '');
+        $title = $type == '1001' ? "【".$from->username."】评论了你" : "【".$from->username."】回复中提到了你";
 
         $data = array(
-            'message' => $content,
+            'message' => $replyBody,
             'type' => $type,
+            'avatar' => $from->avatar_url,
+            'title' => $title,
+            'time' => date('Y-m-d H:i', strtotime('now')),
+            'userId' => $from->id,
+            'replyId' => ($object instanceof Thread) ? : $object->id,
+
             'msg_type' => '0',//推送消息类型 0.通知,1.消息
-            'outline' => substr($content_original, 0, 26),
-            'title' => $from->username,
+            'outline' => substr($replyBodyOriginal, 0, 26),
             'uid' => $to->phicomm_id,
-            'url' => $object->thread->id,
         );
 
         (new BaseBll())->pushMessage($data);

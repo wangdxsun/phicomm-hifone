@@ -50,16 +50,20 @@ class ChatBll extends BaseBll
 
         $messages = $this->getMessages();
         event(new NewChatMessageEvent($from, $to, $messages[0]));
+
         $to->increment('notification_chat_count', 1);
         //友盟消息推送
         $data = array(
             'message' => $messages[0],
             'type' => '1004',
-            'msg_type' => '0',//推送消息类型 0.通知,1.消息
-            'outline' => substr($messages[0], 0, 26),
+            'avatar' => $from->avatar_url,
             'title' => $from->username,
+            'time' => date('Y-m-d H:i', strtotime('now')),
+            'userId' => $from->id,
+
+            'msg_type' => '0',//推送消息类型 0.通知,1.消息
+            'outline' => substr(Input::has('message') ? Input::get('message') : "[图片]", 0, 26),
             'uid' => $to->phicomm_id,
-            'url' => route('app.chat.message', ['user' => $from->id, 'scope' => 'after']),
         );
         $this->pushMessage($data);
 

@@ -70,7 +70,21 @@ class BaseBll
             $ticker = 'ticker';
         }
 
-        $array_message = ["content" => $data['message'], "type" => $data['type']];
+        //根据type构造不同message_content封装到$data
+        $array_message = [
+            "content" => $data['message'],
+            "type" => $data['type'],
+            "source" => '1',
+            "producer" => '2',
+            "avatar" => $data['avatar'],
+            "title" => $data['title'],
+            "time" => $data['time'],
+            "userId" => $data['userId'],
+        ];
+        if ("1001" == $data['type'] || "1002" == $data['type']) {
+            $array_message += ["replyId" => $data['replyId']];
+        }
+
         $json_message = json_encode($array_message);
 
 //        $json_message = '{"content":"' . str_replace('"', "'", $data['message']) . '","type":"1004"}';
@@ -89,7 +103,7 @@ class BaseBll
             'timestamp' => date('Y-m-d H:i', strtotime('now')),
             'title' => $data['title'],
             'uid' => $data['uid'],
-            'url' => $data['url'],
+            'url' => '',
         );
         //测试环境 114.141.173.53内网 192.168.43.111外网
         $json = curlPost(env('PHIDELIVER'), $parameters);
