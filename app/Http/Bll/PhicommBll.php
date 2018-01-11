@@ -42,7 +42,7 @@ class PhicommBll extends BaseBll
         if ($output) {
             switch($output['error']){
                 case 0:
-                    return $output;break;
+                    return $output['uid'];break;
                 case 1:
                     throw new HifoneException('验证码错误！');
                 case 2:
@@ -106,8 +106,8 @@ class PhicommBll extends BaseBll
         $accessCode = $this->getAccessCode();
         $url = env('PHICLOUND_DOMAIN') . 'checkPhonenumber?authorizationcode=' . $accessCode . '&phonenumber=' . $phone;
         $output = json_decode(curlGet($url), true);
-        if($output){
-            switch($output['error']){
+        if ($output) {
+            switch($output['error']) {
                 case 0:
                     return true;
                 case 14:
@@ -115,7 +115,32 @@ class PhicommBll extends BaseBll
                 default:
                     throw new HifoneException('操作失败，请联系客服！', 500);
             }
-        }else{
+        } else {
+            throw new HifoneException('操作失败，请联系客服！', 500);
+        }
+    }
+
+    /**
+     * 检测手机号是否未注册，重置密码用
+     * @param $phone
+     * @return bool
+     * @throws HifoneException
+     */
+    public function checkPhoneRegistered($phone)
+    {
+        $accessCode = $this->getAccessCode();
+        $url = env('PHICLOUND_DOMAIN') . 'checkPhonenumber?authorizationcode=' . $accessCode . '&phonenumber=' . $phone;
+        $output = json_decode(curlGet($url), true);
+        if ($output) {
+            switch($output['error']) {
+                case 0:
+                    throw new HifoneException('该手机号未注册！');
+                case 14:
+                    return true;
+                default:
+                    throw new HifoneException('操作失败，请联系客服！', 500);
+            }
+        } else {
             throw new HifoneException('操作失败，请联系客服！', 500);
         }
     }

@@ -57,6 +57,7 @@ class WebRoutes
             $router->post('register/pre', 'PhicommController@preRegister');
             $router->post('register', 'PhicommController@register');
             $router->post('login', 'PhicommController@login');
+            $router->post('reset/pre', 'PhicommController@preReset');
             $router->post('reset', 'PhicommController@reset');
             $router->post('verify', 'PhicommController@verify');
             $router->post('bind', 'PhicommController@bind');

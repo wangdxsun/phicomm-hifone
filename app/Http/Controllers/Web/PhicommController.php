@@ -49,8 +49,7 @@ class PhicommController extends WebController
         ]);
         $password = strtoupper(md5($request->get('password')));
         $this->phicommBll->checkPhoneAvailable($request->phone);
-        $this->phicommBll->register($request->phone, $password, $request->verify);
-        $phicommId = $this->phicommBll->login($request->phone, $password);
+        $phicommId = $this->phicommBll->register($request->phone, $password, $request->verify);
         Session::set('phicommId', $phicommId);
 
         return response(['user' => 'Unbind']);
@@ -98,6 +97,23 @@ class PhicommController extends WebController
         $user = $phicommBll->bind($wordsFilter);
 
         return $user;
+    }
+
+    public function preReset(Request $request)
+    {
+        //验证当前手机号是否未注册，并验证图形验证码
+        $this->validate($request, [
+            'phone' => 'required|phone',
+            'captcha' => 'required',
+        ]);
+        $this->phicommBll->checkPhoneRegistered($request->phone);
+        $captcha = request('captcha');
+        if ($captcha != Session::get('phrase')) {
+            // instructions if user phrase is good
+            return 'Captcha wrong';
+        }
+
+        return 'Success';
     }
 
     public function reset()
