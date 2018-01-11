@@ -10,6 +10,7 @@ namespace Hifone\Http\Controllers\App\V1;
 
 use Hifone\Http\Bll\ReplyBll;
 use Hifone\Http\Controllers\App\AppController;
+use Hifone\Models\Reply;
 use Hifone\Services\Filter\WordsFilter;
 
 class ReplyController extends AppController
@@ -19,6 +20,13 @@ class ReplyController extends AppController
         $reply = $replyBll->createReplyApp();
         $result = $replyBll->auditReply($reply, $wordsFilter);
         return $result;
+    }
+
+    public function show(Reply $reply, ReplyBll $replyBll)
+    {
+        $reply = $replyBll->showReply($reply);
+
+        return $reply;
     }
 
 }
