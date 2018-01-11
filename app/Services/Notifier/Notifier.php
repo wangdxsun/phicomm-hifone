@@ -115,8 +115,9 @@ class Notifier
     {
         $replyBody = ($object instanceof Thread) ? '': (isset($object->body) ? $object->body : '');
         $replyBodyOriginal = ($object instanceof Thread) ? '': (isset($object->body_original) ? $object->body_original : '');
-        $title = $type == '1001' ? "【".$from->username."】评论了你" : "【".$from->username."】回复中提到了你";
+        $title = $type == '1001' ? "【" . $from->username . "】评论了你" : "【" . $from->username . "】回复中提到了你";
 
+        //友盟消息推送
         $data = array(
             'message' => $replyBody,
             'type' => $type,

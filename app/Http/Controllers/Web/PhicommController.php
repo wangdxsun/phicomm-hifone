@@ -32,7 +32,7 @@ class PhicommController extends WebController
         ]);
         $this->phicommBll->checkPhoneAvailable($request->phone);
         $captcha = request('captcha');
-        if (!Config::get('setting.captcha_login_disabled') && $captcha != Session::get('phrase')) {
+        if ($captcha != Session::get('phrase')) {
             // instructions if user phrase is good
             return 'Captcha wrong';
         }
@@ -65,7 +65,7 @@ class PhicommController extends WebController
         $phone = request('phone');
         $password = strtoupper(md5(request('password')));
         $captcha = request('captcha');
-        if (!Config::get('setting.captcha_login_disabled') && $captcha != Session::get('phrase')) {
+        if ($captcha != Session::get('phrase')) {
             // instructions if user phrase is good
             return 'Captcha wrong';
         }

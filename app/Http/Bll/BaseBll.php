@@ -89,7 +89,6 @@ class BaseBll
 
         $json_message = json_encode($array_message);
 
-//        $json_message = '{"content":"' . str_replace('"', "'", $data['message']) . '","type":"1004"}';
         $parameters = array(
             'callbackmsginfo' => '',
             'callbackurl' => '',
