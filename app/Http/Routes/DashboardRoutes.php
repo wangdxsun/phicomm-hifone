@@ -77,6 +77,8 @@ class DashboardRoutes
             $router->get('stat/zeroReply', 'StatController@zeroReplyCount')->name('stat.zeroReply');
             $router->get('stat/banner/{carousel}', 'StatController@banner_detail')->name('stat.banner.show');
             $router->get('stat/interaction', 'StatController@userInteraction')->name('stat.interaction');
+            $router->get('stat/search', 'StatController@userSearch')->name('stat.search');
+            $router->get('stat/search/{date}', 'StatController@userSearchDate')->name('stat.search.date');
 
             $router->get('wordsExcel/export','WordsExcelController@export')->name('wordsExcel.export');
             $router->post('wordsExcel/import','WordsExcelController@import');

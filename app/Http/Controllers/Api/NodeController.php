@@ -29,6 +29,7 @@ class NodeController extends ApiController
     public function sections(NodeBll $nodeBll)
     {
         $sections = $nodeBll->sections();
+        $nodeBll->h5UpdateActiveTime();
         return $sections;
     }
 
@@ -52,6 +53,7 @@ class NodeController extends ApiController
     public function show(Node $node, NodeBll $nodeBll)
     {
         $node = $nodeBll->show($node, $nodeBll);
+        $nodeBll->h5UpdateActiveTime();
         return $node;
     }
 

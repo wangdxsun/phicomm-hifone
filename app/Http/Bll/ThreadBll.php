@@ -13,6 +13,7 @@ use Hifone\Commands\Thread\AddThreadCommand;
 use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasAuditedEvent;
 use Hifone\Events\Thread\ThreadWasViewedEvent;
+use Hifone\Models\SearchWord;
 use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
@@ -23,13 +24,15 @@ use Hifone\Services\Filter\WordsFilter;
 use Input;
 use Auth;
 use Config;
+use Illuminate\Support\Facades\Redis;
+use Carbon\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ThreadBll extends BaseBll
 {
     public function getThreads()
     {
-        (new CommonBll())->login();
+        (new CommonBll())->loginWeb();
 
         $repository = app('repository');
         $repository->pushCriteria(new Filter(Input::query('filter')));
@@ -41,6 +44,7 @@ class ThreadBll extends BaseBll
 
     public function search($keyword)
     {
+        $this->searchWords($keyword);
         $threads = Thread::searchThread($keyword)->load(['user', 'node'])->paginate(15);
 
         return $threads;
@@ -49,13 +53,34 @@ class ThreadBll extends BaseBll
     public function webSearch()
     {
         $threads = Thread::searchThread(request('q'));
+        $this->searchWords(request('q'));
         foreach ($threads as $thread) {
             unset($thread['node']);
             unset($thread['user']);
         }
         $threads = $threads->load(['user', 'node', 'lastReplyUser']);
-
         return $threads;
+    }
+
+
+    //记录搜索词
+    public function searchWords($word)
+    {
+        if (Redis::sAdd(substr(date('Ymd'),1,10), $word)) {
+            Redis::expire(substr(date('Ymd'),1,10), 60*60*24);
+            $data = [
+                'word'  => $word,
+                'created_at' => Carbon::today()->toDateString(),
+                'updated_at' => Carbon::today()->toDateString(),
+                'count'      => 1,
+                'stat_count' =>  SearchWord::where('word', $word)->max('stat_count') + 1,
+            ];
+            SearchWord::create($data);
+        } else {
+            SearchWord::where('word', $word)->where('created_at',Carbon::today()->toDateString())->increment('count', 1);
+            SearchWord::where('word', $word)->where('created_at',Carbon::today()->toDateString())->increment('stat_count', 1);
+        }
+        return ;
     }
 
     //H5端发帖图文分开 Web发帖富文本图文混排
@@ -221,5 +246,6 @@ class ThreadBll extends BaseBll
             throw $e;
         }
     }
+
 
 }

@@ -25,7 +25,7 @@ class ThreadController extends AppController
 {
     public function index(CommonBll $commonBll)
     {
-        $commonBll->login();
+        $commonBll->loginApp();
         $threads = Thread::visible()->with(['user', 'node'])->hot()->paginate();
         return $threads;
     }
@@ -57,6 +57,7 @@ class ThreadController extends AppController
         if (count(strip_tags(array_get(request('thread'), 'body'))) > 10000) {
             throw new HifoneException('帖子内容不得多于10000个字符');
         }
+        $threadBll->appUpdateActiveTime();
         $thread = $threadBll->createThreadImageMixed();
         $result = $threadBll->auditThread($thread, $wordsFilter);
         return $result;
@@ -64,7 +65,8 @@ class ThreadController extends AppController
 
     public function show(Thread $thread, ThreadBll $threadBll, CommonBll $commonBll)
     {
-        $commonBll->login();
+        $commonBll->loginApp();
+        $threadBll->appUpdateActiveTime();
         $thread = $threadBll->showThread($thread);
 
         return $thread;

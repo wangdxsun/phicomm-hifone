@@ -28,12 +28,17 @@ class ThreadController extends ApiController
         $commonBll->login();
         //置顶优先，再按热度值倒序排序
         $threads = Thread::visible()->with(['user', 'node'])->hot()->paginate();
+        if(\Request::has('page')) {
+            $commonBll->h5UpdateActiveTime();
+        }
         return $threads;
     }
 
     public function search($keyword, ThreadBll $threadBll)
     {
         $threads = $threadBll->search($keyword);
+
+        $threadBll->h5UpdateActiveTime();
 
         return $threads;
     }
@@ -42,6 +47,7 @@ class ThreadController extends ApiController
     {
         $commonBll->login();
         $threadBll->showThread($thread);
+        $threadBll->h5UpdateActiveTime();
 
         return $thread;
     }
@@ -69,6 +75,7 @@ class ThreadController extends ApiController
         $threadData['body'] = e($threadData['body']);
         $thread = $threadBll->createThread($threadData);
         $result = $threadBll->auditThread($thread, $wordsFilter);
+        $threadBll->h5UpdateActiveTime();
         return $result;
     }
 

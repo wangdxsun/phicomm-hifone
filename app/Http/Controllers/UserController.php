@@ -13,10 +13,10 @@ namespace Hifone\Http\Controllers;
 
 use AltThree\Validator\ValidationException;
 use Auth;
-use Hash;
 use Hifone\Hashing\PasswordHasher;
 use Hifone\Http\Bll\FollowBll;
 use Hifone\Http\Bll\PhicommBll;
+use Hifone\Http\Bll\UserBll;
 use Hifone\Models\Identity;
 use Hifone\Models\Location;
 use Hifone\Models\Provider;
@@ -46,8 +46,9 @@ class UserController extends Controller
             ->withUsers($users);
     }
 
-    public function show(User $user, FollowBll $followBll)
+    public function show(User $user, FollowBll $followBll, UserBll $userBll)
     {
+        $userBll->webUpdateActiveTime();
         $threads = Thread::forUser($user->id)->recent()->limit(10)->get();
         $replies = Reply::forUser($user->id)->recent()->limit(10)->get();
         $followers = $followBll->followers($user);
@@ -61,9 +62,9 @@ class UserController extends Controller
             ->withFollows($follows);
     }
 
-    public function showByUsername($username, FollowBll $followBll)
+    public function showByUsername($username, FollowBll $followBll, UserBll $userBll)
     {
-        return $this->show($username, $followBll);
+        return $this->show($username, $followBll,$userBll);
     }
 
     public function edit(User $user)

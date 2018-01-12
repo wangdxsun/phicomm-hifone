@@ -8,7 +8,7 @@
                 @if ( $item['src'] == $src)
                     <li class="{{ $key == $current_tap  ? 'active' : null }}">
                         <a href="{{ $item['url'] }}">
-                            <i class="{{ $item['icon'] }}"></i>{{ $item['title'] }}
+                            {{ $item['title'] }}
                         </a>
                     </li>
                 @endif

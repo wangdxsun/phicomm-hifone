@@ -13,6 +13,7 @@ namespace Hifone\Models;
 
 use Hifone\Presenters\NodePresenter;
 use McCool\LaravelAutoPresenter\HasPresenter;
+use DB;
 
 class Node extends BaseModel implements HasPresenter
 {
@@ -74,29 +75,45 @@ class Node extends BaseModel implements HasPresenter
      * @var string[]
      */
     public $rules = [
-        'icon'         => 'required',
-        'icon_list'    => 'required',
-        'icon_detail'  => 'required',
-        'name'         => 'required|string|min:2|max:50',
-        'order'        => 'int',
-        'status'       => 'int',
-        'description'  => 'required|string|min:2|max:100',
-        'prompt'       => 'string|min:10|max:40',
+//        'icon'                => 'required',
+//        'icon_list'           => 'required',
+//        'icon_detail'         => 'required',
+//        'android_icon'        => 'required',
+//        'android_icon_list'   => 'required',
+//        'android_icon_detail' => 'required',
+//        'ios_icon'            => 'required',
+//        'ios_icon_list'       => 'required',
+//        'ios_icon_detail'     => 'required',
+//        'web_icon_detail'     => 'required',
+//        'web_icon_list'       => 'required',
+        'name'                => 'required|string|min:2|max:50',
+        'order'               => 'int',
+        'status'              => 'int',
+        'description'         => 'required|string|min:2|max:100',
+        'prompt'              => 'string|min:10|max:40',
     ];
 
     public $validationMessages = [
-        'icon.required'           => '首页热门版块图片是必填字段',
-        'icon_list.required'      => '版块列表图片是必填字段',
-        'icon_detail.required'    => '版块详情页是必填字段',
-        'name.required'           => '主版块名称是必填字段',
-        'name.min'                => '主版块名称最少2个字符',
-        'name.max'                => '主版块名称最多50个字符',
-        'prompt.required'         => '提示语是必填字段',
-        'prompt.min'              => '提示语最少10个字符',
-        'prompt.max'              => '提示语最多40个字符',
-        'description.required'    => '主版块描述是必填字段',
-        'description.min'         => '主版块描述最少2个字符',
-        'description.max'         => '主版块描述最多100个字符',
+//        'icon.required'               => 'H5首页热门版块图片是必填字段',
+//        'icon_list.required'          => 'H5版块列表图片是必填字段',
+//        'icon_detail.required'        => 'H5版块详情页是必填字段',
+//        'ios_icon.required'           => 'IOS首页热门版块图片是必填字段',
+//        'ios_icon_list.required'      => 'IOS版块列表图片是必填字段',
+//        'ios_icon_detail.required'    => 'IOS版块详情页是必填字段',
+//        'android_icon.required'       => '安卓首页热门版块图片是必填字段',
+//        'android_icon_list.required'  => '安卓版块列表图片是必填字段',
+//        'android_icon_detail.required'=> '安卓版块详情页是必填字段',
+//        'web_icon_list.required'      => 'WEB右侧列表图片是必填字段',
+//        'web_icon_detail.required'    => 'WEB版块详情页是必填字段',
+        'name.required'               => '主版块名称是必填字段',
+        'name.min'                    => '主版块名称最少2个字符',
+        'name.max'                    => '主版块名称最多50个字符',
+        'prompt.required'             => '提示语是必填字段',
+        'prompt.min'                  => '提示语最少10个字符',
+        'prompt.max'                  => '提示语最多40个字符',
+        'description.required'        => '主版块描述是必填字段',
+        'description.min'             => '主版块描述最少2个字符',
+        'description.max'             => '主版块描述最多100个字符',
     ];
 
     /**
@@ -162,5 +179,15 @@ class Node extends BaseModel implements HasPresenter
     public function scopeShow($query)
     {
         return $query->where('is_show', 1);
+    }
+
+    public function getReplies($value)
+    {
+        $replies = DB::select('select * from replies 
+                                    left join (select id from threads where node_id = ?) as stat 
+                                    on thread_id = stat.id
+                                    where replies.status = 0
+                                    or replies.status = -3',[$value]);
+        return $replies;
     }
 }

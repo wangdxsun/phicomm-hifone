@@ -10,6 +10,7 @@ namespace Hifone\Http\Bll;
 
 use Auth;
 use Config;
+use Hifone\Events\User\UserWasActiveEvent;
 use Hifone\Models\User;
 
 class UserBll extends BaseBll

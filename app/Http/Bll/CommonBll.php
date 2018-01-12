@@ -11,7 +11,9 @@ namespace Hifone\Http\Bll;
 use Auth;
 use Hifone\Commands\Image\UploadBase64ImageCommand;
 use Hifone\Commands\Image\UploadImageCommand;
+use Hifone\Events\User\UserWasLoggedinAppEvent;
 use Hifone\Events\User\UserWasLoggedinEvent;
+use Hifone\Events\User\UserWasLoggedinWebEvent;
 use Input;
 
 class CommonBll extends BaseBll
@@ -26,6 +28,31 @@ class CommonBll extends BaseBll
 
             if (!$activeDate || $activeDate != date('Ymd')) {
                 event(new UserWasLoggedinEvent(Auth::user()));
+                app('session')->put('active_date', date('Ymd'));
+            }
+        }
+    }
+
+    public function loginWeb()
+    {
+        if (Auth::check()) {
+            $activeDate = app('session')->get('active_date');
+
+            if (!$activeDate || $activeDate != date('Ymd')) {
+                event(new UserWasLoggedinWebEvent(Auth::user()));
+                app('session')->put('active_date', date('Ymd'));
+            }
+        }
+    }
+
+
+    public function loginApp()
+    {
+        if (Auth::check()) {
+            $activeDate = app('session')->get('active_date');
+
+            if (!$activeDate || $activeDate != date('Ymd')) {
+                event(new UserWasLoggedinAppEvent(Auth::user()));
                 app('session')->put('active_date', date('Ymd'));
             }
         }

@@ -73,31 +73,37 @@ class StatMenuComposer
                 'icon'   => 'fa fa-user',
                 'active' => false,
             ],
+            'search_words' => [
+                'title'  => '用户搜索词',
+                'url'    => route('dashboard.stat.search'),
+                'icon'   => 'fa fa-user',
+                'active' => false,
+            ],
         ];
         $subNav = [
             'basic' => [
                 'title'  => '用户基本情况',
                 'url'    => route('dashboard.stat.user'),
                 'active' => false,
-                'src'    => 'basic'
+                'src'    => 'user'
             ],
             'app'   => [
                 'title'  => 'App活跃用户',
                 'url'    => route('dashboard.stat.user.app'),
                 'active' => false,
-                'src'    => 'app'
+                'src'    => 'user'
             ],
             'web'   => [
                 'title'  => 'WEB活跃用户',
                 'url'    => route('dashboard.stat.user.web'),
                 'active' => false,
-                'src'    => 'web'
+                'src'    => 'user'
             ],
-            'H5'    => [
+            'h5'    => [
                 'title'  => 'H5活跃用户',
                 'url'    => route('dashboard.stat.user.h5'),
                 'active' => false,
-                'src'    => 'h5'
+                'src'    => 'user'
             ]
         ];
         $view->withSubMenu($subMenu);

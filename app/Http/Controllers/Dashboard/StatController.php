@@ -61,22 +61,116 @@ class StatController extends Controller
         return view('dashboard.stats.user')
             ->withCurrentMenu('user')
             ->with('statArr', $statsArr)
-            ->with('src', 'basic')
+            ->with('src', 'user')
             ->withCurrentTap('basic');
     }
     //用户统计之App活跃用户
     public function userCountApp()
     {
-
+        $userStat = DB::select('select stat.date,
+                                        count(DISTINCT uid) as active_user_cnt, 
+                                        count(DISTINCT new_id) as new_user_cnt,
+                                        count(DISTINCT old_id) as  old_user_cnt
+                                        from(
+                                        select substr(u.last_active_time_app,1,10) as date, u.id as uid,null as new_id,null as old_id 
+                                        from users as u 
+                                        where u.last_active_time_app is not null
+                                        union all 
+                                        select substr(u.last_visit_time_app,1,10) as date,null as uid, u.id as new_id,null as old_id
+                                        from users as u 
+                                        where substr(u.last_visit_time_app,1,10) = SUBSTR(u.created_at,1,10)
+                                        union ALL
+                                        select substr(u.last_visit_time_app,1,10) as date,null as uid,null as new_id,u.id as old_id
+                                        from users as u 
+                                        where substr(u.last_visit_time_app,1,10) > SUBSTR(u.created_at,1,10)) as stat
+                                        group by stat.date
+                                        order by stat.date desc limit 30');
+        $statsArr = array();
+        foreach ($userStat as $userCount) {
+            $statsArr[$userCount->date] = [
+                'date' => $userCount->date,
+                'active_user_cnt' => $userCount->active_user_cnt,
+                'new_user_cnt' => $userCount->new_user_cnt,
+                'old_user_cnt' => $userCount->old_user_cnt,
+            ];
+        }
+        return view('dashboard.stats.user_active')
+            ->with('statArr', $statsArr)
+            ->withSrc('user')
+            ->withCurrentTap('app')
+            ->withCurrentMenu('user');
     }
     //用户统计之Web活跃用户
     public function userCountWeb()
     {
-
+        $userStat = DB::select('select stat.date,
+                                        count(DISTINCT uid) as active_user_cnt, 
+                                        count(DISTINCT new_id) as new_user_cnt,
+                                        count(DISTINCT old_id) as  old_user_cnt
+                                        from(
+                                        select substr(u.last_active_time_web,1,10) as date, u.id as uid,null as new_id,null as old_id 
+                                        from users as u 
+                                        where u.last_active_time_web is not null
+                                        union all 
+                                        select substr(u.last_visit_time_web,1,10) as date,null as uid, u.id as new_id,null as old_id
+                                        from users as u 
+                                        where substr(u.last_visit_time_web,1,10) = SUBSTR(u.created_at,1,10)
+                                        union ALL
+                                        select substr(u.last_visit_time_web,1,10) as date,null as uid,null as new_id,u.id as old_id
+                                        from users as u 
+                                        where substr(u.last_visit_time_web,1,10) > SUBSTR(u.created_at,1,10)) as stat
+                                        group by stat.date
+                                        order by stat.date desc limit 30');
+        $statsArr = array();
+        foreach ($userStat as $userCount) {
+            $statsArr[$userCount->date] = [
+                'date' => $userCount->date,
+                'active_user_cnt' => $userCount->active_user_cnt,
+                'new_user_cnt' => $userCount->new_user_cnt,
+                'old_user_cnt' => $userCount->old_user_cnt,
+            ];
+        }
+        return view('dashboard.stats.user_active')
+            ->with('statArr', $statsArr)
+            ->withSrc('user')
+            ->withCurrentTap('web')
+            ->withCurrentMenu('user');
     }
     //用户统计之H5活跃用户
     public function userCountH5()
     {
+        $userStat = DB::select('select stat.date,
+                                        count(DISTINCT uid) as active_user_cnt, 
+                                        count(DISTINCT new_id) as new_user_cnt,
+                                        count(DISTINCT old_id) as  old_user_cnt
+                                        from(
+                                        select substr(u.last_active_time,1,10) as date, u.id as uid,null as new_id,null as old_id 
+                                        from users as u 
+                                        where u.last_active_time is not null
+                                        union all 
+                                        select substr(u.last_visit_time,1,10) as date,null as uid, u.id as new_id,null as old_id
+                                        from users as u 
+                                        where substr(u.last_visit_time,1,10) = SUBSTR(u.created_at,1,10)
+                                        union ALL
+                                        select substr(u.last_visit_time,1,10) as date,null as uid,null as new_id,u.id as old_id
+                                        from users as u 
+                                        where substr(u.last_visit_time,1,10) > SUBSTR(u.created_at,1,10)) as stat
+                                        group by stat.date
+                                        order by stat.date desc limit 30');
+        $statsArr = array();
+        foreach ($userStat as $userCount) {
+            $statsArr[$userCount->date] = [
+                'date' => $userCount->date,
+                'active_user_cnt' => $userCount->active_user_cnt,
+                'new_user_cnt' => $userCount->new_user_cnt,
+                'old_user_cnt' => $userCount->old_user_cnt,
+            ];
+        }
+        return view('dashboard.stats.user_active')
+            ->with('statArr', $statsArr)
+            ->withSrc('user')
+            ->withCurrentTap('h5')
+            ->withCurrentMenu('user');
 
     }
 
@@ -221,5 +315,47 @@ class StatController extends Controller
     {
         $dailyStats = $carousel->dailyStats()->recent()->paginate(20);
         return view('dashboard.stats.banner_detail')->withCurrentMenu('banner')->withDailyStats($dailyStats);
+    }
+
+    //用户搜索词统计
+    public function userSearch()
+    {
+        $userStat = DB::select("select substr(created_at,1,10) as date,sum(`count`) as cnt
+                                        from search_words
+                                        group by date
+                                        order by date desc limit 30");
+        $statsArr = array();
+        foreach ($userStat as $userCount) {
+            $statsArr[$userCount->date] = [
+                'date' => $userCount->date,
+                'daily_count' => $userCount->cnt,
+            ];
+        }
+        return view('dashboard.stats.search_words')
+            ->with('statArr', $statsArr)
+            ->withCurrentMenu('search_words');
+
+    }
+
+    //搜索词详情
+    public function userSearchDate($date)
+    {
+        $dailyStat = DB::select("select word,`count` as daliy_cnt,`stat_count` as stat_cnt
+                                        from search_words
+                                        where substr(created_at,1,10) = ?
+                                        order by daliy_cnt desc limit 30",[$date]);
+        $statsArr = array();
+        foreach ($dailyStat as $dailyCount) {
+            $statsArr[] = [
+                'date' => $dailyCount->date,
+                'word' => $dailyCount->word,
+                'daily_count' => $dailyCount->daliy_cnt,
+                'stat_count'  =>  $dailyCount->stat_cnt
+            ];
+        }
+        return view('dashboard.stats.search_detail')
+            ->with('statArr', $statsArr)
+            ->withDate($date)
+            ->withCurrentMenu('search_detail');
     }
 }

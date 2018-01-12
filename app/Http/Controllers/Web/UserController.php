@@ -16,7 +16,7 @@ use Str;
 
 class UserController extends WebController
 {
-    public function me(PhicommBll $phicommBll)
+    public function me(PhicommBll $phicommBll, UserBll $userBll)
     {
         $user = Auth::user();
         if (Auth::bind() == false) {
@@ -33,22 +33,24 @@ class UserController extends WebController
                 $user->phone = $cloudUser['phonenumber'];
                 $user->save();
             }
+            $userBll->webUpdateActiveTime();
             return $user;
         } else {
             return 'PhicommNoLogin';
         }
     }
 
-    public function show(User $user)
+    public function show(User $user, UserBll $userBll)
     {
         $user['followed'] = User::hasFollowUser($user);
+        $userBll->webUpdateActiveTime();
 
         return $user;
     }
 
-    public function showByUsername(User $user)
+    public function showByUsername(User $user, UserBll $userBll)
     {
-        return $this->show($user);
+        return $this->show($user, $userBll);
     }
 
     public function follows(User $user, FollowBll $followBll)
@@ -89,7 +91,7 @@ class UserController extends WebController
 
     public function credit(UserBll $userBll, CommonBll $commonBll)
     {
-        $commonBll->login();
+        $commonBll->loginWeb();
         $credits = $userBll->getCredits();
 
         return $credits;
@@ -114,6 +116,7 @@ class UserController extends WebController
     public function search($keyword, UserBll $userBll)
     {
         $users = $userBll->search($keyword);
+        $userBll->webUpdateActiveTime();
         return $users;
     }
 

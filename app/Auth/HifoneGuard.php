@@ -106,6 +106,8 @@ class HifoneGuard extends SessionGuard implements Guard
     {
         $this->session->remove('access_token');
         $this->session->remove('phicommId');
+        $this->session->remove('user_active_date');
+        $this->session->remove('active_date');
         parent::logout();
     }
 }

@@ -9,6 +9,7 @@
 namespace Hifone\Http\Controllers\App\V1;
 
 use Hifone\Events\Banner\BannerWasViewedEvent;
+use Hifone\Http\Bll\BannerBll;
 use Hifone\Http\Controllers\App\AppController;
 use Hifone\Models\Carousel;
 use Jenssegers\Agent\Facades\Agent;
@@ -31,10 +32,10 @@ class BannerController extends AppController
         return $carousels;
     }
 
-    public function bannerViewCount(Carousel $carousel)
+    public function bannerViewCount(Carousel $carousel, BannerBll $bannerBll)
     {
         event(new BannerWasViewedEvent($carousel));
-
+        $bannerBll->appUpdateActiveTime();
         return '统计banner点击';
     }
 }

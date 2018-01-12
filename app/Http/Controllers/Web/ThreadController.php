@@ -18,7 +18,7 @@ class ThreadController extends WebController
 {
     public function index(CommonBll $commonBll)
     {
-        $commonBll->login();
+        $commonBll->loginWeb();
         //置顶优先，再按热度值倒序排序
         $threads = Thread::visible()->with(['user', 'node'])->hot()->paginate();
         return $threads;
@@ -33,14 +33,16 @@ class ThreadController extends WebController
     public function search($keyword, ThreadBll $threadBll)
     {
         $threads = $threadBll->search($keyword);
+        $threadBll->webUpdateActiveTime();
 
         return $threads;
     }
 
     public function show(Thread $thread, ThreadBll $threadBll, CommonBll $commonBll)
     {
-        $commonBll->login();
+        $commonBll->loginWeb();
         $threadBll->showThread($thread);
+        $threadBll->webUpdateActiveTime();
 
         return $thread;
     }
@@ -64,6 +66,7 @@ class ThreadController extends WebController
             'thread.body.min' => '帖子内容不得少于5个字符',
             'thread.body.max' => '帖子内容不得多于10000个字符',
         ]);
+        $threadBll->weUpdateActiveTime();
         $thread = $threadBll->createThread(request('thread'));
         $result = $threadBll->auditThread($thread, $wordsFilter);
         return $result;

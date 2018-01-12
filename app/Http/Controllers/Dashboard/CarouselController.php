@@ -221,7 +221,7 @@ class CarouselController extends Controller
                 ->withErrors($e->getMessageBag());
         }
 
-        return Redirect::route('dashboard.carousel.index')
+        return Redirect::route('dashboard.carousel.app.show')
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.notices.add.success')));
     }
 
@@ -320,13 +320,13 @@ class CarouselController extends Controller
             $carousel->update($carouselData);
             $this->updateOpLog($carousel, '修改banner');
         } catch (ValidationException $e) {
-            return Redirect::route('dashboard.carousel.edit', ['id' => $carousel->id])
+            return Redirect::route('dashboard.carousel.edit.app', ['id' => $carousel->id])
                 ->withInput(Request::all())
                 ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.notices.edit.failure')))
                 ->withErrors($e->getMessageBag());
         }
 
-        return Redirect::route('dashboard.carousel.web.show')
+        return Redirect::route('dashboard.carousel.app.show')
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.notices.edit.success')));
     }
 
