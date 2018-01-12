@@ -45,7 +45,9 @@ class AddThreadCommandHandler
             'ip'            => getClientIp().':'.$_SERVER['REMOTE_PORT'],
             'channel'       => $command->channel,
             'dev_info'      => $command->dev_info,
-            'contact'       => $command->contact
+            'contact'       => $command->contact,
+            //发帖设备iOS Android Web H5
+            'device'        => get_request_agent()
         ];
         // Create the thread
         $thread = Thread::create($data);

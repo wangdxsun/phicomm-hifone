@@ -54,8 +54,7 @@ class PhicommController extends Controller
         $password = strtoupper(md5($request->get('password')));
         try {
             $this->phicommBll->checkPhoneAvailable($request->phone);
-            $this->phicommBll->register($request->phone, $password, $request->verifyCode);
-            $phicommId = $this->phicommBll->login($request->phone, $password);
+            $phicommId = $this->phicommBll->register($request->phone, $password, $request->verifyCode);
             Session::set('phicommId', $phicommId);
         } catch (\Exception $e) {
             return Redirect::back()->withInput(Input::except('password'))->withErrors($e->getMessage());

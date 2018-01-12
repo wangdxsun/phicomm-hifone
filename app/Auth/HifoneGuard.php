@@ -49,6 +49,20 @@ class HifoneGuard extends SessionGuard implements Guard
                 $user = $this->provider->retrieveById($id);
             }
         }
+        // If the user is null, but we decrypt a "recaller" cookie we can attempt to
+        // pull the user data on that cookie which serves as a remember cookie on
+        // the application. Once we have a user we can return it to the caller.
+        $recaller = $this->getRecaller();
+
+        if (is_null($user) && ! is_null($recaller)) {
+            $user = $this->getUserByRecaller($recaller);
+
+            if ($user) {
+                $this->updateSession($user->getAuthIdentifier());
+
+                $this->fireLoginEvent($user, true);
+            }
+        }
 
         return $this->user = $user;
     }

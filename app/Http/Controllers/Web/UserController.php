@@ -39,9 +39,13 @@ class UserController extends WebController
             return 'PhicommNoLogin';
         }
     }
-
+    
     public function show(User $user, UserBll $userBll)
+    //用户个人中心
     {
+        $user = User::withCount(['favorites' => function ($query) {
+            $query->has('thread');
+        }])->find($user->id);
         $user['followed'] = User::hasFollowUser($user);
         $userBll->webUpdateActiveTime();
 

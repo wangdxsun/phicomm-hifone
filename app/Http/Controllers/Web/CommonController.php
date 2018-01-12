@@ -8,10 +8,11 @@
 
 namespace Hifone\Http\Controllers\Web;
 
+use Gregwar\Captcha\CaptchaBuilder;
 use Hifone\Commands\Image\UploadBase64ImageCommand;
 use Hifone\Commands\Image\UploadImageCommand;
 use Hifone\Exceptions\HifoneException;
-use Hifone\Http\Bll\CommonBll;
+use Session;
 
 class CommonController extends WebController
 {
@@ -38,5 +39,16 @@ class CommonController extends WebController
         unset($upload['localFile']);
 
         return $upload;
+    }
+
+    public function captcha(CaptchaBuilder $builder)
+    {
+        $builder->build($width = 170, $height = 50, $font = null);
+
+        Session::put('phrase', $builder->getPhrase());
+
+        header('Cache-Control: no-cache, must-revalidate');
+        header('Content-Type: image/jpeg');
+        $builder->output();
     }
 }

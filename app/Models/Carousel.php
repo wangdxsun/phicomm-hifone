@@ -5,6 +5,12 @@ use Carbon\Carbon;
 
 class Carousel extends BaseModel
 {
+    //BANNER所在设备
+    const H5 = 1;
+    const WEB = 2;
+    const ANDROID = 4;
+    const IOS = 8;
+
     protected $fillable = [
         'image',
         'type',
@@ -57,29 +63,29 @@ class Carousel extends BaseModel
 
     public function getDevice($value)
     {
-        $system= '';
+        $device = '';
         switch($value)
         {
-            case 1:
-                $system = 'h5';
+            case (Carousel::H5):
+                $device = 'h5';
                 break;
-            case 2:
-                $system = 'web';
+            case (Carousel::WEB):
+                $device = 'web';
                 break;
-            case 3:
-                $system = 'h5/web';
+            case (Carousel::H5 + Carousel::WEB):
+                $device = 'h5/web';
                 break;
-            case 4:
-                $system = 'android';
+            case (Carousel::ANDROID):
+                $device = 'android';
                 break;
-            case 8:
-                $system = 'ios';
+            case (Carousel::IOS):
+                $device = 'ios';
                 break;
-            case 12:
-                $system = 'android/ios';
+            case (Carousel::ANDROID + Carousel::IOS):
+                $device = 'android/ios';
                 break;
         }
-        return $system;
+        return $device;
     }
 
 }

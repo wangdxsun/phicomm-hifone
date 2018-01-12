@@ -33,6 +33,7 @@ class WebRoutes
             'as' => 'web.'
         ], function ($router) {
             $router->get('emotions', 'GeneralController@emotion');
+            $router->get('captcha', 'CommonController@captcha')->name('captcha');
 
             //内容相关
             $router->get('threads/hot', 'ThreadController@index');
@@ -53,8 +54,10 @@ class WebRoutes
             $router->get('report/reason', 'ReportController@reason');
 
             //登录相关
+            $router->post('register/pre', 'PhicommController@preRegister');
             $router->post('register', 'PhicommController@register');
             $router->post('login', 'PhicommController@login');
+            $router->post('reset/pre', 'PhicommController@preReset');
             $router->post('reset', 'PhicommController@reset');
             $router->post('verify', 'PhicommController@verify');
             $router->post('bind', 'PhicommController@bind');
@@ -92,10 +95,14 @@ class WebRoutes
 
                 $router->get('chats', 'ChatController@chats');
                 $router->get('chat/{user}', 'ChatController@messages');
-                $router->post('chat/{user}', 'ChatController@store');
+                $router->post('chat/{user}', 'ChatController@store')->where('user', '[0-9]+');
+
+                $router->get('notification', 'NotificationController@index');
                 $router->get('notification/reply', 'NotificationController@reply');
                 $router->get('notification/at', 'NotificationController@at');
                 $router->get('notification/system', 'NotificationController@system');
+                $router->get('notification/watch', 'NotificationController@watch');
+
                 $router->post('logout', 'PhicommController@logout');
             });
 
