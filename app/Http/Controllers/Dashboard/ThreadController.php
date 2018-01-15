@@ -191,10 +191,10 @@ class ThreadController extends Controller
     public function excellent(Thread $thread)
     {
         if ($thread->is_excellent > 0) {
-            $thread->decrement('is_excellent', 1);
+            $thread->is_excellent = 0;
             $this->updateOpLog($thread, '取消精华');
         } else {
-            $thread->increment('is_excellent', 1);
+            $thread->is_excellent = 1;
             $this->updateOpLog($thread, '精华');
             event(new ExcellentWasAddedEvent($thread->user));
             event(new ThreadWasMarkedExcellentEvent($thread));

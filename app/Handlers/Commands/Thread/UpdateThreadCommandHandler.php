@@ -41,7 +41,7 @@ class UpdateThreadCommandHandler
 
     public function handle(UpdateThreadCommand $command)
     {
-
+dd($command->data);
         $thread = $command->thread;
         $original_subNode_id = $thread->sub_node_id;//帖子更新前的子版块id
 
