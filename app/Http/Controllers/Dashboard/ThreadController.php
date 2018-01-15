@@ -140,10 +140,10 @@ class ThreadController extends Controller
         try {
             $this->updateOpLog($thread, '修改帖子');
             dispatch(new UpdateThreadCommand($thread, $threadData));
-        } catch (ValidationException $e) {
+        } catch (\Exception $e) {
             return Redirect::route('dashboard.thread.edit', $thread->id)
                 ->withInput($threadData)
-                ->withErrors($e->getMessageBag());
+                ->withErrors($e->getMessage());
         }
         if ($thread->status == Thread::VISIBLE) {
             return Redirect::route('dashboard.thread.index')->withSuccess('恭喜，操作成功！');
@@ -221,15 +221,13 @@ class ThreadController extends Controller
             DB::beginTransaction();
             try {
                 foreach ($thread_ids as $id) {
-                    if (Thread::find($id)){
-                        self::postAudit(Thread::find($id));
-                        $count++;
-                    }
+                    self::postAudit(Thread::find($id));
+                    $count++;
                 }
                 DB::commit();
-            } catch (ValidationException $e) {
+            } catch (\Exception $e) {
                 DB::rollBack();
-                return Redirect::back()->withErrors($e->getMessageBag());
+                return Redirect::back()->withErrors($e->getMessage());
             }
             return Redirect::back()->withSuccess('恭喜，批量操作成功！'.'共'.$count.'条');
         } else {
@@ -266,9 +264,9 @@ class ThreadController extends Controller
             event(new ThreadWasAuditedEvent($thread));
             $thread->addToIndex();
             DB::commit();
-        } catch (ValidationException $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
-            return Redirect::back()->withErrors($e->getMessageBag());
+            return Redirect::back()->withErrors($e->getMessage());
         }
 
         return Redirect::back()->withSuccess('恭喜，操作成功！');
@@ -286,9 +284,9 @@ class ThreadController extends Controller
             $thread->removeFromIndex();
             event(new ThreadWasTrashedEvent($thread));
             DB::commit();
-        } catch (ValidationException $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
-            return Redirect::back()->withErrors($e->getMessageBag());
+            return Redirect::back()->withErrors($e->getMessage());
         }
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
@@ -299,7 +297,7 @@ class ThreadController extends Controller
         try {
             $this->trash($thread);
         } catch (\Exception $e) {
-            return Redirect::back()->withErrors($e->getMessageBag());
+            return Redirect::back()->withErrors($e->getMessage());
         }
 
         return Redirect::back()->withSuccess('恭喜，操作成功！');
@@ -335,8 +333,8 @@ class ThreadController extends Controller
             $thread->heat = $thread->heat_compute;
             $this->updateOpLog($thread, '提升帖子', $heatOffset);
             $thread->save();
-        } catch (ValidationException $e) {
-            return Redirect::back()->withErrors($e->getMessageBag());
+        } catch (\Exception $e) {
+            return Redirect::back()->withErrors($e->getMessage());
         }
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
@@ -348,25 +346,21 @@ class ThreadController extends Controller
         $threadData = Input::get('thread');
         $threadData['node_id'] = SubNode::find($threadData['sub_node_id'])->node->id;
         $threadIds = Input::get('batch');
-        if ($threadIds != null) {
-            DB::beginTransaction();
-            try {
-                foreach ($threadIds as $threadId) {
-                    if (Thread::find($threadId)){
-                        self::moveThread(Thread::find($threadId),$threadData);
-                        $count++;
-                    }
-                }
-                DB::commit();
-            } catch(ValidationException $e) {
-                DB::rollBack();
-                return Redirect::back()->withErrors($e->getMessageBag());
-            }
-            return  Redirect::back()->withSuccess('恭喜，成功将'.$count.'个帖子移动到相应子版块！');;
-        } else {
+        if (!$threadIds) {
             return Redirect::back()->withErrors('您未选中任何记录！');
         }
-
+        DB::beginTransaction();
+        try {
+            foreach ($threadIds as $threadId) {
+                self::moveThread(Thread::find($threadId), $threadData);
+                $count++;
+            }
+            DB::commit();
+        } catch(\Exception $e) {
+            DB::rollBack();
+            return Redirect::back()->withErrors($e->getMessage());
+        }
+        return  Redirect::back()->withSuccess('恭喜，成功将'.$count.'个帖子移动到相应子版块！');
     }
 
     //移动帖子,将帖子移入别的版块
@@ -376,9 +370,9 @@ class ThreadController extends Controller
         try {
             dispatch(new UpdateThreadCommand($thread, $threadData));
             DB::commit();
-        } catch(ValidationException $e) {
+        } catch(\Exception $e) {
             DB::rollBack();
-            return Redirect::back()->withErrors($e->getMessageBag());
+            return Redirect::back()->withErrors($e->getMessage());
         }
     }
 }

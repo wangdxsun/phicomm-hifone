@@ -161,7 +161,7 @@ class ThreadController extends Controller
             $threadBll->weUpdateActiveTime();
 
             return Redirect::route('thread.show', ['thread' => $thread->id])->withSuccess('发布成功');
-        } catch (ValidationException $e) {
+        } catch (\Exception $e) {
             return Redirect::route('thread.create')->withInput()->withErrors($e->getMessageBag());
         }
     }
