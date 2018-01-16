@@ -58,7 +58,7 @@ class NodeBll extends BaseBll
     {
         //除去无子版块的版块信息,同时判断用户身份决定是否显示公告活动等主版块
         $sections = Section::orderBy('order')->with(['nodes.subNodes', 'nodes' => function ($query) {
-            $query->show()->has('subNodes');//管理员和普通用户都不能在隐藏的板块发帖
+            $query->show()->has('subNodes');//管理员和普通用户都不能在隐藏的版块发帖
         }])->has('nodes')->get();
 
         return $sections;
