@@ -24,9 +24,8 @@ class CommonController extends WebController
             throw new HifoneException('没有上传图片');
         }
         $upload = dispatch(new UploadImageCommand(request()->file('image')));
-        unset($upload['localFile']);
 
-        return $upload;
+        return $upload['filename'];
     }
 
     //上传图片Base64编码
