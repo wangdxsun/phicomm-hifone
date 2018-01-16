@@ -18,7 +18,7 @@ class WebUserWasActiveHandler
     {
         $user = $event->user;
         $user->update([
-            'last_active_time_web' => Carbon::now(),
+            'last_active_time_web' => Carbon::now()->toDateTimeString(),
             'device' => 2,
         ]);
     }

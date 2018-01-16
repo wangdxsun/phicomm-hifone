@@ -10,6 +10,6 @@ class UserWasLoggedInAppHandler
     public function handle(EventInterface $event)
     {
         $user = $event->user;
-        $user->update(['last_visit_time_app' => Carbon::now()]);
+        $user->update(['last_visit_time_app' => Carbon::now()->toDateTimeString()]);
     }
 }

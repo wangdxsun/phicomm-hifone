@@ -11,7 +11,7 @@ class H5UserWasActiveHandler
     {
         $user = $event->user;
         $user->update([
-            'last_active_time' => Carbon::now(),
+            'last_active_time' => Carbon::now()->toDateTimeString(),
             'device' => 1,
         ]);
     }
