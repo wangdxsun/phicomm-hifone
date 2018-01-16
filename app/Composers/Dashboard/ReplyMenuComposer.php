@@ -24,7 +24,7 @@ class ReplyMenuComposer
      */
     public function compose(View $view)
     {
-        $subMenu = [
+        $subNav = [
             'audit' => [
                 'title'  => '待审核',
                 'url'    => route('dashboard.reply.audit'),
@@ -45,7 +45,7 @@ class ReplyMenuComposer
             ],
         ];
 
-        $view->withSubMenu($subMenu);
+        $view->withSubNav($subNav);
         $view->withSubTitle(trans('dashboard.content.content'));
     }
 }

@@ -8,7 +8,7 @@
             {{ trans('dashboard.replies.edit.title') }}
         </span>
     </div>
-     @if(isset($sub_menu))
+     @if(isset($sub_nav))
     @include('dashboard.partials.sub-nav')
     @endif
     <div class="row">

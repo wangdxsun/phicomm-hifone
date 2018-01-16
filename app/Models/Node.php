@@ -181,13 +181,8 @@ class Node extends BaseModel implements HasPresenter
         return $query->where('is_show', 1);
     }
 
-    public function getReplies($value)
+    public function replies()
     {
-        $replies = DB::select('select * from replies 
-                                    left join (select id from threads where node_id = ?) as stat 
-                                    on thread_id = stat.id
-                                    where replies.status = 0
-                                    or replies.status = -3',[$value]);
-        return $replies;
+        return $this->hasManyThrough(Reply::class,Thread::class);
     }
 }

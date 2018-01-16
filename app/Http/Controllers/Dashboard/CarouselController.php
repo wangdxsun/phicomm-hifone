@@ -42,20 +42,7 @@ class CarouselController extends Controller
         return View::make('dashboard.carousel.index')
             ->withPageTitle('banner管理')
             ->withCarousels($carousels)
-            ->withSrc('app')
-            ->withCurrentMenu('app')
-            ->withCurrentTap('app_show');
-    }
-
-    public function appShow()
-    {
-        $carousels  = Carousel::orderBy('order')->recent()
-            ->whereIn('device', [Carousel::ANDROID, Carousel::IOS, Carousel::ANDROID + Carousel::IOS])->visible()->get();
-
-        return View::make('dashboard.carousel.index')
-            ->withPageTitle('banner管理')
-            ->withCarousels($carousels)
-            ->withSrc('app')
+            ->withSource('app')
             ->withCurrentMenu('app')
             ->withCurrentTap('app_show');
     }
@@ -68,7 +55,7 @@ class CarouselController extends Controller
         return View::make('dashboard.carousel.index')
             ->withPageTitle('banner管理')
             ->withCarousels($carousels)
-            ->withSrc('app')
+            ->withSource('app')
             ->withCurrentMenu('app')
             ->withCurrentTap('app_hide');
 
@@ -82,7 +69,7 @@ class CarouselController extends Controller
         return View::make('dashboard.carousel.index')
             ->withPageTitle('banner管理')
             ->withCarousels($carousels)
-            ->withSrc('web')
+            ->withSource('web')
             ->withCurrentMenu('web')
             ->withCurrentTap('web_show');
     }
@@ -95,7 +82,7 @@ class CarouselController extends Controller
         return View::make('dashboard.carousel.index')
             ->withPageTitle('banner管理')
             ->withCarousels($carousels)
-            ->withSrc('web')
+            ->withSource('web')
             ->withCurrentMenu('web')
             ->withCurrentTap('web_hide');
 

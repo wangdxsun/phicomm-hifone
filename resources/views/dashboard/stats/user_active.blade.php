@@ -6,7 +6,7 @@
     @endif
     <div class="content-wrapper">
         @if(isset($sub_nav))
-            @include('dashboard.partials.sub_nav')
+            @include('dashboard.partials.sub-nav')
         @endif
         <div class="row">
             <div class="col-sm-12">
@@ -16,8 +16,8 @@
                     <tr class="head">
                         <td>日期</td>
                         <td>每日活跃参与用户数</td>
-                        <td>每日活跃参与新用户数</td>
-                        <td>每日活跃参与老用户数</td>
+                        <td>每日登陆新用户数</td>
+                        <td>每日登陆老用户数</td>
                     </tr>
                     @foreach ($statArr as $key => $value)
                         <tr>

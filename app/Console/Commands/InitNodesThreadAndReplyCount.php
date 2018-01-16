@@ -26,12 +26,12 @@ class InitNodesThreadAndReplyCount extends Command
         foreach ($nodes as $node) {
             $node->update([
                 'thread_count' => $node->threads()->visibleAndDeleted()->count(),
-                'reply_count'  => count($node->getReplies($node->id)),
+                'reply_count'  => $node->threads()->visibleAndDeleted()->count(),
             ]);
             foreach ($node->subNodes as $subNode) {
                 $subNode->update([
                     'thread_count' => $subNode->threads()->visibleAndDeleted()->count(),
-                    'reply_count'  => count($subNode->getReplies($subNode->id)),
+                    'reply_count'  => $node->threads()->visibleAndDeleted()->count(),
                 ]);
             }
             

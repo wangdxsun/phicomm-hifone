@@ -39,7 +39,7 @@ class UserController extends WebController
             return 'PhicommNoLogin';
         }
     }
-    
+
     public function show(User $user, UserBll $userBll)
     //用户个人中心
     {

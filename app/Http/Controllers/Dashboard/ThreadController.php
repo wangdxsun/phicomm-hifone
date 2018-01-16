@@ -62,7 +62,7 @@ class ThreadController extends Controller
             ->withThreads($threads)
             ->with('threadCount', $threadCount)
             ->with('orderTypes', $orderTypes)
-            ->withCurrentMenu('index')
+            ->withCurrentNav('index')
             ->withSearch($search)
             ->withNodes($nodes)
             ->withSections($sections);
@@ -81,7 +81,7 @@ class ThreadController extends Controller
             ->withPageTitle(trans('dashboard.threads.threads').' - '.trans('dashboard.dashboard'))
             ->withThreads($threads)
             ->with('threadCount', $threadCount)
-            ->withCurrentMenu('audit');
+            ->withCurrentNav('audit');
     }
 
     /**
@@ -106,7 +106,7 @@ class ThreadController extends Controller
             ->withThreadAll($threadAll)
             ->with('orderTypes',$orderTypes)
             ->withSections($sections)
-            ->withCurrentMenu('trash')
+            ->withCurrentNav('trash')
             ->withSearch($search)
             ->withUsers(User::find($userIds))
             ->withOperators(User::find($operators));
@@ -120,7 +120,7 @@ class ThreadController extends Controller
         return View::make('dashboard.threads.create_edit')
             ->withNodes($nodes)
             ->withThread($thread)
-            ->withCurrentMenu($menu);
+            ->withCurrentNav($menu);
     }
 
     /**

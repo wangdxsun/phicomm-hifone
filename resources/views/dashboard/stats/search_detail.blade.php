@@ -12,8 +12,8 @@
                 <table class="table table-bordered table-striped table-condensed">
                     <tr class="head">
                         <td>热搜名词</td>
-                        <td>出现次数</td>
-                        <td>截止当前改词出现的次数</td>
+                        <td>今日出现次数</td>
+                        <td>截止当前总次数</td>
                     </tr>
                     @foreach ($statArr as $key => $value)
                         <tr>
@@ -23,8 +23,6 @@
                         </tr>
                     @endforeach
                 </table>
-
-
             </div>
         </div>
     </div>
