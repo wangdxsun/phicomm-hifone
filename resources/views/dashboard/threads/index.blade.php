@@ -13,7 +13,7 @@
                 截止当前列表的帖子总数：{{ $threadCount }}
             </span>
         </div>
-    @if(isset($sub_menu))
+    @if(isset($sub_nav))
         @include('dashboard.partials.sub-nav')
     @endif
         <div class="row">

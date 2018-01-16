@@ -61,8 +61,7 @@ class StatController extends Controller
         return view('dashboard.stats.user')
             ->withCurrentMenu('user')
             ->with('statArr', $statsArr)
-            ->with('src', 'user')
-            ->withCurrentTap('basic');
+            ->withCurrentNav('basic');
     }
     //用户统计之App活跃用户
     public function userCountApp()
@@ -96,8 +95,7 @@ class StatController extends Controller
         }
         return view('dashboard.stats.user_active')
             ->with('statArr', $statsArr)
-            ->withSrc('user')
-            ->withCurrentTap('app')
+            ->withCurrentNav('app')
             ->withCurrentMenu('user');
     }
     //用户统计之Web活跃用户
@@ -132,8 +130,7 @@ class StatController extends Controller
         }
         return view('dashboard.stats.user_active')
             ->with('statArr', $statsArr)
-            ->withSrc('user')
-            ->withCurrentTap('web')
+            ->withCurrentNav('web')
             ->withCurrentMenu('user');
     }
     //用户统计之H5活跃用户
@@ -168,8 +165,7 @@ class StatController extends Controller
         }
         return view('dashboard.stats.user_active')
             ->with('statArr', $statsArr)
-            ->withSrc('user')
-            ->withCurrentTap('h5')
+            ->withCurrentNav('h5')
             ->withCurrentMenu('user');
 
     }
@@ -347,7 +343,6 @@ class StatController extends Controller
         $statsArr = array();
         foreach ($dailyStat as $dailyCount) {
             $statsArr[] = [
-                'date' => $dailyCount->date,
                 'word' => $dailyCount->word,
                 'daily_count' => $dailyCount->daliy_cnt,
                 'stat_count'  =>  $dailyCount->stat_cnt
@@ -355,7 +350,6 @@ class StatController extends Controller
         }
         return view('dashboard.stats.search_detail')
             ->with('statArr', $statsArr)
-            ->withDate($date)
             ->withCurrentMenu('search_detail');
     }
 }

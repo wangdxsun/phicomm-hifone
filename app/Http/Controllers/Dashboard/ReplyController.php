@@ -57,7 +57,7 @@ class ReplyController extends Controller
             ->with('orderTypes',$orderTypes)
             ->withSearch($search)
             ->with('orderByThreadId',$orderByThreadId)
-            ->withCurrentMenu('index');
+            ->withCurrentNav('index');
     }
 
     public function audit()
@@ -69,7 +69,7 @@ class ReplyController extends Controller
             ->withPageTitle(trans('dashboard.replies.replies').' - '.trans('dashboard.dashboard'))
             ->withReplies($replies)
             ->with('replyCount', $replyCount)
-            ->withCurrentMenu('audit');
+            ->withCurrentNav('audit');
     }
 
     public function trashView()
@@ -89,7 +89,8 @@ class ReplyController extends Controller
             ->with('orderTypes',$orderTypes)
             ->withSearch($search)
             ->with('replyCount', $replyCount)
-            ->withReplies($replies)->withCurrentMenu('trash')
+            ->withReplies($replies)
+            ->withCurrentNav('trash')
             ->withThreads(Thread::find($threadIds))
             ->withUsers(User::find($userIds))
             ->withOperators(User::find($operators));
@@ -107,7 +108,8 @@ class ReplyController extends Controller
         $menu = $reply->status == Reply::VISIBLE ? 'index' : 'audit';
         return View::make('dashboard.replies.create_edit')
             ->withPageTitle(trans('dashboard.replies.edit.title').' - '.trans('dashboard.dashboard'))
-            ->withReply($reply)->withCurrentMenu($menu);
+            ->withReply($reply)
+            ->withCurrentNav($menu);
     }
 
     /**

@@ -7,7 +7,7 @@
     <div class="content-wrapper">
 
         @if(isset($sub_nav))
-            @include('dashboard.partials.sub_nav')
+            @include('dashboard.partials.sub-nav')
         @endif
         <div class="row">
             <div class="col-sm-12">

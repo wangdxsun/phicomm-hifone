@@ -18,17 +18,17 @@ class ChatController extends Controller
     public function sendChat()
     {
         return View::make('dashboard.chat.index')
-            ->withCurrentMenu('send');
+            ->withCurrentNav('send');
     }
 
     public function chatLists()
     {
         $search = $this->filterEmptyValue(Input::get('chat'));
-        $chats = Chat::search($search)->orderBy('created_at','desc')->paginate(20);
+        $chats = Chat::search($search)->orderBy('created_at','desc')->paginate(30);
         return View::make('dashboard.chat.lists')
             ->withChats($chats)
             ->withSearch($search)
-            ->withCurrentMenu('lists');
+            ->withCurrentNav('lists');
     }
 
     public function chatStore(ChatBll $chatBll)

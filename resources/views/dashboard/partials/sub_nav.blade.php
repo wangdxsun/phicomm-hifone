@@ -5,7 +5,7 @@
                 <i class="fa fa-navicon"></i>
             </li>
             @foreach($sub_nav as $key => $item)
-                @if ( $item['src'] == $src)
+                @if ( $item['source'] == $source)
                     <li class="{{ $key == $current_tap  ? 'active' : null }}">
                         <a href="{{ $item['url'] }}">
                             {{ $item['title'] }}

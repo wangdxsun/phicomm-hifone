@@ -10,9 +10,6 @@ use Hifone\Services\Filter\WordsFilter;
 use Illuminate\Http\Request;
 use Auth;
 use Session;
-use Config;
-use Redirect;
-use Input;
 
 class PhicommController extends WebController
 {
@@ -34,10 +31,10 @@ class PhicommController extends WebController
         $captcha = request('captcha');
         if ($captcha != Session::get('phrase')) {
             // instructions if user phrase is good
-            return 'Captcha wrong';
+            throw new HifoneException('验证码有误');
         }
 
-        return 'Success';
+        return success('验证成功');
     }
 
     public function register(Request $request)
@@ -67,7 +64,7 @@ class PhicommController extends WebController
         $captcha = request('captcha');
         if ($captcha != Session::get('phrase')) {
             // instructions if user phrase is good
-            return 'Captcha wrong';
+            throw new HifoneException('验证码有误');
         }
 
         $phicommId = $this->phicommBll->login($phone, $password);
@@ -83,6 +80,7 @@ class PhicommController extends WebController
             $commonBll->loginWeb();
             return $user;
         } else {
+            throw new HifoneException('Unbind');
             return 'Unbind';
         }
     }
@@ -110,10 +108,10 @@ class PhicommController extends WebController
         $captcha = request('captcha');
         if ($captcha != Session::get('phrase')) {
             // instructions if user phrase is good
-            return 'Captcha wrong';
+            throw new HifoneException('验证码有误');
         }
 
-        return 'Success';
+        return success('验证成功');
     }
 
     public function reset()

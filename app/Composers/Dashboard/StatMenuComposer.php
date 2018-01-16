@@ -85,25 +85,25 @@ class StatMenuComposer
                 'title'  => '用户基本情况',
                 'url'    => route('dashboard.stat.user'),
                 'active' => false,
-                'src'    => 'user'
+                'icon'   => 'fa fa-user',
             ],
             'app'   => [
                 'title'  => 'App活跃用户',
                 'url'    => route('dashboard.stat.user.app'),
                 'active' => false,
-                'src'    => 'user'
+                'icon'   => 'fa fa-user',
             ],
             'web'   => [
                 'title'  => 'WEB活跃用户',
                 'url'    => route('dashboard.stat.user.web'),
                 'active' => false,
-                'src'    => 'user'
+                'icon'   => 'fa fa-user',
             ],
             'h5'    => [
                 'title'  => 'H5活跃用户',
                 'url'    => route('dashboard.stat.user.h5'),
                 'active' => false,
-                'src'    => 'user'
+                'icon'   => 'fa fa-user',
             ]
         ];
         $view->withSubMenu($subMenu);
