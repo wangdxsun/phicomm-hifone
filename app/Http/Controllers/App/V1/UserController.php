@@ -11,6 +11,7 @@ namespace Hifone\Http\Controllers\App\V1;
 use Hifone\Commands\Image\UploadImageCommand;
 use Hifone\Events\Image\AvatarWasUploadedEvent;
 use Hifone\Exceptions\HifoneException;
+use Hifone\Http\Bll\BannerBll;
 use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\FollowBll;
 use Hifone\Http\Bll\PhicommBll;
@@ -27,7 +28,7 @@ class UserController extends AppController
      * @return mixed
      * @throws \Exception
      */
-    public function me()
+    public function me(UserBll $userBll)
     {
         if (empty(Auth::phicommId())) {
             throw new HifoneException('缺少token');
@@ -36,6 +37,7 @@ class UserController extends AppController
         if (!$user) {
             throw new HifoneException('请先关联社区账号');
         }
+        $userBll->appUpdateActiveTime();
         return $user;
     }
 
@@ -52,9 +54,10 @@ class UserController extends AppController
         return success('创建成功');
     }
 
-    public function show(User $user)
+    public function show(User $user,UserBll $userBll)
     {
         $user['followed'] = User::hasFollowUser($user);
+        $userBll->appUpdateActiveTime();
         return $user;
     }
 
@@ -96,7 +99,7 @@ class UserController extends AppController
 
     public function credit(UserBll $userBll, CommonBll $commonBll)
     {
-        $commonBll->login();
+        $commonBll->loginApp();
         $credits = $userBll->getCredits();
 
         return $credits;
@@ -121,6 +124,7 @@ class UserController extends AppController
     public function search($keyword, UserBll $userBll)
     {
         $users = $userBll->search($keyword);
+        $userBll->h5UpdateActiveTime();
         return $users;
     }
 

@@ -95,7 +95,7 @@ class PhicommController extends Controller
             }
             // 登录并且「记住」用户
             Auth::login($user, request()->has('remember'));
-            $commonBll->login();
+            $commonBll->loginWeb();
             $cloudUser = $this->phicommBll->userInfo();
             if ($cloudUser['img'] && $user->avatar_url != $cloudUser['img'] && $cloudUser['img'] != 'Uploads/default/default.jpg') {
                 $user->avatar_url = $cloudUser['img'];

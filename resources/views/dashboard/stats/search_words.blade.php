@@ -6,9 +6,6 @@
     @endif
     <div class="content-wrapper">
 
-        @if(isset($sub_nav))
-            @include('dashboard.partials.sub-nav')
-        @endif
         <div class="row">
             <div class="col-sm-12">
 
@@ -16,18 +13,16 @@
                 <table class="table table-bordered table-striped table-condensed">
                     <tr class="head">
                         <td>日期</td>
-                        <td>每日新增用户</td>
-                        <td>每日发帖用户</td>
-                        <td>每日回帖用户</td>
-                        <td>每日贡献内容用户</td>
+                        <td>每日搜索词总数</td>
+                        <td>详情</td>
                     </tr>
                     @foreach ($statArr as $key => $value)
                         <tr>
                             <td>{{ $value['date'] }}</td>
-                            <td>{{ $value['user_count'] }}</td>
-                            <td>{{ $value['thread_user_count'] }}</td>
-                            <td>{{ $value['reply_user_count'] }}</td>
-                            <td>{{ $value['contribute_user_count'] }}</td>
+                            <td>{{ $value['daily_count'] }}</td>
+                            <td>
+                                <a href="/dashboard/stat/search/{{ $value['date'] }}">详情</a>
+                            </td>
                         </tr>
                     @endforeach
                 </table>

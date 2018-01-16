@@ -27,6 +27,7 @@ use Hifone\Events\Report\ReportWasPassedEvent;
 use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasTrashedEvent;
 use Hifone\Events\User\UserWasAddedEvent;
+use Hifone\Events\User\UserWasLoggedinAppEvent;
 use Hifone\Events\User\UserWasLoggedinEvent;
 use Hifone\Events\Favorite\FavoriteWasAddedEvent;
 use Hifone\Events\Favorite\FavoriteWasRemovedEvent;
@@ -40,6 +41,7 @@ use Hifone\Events\Like\LikeWasAddedEvent;
 use Hifone\Events\Like\LikedWasAddedEvent;
 use Hifone\Events\Like\LikedWasRemovedEvent;
 use Hifone\Events\Image\AvatarWasUploadedEvent;
+use Hifone\Events\User\UserWasLoggedinWebEvent;
 use Hifone\Models\Report;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
@@ -73,7 +75,7 @@ class AddCreditHandler
         } elseif ($event instanceof UserWasAddedEvent) {
             $action = 'register';
             $user = $event->user;
-        } elseif ($event instanceof UserWasLoggedinEvent) {
+        } elseif ($event instanceof UserWasLoggedinEvent || $event instanceof UserWasLoggedinWebEvent || $event instanceof UserWasLoggedinAppEvent) {
             $action = 'login';
             $user = $event->user;
         } elseif ($event instanceof FavoriteWasAddedEvent) {

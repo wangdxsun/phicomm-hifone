@@ -16,6 +16,7 @@
     <div class="row">
         @include('partials.errors')
         <div class="col-sm-12 striped-list" id="item-list" data-item-name="carousel">
+
             @forelse($carousels as $carousel)
             <div class="row striped-list-item" data-item-id="{{ $carousel->id }}">
                 <div class="col-xs-1">
@@ -49,7 +50,7 @@
                     </div>
                 @endif
                 <div class="col-xs-1">
-                    {{ '适用系统 ： ' . $carousel->device }}<br>
+                    {{ '适用系统 ： ' . $carousel->getDevice($carousel->device) }}<br>
                 </div>
 
                 <div class="col-xs-1">

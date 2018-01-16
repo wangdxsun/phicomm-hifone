@@ -77,7 +77,7 @@ class PhicommController extends WebController
             }
             // 登录并且「记住」用户
             Auth::login($user, request()->has('remember'));
-            $commonBll->login();
+            $commonBll->loginWeb();
             return $user;
         } else {
             throw new HifoneException('Unbind');

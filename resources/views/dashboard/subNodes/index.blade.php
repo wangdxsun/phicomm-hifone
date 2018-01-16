@@ -24,12 +24,15 @@
                         <span class="drag-handle"><i class="fa fa-navicon"></i></span>
                     </div>
                     <div class="col-xs-2 drag-handle" >
+                        {{ '子版块ID： '. $subNode->id }}
+                    </div>
+                    <div class="col-xs-2 drag-handle" >
                         {{ $subNode->name }}
                     </div>
                     <div class="col-xs-2 drag-handle">
-                        {{ $subNode->node->name }}
+                        {{'主板块：'}}<br>{{ $subNode->node->name }}
                     </div>
-                    <div class="col-xs-5 drag-handle">
+                    <div class="col-xs-3 drag-handle">
                         {{ $subNode->description }}
                     </div>
                     <div class="col-xs-2 text-right">

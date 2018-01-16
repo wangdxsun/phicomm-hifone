@@ -9,6 +9,10 @@
 namespace Hifone\Http\Bll;
 
 use Carbon\Carbon;
+use Hifone\Events\User\AppUserWasActiveEvent;
+use Hifone\Events\User\H5UserWasActiveEvent;
+use Hifone\Events\User\UserWasActiveEvent;
+use Hifone\Events\User\WebUserWasActiveEvent;
 use Hifone\Models\BaseModel;
 use Auth;
 
@@ -111,5 +115,43 @@ class BaseBll
         $output = json_decode($json, true);
 
         return $output;
+    }
+
+    public function appUpdateActiveTime()
+    {
+        //点击node，统计活跃参与用户数
+        if (Auth::check()) {
+            $activeDate = app('session')->get('app_user_active_date');
+            if (!$activeDate || $activeDate != date('Ymd')) {
+                event(new AppUserWasActiveEvent(Auth::user()));
+                app('session')->put('app_user_active_date', date('Ymd'));
+            }
+        }
+    }
+
+
+    public function h5UpdateActiveTime()
+    {
+        //点击node，统计活跃参与用户数
+        if (Auth::check()) {
+            $activeDate = app('session')->get('user_active_date');
+            if (!$activeDate || $activeDate != date('Ymd')) {
+                event(new H5UserWasActiveEvent(Auth::user()));
+                app('session')->put('user_active_date', date('Ymd'));
+            }
+        }
+    }
+
+
+    public function webUpdateActiveTime()
+    {
+        //点击node，统计活跃参与用户数
+        if (Auth::check()) {
+            $activeDate = app('session')->get('web_user_active_date');
+            if (!$activeDate || $activeDate != date('Ymd')) {
+                event(new WebUserWasActiveEvent(Auth::user()));
+                app('session')->put('web_user_active_date', date('Ymd'));
+            }
+        }
     }
 }

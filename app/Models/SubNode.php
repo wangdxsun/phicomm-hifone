@@ -6,7 +6,7 @@
  * Time: 14:03
  */
 namespace Hifone\Models;
-
+use DB;
 class SubNode extends BaseModel
 {
 
@@ -72,6 +72,15 @@ class SubNode extends BaseModel
     public function scopeFeedback($query)
     {
         return $query->where('is_feedback', 1);
+    }
+
+    public function getReplies($value)
+    {
+        $replies = DB::select('select * from replies left join (select id from threads where sub_node_id = ?) as stat 
+                                    on thread_id = stat.id
+                                    where replies.status = 0
+                                    or replies.status = -3',[$value]);
+        return $replies;
     }
 
 }

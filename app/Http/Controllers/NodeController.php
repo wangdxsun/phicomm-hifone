@@ -36,6 +36,7 @@ class NodeController extends Controller
         $this->breadcrumb->push($node->name, $node->url);
 
         $threads = $nodeBll->threads($node, Input::get('filter'));
+        $nodeBll->webUpdateActiveTime();
 
         return $this->view('threads.index')
             ->withThreads($threads)

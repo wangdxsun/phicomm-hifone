@@ -32,6 +32,7 @@ class NodeController extends AppController
     public function sections(NodeBll $nodeBll)
     {
         $sections = $nodeBll->sections();
+        $nodeBll->appUpdateActiveTime();
         foreach ($sections as $section) {
             foreach ($nodes = $section['nodes'] as $node) {
                 $node['detail_url'] = route('app.node.show', $node->id);
@@ -60,6 +61,7 @@ class NodeController extends AppController
     public function show(Node $node, NodeBll $nodeBll)
     {
         $node = $nodeBll->show($node, $nodeBll);
+        $nodeBll->appUpdateActiveTime();
         return $node;
     }
 

@@ -5,10 +5,10 @@
                 <i class="fa fa-navicon"></i>
             </li>
             @foreach($sub_nav as $key => $item)
-                @if ( $item['src'] == $src)
+                @if ( $item['source'] == $source)
                     <li class="{{ $key == $current_tap  ? 'active' : null }}">
                         <a href="{{ $item['url'] }}">
-                            <i class="{{ $item['icon'] }}"></i>{{ $item['title'] }}
+                            {{ $item['title'] }}
                         </a>
                     </li>
                 @endif

@@ -11,7 +11,7 @@ class BannerMenuComposer
             //安卓、IOS系统页面
             'app' => [
                 'title'  => '安卓/IOS系统',
-                'url'    => route('dashboard.carousel.app.show'),
+                'url'    => route('dashboard.carousel.index'),
                 'active' => false,
             ],
             //web、H5端系统页面
@@ -26,17 +26,17 @@ class BannerMenuComposer
             //APP端正在展现和已经关闭的banner
             'app_show' => [
                 'title'  => '正在展现的banner',
-                'url'    => route('dashboard.carousel.app.show'),
+                'url'    => route('dashboard.carousel.index'),
                 'icon'   => 'fa fa-envelope-o',
                 'active' => false,
-                'src'    => 'app'
+                'source' => 'app'
             ],
             'app_hide' => [
                 'title'  => '已关闭的banner',
                 'url'    => route('dashboard.carousel.app.hide'),
                 'icon'   => 'fa fa-clock-o',
                 'active' => false,
-                'src'    => 'app'
+                'source' => 'app'
             ],
             //web端正在展现和已经关闭的banner
             'web_show' => [
@@ -44,14 +44,14 @@ class BannerMenuComposer
                 'url'    => route('dashboard.carousel.web.show'),
                 'icon'   => 'fa fa-envelope-o',
                 'active' => false,
-                'src'    => 'web'
+                'source' => 'web'
             ],
             'web_hide' => [
                 'title'  => '已关闭的banner',
                 'url'    => route('dashboard.carousel.web.hide'),
                 'icon'   => 'fa fa-clock-o',
                 'active' => false,
-                'src'    => 'web'
+                'source' => 'web'
             ],
         ];
 

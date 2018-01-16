@@ -61,7 +61,7 @@ class Carousel extends BaseModel
         return $query->where('start_display', '>=', Carbon::now())->orWhere('end_display', '<=', Carbon::now());
     }
 
-    public function getDeviceAttribute($value)
+    public function getDevice($value)
     {
         $device = '';
         switch($value)

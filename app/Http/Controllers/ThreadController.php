@@ -16,6 +16,7 @@ use Auth;
 use Hifone\Commands\Append\AddAppendCommand;
 use Hifone\Commands\Thread\RemoveThreadCommand;
 use Hifone\Commands\Thread\UpdateThreadCommand;
+use Hifone\Events\Thread\ThreadWasMarkedExcellentEvent;
 use Hifone\Events\Thread\ThreadWasViewedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Pin\SinkWasAddedEvent;
@@ -56,6 +57,7 @@ class ThreadController extends Controller
     public function search(ThreadBll $threadBll)
     {
         $threads = $threadBll->webSearch();
+        $threadBll->webUpdateActiveTime();
         return $this->view('threads.search')
             ->withThreads($threads)
             ->withSections(Section::orderBy('order')->get());
@@ -68,12 +70,12 @@ class ThreadController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function show(Thread $thread)
+    public function show(Thread $thread, ThreadBll $threadBll)
     {
         if ($thread->inVisible()) {
             throw new NotFoundHttpException('帖子状态不可见');
         }
-
+        $threadBll->webUpdateActiveTime();
         $this->breadcrumb->push([
             $thread->node->name => $thread->node->url,
             $thread->title      => $thread->url,
@@ -100,8 +102,9 @@ class ThreadController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function create()
+    public function create(ThreadBll $threadBll)
     {
+        $threadBll->webUpdateActiveTime();
         //除去无子版块的版块信息,同时判断用户身份决定是否显示公告活动等版块
         $sections = Section::orderBy('order')->with(['nodes.subNodes', 'nodes' => function ($query) {
             if (Auth::check() && Auth::user()->can('manage_threads')) {
@@ -156,9 +159,10 @@ class ThreadController extends Controller
             $thread->body = app('parser.emotion')->parse($thread->body);
             $thread->save();
             $threadBll->autoAudit($thread);
+            $threadBll->weUpdateActiveTime();
 
             return Redirect::route('thread.show', ['thread' => $thread->id])->withSuccess('发布成功');
-        } catch (ValidationException $e) {
+        } catch (\Exception $e) {
             return Redirect::route('thread.create')->withInput()->withErrors($e->getMessageBag());
         }
     }
@@ -244,19 +248,19 @@ class ThreadController extends Controller
      */
     public function excellent(Thread $thread)
     {
-        $this->needAuthorOrAdminPermission($thread->user_id);
-
-        $updateData = [
-            'is_excellent' => !$thread->is_excellent,
-        ];
-
-        $thread = dispatch(new UpdateThreadCommand($thread, $updateData));
-        if ($thread->is_excellent == 1) {
+        if ($thread->is_excellent > 0) {
+            $thread->is_excellent = 0;
+            $this->updateOpLog($thread, '取消精华');
+        } else {
+            $thread->is_excellent = 1;
+            $this->updateOpLog($thread, '精华');
             event(new ExcellentWasAddedEvent($thread->user));
+            event(new ThreadWasMarkedExcellentEvent($thread));
         }
-
-        return Redirect::route('thread.show', $thread->id)
-            ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
+        //更新热度值
+        $thread->heat = $thread->heat_compute;
+        $thread->save();
+        return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
     public function pin(Thread $thread)

@@ -42,20 +42,7 @@ class CarouselController extends Controller
         return View::make('dashboard.carousel.index')
             ->withPageTitle('banner管理')
             ->withCarousels($carousels)
-            ->withSrc('app')
-            ->withCurrentMenu('app')
-            ->withCurrentTap('app_show');
-    }
-
-    public function appShow()
-    {
-        $carousels  = Carousel::orderBy('order')->recent()
-            ->whereIn('device', [Carousel::ANDROID, Carousel::IOS, Carousel::ANDROID + Carousel::IOS])->visible()->get();
-
-        return View::make('dashboard.carousel.index')
-            ->withPageTitle('banner管理')
-            ->withCarousels($carousels)
-            ->withSrc('app')
+            ->withSource('app')
             ->withCurrentMenu('app')
             ->withCurrentTap('app_show');
     }
@@ -68,7 +55,7 @@ class CarouselController extends Controller
         return View::make('dashboard.carousel.index')
             ->withPageTitle('banner管理')
             ->withCarousels($carousels)
-            ->withSrc('app')
+            ->withSource('app')
             ->withCurrentMenu('app')
             ->withCurrentTap('app_hide');
 
@@ -82,7 +69,7 @@ class CarouselController extends Controller
         return View::make('dashboard.carousel.index')
             ->withPageTitle('banner管理')
             ->withCarousels($carousels)
-            ->withSrc('web')
+            ->withSource('web')
             ->withCurrentMenu('web')
             ->withCurrentTap('web_show');
     }
@@ -95,7 +82,7 @@ class CarouselController extends Controller
         return View::make('dashboard.carousel.index')
             ->withPageTitle('banner管理')
             ->withCarousels($carousels)
-            ->withSrc('web')
+            ->withSource('web')
             ->withCurrentMenu('web')
             ->withCurrentTap('web_hide');
 
@@ -225,7 +212,7 @@ class CarouselController extends Controller
                 ->withErrors($e->getMessageBag());
         }
 
-        return Redirect::route('dashboard.carousel.index')
+        return Redirect::route('dashboard.carousel.app.show')
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.notices.add.success')));
     }
 
@@ -324,13 +311,13 @@ class CarouselController extends Controller
             $carousel->update($carouselData);
             $this->updateOpLog($carousel, '修改banner');
         } catch (ValidationException $e) {
-            return Redirect::route('dashboard.carousel.edit', ['id' => $carousel->id])
+            return Redirect::route('dashboard.carousel.edit.app', ['id' => $carousel->id])
                 ->withInput(Request::all())
                 ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.notices.edit.failure')))
                 ->withErrors($e->getMessageBag());
         }
 
-        return Redirect::route('dashboard.carousel.web.show')
+        return Redirect::route('dashboard.carousel.app.show')
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.notices.edit.success')));
     }
 

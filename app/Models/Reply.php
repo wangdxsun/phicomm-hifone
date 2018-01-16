@@ -160,11 +160,6 @@ class Reply extends BaseModel
         return $this->like_count > 0 ? 'highlight' : null;
     }
 
-//    public function getBodyAttribute($value)
-//    {
-//        return $this->status < Reply::VISIBLE ? "该评论已删除" : $value;
-//    }
-
     public function scopeSearch($query,$searches = [])
     {
         foreach ($searches as $key => $value) {

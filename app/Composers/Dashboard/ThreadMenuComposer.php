@@ -24,7 +24,7 @@ class ThreadMenuComposer
      */
     public function compose(View $view)
     {
-        $subMenu = [
+        $subNav = [
             'audit' => [
                 'title'  => '待审核',
                 'url'    => route('dashboard.thread.audit'),
@@ -45,7 +45,7 @@ class ThreadMenuComposer
             ],
         ];
 
-        $view->withSubMenu($subMenu);
+        $view->withSubNav($subNav);
         $view->withSubTitle(trans('dashboard.content.content'));
     }
 }

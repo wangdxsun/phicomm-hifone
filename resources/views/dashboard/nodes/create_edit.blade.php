@@ -138,6 +138,7 @@
                                 :on-success="imageDetailUrlHandle">
                             <img v-if="imageDetailUrl" :src="imageDetailUrl" class="el-avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                            <el-input  v-model="imageDetailUrl" type="hidden" name="node[icon_detail]"></el-input>
                         </el-upload>
                     </div>
                 </div>

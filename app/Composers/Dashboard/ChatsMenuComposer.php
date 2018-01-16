@@ -7,7 +7,7 @@ class ChatsMenuComposer
 {
     public function compose(View $view)
     {
-        $subMenu = [
+        $subNav = [
             'send' => [
             'title'  => trans('dashboard.chat.send'),
             'url'    => route('dashboard.chat.send'),
@@ -22,7 +22,7 @@ class ChatsMenuComposer
             ],
         ];
 
-        $view->withSubMenu($subMenu);
+        $view->withSubNav($subNav);
         $view->withSubTitle(trans('dashboard.chat.send'));
     }
 }

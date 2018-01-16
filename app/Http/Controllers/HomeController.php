@@ -27,6 +27,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+
         if (Auth::check()) {
             $activeDate = app('session')->get('active_date');
 

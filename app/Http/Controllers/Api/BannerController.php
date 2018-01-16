@@ -9,6 +9,7 @@
 namespace Hifone\Http\Controllers\Api;
 
 use Hifone\Events\Banner\BannerWasViewedEvent;
+use Hifone\Http\Bll\BannerBll;
 use Hifone\Models\Carousel;
 
 class BannerController extends ApiController
@@ -22,10 +23,11 @@ class BannerController extends ApiController
         return $carousels;
     }
 
-    public function show(Carousel $carousel)
+    public function show(Carousel $carousel, BannerBll $bannerBll)
     {
         //统计Banner次数
         event(new BannerWasViewedEvent($carousel));
+        $bannerBll->h5UpdateActiveTime();
         if ($carousel->type == 0) {
             return redirect($carousel->url);
         } else {

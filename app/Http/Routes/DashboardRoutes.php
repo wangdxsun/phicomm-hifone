@@ -77,6 +77,8 @@ class DashboardRoutes
             $router->get('stat/zeroReply', 'StatController@zeroReplyCount')->name('stat.zeroReply');
             $router->get('stat/banner/{carousel}', 'StatController@banner_detail')->name('stat.banner.show');
             $router->get('stat/interaction', 'StatController@userInteraction')->name('stat.interaction');
+            $router->get('stat/search', 'StatController@userSearch')->name('stat.search');
+            $router->get('stat/search/{date}', 'StatController@userSearchDate')->name('stat.search.date');
 
             $router->get('wordsExcel/export','WordsExcelController@export')->name('wordsExcel.export');
             $router->post('wordsExcel/import','WordsExcelController@import');
@@ -88,7 +90,6 @@ class DashboardRoutes
             $router->get('chat/lists','ChatController@chatLists')->name('chat.lists');
             $router->post('chat/store','ChatController@chatStore')->name('chat.store');
 
-            $router->get('carousel/app/show', 'CarouselController@appShow')->name('carousel.app.show');
             $router->get('carousel/web/show', 'CarouselController@webShow')->name('carousel.web.show');
             $router->get('carousel/app/hide', 'CarouselController@appHideBanners')->name('carousel.app.hide');
             $router->get('carousel/web/hide', 'CarouselController@webHideBanners')->name('carousel.web.hide');

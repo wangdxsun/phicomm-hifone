@@ -170,6 +170,28 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\User\UserWasLoggedInHandler::class,
         ],
 
+        \Hifone\Events\User\UserWasLoggedinWebEvent::class => [
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+            \Hifone\Handlers\Listeners\User\UserWasLoggedInWebHandler::class,
+        ],
+
+        \Hifone\Events\User\UserWasLoggedinAppEvent::class => [
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+            \Hifone\Handlers\Listeners\User\UserWasLoggedInAppHandler::class,
+        ],
+
+        \Hifone\Events\User\WebUserWasActiveEvent::class => [
+            \Hifone\Handlers\Listeners\User\WebUserWasActiveHandler::class
+        ],
+
+        \Hifone\Events\User\AppUserWasActiveEvent::class => [
+            \Hifone\Handlers\Listeners\User\AppUserWasActiveHandler::class
+        ],
+
+        \Hifone\Events\User\H5UserWasActiveEvent::class => [
+            \Hifone\Handlers\Listeners\User\H5UserWasActiveHandler::class
+        ],
+
         \SocialiteProviders\Manager\SocialiteWasCalled::class => [
             'SocialiteProviders\QQ\QqExtendSocialite@handle',
             'SocialiteProviders\Weibo\WeiboExtendSocialite@handle',
