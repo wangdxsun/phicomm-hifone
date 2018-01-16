@@ -33,6 +33,7 @@ class UserController extends WebController
                 $user->phone = $cloudUser['phonenumber'];
                 $user->save();
             }
+            $user['isAdmin'] = $user->role =='管理员' || $user->role =='创始人';
             $userBll->webUpdateActiveTime();
             return $user;
         } else {
