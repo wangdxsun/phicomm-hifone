@@ -41,7 +41,7 @@ class UpdateThreadCommandHandler
 
     public function handle(UpdateThreadCommand $command)
     {
-
+dd($command->data);
         $thread = $command->thread;
         $original_subNode_id = $thread->sub_node_id;//帖子更新前的子版块id
 
@@ -49,9 +49,9 @@ class UpdateThreadCommandHandler
             $command->data['body_original'] = $command->data['body'];
             $command->data['excerpt'] = Thread::makeExcerpt($command->data['body']);
             $command->data['body'] = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse($command->data['body']));
+            //过滤数据中的空字段，并且更新帖子
+            $command->data['thumbnails'] = getFirstImageUrl($command->data['body_original']);
         }
-        //过滤数据中的空字段，并且更新帖子
-        $command->data['thumbnails'] = getFirstImageUrl($command->data['body_original']);
         $thread->update($this->filter($command->data));
 
         // The thread was added successfully, so now let's deal with the tags.

@@ -16,6 +16,7 @@ use Auth;
 use Hifone\Commands\Append\AddAppendCommand;
 use Hifone\Commands\Thread\RemoveThreadCommand;
 use Hifone\Commands\Thread\UpdateThreadCommand;
+use Hifone\Events\Thread\ThreadWasMarkedExcellentEvent;
 use Hifone\Events\Thread\ThreadWasViewedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Pin\SinkWasAddedEvent;
@@ -161,7 +162,7 @@ class ThreadController extends Controller
             $threadBll->weUpdateActiveTime();
 
             return Redirect::route('thread.show', ['thread' => $thread->id])->withSuccess('发布成功');
-        } catch (ValidationException $e) {
+        } catch (\Exception $e) {
             return Redirect::route('thread.create')->withInput()->withErrors($e->getMessageBag());
         }
     }
@@ -247,19 +248,19 @@ class ThreadController extends Controller
      */
     public function excellent(Thread $thread)
     {
-        $this->needAuthorOrAdminPermission($thread->user_id);
-
-        $updateData = [
-            'is_excellent' => !$thread->is_excellent,
-        ];
-
-        $thread = dispatch(new UpdateThreadCommand($thread, $updateData));
-        if ($thread->is_excellent == 1) {
+        if ($thread->is_excellent > 0) {
+            $thread->is_excellent = 0;
+            $this->updateOpLog($thread, '取消精华');
+        } else {
+            $thread->is_excellent = 1;
+            $this->updateOpLog($thread, '精华');
             event(new ExcellentWasAddedEvent($thread->user));
+            event(new ThreadWasMarkedExcellentEvent($thread));
         }
-
-        return Redirect::route('thread.show', $thread->id)
-            ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
+        //更新热度值
+        $thread->heat = $thread->heat_compute;
+        $thread->save();
+        return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
     public function pin(Thread $thread)
