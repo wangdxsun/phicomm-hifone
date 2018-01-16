@@ -48,8 +48,8 @@ class UserController extends ApiController
 
     public function show(User $user, UserBll $userBll)
     {
-        $user['followed'] = User::hasFollowUser($user);
         $userBll->h5UpdateActiveTime();
+        $user['followed'] = User::hasFollowUser($user);
 
         return $user;
     }

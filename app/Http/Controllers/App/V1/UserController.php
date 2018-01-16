@@ -56,8 +56,8 @@ class UserController extends AppController
 
     public function show(User $user,UserBll $userBll)
     {
-        $user['followed'] = User::hasFollowUser($user);
         $userBll->appUpdateActiveTime();
+        $user['followed'] = User::hasFollowUser($user);
         return $user;
     }
 
