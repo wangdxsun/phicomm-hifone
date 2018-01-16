@@ -10,6 +10,6 @@ class UserWasLoggedInWebHandler
     public function handle(EventInterface $event)
     {
         $user = $event->user;
-        $user->update(['last_visit_time_web' => Carbon::now()]);
+        $user->update(['last_visit_time_web' => Carbon::now()->toDateTimeString()]);
     }
 }
