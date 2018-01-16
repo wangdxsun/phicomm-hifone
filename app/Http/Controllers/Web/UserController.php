@@ -33,8 +33,9 @@ class UserController extends WebController
                 $user->phone = $cloudUser['phonenumber'];
                 $user->save();
             }
-            $user['isAdmin'] = $user->role =='管理员' || $user->role =='创始人';
             $userBll->webUpdateActiveTime();
+            $user['isAdmin'] = ($user->role =='管理员' || $user->role =='创始人');
+
             return $user;
         } else {
             return 'PhicommNoLogin';
@@ -47,8 +48,8 @@ class UserController extends WebController
         $user = User::withCount(['favorites' => function ($query) {
             $query->has('thread');
         }])->find($user->id);
-        $user['followed'] = User::hasFollowUser($user);
         $userBll->webUpdateActiveTime();
+        $user['followed'] = User::hasFollowUser($user);
 
         return $user;
     }
