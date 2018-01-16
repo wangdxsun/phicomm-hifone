@@ -38,7 +38,7 @@ class AuthController extends WebController
         $redisKey = $username . "|" . $ip;
         if (Redis::get($redisKey) >= 5) {
             $second = Redis::ttl($redisKey);
-            throw new HifoneException('该账号已被锁定，请'. intval($second/60) . '分'. $second%60 .'秒后再试');
+            throw new HifoneException('该账号已被锁定，请'. intval($second / 60) . '分'. $second % 60 .'秒后再试');
         }
 
         $this->validate(request(), [
@@ -71,7 +71,6 @@ class AuthController extends WebController
             }
 
             return Auth::user();
-            return success('登录成功');
         } else {
             //使用缓存实现3分钟内密码连续输错5次账号锁定15分钟,以login|ip作为标识
             if (Redis::incr($redisKey) >= 5) {
