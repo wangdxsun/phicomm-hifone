@@ -159,11 +159,11 @@ class ThreadController extends Controller
             $thread->body = app('parser.emotion')->parse($thread->body);
             $thread->save();
             $threadBll->autoAudit($thread);
-            $threadBll->weUpdateActiveTime();
+            $threadBll->webUpdateActiveTime();
 
             return Redirect::route('thread.show', ['thread' => $thread->id])->withSuccess('发布成功');
         } catch (\Exception $e) {
-            return Redirect::route('thread.create')->withInput()->withErrors($e->getMessageBag());
+            return Redirect::route('thread.create')->withInput()->withErrors($e->getMessage());
         }
     }
 
