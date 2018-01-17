@@ -15,6 +15,7 @@ use Hifone\Events\Reply\ReplyWasAddedEvent;
 use Hifone\Events\Reply\ReplyWasAuditedEvent;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Models\Reply;
+use Hifone\Models\Thread;
 use Hifone\Services\Filter\WordsFilter;
 use DB;
 use Input;
@@ -29,6 +30,10 @@ class ReplyBll extends BaseBll
             throw new HifoneException('对不起，你已被管理员禁止发言');
         } elseif (!Auth::user()->can('manage_threads') && Auth::user()->score < 0) {
             throw new HifoneException('对不起，你所在的用户组无法发言');
+        }
+        $thread = Thread::findOrFail(request('reply.thread_id'));
+        if (!$thread->visible) {
+            throw new HifoneException('当前帖子状态不可见！');
         }
         $replyData = request('reply');
         $replyData['body'] = e($replyData['body']);
