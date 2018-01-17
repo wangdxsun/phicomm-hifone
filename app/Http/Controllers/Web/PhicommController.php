@@ -67,7 +67,8 @@ class PhicommController extends WebController
             throw new HifoneException('验证码有误');
         }
 
-        $phicommId = $this->phicommBll->login($phone, $password);
+        $res = $this->phicommBll->login($phone, $password);
+        $phicommId = $res['uid'];
 
         $user = User::findUserByPhicommId($phicommId);
 
@@ -78,6 +79,9 @@ class PhicommController extends WebController
             // 登录并且「记住」用户
             Auth::login($user, request()->has('remember'));
             $commonBll->loginWeb();
+
+            //refreshToken存入用户表
+            $user->update(['refresh_token' => $res['refresh_token']]);
             return $user;
         } else {
             throw new HifoneException('Unbind');

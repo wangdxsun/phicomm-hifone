@@ -11,7 +11,6 @@
 
 namespace Hifone\Http\Controllers\Web;
 
-use Carbon\Carbon;
 use Hifone\Commands\Identity\AddIdentityCommand;
 use Hifone\Exceptions\HifoneException;
 use Auth;

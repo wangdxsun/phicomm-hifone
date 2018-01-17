@@ -63,7 +63,6 @@ class HifoneGuard extends SessionGuard implements Guard
                 $this->fireLoginEvent($user, true);
             }
         }
-
         return $this->user = $user;
     }
 

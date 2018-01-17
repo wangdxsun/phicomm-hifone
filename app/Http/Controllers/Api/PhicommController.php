@@ -36,7 +36,8 @@ class PhicommController extends ApiController
         $password = strtoupper(md5($request->get('password')));
         $this->phicommBll->checkPhoneAvailable($request->phone);
         $this->phicommBll->register($request->phone, $password, $request->verify);
-        $phicommId = $this->phicommBll->login($request->phone, $password);
+        $res = $this->phicommBll->login($request->phone, $password);
+        $phicommId = $res['uid'];
         Session::set('phicommId', $phicommId);
 
         return response(['user' => 'Unbind']);
@@ -50,7 +51,8 @@ class PhicommController extends ApiController
         ]);
         $phone = request('phone');
         $password = strtoupper(md5(request('password')));
-        $phicommId = $this->phicommBll->login($phone, $password);
+        $res = $this->phicommBll->login($phone, $password);
+        $phicommId = $res['uid'];
 
         $user = User::findUserByPhicommId($phicommId);
         if ($user) {

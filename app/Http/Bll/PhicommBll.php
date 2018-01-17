@@ -75,7 +75,7 @@ class PhicommBll extends BaseBll
         Session::set('access_token', $output['access_token']);
         Session::set('phicommId', $output['uid']);
 
-        return $output['uid'];
+        return $output;
     }
 
     public function getAccessCode()
@@ -220,7 +220,9 @@ class PhicommBll extends BaseBll
 
     public function upload($file)
     {
-        $file = new \CURLFile($file);
+        if (!is_object($file)) {
+            $file = new \CURLFile($file);
+        }
         $data = [
             'file' => $file,
             'type' => 1,
@@ -235,7 +237,10 @@ class PhicommBll extends BaseBll
                 case 0:
                     return $res;
                 case 5:
-                    throw new HifoneException('token过期！');
+                    //若token过期刷新后重新上传头像
+                    $this->refreshToken();
+                    $this->upload($file);
+                    break;
                 case 18:
                     throw new HifoneException('图片格式错误！');
                 case 19:
@@ -259,6 +264,28 @@ class PhicommBll extends BaseBll
             return $res['data'];
         }
         return null;
+    }
+
+    protected function refreshToken()
+    {
+        $refresh_token = Auth::user()->refresh_token;
+        $url = env('PHICLOUND_DOMAIN') . 'token?authorizationcode=' . $this->getAccessCode() . '&grant_type=refresh_token';
+        $header = ["Authorization:".$refresh_token];
+        $res = json_decode(curl_get($url, $header), true);
+
+        if ($res) {
+            switch($res['error']){
+                case 0:
+                    Session::set('access_token', $res['access_token']);
+                    break;
+                case 5:
+                    throw new HifoneException('登录失效，请重新登录！');
+                default:
+                    throw new HifoneException($res['message']);
+            }
+        } else {
+            throw new HifoneException('服务器异常！');
+        }
     }
 
 }
