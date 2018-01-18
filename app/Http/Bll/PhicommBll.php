@@ -276,6 +276,7 @@ class PhicommBll extends BaseBll
         if ($res) {
             switch($res['error']){
                 case 0:
+                    //h5 web请求header不带token请求，刷新session中token足够
                     Session::set('access_token', $res['access_token']);
                     break;
                 case 5:
