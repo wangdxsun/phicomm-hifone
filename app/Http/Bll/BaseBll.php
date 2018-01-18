@@ -110,7 +110,7 @@ class BaseBll
             'uid' => $data['uid'],
             'url' => '',
         );
-        //测试环境 114.141.173.53内网 192.168.43.111外网
+        //测试环境 114.141.173.53外网 192.168.43.111内网
         $json = curlPost(env('PHIDELIVER'), $parameters);
         $output = json_decode($json, true);
 
