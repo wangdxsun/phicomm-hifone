@@ -33,6 +33,7 @@ class PhicommController extends WebController
             // instructions if user phrase is good
             throw new HifoneException('验证码有误');
         }
+        Session::remove('phrase');
 
         return success('验证成功');
     }
@@ -66,6 +67,7 @@ class PhicommController extends WebController
             // instructions if user phrase is good
             throw new HifoneException('验证码有误');
         }
+        Session::remove('phrase');
 
         $res = $this->phicommBll->login($phone, $password);
         $phicommId = $res['uid'];
@@ -114,6 +116,7 @@ class PhicommController extends WebController
             // instructions if user phrase is good
             throw new HifoneException('验证码有误');
         }
+        Session::remove('phrase');
 
         return success('验证成功');
     }
