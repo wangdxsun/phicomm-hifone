@@ -128,7 +128,7 @@ class Notifier
             'replyId' => ($object instanceof Thread) ? : $object->id,
 
             'msg_type' => '1',//推送消息类型 0.通知,1.消息
-            'outline' => substr($replyBodyOriginal, 0, 26),
+            'outline' => mb_substr($replyBodyOriginal, 0, 26),
             'uid' => $to->phicomm_id,
         );
 
