@@ -309,6 +309,17 @@ if (!function_exists('get_request_agent')) {
     }
 }
 
+if (!function_exists('parse_agent_version')) {
+    function parse_agent_version($agent)
+    {
+        $pre = explode("PhiWifi/", $agent, 2)[1];
+        $middle = explode(".", $pre, 4);
+        $version = $middle[0] . "." . $middle[1] . "." . $middle[2];
+
+        return $version;
+    }
+}
+
 function correct_image_orientation($target) {
     $exif = @exif_read_data($target);
     if($exif && isset($exif['Orientation']) && $exif['Orientation'] != 1) {
@@ -381,5 +392,4 @@ function getChars($utf8_str)
         }
     }
     return $chars;
-
 }

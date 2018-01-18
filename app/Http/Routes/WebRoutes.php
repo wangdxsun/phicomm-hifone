@@ -63,6 +63,7 @@ class WebRoutes
             $router->post('bind', 'PhicommController@bind');
 
             $router->post('auth/login', 'AuthController@login');
+            $router->post('auth/logout', 'PhicommController@logout');
 
             //个人中心
             $router->get('user/info', 'UserController@me');

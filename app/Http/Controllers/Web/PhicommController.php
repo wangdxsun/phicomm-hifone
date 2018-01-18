@@ -82,13 +82,12 @@ class PhicommController extends WebController
             // 登录并且「记住」用户
             Auth::login($user, request()->has('remember'));
             $commonBll->loginWeb();
-
             //refreshToken存入用户表
             $user->update(['refresh_token' => $res['refresh_token']]);
+
             return $user;
         } else {
             throw new HifoneException('Unbind');
-            return 'Unbind';
         }
     }
 
