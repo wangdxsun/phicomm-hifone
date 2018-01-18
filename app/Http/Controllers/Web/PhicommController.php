@@ -33,6 +33,8 @@ class PhicommController extends WebController
             // instructions if user phrase is good
             throw new HifoneException('验证码有误');
         }
+        Session::remove('phrase');
+        Session::set('phone', request('phone'));
 
         return success('验证成功');
     }
@@ -66,6 +68,7 @@ class PhicommController extends WebController
             // instructions if user phrase is good
             throw new HifoneException('验证码有误');
         }
+        Session::remove('phrase');
 
         $res = $this->phicommBll->login($phone, $password);
         $phicommId = $res['uid'];
@@ -79,13 +82,12 @@ class PhicommController extends WebController
             // 登录并且「记住」用户
             Auth::login($user, request()->has('remember'));
             $commonBll->loginWeb();
-
             //refreshToken存入用户表
             $user->update(['refresh_token' => $res['refresh_token']]);
+
             return $user;
         } else {
             throw new HifoneException('Unbind');
-            return 'Unbind';
         }
     }
 
@@ -114,6 +116,8 @@ class PhicommController extends WebController
             // instructions if user phrase is good
             throw new HifoneException('验证码有误');
         }
+        Session::remove('phrase');
+        Session::set('phone', request('phone'));
 
         return success('验证成功');
     }
@@ -139,6 +143,11 @@ class PhicommController extends WebController
         $this->validate(request(), [
             'phone' => 'required|phone',
         ]);
+        //防脚本刷验证码
+        if (Session::get('phone') != request('phone')) {
+            throw new HifoneException('请先验证图形验证码');
+        }
+
         if (request('type') == 'register') {
             $this->phicommBll->checkPhoneAvailable(request('phone'));
         } elseif (request('type') == 'reset') {

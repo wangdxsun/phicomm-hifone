@@ -61,8 +61,8 @@ class ChatBll extends BaseBll
             'time' => date('Y-m-d H:i', strtotime('now')),
             'userId' => $from->id,
 
-            'msg_type' => '0',//推送消息类型 0.通知,1.消息
-            'outline' => substr(Input::has('message') ? Input::get('message') : "[图片]", 0, 26),
+            'msg_type' => '1',//推送消息类型 0.通知,1.消息
+            'outline' => mb_substr(Input::has('message') ? Input::get('message') : "[图片]", 0, 26),
             'uid' => $to->phicomm_id,
         );
         $this->pushMessage($data);
