@@ -22,7 +22,7 @@ use Str;
 
 class UserController extends ApiController
 {
-    public function me(PhicommBll $phicommBll, UserBll $userBll)
+    public function me(PhicommBll $phicommBll)
     {
         $user = Auth::user();
         if (Auth::bind() == false) {
@@ -39,7 +39,6 @@ class UserController extends ApiController
                 $user->phone = $cloudUser['phonenumber'];
                 $user->save();
             }
-            $userBll->h5UpdateActiveTime();
             return $user;
         } else {
             return 'PhicommNoLogin';
@@ -48,7 +47,6 @@ class UserController extends ApiController
 
     public function show(User $user, UserBll $userBll)
     {
-        $userBll->h5UpdateActiveTime();
         $user['followed'] = User::hasFollowUser($user);
 
         return $user;
@@ -122,7 +120,6 @@ class UserController extends ApiController
     public function search($keyword, UserBll $userBll)
     {
         $users = $userBll->search($keyword);
-        $userBll->h5UpdateActiveTime();
         return $users;
     }
 

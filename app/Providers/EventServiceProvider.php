@@ -180,17 +180,6 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\User\UserWasLoggedInAppHandler::class,
         ],
 
-        \Hifone\Events\User\WebUserWasActiveEvent::class => [
-            \Hifone\Handlers\Listeners\User\WebUserWasActiveHandler::class
-        ],
-
-        \Hifone\Events\User\AppUserWasActiveEvent::class => [
-            \Hifone\Handlers\Listeners\User\AppUserWasActiveHandler::class
-        ],
-
-        \Hifone\Events\User\H5UserWasActiveEvent::class => [
-            \Hifone\Handlers\Listeners\User\H5UserWasActiveHandler::class
-        ],
 
         \SocialiteProviders\Manager\SocialiteWasCalled::class => [
             'SocialiteProviders\QQ\QqExtendSocialite@handle',

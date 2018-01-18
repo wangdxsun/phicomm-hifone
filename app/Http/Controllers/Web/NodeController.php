@@ -23,7 +23,6 @@ class NodeController extends WebController
     public function sections(NodeBll $nodeBll)
     {
         $sections = $nodeBll->sections();
-        $nodeBll->webUpdateActiveTime();
         return $sections;
     }
 
@@ -47,7 +46,6 @@ class NodeController extends WebController
     public function show(Node $node, NodeBll $nodeBll)
     {
         $node = $nodeBll->show($node, $nodeBll);
-        $nodeBll->webUpdateActiveTime();
         return $node;
     }
 

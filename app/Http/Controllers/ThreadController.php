@@ -44,6 +44,7 @@ class ThreadController extends Controller
         parent::__construct();
 
         $this->middleware('auth', ['except' => ['index', 'show', 'search']]);
+        $this->middleware('web.active',['only' => ['show','create','store']]);
     }
 
     public function index(ThreadBll $threadBll)
@@ -57,7 +58,6 @@ class ThreadController extends Controller
     public function search(ThreadBll $threadBll)
     {
         $threads = $threadBll->webSearch();
-        $threadBll->webUpdateActiveTime();
         return $this->view('threads.search')
             ->withThreads($threads)
             ->withSections(Section::orderBy('order')->get());
@@ -70,12 +70,11 @@ class ThreadController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function show(Thread $thread, ThreadBll $threadBll)
+    public function show(Thread $thread)
     {
         if ($thread->inVisible()) {
             throw new NotFoundHttpException('帖子状态不可见');
         }
-        $threadBll->webUpdateActiveTime();
         $this->breadcrumb->push([
             $thread->node->name => $thread->node->url,
             $thread->title      => $thread->url,
@@ -102,9 +101,8 @@ class ThreadController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function create(ThreadBll $threadBll)
+    public function create()
     {
-        $threadBll->webUpdateActiveTime();
         //除去无子版块的版块信息,同时判断用户身份决定是否显示公告活动等版块
         $sections = Section::orderBy('order')->with(['nodes.subNodes', 'nodes' => function ($query) {
             if (Auth::check() && Auth::user()->can('manage_threads')) {
@@ -159,7 +157,6 @@ class ThreadController extends Controller
             $thread->body = app('parser.emotion')->parse($thread->body);
             $thread->save();
             $threadBll->autoAudit($thread);
-            $threadBll->webUpdateActiveTime();
 
             return Redirect::route('thread.show', ['thread' => $thread->id])->withSuccess('发布成功');
         } catch (\Exception $e) {

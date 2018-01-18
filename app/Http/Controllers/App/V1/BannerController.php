@@ -19,9 +19,11 @@ class BannerController extends AppController
     public function index()
     {
         if (Agent::match('PhiWifiNative') && Agent::match('iPhone')) {
-            $carousels = Carousel::orderBy('order')->whereIn('device', [Carousel::IOS, Carousel::IOS + Carousel::ANDROID])->visible()->get();
+            $carousels = Carousel::orderBy('order')
+                ->whereIn('device', [Carousel::IOS, Carousel::IOS + Carousel::ANDROID])->visible()->get();
         } elseif (Agent::match('PhiWifiNative') && Agent::match('Android')) {
-            $carousels = Carousel::orderBy('order')->whereIn('device', [Carousel::ANDROID, Carousel::ANDROID + Carousel::IOS])->visible()->get();
+            $carousels = Carousel::orderBy('order')
+                ->whereIn('device', [Carousel::ANDROID, Carousel::ANDROID + Carousel::IOS])->visible()->where->get();
         } else {
             return [];
         }
@@ -32,10 +34,9 @@ class BannerController extends AppController
         return $carousels;
     }
 
-    public function bannerViewCount(Carousel $carousel, BannerBll $bannerBll)
+    public function bannerViewCount(Carousel $carousel)
     {
         event(new BannerWasViewedEvent($carousel));
-        $bannerBll->appUpdateActiveTime();
         return '统计banner点击';
     }
 }

@@ -21,7 +21,6 @@ class BannerController extends WebController
     {
         //统计Banner次数
         event(new BannerWasViewedEvent($carousel));
-        $bannerBll->webUpdateActiveTime();
         if ($carousel->type == 0) {
             return redirect($carousel->url);
         } else {

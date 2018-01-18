@@ -33,7 +33,6 @@ class ThreadController extends WebController
     public function search($keyword, ThreadBll $threadBll)
     {
         $threads = $threadBll->search($keyword);
-        $threadBll->webUpdateActiveTime();
 
         return $threads;
     }
@@ -42,7 +41,6 @@ class ThreadController extends WebController
     {
         $commonBll->loginWeb();
         $threadBll->showThread($thread);
-        $threadBll->webUpdateActiveTime();
 
         return $thread;
     }
@@ -66,7 +64,6 @@ class ThreadController extends WebController
             'thread.body.min' => '帖子内容不得少于5个字符',
             'thread.body.max' => '帖子内容不得多于10000个字符',
         ]);
-        $threadBll->webUpdateActiveTime();
         $thread = $threadBll->createThread(request('thread'));
         $result = $threadBll->auditThread($thread, $wordsFilter);
         return $result;

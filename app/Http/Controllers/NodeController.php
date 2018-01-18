@@ -23,6 +23,11 @@ use Input;
 
 class NodeController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('web.active')->only('show');
+    }
+
     public function index()
     {
         $sections = Section::orderBy('order')->get();
@@ -36,7 +41,6 @@ class NodeController extends Controller
         $this->breadcrumb->push($node->name, $node->url);
 
         $threads = $nodeBll->threads($node, Input::get('filter'));
-        $nodeBll->webUpdateActiveTime();
 
         return $this->view('threads.index')
             ->withThreads($threads)

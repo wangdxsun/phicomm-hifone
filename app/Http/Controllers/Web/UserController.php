@@ -33,7 +33,6 @@ class UserController extends WebController
                 $user->phone = $cloudUser['phonenumber'];
                 $user->save();
             }
-            $userBll->webUpdateActiveTime();
             $user['isAdmin'] = ($user->role =='管理员' || $user->role =='创始人');
 
             return $user;
@@ -48,7 +47,6 @@ class UserController extends WebController
         $user = User::withCount(['favorites' => function ($query) {
             $query->has('thread');
         }])->find($user->id);
-        $userBll->webUpdateActiveTime();
         $user['followed'] = User::hasFollowUser($user);
 
         return $user;
@@ -122,7 +120,6 @@ class UserController extends WebController
     public function search($keyword, UserBll $userBll)
     {
         $users = $userBll->search($keyword);
-        $userBll->webUpdateActiveTime();
         return $users;
     }
 
