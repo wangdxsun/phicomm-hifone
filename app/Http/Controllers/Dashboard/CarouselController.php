@@ -213,7 +213,7 @@ class CarouselController extends Controller
                 ->withErrors($e->getMessageBag());
         }
 
-        return Redirect::route('dashboard.carousel.app.show')
+        return Redirect::route('dashboard.carousel.index')
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.notices.add.success')));
     }
 
@@ -318,7 +318,7 @@ class CarouselController extends Controller
                 ->withErrors($e->getMessageBag());
         }
 
-        return Redirect::route('dashboard.carousel.app.show')
+        return Redirect::route('dashboard.carousel.index')
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.notices.edit.success')));
     }
 
