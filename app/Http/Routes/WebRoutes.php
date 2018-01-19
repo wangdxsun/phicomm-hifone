@@ -29,7 +29,7 @@ class WebRoutes
         $router->group([
             'namespace' => 'Web',
             'prefix' => 'web/v1',
-            'middleware' => ['web', 'localize'],
+            'middleware' => 'web',
             'as' => 'web.'
         ], function ($router) {
             $router->get('emotions', 'GeneralController@emotion');
