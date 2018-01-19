@@ -28,7 +28,7 @@ class UserController extends AppController
      * @return mixed
      * @throws \Exception
      */
-    public function me(UserBll $userBll)
+    public function me()
     {
         if (empty(Auth::phicommId())) {
             throw new HifoneException('缺少token');
@@ -37,7 +37,6 @@ class UserController extends AppController
         if (!$user) {
             throw new HifoneException('请先关联社区账号');
         }
-        $userBll->appUpdateActiveTime();
         return $user;
     }
 
@@ -54,9 +53,8 @@ class UserController extends AppController
         return success('创建成功');
     }
 
-    public function show(User $user,UserBll $userBll)
+    public function show(User $user)
     {
-        $userBll->appUpdateActiveTime();
         $user['followed'] = User::hasFollowUser($user);
         return $user;
     }
@@ -124,7 +122,6 @@ class UserController extends AppController
     public function search($keyword, UserBll $userBll)
     {
         $users = $userBll->search($keyword);
-        $userBll->h5UpdateActiveTime();
         return $users;
     }
 

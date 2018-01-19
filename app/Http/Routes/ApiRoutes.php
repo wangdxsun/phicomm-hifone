@@ -31,21 +31,20 @@ class ApiRoutes
             $router->get('ping', 'GeneralController@ping');
             $router->get('exception', 'GeneralController@exception');
             $router->get('emotions', 'GeneralController@emotion');
-
             //内容相关
-            $router->get('threads', 'ThreadController@index');
-            $router->get('thread/search/{keyword}', 'ThreadController@search');
-            $router->get('user/search/{keyword}', 'UserController@search');
-            $router->get('threads/{thread}', 'ThreadController@show')->where('thread', '[0-9]+');
+            $router->get('threads', 'ThreadController@index')->middleware('h5.active');
+            $router->get('thread/search/{keyword}', 'ThreadController@search')->middleware('h5.active');
+            $router->get('user/search/{keyword}', 'UserController@search')->middleware('h5.active');
+            $router->get('threads/{thread}', 'ThreadController@show')->where('thread', '[0-9]+')->middleware('h5.active');
             $router->get('threads/{thread}/replies', 'ThreadController@replies')->where('thread', '[0-9]+');
             $router->get('nodes', 'NodeController@index');
-            $router->get('sections', 'NodeController@sections');
+            $router->get('sections', 'NodeController@sections')->middleware('h5.active');
             $router->get('subNodes', 'NodeController@subNodes');
-            $router->get('nodes/{node}', 'NodeController@show')->where('node', '[0-9]+');
+            $router->get('nodes/{node}', 'NodeController@show')->where('node', '[0-9]+')->middleware('h5.active');
             $router->get('subNodes/{subNode}', 'NodeController@showOfSubNode')->where('subNode', '[0-9]+');
             $router->get('nodes/{node}/subNodes','SubNodeController@index')->where('node', '[0-9]+');
             $router->get('banners', 'BannerController@index');
-            $router->get('banners/{carousel}', 'BannerController@show')->name('banner.show')->where('carousel', '[0-9]+');
+            $router->get('banners/{carousel}', 'BannerController@show')->name('banner.show')->where('carousel', '[0-9]+')->middleware('h5.active');
             $router->get('report/reason', 'ReportController@reason');
 
             //登录相关
@@ -58,7 +57,7 @@ class ApiRoutes
             //个人中心
             $router->get('user/me', 'UserController@me');
             $router->get('u/{username}', 'UserController@showByUsername');
-            $router->get('users/{user}', 'UserController@show')->where('user', '[0-9]+');
+            $router->get('users/{user}', 'UserController@show')->where('user', '[0-9]+')->middleware('h5.active');
             $router->get('users/{user}/follows', 'UserController@follows')->where('user', '[0-9]+');
             $router->get('users/{user}/followers', 'UserController@followers')->where('user', '[0-9]+');
             $router->get('users/{user}/threads', 'UserController@threads')->where('user', '[0-9]+');
@@ -70,7 +69,7 @@ class ApiRoutes
             $router->group(['middleware' => 'auth:hifone'], function ($router) {
                 $router->post('upload/base64', 'CommonController@uploadBase64');
                 $router->post('upload', 'CommonController@upload');
-                $router->post('threads', 'ThreadController@store');
+                $router->post('threads', 'ThreadController@store')->middleware('h5.active');
                 $router->post('replies', 'ReplyController@store');
                 $router->post('follow/users/{user}', 'FollowController@user')->where('user', '[0-9]+');
                 $router->post('follow/threads/{thread}', 'FollowController@thread')->where('thread', '[0-9]+');

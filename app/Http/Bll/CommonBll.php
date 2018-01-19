@@ -24,11 +24,11 @@ class CommonBll extends BaseBll
     public function login()
     {
         if (Auth::check()) {
-            $activeDate = app('session')->get('active_date');
+            $activeDate = app('session')->get('last_visit_time');
 
             if (!$activeDate || $activeDate != date('Ymd')) {
                 event(new UserWasLoggedinEvent(Auth::user()));
-                app('session')->put('active_date', date('Ymd'));
+                app('session')->put('last_visit_time', date('Ymd'));
             }
         }
     }
@@ -36,11 +36,11 @@ class CommonBll extends BaseBll
     public function loginWeb()
     {
         if (Auth::check()) {
-            $activeDate = app('session')->get('active_date');
+            $activeDate = app('session')->get('last_visit_time_web');
 
             if (!$activeDate || $activeDate != date('Ymd')) {
                 event(new UserWasLoggedinWebEvent(Auth::user()));
-                app('session')->put('active_date', date('Ymd'));
+                app('session')->put('last_visit_time_web', date('Ymd'));
             }
         }
     }
@@ -49,11 +49,11 @@ class CommonBll extends BaseBll
     public function loginApp()
     {
         if (Auth::check()) {
-            $activeDate = app('session')->get('active_date');
+            $activeDate = app('session')->get('last_visit_time_app');
 
             if (!$activeDate || $activeDate != date('Ymd')) {
                 event(new UserWasLoggedinAppEvent(Auth::user()));
-                app('session')->put('active_date', date('Ymd'));
+                app('session')->put('last_visit_time_app', date('Ymd'));
             }
         }
     }

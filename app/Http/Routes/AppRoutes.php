@@ -16,9 +16,9 @@ class AppRoutes
     {
         $router->group(['namespace' => 'App\V1', 'prefix' => 'app/v1', 'middleware' => 'api', 'as' => 'app.'], function ($router) {
             //个人中心
-            $router->get('user/info', 'UserController@me');
+            $router->get('user/info', 'UserController@me')->middleware('app.active');
             $router->post('user/bind', 'UserController@bind');
-            $router->get('users/{user}', 'UserController@show')->where('user', '[0-9]+');
+            $router->get('users/{user}', 'UserController@show')->where('user', '[0-9]+')->middleware('app.active');
             $router->get('users/{user}/follows', 'UserController@follows')->where('user', '[0-9]+');
             $router->get('users/{user}/followers', 'UserController@followers')->where('user', '[0-9]+');
             $router->get('users/{user}/threads', 'UserController@threads')->where('user', '[0-9]+');
@@ -27,17 +27,17 @@ class AppRoutes
 
             //内容相关
             $router->get('nodes', 'NodeController@index');
-            $router->get('sections', 'NodeController@sections');
+            $router->get('sections', 'NodeController@sections')->middleware('app.active');
             $router->get('subNodes', 'NodeController@subNodes');
             $router->get('subNodes/feedback', 'NodeController@subNodesInFeedback');
-            $router->get('nodes/{node}', 'NodeController@show')->name('node.show')->where('node', '[0-9]+');
+            $router->get('nodes/{node}', 'NodeController@show')->name('node.show')->where('node', '[0-9]+')->middleware('app.active');
             $router->get('subNodes/{subNode}', 'NodeController@showOfSubNode')->where('subNode', '[0-9]+');
             $router->get('banners', 'BannerController@index');
-            $router->get('banners/{carousel}', 'BannerController@bannerViewCount')->name('banner.show')->where('carousel', '[0-9]+');
+            $router->get('banners/{carousel}', 'BannerController@bannerViewCount')->name('banner.show')->where('carousel', '[0-9]+')->middleware('app.active');
             $router->get('threads', 'ThreadController@index');
             $router->get('threads/search/{keyword}', 'ThreadController@search');
             $router->get('users/search/{keyword}', 'UserController@search');
-            $router->get('threads/{thread}', 'ThreadController@show')->where('thread', '[0-9]+');
+            $router->get('threads/{thread}', 'ThreadController@show')->where('thread', '[0-9]+')->middleware('app.active');
             $router->get('threads/{thread}/replies', 'ThreadController@replies')->where('thread', '[0-9]+');
             $router->get('replies/{reply}', 'ReplyController@show');
 
@@ -45,7 +45,7 @@ class AppRoutes
             $router->group(['middleware' => 'auth:hifone'], function ($router) {
                 $router->post('upload', 'CommonController@upload');
                 $router->post('upload/base64', 'CommonController@uploadBase64');
-                $router->post('threads', 'ThreadController@store');
+                $router->post('threads', 'ThreadController@store')->middleware('app.active');
                 $router->post('feedbacks', 'ThreadController@feedback');
                 $router->post('replies', 'ReplyController@store');
                 $router->post('follow/user/{user}', 'FollowController@user')->where('user', '[0-9]+');

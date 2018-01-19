@@ -32,7 +32,6 @@ class HomeController extends Controller
             $activeDate = app('session')->get('active_date');
 
             if (!$activeDate || $activeDate != date('Ymd')) {
-                event(new UserWasLoggedinEvent(Auth::user()));
                 app('session')->put('active_date', date('Ymd'));
             }
         }

@@ -24,6 +24,7 @@ class CarouselController extends Controller
     /**
      * Creates a new notice controller instance.
      */
+
     public function __construct()
     {
         View::share([
@@ -175,9 +176,9 @@ class CarouselController extends Controller
             return Redirect::route('dashboard.carousel.create.app')
                 ->withErrors('没有选择版本类型')
                 ->withInput();
-        } elseif ($carouselData['version'] == 1) {
+        } elseif ($carouselData['version'] == Carousel::ALL_VERSION) {
             $carouselData['start_version'] = '全部版本';
-        } elseif ($carouselData['version'] == 2) {
+        } elseif ($carouselData['version'] == Carousel::SOME_VERSION) {
             if ($carouselData['start_version'] == "" || $carouselData['end_version'] == "") {
                 return Redirect::route('dashboard.carousel.create.app')
                     ->withErrors('自定义版本请选择起止版本号')
@@ -285,9 +286,9 @@ class CarouselController extends Controller
             return Redirect::route('dashboard.carousel.create.app')
                 ->withErrors('没有选择版本类型')
                 ->withInput();
-        } elseif ($carouselData['version'] == 1) {
+        } elseif ($carouselData['version'] == Carousel::ALL_VERSION) {
             $carouselData['start_version'] = '全部版本';
-        } elseif ($carouselData['version'] == 2) {
+        } elseif ($carouselData['version'] == Carousel::SOME_VERSION) {
             if ($carouselData['start_version'] == "" || $carouselData['end_version'] == "") {
                 return Redirect::route('dashboard.carousel.create.app')
                     ->withErrors('自定义版本请选择起止版本号')

@@ -23,11 +23,10 @@ class BannerController extends ApiController
         return $carousels;
     }
 
-    public function show(Carousel $carousel, BannerBll $bannerBll)
+    public function show(Carousel $carousel)
     {
         //统计Banner次数
         event(new BannerWasViewedEvent($carousel));
-        $bannerBll->h5UpdateActiveTime();
         if ($carousel->type == 0) {
             return redirect($carousel->url);
         } else {

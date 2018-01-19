@@ -36,6 +36,7 @@ class UserController extends Controller
     {
         $this->hasher = $hasher;
         $this->middleware('auth', ['only' => ['edit', 'update', 'destroy', 'unbind']]);
+        $this->middleware('web.active',['only' => ['show']]);
     }
 
     public function index()
@@ -46,9 +47,8 @@ class UserController extends Controller
             ->withUsers($users);
     }
 
-    public function show(User $user, FollowBll $followBll, UserBll $userBll)
+    public function show(User $user, FollowBll $followBll)
     {
-        $userBll->webUpdateActiveTime();
         $threads = Thread::forUser($user->id)->recent()->limit(10)->get();
         $replies = Reply::forUser($user->id)->recent()->limit(10)->get();
         $followers = $followBll->followers($user);
