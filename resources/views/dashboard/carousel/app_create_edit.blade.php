@@ -46,8 +46,8 @@
                             <div><el-radio label="1">默认全部版本</el-radio></div>
                             <div>
                                 <el-radio label="2">自定义版本</el-radio><br>
-                                <el-input name="carousel[start_version]" placeholder="起始版本" resize="both" style="width: 100px; height: 10px;" v-model="start_version"></el-input>
-                                <el-input name="carousel[end_version]"  placeholder="截止版本" resize="both" style="width: 100px; height: 10px;" v-model="end_version"></el-input>
+                                <el-input name="carousel[start_version]" placeholder="起始版本，如1.2.3" resize="both" style="width: 200px; height: 10px;" v-model="start_version"></el-input>
+                                <el-input name="carousel[end_version]"  placeholder="截止版本，如1.2.3" resize="both" style="width: 200px; height: 10px;" v-model="end_version"></el-input>
 
                             </div>
                         </el-radio-group>
@@ -76,7 +76,7 @@
                     <div class="col-xs-12">
                         <div class="form-group">
                             <button type="submit" class="btn btn-success">{{ trans('forms.save') }}</button>
-                            <a class="btn btn-default" href="{{ back_url() }}">{{ trans('forms.cancel') }}</a>
+                            <a class="btn btn-default" href="{{ route('dashboard.carousel.index') }}">{{ trans('forms.cancel') }}</a>
                         </div>
                     </div>
                 </div>
