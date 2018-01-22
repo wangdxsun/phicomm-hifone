@@ -10,6 +10,7 @@ class Carousel extends BaseModel
     const WEB = 2;
     const ANDROID = 4;
     const IOS = 8;
+    const APP = self::ANDROID + self::IOS;
     const ALL_VERSION = 1;
     const SOME_VERSION = 2;
 

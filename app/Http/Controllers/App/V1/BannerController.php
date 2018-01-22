@@ -22,10 +22,10 @@ class BannerController extends AppController
         //TODO 过滤当前APP版本和Banner设定区间匹配者
         if (Agent::match('PhiWifiNative') && Agent::match('iPhone')) {
             $carousels = Carousel::orderBy('order')
-                ->whereIn('device', [Carousel::IOS, Carousel::IOS + Carousel::ANDROID])->visible()->get();
+                ->whereIn('device', [Carousel::IOS, Carousel::APP])->visible()->get();
         } elseif (Agent::match('PhiWifiNative') && Agent::match('Android')) {
             $carousels = Carousel::orderBy('order')
-                ->whereIn('device', [Carousel::ANDROID, Carousel::ANDROID + Carousel::IOS])->visible()->get();
+                ->whereIn('device', [Carousel::ANDROID, Carousel::APP])->visible()->get();
         } else {
             return [];
         }
@@ -46,7 +46,7 @@ class BannerController extends AppController
         return '统计banner点击';
     }
 
-    public function compareVersion($version, $carousel)
+    private function compareVersion($version, $carousel)
     {
         if ($carousel->start_version == '全部版本') {
             return true;
@@ -54,11 +54,11 @@ class BannerController extends AppController
         $versionArr = explode('.', $version);
         $targetVersionArrStart = explode('.', $carousel->start_version);
         $targetVersionArrEnd = explode('.', $carousel->end_version);
-        return $this->compare($targetVersionArrEnd, $versionArr,0) &&
+        return $this->compare($targetVersionArrEnd, $versionArr, 0) &&
             $this->compare($versionArr,$targetVersionArrStart, 0);
     }
 
-    public function compare($versionArr, $targetVersionArr, $i)
+    private function compare($versionArr, $targetVersionArr, $i)
     {
         if ($i > count($versionArr) - 1 ) {
             return true;
