@@ -81,6 +81,7 @@ class WebRoutes
                 $router->post('upload', 'CommonController@upload');
                 $router->post('upload/base64', 'CommonController@uploadBase64');
                 $router->post('threads', 'ThreadController@store')->middleware('active:web');
+                $router->post('threads/{thread}', 'ThreadController@update');
                 $router->post('replies', 'ReplyController@store');
                 $router->post('follow/users/{user}', 'FollowController@user');
                 $router->post('follow/threads/{thread}', 'FollowController@thread');

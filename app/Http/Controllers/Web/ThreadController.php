@@ -3,6 +3,7 @@
 namespace Hifone\Http\Controllers\Web;
 
 use Auth;
+use Hifone\Commands\Thread\UpdateThreadCommand;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Pin\SinkWasAddedEvent;
@@ -11,8 +12,10 @@ use Hifone\Events\Thread\ThreadWasPinnedEvent;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\ThreadBll;
+use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
 use Hifone\Services\Filter\WordsFilter;
+use Hifone\Services\Parsers\Markdown;
 
 class ThreadController extends WebController
 {
@@ -67,6 +70,30 @@ class ThreadController extends WebController
         $thread = $threadBll->createThread(request('thread'));
         $result = $threadBll->auditThread($thread, $wordsFilter);
         return $result;
+    }
+
+    public function update(Thread $thread)
+    {
+        if (!Auth::user()->hasRole(['Admin', 'Founder'])) {
+            throw new HifoneException('只有管理员才可以编辑帖子');
+        }
+        //修改帖子标题，版块和正文
+        $threadData = request('thread');
+        $threadData['node_id'] = SubNode::find($threadData['sub_node_id'])->node->id;
+
+        $threadData['body_original'] = $threadData['body'];
+        $threadData['body'] = (new Markdown())->convertMarkdownToHtml($threadData['body']);
+        $threadData['excerpt'] = Thread::makeExcerpt($threadData['body']);
+        try {
+            $this->updateOpLog($thread, '修改帖子');
+            $thread = dispatch(new UpdateThreadCommand($thread, $threadData));
+        } catch (\Exception $e) {
+            throw new HifoneException($e->getMessage());
+        }
+        return [
+            'msg' => '恭喜，操作成功！',
+            'thread' => $thread
+        ];
     }
 
     public function replies(Thread $thread, ThreadBll $threadBll)
