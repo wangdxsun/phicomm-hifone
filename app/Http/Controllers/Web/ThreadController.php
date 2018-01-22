@@ -86,11 +86,14 @@ class ThreadController extends WebController
         $threadData['excerpt'] = Thread::makeExcerpt($threadData['body']);
         try {
             $this->updateOpLog($thread, '修改帖子');
-            dispatch(new UpdateThreadCommand($thread, $threadData));
+            $thread = dispatch(new UpdateThreadCommand($thread, $threadData));
         } catch (\Exception $e) {
             throw new HifoneException($e->getMessage());
         }
-        return success('恭喜，操作成功！');
+        return [
+            'msg' => '恭喜，操作成功！',
+            'thread' => $thread
+        ];
     }
 
     public function replies(Thread $thread, ThreadBll $threadBll)
