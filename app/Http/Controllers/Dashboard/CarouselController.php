@@ -227,6 +227,11 @@ class CarouselController extends Controller
 
     public function editApp(Carousel $carousel)
     {
+        if ($carousel->start_version == '全部版本') {
+            $carousel['version'] = Carousel::ALL_VERSION;
+        } else {
+            $carousel['version'] = Carousel::SOME_VERSION;
+        }
         return View::make('dashboard.carousel.app_create_edit')
             ->withPageTitle('编辑banner')
             ->withCarousel($carousel)

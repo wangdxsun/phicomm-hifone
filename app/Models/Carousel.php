@@ -89,6 +89,4 @@ class Carousel extends BaseModel
         }
         return $device;
     }
-
-
 }

@@ -3,10 +3,10 @@
     @if(isset($sub_menu))
         @include('dashboard.partials.sub-sidebar')
     @endif
-<div class="content-wrapper" id="app">
+<div class="content-wrapper">
     <div class="row">
-        <div class="col-sm-12">
-            @include('partials.errors')
+        @include('partials.errors')
+        <div class="col-sm-12" id="app">
             @if(isset($carousel))
                 {!! Form::model($carousel, ['route' => ['dashboard.carousel.update', $carousel->id], 'method' => 'patch', 'class' => 'create_form']) !!}
             @else
@@ -24,7 +24,7 @@
                                 <img v-if="imageUrlWeb" :src="imageUrlWeb" class="el-avatar">
                                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                             </el-upload>
-                            <el-input v-model="imageUrlWeb" type="hidden" name="carousel[web_icon]"></el-input>
+                            <el-input :value="imageUrlWeb" type="hidden" name="carousel[web_icon]"></el-input>
                             <el-button class="btn-danger" size="medium" @click="clearImageUrlWeb">清空图片</el-button>
                         </div>
 
@@ -38,7 +38,7 @@
                                 <img v-if="imageUrlH5" :src="imageUrlH5" class="el-avatar">
                                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                             </el-upload>
-                            <el-input  v-model="imageUrlH5" type="hidden" name="carousel[h5_icon]"></el-input>
+                            <el-input  :value="imageUrlH5" type="hidden" name="carousel[h5_icon]"></el-input>
                             <el-button class="btn-danger" size="medium" @click="clearImageUrlH5">清空图片</el-button>
 
                         </div>
