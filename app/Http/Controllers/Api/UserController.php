@@ -26,7 +26,7 @@ class UserController extends ApiController
     {
         $user = Auth::user();
         if (Auth::bind() == false) {
-            return new JsonResponse('unbind.', 400);
+            return 'Unbind';
         }
         if (! is_null($user)) {
             $cloudUser = $phicommBll->userInfo();
