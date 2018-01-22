@@ -19,7 +19,7 @@ class BannerController extends AppController
     public function index()
     {
         $version = parse_agent_version($_SERVER['HTTP_USER_AGENT']);
-        //TODO 过滤当前APP版本和Banner设定区间匹配者
+        //过滤当前APP版本和Banner设定区间匹配者
         if (Agent::match('PhiWifiNative') && Agent::match('iPhone')) {
             $carousels = Carousel::orderBy('order')
                 ->whereIn('device', [Carousel::IOS, Carousel::APP])->visible()->get();
@@ -32,7 +32,7 @@ class BannerController extends AppController
         $carouselsFiltered = $carousels->filter(function ($carousel) use ($version) {
             return $this->compareVersion($version, $carousel);
         });
-        $carousels = collect($carouselsFiltered->all());
+        $carousels = $carouselsFiltered->values();
 
         foreach ($carousels as $carousel) {
             $carousel['statistic'] = route('app.banner.show', $carousel->id);
@@ -52,24 +52,28 @@ class BannerController extends AppController
             return true;
         }
         $versionArr = explode('.', $version);
-        $targetVersionArrStart = explode('.', $carousel->start_version);
-        $targetVersionArrEnd = explode('.', $carousel->end_version);
-        return $this->compare($targetVersionArrEnd, $versionArr, 0) &&
-            $this->compare($versionArr,$targetVersionArrStart, 0);
+        $versionArrStart = explode('.', $carousel->start_version);
+        $versionArrEnd = explode('.', $carousel->end_version);
+        return $this->compare($versionArrStart, $versionArr) &&
+            $this->compare($versionArr,$versionArrEnd);
     }
 
-    private function compare($versionArr, $targetVersionArr, $i)
-    {
-        if ($i > count($versionArr) - 1 ) {
-            return true;
+    /**
+     * 比较版本号
+     * 如果$versionA <= $versionB return true
+     * 如果$versionA > $versionB return false
+     */
+    private function compare($versionA, $versionB) {
+        for ($i = 0; $i < 3; $i++) {
+            if (intval($versionA[$i]) < intval($versionB[$i])) {
+                return true;
+            } elseif (intval($versionA[$i]) == intval($versionB[$i])) {
+                continue;
+            } else {
+                return false;
+            }
         }
-        if (intval($versionArr[$i]) > intval($targetVersionArr[$i])) {
-            return true;
-        } elseif (intval($versionArr[$i]) < intval($targetVersionArr[$i])) {
-            return false;
-        } else {
-            return $this->compare($versionArr, $targetVersionArr, ++$i);
-        }
+        return true;
     }
 
 }
