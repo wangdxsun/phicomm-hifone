@@ -17,7 +17,7 @@ class NodeController extends AppController
 {
     public function index()
     {
-        $nodes = Node::orderBy('order')->get();
+        $nodes = Node::orderBy('order')->limit(4)->get();
         foreach ($nodes as $node) {
             $node['detail_url'] = route('app.node.show', $node->id);
         }
