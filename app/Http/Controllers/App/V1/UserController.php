@@ -35,7 +35,7 @@ class UserController extends AppController
         }
         $user = User::findUserByPhicommId(Auth::phicommId());
         if (!$user) {
-            throw new HifoneException('请先关联社区账号');
+            throw new HifoneException('请先关联社区账号', 500);
         }
         return $user;
     }

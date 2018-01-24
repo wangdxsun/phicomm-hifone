@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: qiuling.jiang
- * Date: 2017/5/9
- * Time: 8:47
- */
 
 namespace Hifone\Http\Controllers\Api;
 
