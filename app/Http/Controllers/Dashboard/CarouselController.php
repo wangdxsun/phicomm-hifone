@@ -172,6 +172,7 @@ class CarouselController extends Controller
         }
         $carouselData['image'] = $carouselData['android_icon'] != "" ?  $carouselData['android_icon'] : $carouselData['ios_icon'];
 
+
         if (empty($carouselData['version'])) {
             return Redirect::route('dashboard.carousel.create.app')
                 ->withErrors('没有选择版本类型')
@@ -207,7 +208,7 @@ class CarouselController extends Controller
             $carousel = Carousel::create($carouselData);
             $this->updateOpLog($carousel, '添加banner');
         } catch (ValidationException $e) {
-            return Redirect::route('dashboard.carousel.create')
+            return Redirect::route('dashboard.carousel.create.app')
                 ->withInput(Request::all())
                 ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.notices.add.failure')))
                 ->withErrors($e->getMessageBag());

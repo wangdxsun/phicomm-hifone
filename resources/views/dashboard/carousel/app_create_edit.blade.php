@@ -38,7 +38,7 @@
                     <div class="form-group">
                         <label>描述</label>
                         {!! Form::textarea('carousel[description]', isset($carousel) ? $carousel->description : null , [
-                        'class' => 'form-control', 'rows' => 5, 'style' => "overflow:hidden"]) !!}
+                        'class' => 'form-control', 'required', 'rows' => 5, 'style' => "overflow:hidden"]) !!}
                     </div>
                     <div class="form-group">
                         <label>版本选择：</label>
@@ -60,7 +60,7 @@
                     </div>
                     <div class="form-group">
                         <label>链接/ID</label>
-                        {!! Form::text('carousel[url]', isset($carousel) ? $carousel->url : null, ['class' => 'form-control']) !!}
+                        {!! Form::text('carousel[url]', isset($carousel) ? $carousel->url : null, ['class' => 'form-control', 'required']) !!}
                     </div>
 
                     <div class="form-group">

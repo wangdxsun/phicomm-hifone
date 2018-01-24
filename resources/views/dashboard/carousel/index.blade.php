@@ -37,7 +37,7 @@
                     </div>
                 @endif
 
-                
+
                 @if ($carousel->device == 4 || $carousel->device == 8 || $carousel->device == 12)
                     <div class="col-xs-2">{{ '描述 ：'  }}<br>{{ $carousel->description }}
                         <a href="{{ $carousel->url }}" target="_blank">{{ $carousel->jump_url }}</a>
