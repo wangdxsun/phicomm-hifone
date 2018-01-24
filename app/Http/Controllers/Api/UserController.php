@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: qiuling.jiang
- * Date: 2017/5/9
- * Time: 8:47
- */
 
 namespace Hifone\Http\Controllers\Api;
 
@@ -26,7 +20,7 @@ class UserController extends ApiController
     {
         $user = Auth::user();
         if (Auth::bind() == false) {
-            return new JsonResponse('unbind.', 400);
+            return 'Unbind';
         }
         if (! is_null($user)) {
             $cloudUser = $phicommBll->userInfo();

@@ -172,7 +172,7 @@
                 </div>
                 <div class="form-group">
                     <label>{{ trans('dashboard.nodes.name') }}</label>
-                    {!! Form::text('node[name]', isset($node) ? $node->name : null, ['class' => 'form-control']) !!}
+                    {!! Form::text('node[name]', isset($node) ? $node->name : null, ['class' => 'form-control', 'required']) !!}
                 </div>
 
                 @if($sections->count() > 0)
@@ -189,7 +189,7 @@
                 @endif
                 <div class="form-group">
                     <label>{{ trans('dashboard.nodes.description') }}</label>
-                    {!! Form::textarea('node[description]', isset($node) ? $node->description : null , ['class' => 'form-control', 'rows' => 5]) !!}
+                    {!! Form::textarea('node[description]', isset($node) ? $node->description : null , ['class' => 'form-control', 'required', 'rows' => 5]) !!}
                 </div>
 
                 <div class="form-group">
