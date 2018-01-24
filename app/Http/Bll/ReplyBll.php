@@ -21,11 +21,18 @@ use DB;
 use Input;
 use Auth;
 use Config;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ReplyBll extends BaseBll
 {
     public function createReply()
     {
+        if (!is_null(request('reply.reply_id'))) {
+            $reply = Reply::find(request('reply.reply_id'));
+            if ($reply->status <> Reply::VISIBLE) {
+                throw new NotFoundHttpException('该评论已被删除');
+            }
+        }
         if (Auth::user()->hasRole('NoComment')) {
             throw new HifoneException('对不起，你已被管理员禁止发言');
         } elseif (!Auth::user()->can('manage_threads') && Auth::user()->score < 0) {
@@ -33,7 +40,7 @@ class ReplyBll extends BaseBll
         }
         $thread = Thread::findOrFail(request('reply.thread_id'));
         if (!$thread->visible) {
-            throw new HifoneException('当前帖子状态不可见！');
+            throw new HifoneException('该帖子已被删除');
         }
         $replyData = request('reply');
         $replyData['body'] = e($replyData['body']);
@@ -57,6 +64,12 @@ class ReplyBll extends BaseBll
 
     public function createReplyApp()
     {
+        if (!is_null(request('reply.reply_id'))) {
+            $reply = Reply::find(request('reply.reply_id'));
+            if ($reply->status <> Reply::VISIBLE) {
+                throw new NotFoundHttpException('该评论已被删除');
+            }
+        }
         if (Auth::user()->hasRole('NoComment')) {
             throw new HifoneException('对不起，你已被管理员禁止发言');
         } elseif (!Auth::user()->can('manage_threads') && Auth::user()->score < 0) {
@@ -158,12 +171,12 @@ class ReplyBll extends BaseBll
 
     public function showReply(Reply $reply)
     {
-        if ($reply->visible) {
+        if ($reply->status <> Reply::VISIBLE) {
             $reply = Reply::with(['user', 'reply.user'])->find($reply->id);
             $reply['liked'] = Auth::check() ? Auth::user()->hasLikeReply($reply) : false;
             $reply['reported'] = Auth::check() ? Auth::user()->hasReportReply($reply) : false;
         } else {
-            throw new HifoneException('该评论不可见');
+            throw new HifoneException('该评论已被删除');
         }
         return $reply;
     }
