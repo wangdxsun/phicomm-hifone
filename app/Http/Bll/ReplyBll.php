@@ -27,12 +27,8 @@ class ReplyBll extends BaseBll
 {
     public function createReply()
     {
-        if (!is_null(request('reply.reply_id'))) {
-            $reply = Reply::find(request('reply.reply_id'));
-            if ($reply->status <> Reply::VISIBLE) {
-                throw new NotFoundHttpException('该评论已被删除');
-            }
-        }
+        $this->replyIsVisible();
+
         if (Auth::user()->hasRole('NoComment')) {
             throw new HifoneException('对不起，你已被管理员禁止发言');
         } elseif (!Auth::user()->can('manage_threads') && Auth::user()->score < 0) {
@@ -64,12 +60,8 @@ class ReplyBll extends BaseBll
 
     public function createReplyApp()
     {
-        if (!is_null(request('reply.reply_id'))) {
-            $reply = Reply::find(request('reply.reply_id'));
-            if ($reply->status <> Reply::VISIBLE) {
-                throw new NotFoundHttpException('该评论已被删除');
-            }
-        }
+        $this->replyIsVisible();
+
         if (Auth::user()->hasRole('NoComment')) {
             throw new HifoneException('对不起，你已被管理员禁止发言');
         } elseif (!Auth::user()->can('manage_threads') && Auth::user()->score < 0) {
@@ -179,5 +171,15 @@ class ReplyBll extends BaseBll
             throw new HifoneException('该评论已被删除');
         }
         return $reply;
+    }
+
+    private function replyIsVisible()
+    {
+        if (!is_null(request('reply.reply_id'))) {
+            $reply = Reply::find(request('reply.reply_id'));
+            if ($reply == null || $reply->status <> Reply::VISIBLE) {
+                throw new NotFoundHttpException('该评论已被删除');
+            }
+        }
     }
 }
