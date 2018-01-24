@@ -11,7 +11,8 @@ class NodeController extends WebController
 {
     public function index()
     {
-        $nodes = Node::orderBy('order')->has('subNodes')->get();
+        $nodes = Node::orderBy('order')->has('subNodes')->limit(4)->get();
+        $nodes->splice(4);
         return $nodes;
     }
 
