@@ -32,7 +32,7 @@ class BannerController extends AppController
         $carouselsFiltered = $carousels->filter(function ($carousel) use ($version) {
             return $this->compareVersion($version, $carousel);
         });
-        $carousels = collect($carouselsFiltered->all());
+        $carousels = $carouselsFiltered->values();
 
         foreach ($carousels as $carousel) {
             $carousel['statistic'] = route('app.banner.show', $carousel->id);

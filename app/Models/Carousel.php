@@ -2,6 +2,7 @@
 
 namespace Hifone\Models;
 use Carbon\Carbon;
+use Jenssegers\Agent\Facades\Agent;
 
 class Carousel extends BaseModel
 {
@@ -88,5 +89,18 @@ class Carousel extends BaseModel
                 break;
         }
         return $device;
+    }
+
+    public function getImageAttribute()
+    {
+        if (Agent::match('PhiWifiNative') && Agent::match('iPhone')) {
+            return $this->attributes['image'] = $this->ios_icon;
+        } elseif (Agent::match('PhiWifiNative') && Agent::match('Android')) {
+            return $this->attributes['image'] = $this->android_icon;
+        } elseif (Agent::match('Android') || Agent::match('iPhone')) {
+            return $this->attributes['image'] = $this->h5_icon;
+        } else {
+            return $this->attributes['image'] = $this->web_icon;
+        }
     }
 }
