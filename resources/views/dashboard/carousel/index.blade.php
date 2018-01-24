@@ -27,9 +27,17 @@
                     <span class="drag-handle">{{ 'ID : ' . $carousel->id  }}</span>
                 </div>
 
-                <div class="col-xs-2">
-                    <a href="{{ $carousel->url }}" target="_blank"><img src="{{ $carousel->image }}" style="max-width: 200px; max-height: 50px;"></a>
-                </div>
+                @if ($carousel->device == 4 || $carousel->device == 8 || $carousel->device == 12)
+                    <div class="col-xs-2">
+                        <a href="{{ $carousel->url }}" target="_blank"><img src="{{ $carousel->image != "" ? $carousel->image : ($carousel->ios_icon != "" ? $carousel->ios_icon : $carousel->android_icon)}}" style="max-width: 200px; max-height: 50px;"></a>
+                    </div>
+                @else
+                    <div class="col-xs-2">
+                        <a href="{{ $carousel->url }}" target="_blank"><img src="{{ $carousel->image != "" ? $carousel->image : ($carousel->h5_icon != "" ? $carousel->h5_icon : $carousel->web_icon)}}" style="max-width: 200px; max-height: 50px;"></a>
+                    </div>
+                @endif
+
+                
                 @if ($carousel->device == 4 || $carousel->device == 8 || $carousel->device == 12)
                     <div class="col-xs-2">{{ '描述 ：'  }}<br>{{ $carousel->description }}
                         <a href="{{ $carousel->url }}" target="_blank">{{ $carousel->jump_url }}</a>
