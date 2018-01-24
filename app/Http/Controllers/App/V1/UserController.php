@@ -23,20 +23,27 @@ use Auth;
 
 class UserController extends AppController
 {
-    /**
-     * 获取当前用户信息
-     * @return mixed
-     * @throws \Exception
-     */
-    public function me()
+    //获取当前用户信息
+    public function me(PhicommBll $phicommBll)
     {
         if (empty(Auth::phicommId())) {
             throw new HifoneException('缺少token');
         }
         $user = User::findUserByPhicommId(Auth::phicommId());
         if (!$user) {
-            throw new HifoneException('请先关联社区账号');
+            throw new HifoneException('请先关联社区账号', 500);
         }
+        $cloudUser = $phicommBll->userInfo();
+        if ($cloudUser['img'] && $user->avatar_url != $cloudUser['img'] && $cloudUser['img'] != 'Uploads/default/default.jpg') {
+            $user->avatar_url = $cloudUser['img'];
+            $user->save();
+            $user->updateIndex();
+        }
+        if ($cloudUser['phonenumber'] !== $user->phone) {
+            $user->phone = $cloudUser['phonenumber'];
+            $user->save();
+        }
+        $user['isAdmin'] = ($user->role =='管理员' || $user->role =='创始人');
         return $user;
     }
 
