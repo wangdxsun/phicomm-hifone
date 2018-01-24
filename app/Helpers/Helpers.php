@@ -10,6 +10,7 @@
  */
 use Jenssegers\Agent\Facades\Agent;
 use Hifone\Models\Thread;
+use Hifone\Exceptions\HifoneException;
 
 if (!function_exists('back_url')) {
     /**
@@ -312,9 +313,21 @@ if (!function_exists('get_request_agent')) {
 if (!function_exists('parse_agent_version')) {
     function parse_agent_version($agent)
     {
-        $pre = explode("PhiWifi/", $agent, 2)[1];
-        $middle = explode(".", $pre, 4);
-        $version = $middle[0] . "." . $middle[1] . "." . $middle[2];
+        $preArr = explode("PhiWifi/", $agent, 2);
+        $pre = array_get($preArr, 1);
+        if (is_null($pre)) {
+            throw new HifoneException('UserAgent格式不正确');
+        }
+
+        $middleArr = explode(".", $pre, 4);
+        $middle0 = array_get($middleArr, 0);
+        $middle1 = array_get($middleArr, 1);
+        $middle2 = array_get($middleArr, 2);
+        if (is_null($middle0) || is_null($middle1) || is_null($middle2)
+        || !is_numeric($middle0) || !is_numeric($middle1) || !is_numeric($middle2)) {
+            throw new HifoneException('UserAgent格式不正确');
+        }
+        $version = $middle0 . "." . $middle1 . "." . $middle2;
 
         return $version;
     }
