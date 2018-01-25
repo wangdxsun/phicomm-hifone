@@ -68,6 +68,7 @@ class ReplyBll extends BaseBll
             throw new HifoneException('对不起，你所在的用户组无法发言');
         }
         $replyData = request('reply');
+        $replyData['body'] = e($replyData['body']);
         $images = '';
         if (Input::has('images')) {
             foreach ($replyImages = json_decode(Input::get('images'), true) as $image) {
