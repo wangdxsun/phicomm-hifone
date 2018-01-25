@@ -11,7 +11,9 @@ namespace Hifone\Http\Bll;
 use Auth;
 use Hifone\Commands\Follow\AddFollowCommand;
 use Hifone\Exceptions\HifoneException;
+use Hifone\Models\Thread;
 use Hifone\Models\User;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class FollowBll extends BaseBll
 {
@@ -27,6 +29,9 @@ class FollowBll extends BaseBll
 
     public function followThread($thread)
     {
+        if ($thread->status <> Thread::VISIBLE) {
+            throw new NotFoundHttpException('该帖子已被删除');
+        }
         if ($thread->user->id == Auth::id()) {
             throw new HifoneException('自己的帖子无需关注');
         }

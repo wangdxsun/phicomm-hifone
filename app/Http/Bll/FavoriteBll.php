@@ -12,7 +12,7 @@ class FavoriteBll extends BaseBll
     public function favoriteThread(Thread $thread)
     {
         if ($thread->status <> Thread::VISIBLE) {
-            throw new NotFoundHttpException('帖子状态不可见');
+            throw new NotFoundHttpException('该帖子已被删除');
         }
         dispatch(new AddFavoriteCommand($thread));
 

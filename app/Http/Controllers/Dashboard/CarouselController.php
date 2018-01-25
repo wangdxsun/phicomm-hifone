@@ -142,7 +142,7 @@ class CarouselController extends Controller
             $thread_id = $carouselData['url'];
             $thread = Thread::visible()->find($thread_id);
             if (!$thread) {
-                return Redirect::back()->withErrors('您所配置的帖子不可见或不存在');
+                return Redirect::back()->withErrors('您所配置的帖子不可见或已删除');
             }
         }
         try {
@@ -196,7 +196,7 @@ class CarouselController extends Controller
             $thread_id = $carouselData['url'];
             $thread = Thread::visible()->find($thread_id);
             if (!$thread) {
-                return Redirect::back()->withErrors('您所配置的帖子不可见或不存在');
+                return Redirect::back()->withErrors('您所配置的帖子不可见或已删除');
             }
         } else {
             $linkUrl = $carouselData['url'];
@@ -254,7 +254,7 @@ class CarouselController extends Controller
             $thread_id = $carouselData['url'];
             $thread = Thread::visible()->find($thread_id);
             if (!$thread) {
-                return Redirect::back()->withErrors('您所配置的帖子不可见或不存在');
+                return Redirect::back()->withErrors('您所配置的帖子不可见或已删除');
             }
         } else {
             $linkUrl = $carouselData['url'];
@@ -311,7 +311,7 @@ class CarouselController extends Controller
             $thread_id = $carouselData['url'];
             $thread = Thread::visible()->find($thread_id);
             if (!$thread) {
-                return Redirect::back()->withErrors('您所配置的帖子不可见或不存在');
+                return Redirect::back()->withErrors('您所配置的帖子不可见或已删除');
             }
         }
         try {

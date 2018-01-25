@@ -19,7 +19,7 @@ class LikeBll extends BaseBll
     public function likeThread($thread)
     {
         if ($thread->status <> Thread::VISIBLE) {
-            throw new NotFoundHttpException('帖子状态不可见');
+            throw new NotFoundHttpException('该帖子已被删除');
         }
         dispatch(new AddLikeCommand($thread));
 
@@ -29,7 +29,7 @@ class LikeBll extends BaseBll
     public function likeReply($reply)
     {
         if ($reply->status <> Reply::VISIBLE) {
-            throw new NotFoundHttpException('评论状态不可见');
+            throw new NotFoundHttpException('该评论已被删除');
         }
         dispatch(new AddLikeCommand($reply));
 
