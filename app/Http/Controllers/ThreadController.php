@@ -44,7 +44,7 @@ class ThreadController extends Controller
         parent::__construct();
 
         $this->middleware('auth', ['except' => ['index', 'show', 'search']]);
-        $this->middleware('web.active',['only' => ['show','create','store']]);
+        $this->middleware('active:web',['only' => ['show','create','store']]);
     }
 
     public function index(ThreadBll $threadBll)
