@@ -57,7 +57,7 @@ class ThreadController extends Controller
 
     public function search(ThreadBll $threadBll)
     {
-        $threads = $threadBll->webSearch();
+        $threads = $threadBll->webSearch(request('q'));
         return $this->view('threads.search')
             ->withThreads($threads)
             ->withSections(Section::orderBy('order')->get());
