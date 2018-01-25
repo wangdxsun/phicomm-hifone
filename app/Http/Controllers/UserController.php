@@ -36,7 +36,7 @@ class UserController extends Controller
     {
         $this->hasher = $hasher;
         $this->middleware('auth', ['only' => ['edit', 'update', 'destroy', 'unbind']]);
-        $this->middleware('web.active',['only' => ['show']]);
+        $this->middleware('active:web',['only' => ['show']]);
     }
 
     public function index()
