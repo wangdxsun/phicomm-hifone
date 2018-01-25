@@ -13,6 +13,7 @@ use Hifone\Commands\Thread\AddThreadCommand;
 use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasAuditedEvent;
 use Hifone\Events\Thread\ThreadWasViewedEvent;
+use Hifone\Exceptions\HifoneException;
 use Hifone\Models\SearchWord;
 use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
@@ -123,12 +124,14 @@ class ThreadBll extends BaseBll
         $body = '';
         foreach ($json_bodies as $json_body) {
             if ($json_body['type'] == 'text') {
-                $body.= "<p>".$json_body['content']."</p>";
+                $body.= "<p>".e($json_body['content'])."</p>";
             } elseif ($json_body['type'] == 'image') {
                 $body.= "<img src='".$json_body['content']."'/>";
             }
         }
-
+        if (mb_strlen(strip_tags($body)) > 10000) {
+            throw new HifoneException('帖子内容不得多于10000个字符');
+        }
         $threadTemp = dispatch(new AddThreadCommand(
             $threadData['title'],
             $body,

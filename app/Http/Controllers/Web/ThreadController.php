@@ -65,8 +65,10 @@ class ThreadController extends WebController
             'thread.title.max' => '帖子标题不得多于40个字符',
             'thread.body.required' => '帖子内容必填',
             'thread.body.min' => '帖子内容不得少于5个字符',
-            'thread.body.max' => '帖子内容不得多于10000个字符',
         ]);
+        if (mb_strlen(strip_tags(array_get(request('thread'), 'body'))) > 10000) {
+            throw new HifoneException('帖子内容不得多于10000个字符');
+        }
         $thread = $threadBll->createThread(request('thread'));
         $result = $threadBll->auditThread($thread, $wordsFilter);
         return $result;
