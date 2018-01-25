@@ -158,10 +158,10 @@ class ReplyController extends Controller
     {
         if($reply->order > 0){
             $reply->decrement('order', 1);
-            $this->updateOpLog($reply, '置顶');
+            $this->updateOpLog($reply, '取消置顶');
         }else{
             $reply->increment('order', 1);
-            $this->updateOpLog($reply, '取消置顶');
+            $this->updateOpLog($reply, '置顶');
             event(new PinWasAddedEvent($reply->user, 'Reply'));
         }
 
