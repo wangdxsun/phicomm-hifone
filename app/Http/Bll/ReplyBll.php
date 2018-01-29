@@ -27,8 +27,6 @@ class ReplyBll extends BaseBll
 {
     public function createReply()
     {
-        $this->replyIsVisible();
-
         if (Auth::user()->hasRole('NoComment')) {
             throw new HifoneException('对不起，你已被管理员禁止发言');
         } elseif (!Auth::user()->can('manage_threads') && Auth::user()->score < 0) {
@@ -38,6 +36,7 @@ class ReplyBll extends BaseBll
         if (!$thread->visible) {
             throw new HifoneException('该帖子已被删除');
         }
+        $this->replyIsVisible();
         $replyData = request('reply');
         $replyData['body'] = e($replyData['body']);
         $images = '';
@@ -60,13 +59,16 @@ class ReplyBll extends BaseBll
 
     public function createReplyApp()
     {
-        $this->replyIsVisible();
-
         if (Auth::user()->hasRole('NoComment')) {
             throw new HifoneException('对不起，你已被管理员禁止发言');
         } elseif (!Auth::user()->can('manage_threads') && Auth::user()->score < 0) {
             throw new HifoneException('对不起，你所在的用户组无法发言');
         }
+        $thread = Thread::findOrFail(request('reply.thread_id'));
+        if (!$thread->visible) {
+            throw new HifoneException('该帖子已被删除');
+        }
+        $this->replyIsVisible();
         $replyData = request('reply');
         $replyData['body'] = e($replyData['body']);
         $images = '';
