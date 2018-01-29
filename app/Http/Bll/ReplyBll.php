@@ -165,11 +165,11 @@ class ReplyBll extends BaseBll
     public function showReply(Reply $reply)
     {
         if ($reply->status <> Reply::VISIBLE) {
+            throw new HifoneException('该评论已被删除');
+        } else {
             $reply = Reply::with(['user', 'reply.user'])->find($reply->id);
             $reply['liked'] = Auth::check() ? Auth::user()->hasLikeReply($reply) : false;
             $reply['reported'] = Auth::check() ? Auth::user()->hasReportReply($reply) : false;
-        } else {
-            throw new HifoneException('该评论已被删除');
         }
         return $reply;
     }
