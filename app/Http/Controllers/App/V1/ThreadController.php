@@ -54,9 +54,6 @@ class ThreadController extends AppController
             'thread.body.required' => '帖子内容必填',
             'thread.body.min' => '帖子内容不得少于5个字符',
         ]);
-        if (count(strip_tags(array_get(request('thread'), 'body'))) > 10000) {
-            throw new HifoneException('帖子内容不得多于10000个字符');
-        }
         $thread = $threadBll->createThreadImageMixed();
         $result = $threadBll->auditThread($thread, $wordsFilter);
         return $result;

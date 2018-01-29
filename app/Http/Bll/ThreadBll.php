@@ -13,6 +13,7 @@ use Hifone\Commands\Thread\AddThreadCommand;
 use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasAuditedEvent;
 use Hifone\Events\Thread\ThreadWasViewedEvent;
+use Hifone\Exceptions\HifoneException;
 use Hifone\Models\SearchWord;
 use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
@@ -21,6 +22,7 @@ use Hifone\Repositories\Criteria\Thread\Filter;
 use Hifone\Repositories\Criteria\Thread\Search;
 use DB;
 use Hifone\Services\Filter\WordsFilter;
+use Illuminate\Pagination\Paginator;
 use Input;
 use Auth;
 use Config;
@@ -44,21 +46,30 @@ class ThreadBll extends BaseBll
 
     public function search($keyword)
     {
-        $this->searchWords($keyword);
-        $threads = Thread::searchThread($keyword)->load(['user', 'node'])->paginate(15);
+        if (empty($keyword)) {
+            $threads = new Paginator([], 15);
+        } else {
+            $this->searchWords($keyword);
+            $threads = Thread::searchThread($keyword)->load(['user', 'node'])->paginate(15);
+        }
 
         return $threads;
     }
 
-    public function webSearch()
+    public function webSearch($keyword)
     {
-        $threads = Thread::searchThread(request('q'));
-        $this->searchWords(request('q'));
-        foreach ($threads as $thread) {
-            unset($thread['node']);
-            unset($thread['user']);
+        if (empty($keyword)) {
+            $threads = new Paginator([], 0, 15);
+        } else {
+            $threads = Thread::searchThread($keyword);
+            $this->searchWords($keyword);
+            foreach ($threads as $thread) {
+                unset($thread['node']);
+                unset($thread['user']);
+            }
+            $threads = $threads->load(['user', 'node', 'lastReplyUser']);
         }
-        $threads = $threads->load(['user', 'node', 'lastReplyUser']);
+
         return $threads;
     }
 
@@ -123,12 +134,14 @@ class ThreadBll extends BaseBll
         $body = '';
         foreach ($json_bodies as $json_body) {
             if ($json_body['type'] == 'text') {
-                $body.= "<p>".$json_body['content']."</p>";
+                $body.= "<p>".e($json_body['content'])."</p>";
             } elseif ($json_body['type'] == 'image') {
                 $body.= "<img src='".$json_body['content']."'/>";
             }
         }
-
+        if (mb_strlen(strip_tags($body)) > 10000) {
+            throw new HifoneException('帖子内容不得多于10000个字符');
+        }
         $threadTemp = dispatch(new AddThreadCommand(
             $threadData['title'],
             $body,
