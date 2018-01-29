@@ -98,12 +98,12 @@ class PhicommController extends Controller
             Auth::login($user, request()->has('remember'));
             $commonBll->loginWeb();
             $cloudUser = $this->phicommBll->userInfo();
-            if ($cloudUser['img'] && $user->avatar_url != $cloudUser['img'] && $cloudUser['img'] != 'Uploads/default/default.jpg') {
+            if (array_get($cloudUser, 'img') && $user->avatar_url != $cloudUser['img'] && $cloudUser['img'] != 'Uploads/default/default.jpg') {
                 $user->avatar_url = $cloudUser['img'];
                 $user->save();
                 $user->updateIndex();
             }
-            if ($cloudUser['phonenumber'] !== $user->phone) {
+            if (array_get($cloudUser, 'phonenumber') && $cloudUser['phonenumber'] !== $user->phone) {
                 $user->phone = $cloudUser['phonenumber'];
                 $user->save();
             }
