@@ -14,14 +14,13 @@ use Hifone\Models\Reply;
 use Hifone\Models\Report;
 use Hifone\Models\Thread;
 use Input;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ReportBll
 {
     public function reportThread(Thread $thread)
     {
         if ($thread->status <> Thread::VISIBLE) {
-            throw new NotFoundHttpException('该帖子已被删除');
+            throw new HifoneException('该帖子已被删除', 410);
         }
         if (Auth::id() === $thread->user->id) {
             throw new HifoneException('自己不能举报自己哦');
@@ -38,7 +37,7 @@ class ReportBll
     public function reportReply(Reply $reply)
     {
         if ($reply->status <> Reply::VISIBLE) {
-            throw new NotFoundHttpException('该评论已被删除');
+            throw new HifoneException('该评论已被删除');
         }
         if (Auth::id() === $reply->user->id) {
             throw new HifoneException('自己不能举报自己哦');

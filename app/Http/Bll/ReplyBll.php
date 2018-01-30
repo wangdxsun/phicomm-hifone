@@ -66,7 +66,7 @@ class ReplyBll extends BaseBll
         }
         $thread = Thread::findOrFail(request('reply.thread_id'));
         if (!$thread->visible) {
-            throw new HifoneException('该帖子已被删除');
+            throw new HifoneException('该帖子已被删除', 410);
         }
         $this->replyIsVisible();
         $replyData = request('reply');
@@ -181,7 +181,7 @@ class ReplyBll extends BaseBll
         if (!is_null(request('reply.reply_id'))) {
             $reply = Reply::find(request('reply.reply_id'));
             if ($reply == null || $reply->status <> Reply::VISIBLE) {
-                throw new NotFoundHttpException('该评论已被删除');
+                throw new HifoneException('该评论已被删除');
             }
         }
     }

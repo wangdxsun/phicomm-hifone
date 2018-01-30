@@ -73,7 +73,7 @@ class ThreadController extends Controller
     public function show(Thread $thread)
     {
         if ($thread->inVisible()) {
-            throw new NotFoundHttpException('该帖子已被删除');
+            throw new HifoneException('该帖子已被删除', 410);
         }
         $this->breadcrumb->push([
             $thread->node->name => $thread->node->url,

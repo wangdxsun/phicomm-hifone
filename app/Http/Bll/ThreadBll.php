@@ -211,7 +211,7 @@ class ThreadBll extends BaseBll
     public function showThread(Thread $thread)
     {
         if ($thread->inVisible()) {
-            throw new NotFoundHttpException('该帖子已被删除');
+            throw new HifoneException('该帖子已被删除', 410);
         }
         event(new ThreadWasViewedEvent(clone $thread));
 
