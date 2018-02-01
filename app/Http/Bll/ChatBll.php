@@ -62,7 +62,7 @@ class ChatBll extends BaseBll
             'userId' => $from->id,
 
             'msg_type' => '1',//推送消息类型 0.通知,1.消息
-            'outline' => mb_substr(Input::has('message') ? Input::get('message') : "[图片]", 0, 26),
+            'outline' => mb_substr(Input::has('message') ? app('parser.emotion')->reverseParseEmotionAndImage(Input::get('message')) : "[图片]", 0, 26),
             'uid' => $to->phicomm_id,
         );
         $this->pushMessage($data);
@@ -89,14 +89,14 @@ class ChatBll extends BaseBll
         }
         if (Input::has('message')) {
             if (Auth::user()->can('manage_threads')) {
-                $message = app('parser.at')->parse(request('message'));
-                $message = app('parser.emotion')->parse($message);
-                $messages[] = app('parser.markdown')->convertMarkdownToHtml($message);
+//                $message = app('parser.link')->parse(request('message'));
+                $message = app('parser.markdown')->convertMarkdownToHtml(request('message'));
+                $message = app('parser.at')->parse($message);
+                $messages[] = app('parser.emotion')->parse($message);
             } else {
                 $messages[] = app('parser.emotion')->parse(e(request('message')));
             }
         }
-
         return $messages;
     }
 

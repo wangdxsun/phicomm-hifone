@@ -71,9 +71,11 @@ class BaseBll
             $ticker = 'ticker';
         }
 
+        $reverseEmotionAndImage = app('parser.emotion')->reverseParseEmotionAndImage($data['message']);
+
         //根据type构造不同message_content封装到$data
         $array_message = [
-            "content" => $data['message'],
+            "content" => $reverseEmotionAndImage,
             "type" => $data['type'],
             "source" => '1',
             "producer" => '2',
