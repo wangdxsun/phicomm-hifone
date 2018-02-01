@@ -27,7 +27,6 @@ class ParseLink
     {
         foreach ($this->links as $link) {
             $search = $link;
-            //<a href="http://www.w3school.com.cn">W3School</a>
             $replace = '<a href="' . $link . '">' . $link . '</a>';
             $this->post = str_replace($search, $replace, $this->post);
         }
@@ -35,7 +34,7 @@ class ParseLink
 
     protected function getLinks()
     {
-        preg_match_all("/(?<!\"|[^\s])https?:\/\/[^\r\n\s$]*/i", $this->post, $links_tmp);
+        preg_match_all("/(?<!\"|\')https?:\/\/[^\r\n\s]*/i", $this->post, $links_tmp);
         return array_unique($links_tmp[0]);
     }
 
