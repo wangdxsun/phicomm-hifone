@@ -94,7 +94,7 @@ class BaseBll
             'callbackmsginfo' => '',
             'callbackurl' => '',
             'coverimg' => '',
-            'mode' => '0',//0.develop, 1.production
+            'mode' => '1',//0.develop, 1.production
             'msgcontent' => $json_message,
             'msgkind' => '0',
             'msgtype' => $data['msg_type'],
