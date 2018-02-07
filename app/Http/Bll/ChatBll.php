@@ -65,7 +65,8 @@ class ChatBll extends BaseBll
             'outline' => mb_substr(Input::has('message') ? app('parser.emotion')->reverseParseEmotionAndImage(Input::get('message')) : "[图片]", 0, 26),
             'uid' => $to->phicomm_id,
         );
-        $this->pushMessage($data);
+//        $this->pushMessage($data);
+        app('push')->push($data);
 
         return [
             'from' => $from->username,

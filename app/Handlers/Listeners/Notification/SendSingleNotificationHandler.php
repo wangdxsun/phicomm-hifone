@@ -14,6 +14,7 @@ namespace Hifone\Handlers\Listeners\Notification;
 use Auth;
 use Hifone\Events\EventInterface;
 use Hifone\Events\Follow\FollowedWasAddedEvent;
+use Hifone\Events\Reply\ReplyWasPinnedEvent;
 use Hifone\Events\Thread\ThreadWasMarkedExcellentEvent;
 use Hifone\Events\Thread\ThreadWasMovedEvent;
 use Hifone\Events\Favorite\FavoriteWasAddedEvent;
@@ -43,6 +44,8 @@ class SendSingleNotificationHandler
             $this->movedThread($event->target);
         } elseif ($event instanceof ThreadWasPinnedEvent){
             $this->threadPinned($event->target);
+        } elseif ($event instanceof ReplyWasPinnedEvent){
+            $this->replyPinned($event->target);
         }
     }
 
@@ -82,8 +85,15 @@ class SendSingleNotificationHandler
     {
         app('notifier')->notify($action, $user, $user, $credit);
     }
+
     protected function threadPinned($target)
     {
         app('notifier')->notify('thread_pin', Auth::user(), $target->user, $target);
     }
+
+    protected function replyPinned($target)
+    {
+        app('notifier')->notify('reply_pin', Auth::user(), $target->user, $target);
+    }
+
 }
