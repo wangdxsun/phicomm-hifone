@@ -75,7 +75,7 @@ class BaseBll
 
         //根据type构造不同message_content封装到$data
         $array_message = [
-            "content" => $reverseEmotionAndImage,
+            "content" => mb_substr($reverseEmotionAndImage, 0, 100),
             "type" => $data['type'],
             "source" => '1',
             "producer" => '2',
