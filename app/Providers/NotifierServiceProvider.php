@@ -12,6 +12,7 @@
 namespace Hifone\Providers;
 
 use Hifone\Services\Notifier\Notifier;
+use Hifone\Services\Notifier\Pusher;
 use Illuminate\Support\ServiceProvider;
 
 class NotifierServiceProvider extends ServiceProvider
@@ -43,6 +44,10 @@ class NotifierServiceProvider extends ServiceProvider
         $this->app->singleton('notifier', function ($app) {
             return new Notifier();
         });
+
+        $this->app->singleton('push', function ($app) {
+            return new Pusher();
+        });
     }
 
     /**
@@ -54,6 +59,7 @@ class NotifierServiceProvider extends ServiceProvider
     {
         return [
             'notifier',
+            'push',
         ];
     }
 }
