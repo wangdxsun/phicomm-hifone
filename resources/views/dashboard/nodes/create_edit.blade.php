@@ -19,7 +19,7 @@
             @endif
             @include('partials.errors')
                 <fieldset>
-                {{--安卓端板块图片--}}
+                {{--安卓端版块图片--}}
                 <div class="form-group row">
                     <div class="col-xs-4">
                         <label>{{ '安卓端首页热门版块图片' }}</label><br>
@@ -117,7 +117,7 @@
                     </div>
 
                     <div class="col-xs-4">
-                        <label>{{ 'H5端板块列表图片' }}</label><br>
+                        <label>{{ 'H5端版块列表图片' }}</label><br>
                         <el-upload
                                 class="avatar-uploader"
                                 action="/upload_image"
@@ -242,7 +242,7 @@
         el: '#app',
         data: function () {
             return {
-                //安卓端板块图片
+                //安卓端版块图片
                 imageUrlAndroid: "{{ isset($node) ? ($node->android_icon) : (Input::old('node')['android_icon']) }}",
                 imageListUrlAndroid: "{{ isset($node) ? ($node->android_icon_list) : (Input::old('node')['android_icon_list']) }}",
                 imageDetailUrlAndroid: "{{ isset($node) ? ($node->android_icon_detail) : (Input::old('node')['android_icon_detail']) }}",
@@ -262,7 +262,7 @@
             };
         },
         methods: {
-            //安卓端板块图片
+            //安卓端版块图片
             imageUrlAndroidHandle: function (res) {
                 this.imageUrlAndroid = res.filename;
             },

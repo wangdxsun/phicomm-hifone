@@ -33,19 +33,20 @@ class Notifier
             'body'          => ($object instanceof Thread) ? '': (isset($object->body) ? $object->body : ''),
             'type'          => $type,
         ];
-        if ($type == 'reply_like' || $type == 'thread_like' || $type == 'user_follow') {
+        if ($type == 'reply_like' || $type == 'thread_like' || $type == 'user_follow'
+        || $type == 'thread_pin' || $type == 'reply_pin') {
             $toUser->increment('notification_system_count', 1);
         } elseif ($type == 'reply_reply' || $type == 'reply_mention') {
             $toUser->increment('notification_at_count', 1);
-
-            //消息推送
-            $this->push($author, $toUser, "1002", $object);
+//            //消息推送
+//            $this->pushNotify($author, $toUser, "1002", $object);
         } elseif ($type == 'thread_new_reply') {
             $toUser->increment('notification_reply_count', 1);
-
-            //消息推送
-            $this->push($author, $toUser, "1001", $object);
+//            //消息推送
+//            $this->pushNotify($author, $toUser, "1001", $object);
         }
+        //消息推送
+        $this->pushNotify($author, $toUser, $type, $object);
 
         $object->notifications()->create($data);
     }
@@ -67,12 +68,12 @@ class Notifier
                 $toUser->increment('notification_reply_count');
 
                 //消息推送
-                $this->push($author, $toUser, "1001", $object);
+                $this->pushNotify($author, $toUser, "1001", $object);
             } elseif ($type == 'reply_mention') {
                 $toUser->increment('notification_at_count');
 
                 //消息推送
-                $this->push($author, $toUser, "1002", $object);
+                $this->pushNotify($author, $toUser, "1002", $object);
             } elseif ($type == 'followed_user_new_thread') {
                 $toUser->increment('notification_follow_count');
             }
@@ -111,8 +112,12 @@ class Notifier
      * @param $type thread_new_reply:1001; reply_reply, reply_mention:1002;
      * @param $object reply
      */
-    protected function push($from, $to, $type, $object)
+    protected function pushNotify($from, $to, $type, $object)
     {
+        $message = $this->makeMessage();
+
+
+
         $replyBody = ($object instanceof Thread) ? '': (isset($object->body) ? $object->body : '');
         $replyBodyOriginal = ($object instanceof Thread) ? '': (isset($object->body_original) ? $object->body_original : '');
         $title = $type == '1001' ? "【" . $from->username . "】评论了你" : "【" . $from->username . "】回复中提到了你";
@@ -132,6 +137,17 @@ class Notifier
             'uid' => $to->phicomm_id,
         );
 
-        (new BaseBll())->pushMessage($data);
+//        (new BaseBll())->pushMessage($data);
+        app('push')->push($data);
+    }
+
+    protected function makeTitle()
+    {
+
+    }
+
+    protected function makeMessage($from, $to, $type, $object)
+    {
+
     }
 }

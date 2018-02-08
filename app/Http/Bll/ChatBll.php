@@ -50,9 +50,7 @@ class ChatBll extends BaseBll
         $from = Auth::user();
 
         $messages = $this->getMessages();
-
         event(new NewChatMessageEvent($from, $to, $messages[0]));
-
         return [
             'from' => $from->username,
             'to' => $to->username,
@@ -74,14 +72,14 @@ class ChatBll extends BaseBll
         }
         if (Input::has('message')) {
             if (Auth::user()->can('manage_threads')) {
-                $message = app('parser.at')->parse(request('message'));
-                $message = app('parser.emotion')->parse($message);
-                $messages[] = app('parser.markdown')->convertMarkdownToHtml($message);
+                $message = app('parser.link')->parse(request('message'));
+//                $message = app('parser.markdown')->convertMarkdownToHtml(request('message'));
+                $message = app('parser.at')->parse($message);
+                $messages[] = app('parser.emotion')->parse($message);
             } else {
                 $messages[] = app('parser.emotion')->parse(e(request('message')));
             }
         }
-
         if (count($messages) == 0) {
             throw new HifoneException('私信内容不能为空');
         }

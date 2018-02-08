@@ -111,7 +111,7 @@ class Handler implements ExceptionHandlerContract
         }
 
         if ($request->ajax() || $request->wantsJson() || $request->isApi()) {
-            return new JsonResponse(['msg' => $e->getMessage()], $e->getCode() ?: 400);
+            return new JsonResponse(['msg' => $e->getMessage(), 'code' => $e->getCode() ?: 400], $e->getCode() ?: 400);
         } elseif ($this->isHttpException($e)) {
             return $this->toIlluminateResponse($this->renderHttpException($e), $e);
         } else {

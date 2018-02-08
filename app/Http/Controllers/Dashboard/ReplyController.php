@@ -16,6 +16,7 @@ use Hifone\Commands\Reply\UpdateReplyCommand;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Reply\RepliedWasAddedEvent;
 use Hifone\Events\Reply\ReplyWasAddedEvent;
+use Hifone\Events\Reply\ReplyWasPinnedEvent;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
@@ -163,6 +164,7 @@ class ReplyController extends Controller
             $reply->increment('order', 1);
             $this->updateOpLog($reply, '置顶');
             event(new PinWasAddedEvent($reply->user, 'Reply'));
+            event(new ReplyWasPinnedEvent($reply));
         }
 
         return Redirect::back()->withSuccess('恭喜，操作成功');

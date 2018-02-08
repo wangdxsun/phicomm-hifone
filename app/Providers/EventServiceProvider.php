@@ -118,7 +118,7 @@ class EventServiceProvider extends ServiceProvider
         \Hifone\Events\Reply\RepliedWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
-        //置顶
+        //置顶加积分
         \Hifone\Events\Pin\PinWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
@@ -140,8 +140,12 @@ class EventServiceProvider extends ServiceProvider
         \Hifone\Events\Thread\ThreadWasMarkedExcellentEvent::class => [
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
-        //
+        //置顶帖子发通知
         \Hifone\Events\Thread\ThreadWasPinnedEvent::class => [
+            \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
+        ],
+        //置顶评论/回复发通知
+        \Hifone\Events\Reply\ReplyWasPinnedEvent::class => [
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
 

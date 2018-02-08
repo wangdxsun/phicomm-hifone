@@ -10,16 +10,16 @@ namespace Hifone\Http\Bll;
 
 use Hifone\Commands\Like\AddLikeCommand;
 use Auth;
+use Hifone\Exceptions\HifoneException;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class LikeBll extends BaseBll
 {
     public function likeThread($thread)
     {
         if ($thread->status <> Thread::VISIBLE) {
-            throw new NotFoundHttpException('该帖子已被删除');
+            throw new HifoneException('该帖子已被删除', 410);
         }
         dispatch(new AddLikeCommand($thread));
 
@@ -29,7 +29,7 @@ class LikeBll extends BaseBll
     public function likeReply($reply)
     {
         if ($reply->status <> Reply::VISIBLE) {
-            throw new NotFoundHttpException('该评论已被删除');
+            throw new HifoneException('该评论已被删除');
         }
         dispatch(new AddLikeCommand($reply));
 

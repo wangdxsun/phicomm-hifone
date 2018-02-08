@@ -30,11 +30,39 @@ class ParseEmotion
 
     protected function getEmotions()
     {
-        preg_match_all("/\[([^]@<\r\n\s]*)\]/i", $this->post, $atlist_tmp);
+        preg_match_all("/\[([^]@<\r\n\s]*)\]/i", $this->post, $emotions_temp);
         $userEmotions = [];
-        foreach ($atlist_tmp[1] as $k => $v) {
+        foreach ($emotions_temp[1] as $k => $v) {
             $userEmotions[] = '['.$v.']';
         }
         return array_unique($userEmotions);
+    }
+
+    public function reverseParseEmotionAndImage($post)
+    {
+        $this->post= $post;
+        preg_match_all("/<img\sclass=\"face\"\s+src=\"[^>]*(\/images\/emotion\/face-\w+\.png)\">/i", $this->post, $emotions_temp);
+        $this->userEmotions[0] = array_unique($emotions_temp[0]);
+        $this->userEmotions[1] = array_unique($emotions_temp[1]);
+
+        //替换表情
+        foreach ($this->userEmotions[1] as $key => $value) {
+            $search = $this->userEmotions[0][$key];
+            $wordOfEmotion = Emotion::where('url', $value)->first();
+            $replace = $wordOfEmotion->emotion;
+            $this->post = str_replace($search, $replace, $this->post);
+        }
+
+        //替换图片
+        preg_match_all("/<img\ssrc=[^>]*>/i", $this->post, $images_temp);
+        if (count($images_temp[0]) > 0) {
+            foreach ($images_temp[0] as $image) {
+                $search = $image;
+                $replace = '[图片]';
+                $this->post = str_replace($search, $replace, $this->post);
+            }
+        }
+
+        return $this->post;
     }
 }

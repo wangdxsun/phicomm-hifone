@@ -30,7 +30,7 @@ class FollowBll extends BaseBll
     public function followThread($thread)
     {
         if ($thread->status <> Thread::VISIBLE) {
-            throw new NotFoundHttpException('该帖子已被删除');
+            throw new HifoneException('该帖子已被删除', 410);
         }
         if ($thread->user->id == Auth::id()) {
             throw new HifoneException('自己的帖子无需关注');

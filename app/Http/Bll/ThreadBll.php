@@ -22,6 +22,7 @@ use Hifone\Repositories\Criteria\Thread\Filter;
 use Hifone\Repositories\Criteria\Thread\Search;
 use DB;
 use Hifone\Services\Filter\WordsFilter;
+use Illuminate\Pagination\Paginator;
 use Input;
 use Auth;
 use Config;
@@ -45,21 +46,30 @@ class ThreadBll extends BaseBll
 
     public function search($keyword)
     {
-        $this->searchWords($keyword);
-        $threads = Thread::searchThread($keyword)->load(['user', 'node'])->paginate(15);
+        if (empty($keyword)) {
+            $threads = new Paginator([], 15);
+        } else {
+            $this->searchWords($keyword);
+            $threads = Thread::searchThread($keyword)->load(['user', 'node'])->paginate(15);
+        }
 
         return $threads;
     }
 
-    public function webSearch()
+    public function webSearch($keyword)
     {
-        $threads = Thread::searchThread(request('q'));
-        $this->searchWords(request('q'));
-        foreach ($threads as $thread) {
-            unset($thread['node']);
-            unset($thread['user']);
+        if (empty($keyword)) {
+            $threads = new Paginator([], 0, 15);
+        } else {
+            $threads = Thread::searchThread($keyword);
+            $this->searchWords($keyword);
+            foreach ($threads as $thread) {
+                unset($thread['node']);
+                unset($thread['user']);
+            }
+            $threads = $threads->load(['user', 'node', 'lastReplyUser']);
         }
-        $threads = $threads->load(['user', 'node', 'lastReplyUser']);
+
         return $threads;
     }
 
@@ -201,7 +211,7 @@ class ThreadBll extends BaseBll
     public function showThread(Thread $thread)
     {
         if ($thread->inVisible()) {
-            throw new NotFoundHttpException('该帖子已被删除');
+            throw new HifoneException('该帖子已被删除', 410);
         }
         event(new ThreadWasViewedEvent(clone $thread));
 

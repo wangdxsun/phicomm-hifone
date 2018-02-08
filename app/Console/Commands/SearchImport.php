@@ -52,6 +52,9 @@ class SearchImport extends Command
             $id = $this->option('id');
             if ($id) {
                 $user = User::find($id);
+                if (!$user) {
+                    $this->error("User $id does't exist");
+                }
                 $user->removeFromIndex();
                 $user->addToIndex();
                 $this->info("Import user $id into ElasticSearch Successfully");
@@ -72,6 +75,9 @@ class SearchImport extends Command
             $id = $this->option('id');
             if ($id) {
                 $thread = Thread::find($id);
+                if (!$thread) {
+                    $this->error("Thread $id does't exist");
+                }
                 $thread->removeFromIndex();
                 $thread->body = strip_tags($thread->body);
                 $thread->addToIndex();
