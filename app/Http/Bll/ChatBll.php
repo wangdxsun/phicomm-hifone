@@ -11,6 +11,7 @@ namespace Hifone\Http\Bll;
 use Carbon\Carbon;
 use Hifone\Commands\Image\UploadBase64ImageCommand;
 use Hifone\Events\Chat\NewChatMessageEvent;
+use Hifone\Exceptions\HifoneException;
 use Hifone\Models\Chat;
 use Hifone\Models\User;
 use Input;
@@ -49,23 +50,8 @@ class ChatBll extends BaseBll
         $from = Auth::user();
 
         $messages = $this->getMessages();
+
         event(new NewChatMessageEvent($from, $to, $messages[0]));
-
-        $to->increment('notification_chat_count', 1);
-        //友盟消息推送
-        $data = array(
-            'message' => $messages[0],
-            'type' => '1004',
-            'avatar' => $from->avatar_url,
-            'title' => $from->username,
-            'time' => date('Y-m-d H:i', strtotime('now')),
-            'userId' => $from->id,
-
-            'msg_type' => '1',//推送消息类型 0.通知,1.消息
-            'outline' => mb_substr(Input::has('message') ? Input::get('message') : "[图片]", 0, 26),
-            'uid' => $to->phicomm_id,
-        );
-        $this->pushMessage($data);
 
         return [
             'from' => $from->username,
@@ -73,7 +59,6 @@ class ChatBll extends BaseBll
             'message' => $messages[0],
         ];
     }
-
 
     public function getMessages()
     {
@@ -97,27 +82,12 @@ class ChatBll extends BaseBll
             }
         }
 
+        if (count($messages) == 0) {
+            throw new HifoneException('私信内容不能为空');
+        }
+
         return $messages;
     }
 
-    public function batchNewMessage($toUsers)
-    {
-        $from = Auth::user();
-        $insert = [];
-        $messages = $this->getMessages();
-        foreach ($toUsers as $to) {
-            foreach ($messages as $message) {
-                $insert[] = [
-                    'from_user_id' => $from->id,
-                    'to_user_id' => $to->id,
-                    'from_to' => $from->id * $to->id + $from->id + $to->id,
-                    'message' => $message,
-                    'created_at'    => Carbon::now()->toDateTimeString(),
-                    'updated_at'    => Carbon::now()->toDateTimeString(),
-                ];
-            }
-        }
-        Chat::insert($insert);//批量创建
-    }
 
 }

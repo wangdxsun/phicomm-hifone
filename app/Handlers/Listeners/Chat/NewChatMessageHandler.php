@@ -13,6 +13,7 @@ namespace Hifone\Handlers\Listeners\Chat;
 
 use Hifone\Events\Chat\NewChatMessageEvent;
 use Hifone\Models\Chat;
+use Input;
 
 class NewChatMessageHandler
 {
@@ -24,5 +25,22 @@ class NewChatMessageHandler
             'from_to' => $event->from->id * $event->to->id + $event->from->id + $event->to->id,
             'message' => $event->message,
         ]);
+
+        $event->to->increment('notification_chat_count', 1);
+        //友盟消息推送
+        $data = array(
+            'message' => $event->message,
+            'type' => '1004',
+            'avatar' => $event->from->avatar_url,
+            'title' => $event->from->username,
+            'time' => date('Y-m-d H:i', strtotime('now')),
+            'userId' => $event->from->id,
+
+            'msg_type' => '1',//推送消息类型 0.通知,1.消息
+            'outline' => mb_substr(Input::has('message') ? Input::get('message') : "[图片]", 0, 26),
+            'uid' => $event->to->phicomm_id,
+        );
+        //todo 推消息
+        app('push')->push($data);
     }
 }

@@ -23,9 +23,6 @@ final class NewChatMessageEvent implements EventInterface, ShouldBroadcast
 
     public $message;
 
-    /**
-     * Create a new thread has reported event instance.
-     */
     public function __construct(User $from, User $to, $message)
     {
         $this->from = $from;

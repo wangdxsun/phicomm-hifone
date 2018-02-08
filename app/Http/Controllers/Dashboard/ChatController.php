@@ -2,6 +2,7 @@
 namespace Hifone\Http\Controllers\Dashboard;
 
 use Hifone\Http\Controllers\Controller;
+use Hifone\Jobs\SendChat;
 use Hifone\Models\Chat;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
@@ -31,6 +32,16 @@ class ChatController extends Controller
             ->withCurrentNav('lists');
     }
 
+    public function sendChatBackground($users, ChatBll $chatBll)
+    {
+        $messages = $chatBll->getMessages();
+        foreach ($users as $user) {
+            foreach ($messages as $message) {
+                $this->dispatch(new SendChat(Auth::user(), $user, $message));
+            }
+        }
+    }
+
     public function chatStore(ChatBll $chatBll)
     {
         ini_set('memory_limit', '-1');
@@ -46,10 +57,8 @@ class ChatController extends Controller
                 ->withInput();
         } elseif ($data['userType'] == 3) {
             //为所有用户发送私信
-            User::where('id', '<>', Auth::user()->id)->chunk(1000, function($users) use ($chatBll){
-                $chatBll->batchNewMessage($users);
-            });
-            User::where('id', '<>', Auth::user()->id)->increment('notification_chat_count', 1);
+            $users = User::where('id', '<>', Auth::user()->id)->get();
+            $this->sendChatBackground($users, $chatBll);
             return Redirect::route('dashboard.chat.send')
                 ->withSuccess('成功为所有用户发送私信')
                 ->withInput();
@@ -67,16 +76,16 @@ class ChatController extends Controller
                 $userIds[] = $reply->user->id;
             }
             $users = User::whereIn('id',$userIds)->whereNotIn('id', [Auth::user()->id])->get();
-            User::whereIn('id', $userIds)->increment('notification_chat_count', 1);
-            $chatBll->batchNewMessage($users);
+
+            $this->sendChatBackground($users, $chatBll);
+
             return Redirect::route('dashboard.chat.send')
                 ->withSuccess('成功为帖子'.$data['thread_id']. '内满足条件的所有用户发送私信')
                 ->withInput();
         } elseif ($data['userType'] == 9) {
             $userIds = explode(',',$data['userIds']);
             $users = User::whereIn('id', $userIds)->whereNotIn('id', [Auth::user()->id])->get();
-            User::whereIn('id', $userIds)->increment('notification_chat_count', 1);
-            $chatBll->batchNewMessage($users);
+            $this->sendChatBackground($users, $chatBll);
             return Redirect::route('dashboard.chat.send')
                 ->withSuccess('成功为满足条件的所有用户发送私信');
         } else {
