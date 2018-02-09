@@ -87,5 +87,4 @@ class ChatBll extends BaseBll
         return $messages;
     }
 
-
 }

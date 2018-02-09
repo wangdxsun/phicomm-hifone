@@ -69,6 +69,7 @@ class Notification extends BaseModel implements HasPresenter
         return $query->where('type', $type);
     }
 
+    //thread_follow 关注帖子尚未考虑
     public function scopeAt($query)
     {
         return $query->whereIn('type', ['reply_mention', 'reply_reply']);
@@ -89,10 +90,10 @@ class Notification extends BaseModel implements HasPresenter
         //thread_follow 关注帖子
         //reply_like 点赞回复
         //thread_like 点赞帖子
-        //thread_mark_excellent 帖子被置为精华
-        //thread_pin 帖子被置顶
         //user_follow 用户关注
+        //thread_pin 帖子被置顶
         //thread_favorite 收藏帖子
+        //thread_mark_excellent 帖子被置为精华
         return $query->whereIn('type', ['reply_like', 'thread_like', 'user_follow']);
     }
 

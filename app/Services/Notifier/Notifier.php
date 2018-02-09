@@ -12,6 +12,7 @@
 namespace Hifone\Services\Notifier;
 
 use Carbon\Carbon;
+use Hifone\Exceptions\HifoneException;
 use Hifone\Http\Bll\BaseBll;
 use Hifone\Models\Notification;
 use Hifone\Models\Reply;
@@ -33,18 +34,16 @@ class Notifier
             'body'          => ($object instanceof Thread) ? '': (isset($object->body) ? $object->body : ''),
             'type'          => $type,
         ];
-        if ($type == 'reply_like' || $type == 'thread_like' || $type == 'user_follow'
-        || $type == 'thread_pin' || $type == 'reply_pin') {
+        //小红点 以下类型暂不计数
+//        || thread_favorite || $type == 'thread_pin' || $type == 'reply_pin' || thread_mark_excellent
+        if ($type == 'reply_like' || $type == 'thread_like' || $type == 'user_follow') {
             $toUser->increment('notification_system_count', 1);
         } elseif ($type == 'reply_reply' || $type == 'reply_mention') {
             $toUser->increment('notification_at_count', 1);
-//            //消息推送
-//            $this->pushNotify($author, $toUser, "1002", $object);
         } elseif ($type == 'thread_new_reply') {
             $toUser->increment('notification_reply_count', 1);
-//            //消息推送
-//            $this->pushNotify($author, $toUser, "1001", $object);
         }
+
         //消息推送
         $this->pushNotify($author, $toUser, $type, $object);
 
@@ -64,18 +63,16 @@ class Notifier
                 'body'          => $content,
                 'type'          => $type,
             ];
-            if ($type == 'thread_new_reply') {
-                $toUser->increment('notification_reply_count');
-
-                //消息推送
-                $this->pushNotify($author, $toUser, "1001", $object);
-            } elseif ($type == 'reply_mention') {
+            //小红点
+            if ($type == 'reply_mention') {
                 $toUser->increment('notification_at_count');
-
-                //消息推送
-                $this->pushNotify($author, $toUser, "1002", $object);
             } elseif ($type == 'followed_user_new_thread') {
                 $toUser->increment('notification_follow_count');
+            }
+
+            //消息推送 (暂不考虑thread_mention)
+            if ($type == 'reply_mention' || $type == 'thread_mention') {
+                $this->pushNotify($author, $toUser, $type, $object);
             }
 
             $object->notifications()->create($data);
@@ -109,19 +106,18 @@ class Notifier
     /**
      * @param $from
      * @param $to
-     * @param $type thread_new_reply:1001; reply_reply, reply_mention:1002;
+     * @param $type 类型映射
      * @param $object reply
      */
     protected function pushNotify($from, $to, $type, $object)
     {
-        $message = $this->makeMessage();
-
-
+//        $message = $this->makeMessage();
 
         $replyBody = ($object instanceof Thread) ? '': (isset($object->body) ? $object->body : '');
         $replyBodyOriginal = ($object instanceof Thread) ? '': (isset($object->body_original) ? $object->body_original : '');
-        $title = $type == '1001' ? "【" . $from->username . "】评论了你" : "【" . $from->username . "】回复中提到了你";
 
+        $title = $this->makeTitle($from, $type);
+        
         //友盟消息推送
         $data = array(
             'message' => $replyBody,
@@ -137,17 +133,66 @@ class Notifier
             'uid' => $to->phicomm_id,
         );
 
-//        (new BaseBll())->pushMessage($data);
         app('push')->push($data);
     }
 
-    protected function makeTitle()
+    protected function makeTitle($operator, $typeStr)
     {
-
+        switch ($typeStr){
+            case 'thread_new_reply'://评论帖子
+                return "【" . $operator->username . "】评论了你";
+            case 'reply_reply'://回复
+                return "【" . $operator->username . "】回复中提到了你";
+            case 'reply_mention'://回复@我
+                return "【" . $operator->username . "】回复中提到了你";
+            case 'thread_mention'://帖子@我
+                return "【" . $operator->username . "】帖子中提到了你";
+            case 'user_follow'://关注用户
+                return "【" . $operator->username . "】关注了你";
+            case 'thread_like'://赞帖子
+                return "【" . $operator->username . "】赞了你的帖子";
+            case 'reply_like'://赞回复
+                return "【" . $operator->username . "】赞了你的回复";
+            case 'thread_favorite'://收藏（帖子）
+                return "【" . $operator->username . "】收藏了你的帖子";
+            case 'thread_pin'://置顶帖子
+                return "【" . $operator->username . "】置顶了你的帖子";
+            case 'reply_pin'://置顶评论回复
+                return "【" . $operator->username . "】置顶你的回复";
+            case 'thread_mark_excellent'://加精华
+                return "【" . $operator->username . "】加精了你的帖子";
+            default :
+                throw new HifoneException("推送类型 $typeStr 不支持");
+        }
     }
 
     protected function makeMessage($from, $to, $type, $object)
     {
+        $message = ($object instanceof Thread) ? '': (isset($object->body) ? $object->body : '');
 
+        switch ($type){
+            case 'thread_new_reply'://评论帖子
+                return "【" . $operator->username . "】评论了你";
+            case 'reply_reply'://回复
+                return "【" . $operator->username . "】回复中提到了你";
+            case 'reply_mention'://@我
+                return "【" . $operator->username . "】回复中提到了你";
+            case 'user_follow'://关注用户
+                return "【" . $operator->username . "】关注了你";
+            case 'thread_like'://赞帖子
+                return "【" . $operator->username . "】赞了你的帖子";
+            case 'reply_like'://赞回复
+                return "【" . $operator->username . "】赞了你的回复";
+            case 'thread_favorite'://收藏（帖子）
+                return "【" . $operator->username . "】收藏了你的帖子";
+            case 'thread_pin'://置顶帖子
+                return "【" . $operator->username . "】置顶了你的帖子";
+            case 'reply_pin'://置顶评论回复
+                return "【" . $operator->username . "】置顶你的回复";
+            case 'thread_mark_excellent'://加精华
+                return "【" . $operator->username . "】加精了你的帖子";
+            default :
+                throw new HifoneException("推送类型 $typeStr 不支持");
+        }
     }
 }

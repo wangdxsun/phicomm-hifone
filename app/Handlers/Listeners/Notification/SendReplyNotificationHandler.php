@@ -25,10 +25,10 @@ class SendReplyNotificationHandler
     {
         $thread = $reply->thread;
         // Notify the author
-        app('notifier')->batchNotify(
+        app('notifier')->notify(
             'thread_new_reply',
             $reply->user,
-            [$thread->user],
+            $thread->user,
             $reply,
             $reply->body
         );

@@ -9,6 +9,8 @@
 namespace Hifone\Services\Notifier;
 
 
+use Hifone\Exceptions\HifoneException;
+
 class Pusher
 {
     /**
@@ -30,11 +32,7 @@ class Pusher
      * url	信息的URL 	string  私信类消息的对话页面链接   帖子类消息的帖子链接  系统提示类消息链接为空
      *
      * $data['type'] 消息类型 社区定义如下：
-     * 1001 —— 评论帖子
-     * 1002 —— 回复帖子的评论
-     * 1003 —— 管理员操作 （帖子置顶、高亮、提升到首页）
-     * 1004 —— 私信
-     * 1005 —— 系统提示
+     *
      */
     public function push($data)
     {
@@ -44,11 +42,12 @@ class Pusher
         }
 
         $reverseEmotionAndImage = app('parser.emotion')->reverseParseEmotionAndImage($data['message']);
+        $type = $this->getType($data['type']);
 
-        //根据type构造不同message_content封装到$data
+        //社区业务参数 根据type构造不同message_content封装到$data
         $array_message = [
             "content" => mb_substr($reverseEmotionAndImage, 0, 100),
-            "type" => $data['type'],
+            "type" => $type,
             "source" => '1',
             "producer" => '2',
             "isBroadcast" => '0',
@@ -58,12 +57,19 @@ class Pusher
             "time" => $data['time'],
             "userId" => $data['userId'],
         ];
-        if ("1001" == $data['type'] || "1002" == $data['type']) {
-            $array_message += ["replyId" => $data['replyId']];
+        //用户关注无需提供thread_id和reply_id
+        //否则接口根据reply_id跳当前评论，不提供跳帖子详情
+        if ('user_follow' != $data['type'] && 'chat' != $data['type']) {
+            $array_message['threadId'] = $data['threadId'];
+            if ("reply_reply" == $data['type'] || "reply_mention" == $data['type']
+                || "reply_like" == $data['type'] || "reply_pin" == $data['type']) {
+                $array_message['replyId'] = $data['replyId'];
+            }
         }
 
         $json_message = json_encode($array_message);
 
+        //云服务参数
         $parameters = array(
             'callbackmsginfo' => '',
             'callbackurl' => '',
@@ -88,4 +94,46 @@ class Pusher
         return $output;
     }
 
+    /**
+     * @param $typeStr
+     *    1001 评论
+     *    1002 回复/帖子@我/回复@我
+     *    1003 收到的关注
+     *    1004 私信
+     *    1005 收到的赞（赞帖子、赞评论/回复）
+     *    1006 收到收藏
+     *    1007 管理员置顶（帖子、评论/回复）
+     *    1008 管理员加精华
+     * @return string
+     * @throws HifoneException
+     */
+    protected function getType($typeStr)
+    {
+        switch ($typeStr){
+            case 'thread_new_reply'://评论帖子 跳帖子详情 提供
+                return '1001';
+            case 'reply_reply'://回复 跳当前评论
+                return '1002';
+            case 'reply_mention'://回复@我 跳当前评论
+                return '1002';
+            case 'thread_mention'://帖子@我 跳帖子详情
+                return '1002';
+            case 'user_follow'://关注用户 跳粉丝列表
+                return '1003';
+            case 'chat'://私信 跳聊天记录
+                return '1004';
+            case 'thread_like'://赞帖子 跳帖子详情
+            case 'reply_like'://赞回复 跳当前评论
+                return '1005';
+            case 'thread_favorite'://收藏（帖子） 跳帖子详情
+                return '1006';
+            case 'thread_pin'://置顶帖子 跳帖子详情
+            case 'reply_pin'://置顶评论 跳当前评论
+                return '1007';
+            case 'thread_mark_excellent'://加精华 跳帖子详情
+                return '1008';
+            default :
+                throw new HifoneException("推送类型 $typeStr 不支持");
+        }
+    }
 }
