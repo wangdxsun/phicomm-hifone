@@ -656,6 +656,7 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
         'CreateCreditRulesTable' => __DIR__ . '/../..' . '/database/migrations/2016_06_21_091855_create_credit_rules_table.php',
         'CreateCreditsTable' => __DIR__ . '/../..' . '/database/migrations/2016_06_21_091827_create_credits_table.php',
         'CreateEntrustTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_29_013410_create_entrust_table.php',
+        'CreateFailedJobsTable' => __DIR__ . '/../..' . '/database/migrations/2018_02_09_092649_create_failed_jobs_table.php',
         'CreateFavoritesTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_29_013551_create_favorites_table.php',
         'CreateFollowsTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_29_013638_create_follows_table.php',
         'CreateIdentitiesTable' => __DIR__ . '/../..' . '/database/migrations/2016_05_31_093935_create_identities_table.php',
