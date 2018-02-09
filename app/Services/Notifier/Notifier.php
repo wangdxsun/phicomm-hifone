@@ -111,16 +111,12 @@ class Notifier
      */
     protected function pushNotify($from, $to, $type, $object)
     {
-//        $message = $this->makeMessage();
-
-        $replyBody = ($object instanceof Thread) ? '': (isset($object->body) ? $object->body : '');
-        $replyBodyOriginal = ($object instanceof Thread) ? '': (isset($object->body_original) ? $object->body_original : '');
-
+        $message = $this->makeMessage($type, $object);
         $title = $this->makeTitle($from, $type);
         
         //友盟消息推送
         $data = array(
-            'message' => $replyBody,
+            'message' => $message,
             'type' => $type,
             'avatar' => $from->avatar_url,
             'title' => $title,
@@ -129,7 +125,7 @@ class Notifier
             'replyId' => ($object instanceof Thread) ? : $object->id,
 
             'msg_type' => '1',//推送消息类型 0.通知,1.消息
-            'outline' => mb_substr($replyBodyOriginal, 0, 26),
+            'outline' => '',
             'uid' => $to->phicomm_id,
         );
 
@@ -166,33 +162,17 @@ class Notifier
         }
     }
 
-    protected function makeMessage($from, $to, $type, $object)
+    protected function makeMessage($type, $object)
     {
-        $message = ($object instanceof Thread) ? '': (isset($object->body) ? $object->body : '');
-
-        switch ($type){
-            case 'thread_new_reply'://评论帖子
-                return "【" . $operator->username . "】评论了你";
-            case 'reply_reply'://回复
-                return "【" . $operator->username . "】回复中提到了你";
-            case 'reply_mention'://@我
-                return "【" . $operator->username . "】回复中提到了你";
-            case 'user_follow'://关注用户
-                return "【" . $operator->username . "】关注了你";
-            case 'thread_like'://赞帖子
-                return "【" . $operator->username . "】赞了你的帖子";
-            case 'reply_like'://赞回复
-                return "【" . $operator->username . "】赞了你的回复";
-            case 'thread_favorite'://收藏（帖子）
-                return "【" . $operator->username . "】收藏了你的帖子";
-            case 'thread_pin'://置顶帖子
-                return "【" . $operator->username . "】置顶了你的帖子";
-            case 'reply_pin'://置顶评论回复
-                return "【" . $operator->username . "】置顶你的回复";
-            case 'thread_mark_excellent'://加精华
-                return "【" . $operator->username . "】加精了你的帖子";
-            default :
-                throw new HifoneException("推送类型 $typeStr 不支持");
+        $message = ($object instanceof Thread) ? $object->title: (isset($object->body) ? $object->body : '');
+        if ($object instanceof Thread) {
+            $message = $object->title;
+        } elseif ($object instanceof Reply) {
+            $message = $object->body;
+        } elseif ($object instanceof User) {
+            $message = "查看详情";
         }
+
+        return $message;
     }
 }
