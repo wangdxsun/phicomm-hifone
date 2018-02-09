@@ -34,106 +34,32 @@ class Pusher
      * $data['type'] 消息类型 社区定义如下：
      *
      */
-    public function push($data)
+    public function push($uid, $data, $outline = '', $msg_type = '1')
     {
-        $ticker = '';
-        if($data['msg_type'] == '0'){
-            $ticker = 'ticker';
-        }
-
-        $reverseEmotionAndImage = app('parser.emotion')->reverseParseEmotionAndImage($data['message']);
-        $type = $this->getType($data['type']);
-
-        //社区业务参数 根据type构造不同message_content封装到$data
-        $array_message = [
-            "content" => mb_substr($reverseEmotionAndImage, 0, 100),
-            "type" => $type,
-            "source" => '1',
-            "producer" => '2',
-            "isBroadcast" => '0',
-            "isMulticast" => '0',
-            "avatar" => $data['avatar'],
-            "title" => $data['title'],
-            "time" => $data['time'],
-            "userId" => $data['userId'],
-        ];
-        //用户关注无需提供thread_id和reply_id
-        //否则接口根据reply_id跳当前评论，不提供跳帖子详情
-        if ('user_follow' != $data['type'] && 'chat' != $data['type']) {
-            $array_message['threadId'] = $data['threadId'];
-            if ("reply_reply" == $data['type'] || "reply_mention" == $data['type']
-                || "reply_like" == $data['type'] || "reply_pin" == $data['type']) {
-                $array_message['replyId'] = $data['replyId'];
-            }
-        }
-
-        $json_message = json_encode($array_message);
+        $ticker = $msg_type == '0' ? 'ticker' : '';
 
         //云服务参数
-        $parameters = array(
+        $parameters = [
             'callbackmsginfo' => '',
             'callbackurl' => '',
             'coverimg' => '',
             'mode' => '1',//0.develop, 1.production
-            'msgcontent' => $json_message,
+            'msgcontent' => json_encode($data),
             'msgkind' => '7',//
-            'msgtype' => $data['msg_type'],
-            'outline' => $data['outline'],
+            'msgtype' => $msg_type,
+            'outline' => $outline,
             'saveRecord' => '1',
             'source' => '1',
             'ticker' => $ticker,
             'timestamp' => date('Y-m-d H:i', strtotime('now')),
             'title' => $data['title'],
-            'uid' => $data['uid'],
+            'uid' => $uid,
             'url' => '',
-        );
+        ];
         //测试环境 114.141.173.53外网 192.168.43.111内网
         $json = curlPost(env('PHIDELIVER'), $parameters);
         $output = json_decode($json, true);
 
         return $output;
-    }
-
-    /**
-     * @param $typeStr
-     *    1001 评论
-     *    1002 回复/帖子@我/回复@我
-     *    1003 收到的关注
-     *    1004 私信
-     *    1005 收到的赞（赞帖子、赞评论/回复）
-     *    1006 收到收藏
-     *    1007 管理员置顶（帖子、评论/回复）
-     *    1008 管理员加精华
-     * @return string
-     * @throws HifoneException
-     */
-    protected function getType($typeStr)
-    {
-        switch ($typeStr){
-            case 'thread_new_reply'://评论帖子 跳帖子详情 提供
-                return '1001';
-            case 'reply_reply'://回复 跳当前评论
-                return '1002';
-            case 'reply_mention'://回复@我 跳当前评论
-                return '1002';
-            case 'thread_mention'://帖子@我 跳帖子详情
-                return '1002';
-            case 'user_follow'://关注用户 跳粉丝列表
-                return '1003';
-            case 'chat'://私信 跳聊天记录
-                return '1004';
-            case 'thread_like'://赞帖子 跳帖子详情
-            case 'reply_like'://赞回复 跳当前评论
-                return '1005';
-            case 'thread_favorite'://收藏（帖子） 跳帖子详情
-                return '1006';
-            case 'thread_pin'://置顶帖子 跳帖子详情
-            case 'reply_pin'://置顶评论 跳当前评论
-                return '1007';
-            case 'thread_mark_excellent'://加精华 跳帖子详情
-                return '1008';
-            default :
-                throw new HifoneException("推送类型 $typeStr 不支持");
-        }
     }
 }

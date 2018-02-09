@@ -73,7 +73,6 @@ class ChatBll extends BaseBll
         if (Input::has('message')) {
             if (Auth::user()->can('manage_threads')) {
                 $message = app('parser.link')->parse(request('message'));
-//                $message = app('parser.markdown')->convertMarkdownToHtml(request('message'));
                 $message = app('parser.at')->parse($message);
                 $messages[] = app('parser.emotion')->parse($message);
             } else {
