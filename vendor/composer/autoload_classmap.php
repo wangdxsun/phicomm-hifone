@@ -21,6 +21,7 @@ return array(
     'CreateCreditRulesTable' => $baseDir . '/database/migrations/2016_06_21_091855_create_credit_rules_table.php',
     'CreateCreditsTable' => $baseDir . '/database/migrations/2016_06_21_091827_create_credits_table.php',
     'CreateEntrustTable' => $baseDir . '/database/migrations/2016_05_29_013410_create_entrust_table.php',
+    'CreateFailedJobsTable' => $baseDir . '/database/migrations/2018_02_09_092649_create_failed_jobs_table.php',
     'CreateFavoritesTable' => $baseDir . '/database/migrations/2016_05_29_013551_create_favorites_table.php',
     'CreateFollowsTable' => $baseDir . '/database/migrations/2016_05_29_013638_create_follows_table.php',
     'CreateIdentitiesTable' => $baseDir . '/database/migrations/2016_05_31_093935_create_identities_table.php',

@@ -27,16 +27,9 @@ class ReplyBll extends BaseBll
 {
     public function createReply()
     {
-        if (Auth::user()->hasRole('NoComment')) {
-            throw new HifoneException('对不起，你已被管理员禁止发言');
-        } elseif (!Auth::user()->can('manage_threads') && Auth::user()->score < 0) {
-            throw new HifoneException('对不起，你所在的用户组无法发言');
-        }
-        $thread = Thread::findOrFail(request('reply.thread_id'));
-        if (!$thread->visible) {
-            throw new HifoneException('该帖子已被删除');
-        }
-        $this->replyIsVisible();
+        $this->checkPermission();
+        $this->checkThread(request('reply.thread_id'));
+        $this->replyIsVisible(request('reply.reply_id'));
         $replyData = request('reply');
         $replyData['body'] = e($replyData['body']);
         $images = '';
@@ -59,16 +52,9 @@ class ReplyBll extends BaseBll
 
     public function createReplyApp()
     {
-        if (Auth::user()->hasRole('NoComment')) {
-            throw new HifoneException('对不起，你已被管理员禁止发言');
-        } elseif (!Auth::user()->can('manage_threads') && Auth::user()->score < 0) {
-            throw new HifoneException('对不起，你所在的用户组无法发言');
-        }
-        $thread = Thread::findOrFail(request('reply.thread_id'));
-        if (!$thread->visible) {
-            throw new HifoneException('该帖子已被删除', 410);
-        }
-        $this->replyIsVisible();
+        $this->checkPermission();
+        $this->checkThread(request('reply.thread_id'));
+        $this->replyIsVisible(request('reply.reply_id'));
         $replyData = request('reply');
         $replyData['body'] = e($replyData['body']);
         $images = '';
@@ -176,13 +162,32 @@ class ReplyBll extends BaseBll
         return $reply;
     }
 
-    private function replyIsVisible()
+    private function replyIsVisible($replyId)
     {
-        if (!is_null(request('reply.reply_id'))) {
-            $reply = Reply::find(request('reply.reply_id'));
+        if (!empty($replyId)) {
+            $reply = Reply::find($replyId);
             if ($reply == null || $reply->status <> Reply::VISIBLE) {
                 throw new HifoneException('该评论已被删除');
             }
+        }
+    }
+
+    private function checkThread($threadId)
+    {
+        $thread = Thread::find($threadId);
+        if (is_null($thread)) {
+            throw new HifoneException('帖子不存在');
+        } elseif ($thread->status <> Thread::VISIBLE) {
+            throw new HifoneException('该帖子已被删除', 410);
+        }
+    }
+
+    private function checkPermission()
+    {
+        if (Auth::user()->hasRole('NoComment')) {
+            throw new HifoneException('对不起，你已被管理员禁止发言');
+        } elseif (!Auth::user()->can('manage_threads') && Auth::user()->score < 0) {
+            throw new HifoneException('对不起，你所在的用户组无法发言');
         }
     }
 }
