@@ -46,6 +46,8 @@ class WebRoutes
             $router->get('sections', 'NodeController@sections')->middleware('active:web');
             $router->get('subNodes', 'NodeController@subNodes');
             $router->get('nodes/{node}', 'NodeController@show')->where('node', '[0-9]+')->middleware('active:web');
+            $router->get('nodes/{node}/hot', 'NodeController@hot')->where('node', '[0-9]+');
+            $router->get('nodes/{node}/recent', 'NodeController@recent')->where('node', '[0-9]+');
             $router->get('nodes/{node}/recommend', 'NodeController@recommendThreadsOfNode')->where('node', '[0-9]+');
             $router->get('subNodes/{subNode}', 'NodeController@showOfSubNode');
             $router->get('nodes/{node}/subNodes','SubNodeController@index');

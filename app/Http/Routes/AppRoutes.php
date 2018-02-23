@@ -31,6 +31,8 @@ class AppRoutes
             $router->get('subNodes', 'NodeController@subNodes');
             $router->get('subNodes/feedback', 'NodeController@subNodesInFeedback');
             $router->get('nodes/{node}', 'NodeController@show')->name('node.show')->where('node', '[0-9]+')->middleware('active:app');
+            $router->get('nodes/{node}/hot', 'NodeController@hot')->where('node', '[0-9]+');
+            $router->get('nodes/{node}/recent', 'NodeController@recent')->where('node', '[0-9]+');
             $router->get('subNodes/{subNode}', 'NodeController@showOfSubNode')->where('subNode', '[0-9]+');
             $router->get('banners', 'BannerController@index');
             $router->get('banners/{carousel}', 'BannerController@bannerViewCount')->name('banner.show')->where('carousel', '[0-9]+')->middleware('active:app');

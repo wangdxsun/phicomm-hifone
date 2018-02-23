@@ -9,6 +9,14 @@ use Hifone\Models\Thread;
 
 class NodeController extends WebController
 {
+    private $nodeBll;
+
+    public function __construct(NodeBll $nodeBll)
+    {
+        $this->nodeBll = $nodeBll;
+        parent::__construct();
+    }
+
     public function index()
     {
         $nodes = Node::orderBy('order')->has('subNodes')->limit(4)->get();
@@ -69,6 +77,20 @@ class NodeController extends WebController
     public function recommendThreadsOfNode(Node $node)
     {
         $threads = Thread::visible()->ofNode($node)->hot()->limit(5)->get();
+
+        return $threads;
+    }
+
+    public function hot(Node $node)
+    {
+        $threads = $this->nodeBll->hotThreadsOfNode($node);
+
+        return $threads;
+    }
+
+    public function recent(Node $node)
+    {
+        $threads = $this->nodeBll->recentThreadsOfNode($node);
 
         return $threads;
     }

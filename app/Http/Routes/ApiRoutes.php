@@ -41,6 +41,8 @@ class ApiRoutes
             $router->get('sections', 'NodeController@sections')->middleware('active:api');
             $router->get('subNodes', 'NodeController@subNodes');
             $router->get('nodes/{node}', 'NodeController@show')->where('node', '[0-9]+')->middleware('active:api');
+            $router->get('nodes/{node}/hot', 'NodeController@hot')->where('node', '[0-9]+');
+            $router->get('nodes/{node}/recent', 'NodeController@recent')->where('node', '[0-9]+');
             $router->get('subNodes/{subNode}', 'NodeController@showOfSubNode')->where('subNode', '[0-9]+');
             $router->get('nodes/{node}/subNodes','SubNodeController@index')->where('node', '[0-9]+');
             $router->get('banners', 'BannerController@index');

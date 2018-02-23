@@ -16,6 +16,14 @@ use Hifone\Models\SubNode;
 
 class NodeController extends ApiController
 {
+    private $nodeBll;
+
+    public function __construct(NodeBll $nodeBll)
+    {
+        $this->nodeBll = $nodeBll;
+        parent::__construct();
+    }
+
     public function index()
     {
         return Node::orderBy('order')->get();
@@ -65,5 +73,19 @@ class NodeController extends ApiController
     {
         $node = $nodeBll->showOfSubNode($subNode, $nodeBll);
         return $node;
+    }
+
+    public function hot(Node $node)
+    {
+        $threads = $this->nodeBll->hotThreadsOfNode($node);
+
+        return $threads;
+    }
+
+    public function recent(Node $node)
+    {
+        $threads = $this->nodeBll->recentThreadsOfNode($node);
+
+        return $threads;
     }
 }

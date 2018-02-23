@@ -15,6 +15,14 @@ use Hifone\Models\SubNode;
 
 class NodeController extends AppController
 {
+    private $nodeBll;
+
+    public function __construct(NodeBll $nodeBll)
+    {
+        $this->nodeBll = $nodeBll;
+        parent::__construct();
+    }
+
     public function index()
     {
         $nodes = Node::orderBy('order')->limit(4)->get();
@@ -85,4 +93,17 @@ class NodeController extends AppController
         return $nodes;
     }
 
+    public function hot(Node $node)
+    {
+        $threads = $this->nodeBll->hotThreadsOfNode($node);
+
+        return $threads;
+    }
+
+    public function recent(Node $node)
+    {
+        $threads = $this->nodeBll->recentThreadsOfNode($node);
+
+        return $threads;
+    }
 }
