@@ -24,7 +24,7 @@ class WordsFilter
             $words = Word::pluck('word');
             return $this->wordInit->initKeyWord($words);
         });
-        $res = $this->wordInit->isContainBadWords($post, $tree);
+        $res = $this->wordInit->isContainBadWords(strip_tags($post), $tree);
 
         return $res;
     }
