@@ -112,6 +112,7 @@ class Notifier
     protected function pushNotify($from, $to, $type, $object)
     {
         $message = $this->makeMessage($type, $object);
+        $avatar = $this->makeAvatar($from, $type);
         $title = $this->makeTitle($from, $type);
         $type = $this->getType($type);
         $data = [
@@ -121,7 +122,7 @@ class Notifier
             "producer" => '2',
             "isBroadcast" => '0',
             "isMulticast" => '0',
-            "avatar" => $from->avatar_url,
+            "avatar" => $avatar,
             "title" => $title,
             "time" => date('Y-m-d H:i', strtotime('now')),
             "userId" => $from->id,
@@ -135,6 +136,18 @@ class Notifier
         $outline = $this->makeOutline($from, $object);
 
         app('push')->push($to->phicomm_id, $data, $outline);
+    }
+
+    protected function makeAvatar($operator, $typeStr)
+    {
+        switch ($typeStr){
+            case 'thread_pin'://置顶帖子
+            case 'reply_pin'://置顶评论回复
+            case 'thread_mark_excellent'://加精华
+                return request()->getSchemeAndHttpHost().'/images/admin_avatar.png';
+            default :
+                return $operator->avatar_url;
+        }
     }
 
     protected function makeTitle($operator, $typeStr)
@@ -153,15 +166,15 @@ class Notifier
             case 'thread_like'://赞帖子
                 return "【" . $operator->username . "】赞了你的帖子";
             case 'reply_like'://赞回复
-                return "【" . $operator->username . "】赞了你的回复";
+                return "【" . $operator->username . "】赞了你的评论";
             case 'thread_favorite'://收藏（帖子）
                 return "【" . $operator->username . "】收藏了你的帖子";
             case 'thread_pin'://置顶帖子
-                return "【" . $operator->username . "】置顶了你的帖子";
+                return "【管理员】置顶了你的帖子";
             case 'reply_pin'://置顶评论回复
-                return "【" . $operator->username . "】置顶你的回复";
+                return "【管理员】置顶你的评论";
             case 'thread_mark_excellent'://加精华
-                return "【" . $operator->username . "】加精了你的帖子";
+                return "【管理员】加精了你的帖子";
             default :
                 throw new HifoneException("推送类型 $typeStr 不支持");
         }
