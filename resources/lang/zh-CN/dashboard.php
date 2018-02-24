@@ -170,6 +170,12 @@ return [
             'type'     =>  '所属版主类别',
             'list'     =>  '版主列表',
         ],
+
+        'pre-moderator' => [
+            'add'      =>  '添加实习版主',
+            'type'     =>  '所属版主类别',
+            'list'     =>  '版主列表',
+        ],
         'prompt'       => [
             'node'          => '主版块提示',
             'subNode'       => '子版块提示',

@@ -170,6 +170,7 @@
                         <el-input  v-model="imageListUrlWeb" type="hidden" name="node[web_icon_list]"></el-input>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label>{{ trans('dashboard.nodes.name') }}</label>
                     {!! Form::text('node[name]', isset($node) ? $node->name : null, ['class' => 'form-control', 'required']) !!}
@@ -187,10 +188,29 @@
                 @else
                     <input type="hidden" name="node[section_id]" value="0">
                 @endif
+                {{--板块描述--}}
                 <div class="form-group">
                     <label>{{ trans('dashboard.nodes.description') }}</label>
                     {!! Form::textarea('node[description]', isset($node) ? $node->description : null , ['class' => 'form-control', 'required', 'rows' => 5]) !!}
                 </div>
+                {{--添加版主--}}
+                <div class="form-group">
+                    <label >{{ trans('dashboard.nodes.moderator.add') }}</label>
+                    <input type="text" name="user[name]" class="form-control"
+                    @if (isset($user['name']))
+                    value="{{ $user['name'] }}"
+                    @endif >
+                </div>
+
+                {{--添加实习版主--}}
+                <div class="form-group">
+                    <label >{{ trans('dashboard.nodes.pre-moderator.add') }}</label>
+                    <input type="text" name="user[name]" class="form-control"
+                           @if (isset($user['name']))
+                           value="{{ $user['name'] }}"
+                            @endif >
+                </div>
+
 
                 <div class="form-group">
                     <label>{{ '主版块发帖时是否对普通用户开放' }}</label>
@@ -222,6 +242,32 @@
                     <label>{{ trans('dashboard.nodes.prompt.nodeDetail') }}</label>
                     {!! Form::textarea('node[prompt]', isset($node) ? $node->prompt : null , ['class' => 'form-control', 'rows' => 3]) !!}
                 </div>
+
+
+                @if(isset($node))
+                <div>
+                    <label>{{ trans('dashboard.nodes.moderator.list') }}</label>
+                    <table class="table table-bordered table-striped table-condensed">
+                        <tbody>
+                            <tr class="head">
+                                <td>版主用户名</td>
+                                <td>所在组别</td>
+                                <td>操作</td>
+                            </tr>
+                            @foreach($node->moderators as $moderator)
+                            <tr>
+                                <td>{{ $moderator->user->username }}</td>
+                                <td>{{ $moderator->user->role }}</td>
+                                <td>
+                                <a data-url="/dashboard/node/{{ $moderator->id }}/audit/to/trash" data-method="post" class="need-reason" title="删除"><i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+
+                    </table>
+                </div>
+                @endif
 
                 </fieldset>
 

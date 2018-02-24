@@ -45,6 +45,14 @@ class NodeBll extends BaseBll
         return $threads;
     }
 
+    //主板块中的精华帖子
+    public function excellentThreadsOfNode(Node $node)
+    {
+        $threads = Thread::visible()->ofNode($node)->excellent()->with(['user', 'subNode'])->paginate();
+
+        return $threads;
+    }
+
     public function sections()
     {
         $sections = Section::orderBy('order')->with(['nodes.subNodes', 'nodes' => function ($query) {
@@ -105,14 +113,24 @@ class NodeBll extends BaseBll
         return $threads;
     }
 
+    //子版块中的精华帖子
+    private function excellentThreadsOfSubNode(SubNode $subNode)
+    {
+        $threads = Thread::visible()->ofSubNode($subNode)->excellent()->with(['user', 'subNode'])->paginate();
+
+        return $threads;
+    }
+
     public function showOfSubNode(SubNode $subNode, NodeBll $nodeBll)
     {
         $hot = $nodeBll->hotThreadsOfSubNode($subNode);
         $recent = $nodeBll->recentThreadsOfSubNode($subNode);
+        $excellent = $nodeBll->excellentThreadsOfSubNode($subNode);
         $moderators = $subNode->node->moderators()->with(['user'])->get();
 
         $node['hot'] = $hot;
         $node['recent'] = $recent;
+        $node['excellent'] = $excellent;
         $node['moderators'] = $moderators;
 
         return $node;

@@ -37,7 +37,8 @@ class WebRoutes
 
             //内容相关
             $router->get('threads/hot', 'ThreadController@index');
-            $router->get('threads/recent', 'ThreadController@recent');
+            $router->get('threads/recent', 'ThreadController@recent')->middleware('active:web');
+            $router->get('threads/excellent', 'ThreadController@excellentThreads')->middleware('active:web');
             $router->get('thread/search/{keyword}', 'ThreadController@search')->middleware('active:web');
             $router->get('user/search/{keyword}', 'UserController@search')->middleware('active:web');
             $router->get('threads/{thread}', 'ThreadController@show')->middleware('active:web');
@@ -47,6 +48,7 @@ class WebRoutes
             $router->get('subNodes', 'NodeController@subNodes');
             $router->get('nodes/{node}', 'NodeController@show')->where('node', '[0-9]+')->middleware('active:web');
             $router->get('nodes/{node}/hot', 'NodeController@hot')->where('node', '[0-9]+');
+            $router->get('nodes/{node}/excellent', 'NodeController@excellent')->where('node', '[0-9]+');
             $router->get('nodes/{node}/recent', 'NodeController@recent')->where('node', '[0-9]+');
             $router->get('nodes/{node}/recommend', 'NodeController@recommendThreadsOfNode')->where('node', '[0-9]+');
             $router->get('subNodes/{subNode}', 'NodeController@showOfSubNode');

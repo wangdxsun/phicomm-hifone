@@ -33,6 +33,13 @@ class ThreadController extends WebController
         return $threads;
     }
 
+    //首页精华帖子
+    public function excellentThreads()
+    {
+        $threads = Thread::visible()->with(['user', 'node'])->excellent()->paginate();
+        return $threads;
+    }
+
     public function search($keyword, ThreadBll $threadBll)
     {
         $threads = $threadBll->search($keyword);

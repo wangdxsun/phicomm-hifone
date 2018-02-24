@@ -106,4 +106,12 @@ class NodeController extends AppController
 
         return $threads;
     }
+
+    //精华帖子，按照加精时间和发表时间排序
+    public function excellent(Node $node)
+    {
+        $threads = $this->nodeBll->excellentThreadsOfNode($node);
+
+        return $threads;
+    }
 }

@@ -275,9 +275,10 @@ class Thread extends BaseModel implements TaggableInterface
         return $query->orderBy('created_at', 'desc');
     }
 
+    //精华帖子
     public function scopeExcellent($query)
     {
-        return $query->where('is_excellent', '=', true);
+        return $query->where('is_excellent', 1)->orderBy('excellent_time', 'desc')->orderBy('created_at', 'desc');
     }
 
     public function scopeFeedback($query)

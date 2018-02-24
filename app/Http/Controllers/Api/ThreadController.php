@@ -31,6 +31,19 @@ class ThreadController extends ApiController
         return $threads;
     }
 
+    public function recent()
+    {
+        $threads = Thread::visible()->with(['user', 'node'])->recent()->paginate();
+        return $threads;
+    }
+
+    //首页精华帖子
+    public function excellentThreads()
+    {
+        $threads = Thread::visible()->with(['user', 'node'])->excellent()->paginate();
+        return $threads;
+    }
+
     public function search($keyword, ThreadBll $threadBll)
     {
         $threads = $threadBll->search($keyword);

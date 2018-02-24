@@ -82,7 +82,6 @@ class NodeController extends Controller
      */
     public function store()
     {
-        //dd(Request::get('node'));
         $this->validate(request(),[
             'node.icon'                => 'required',
             'node.icon_list'           => 'required',
