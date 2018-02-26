@@ -63,6 +63,16 @@ class ParseEmotion
             }
         }
 
+        //替换链接
+        preg_match_all("/<a\s+href=[\"|\'][^>]*>([^<]*)<\/a>/i", $this->post, $links_temp);
+        if (count($links_temp[0]) > 0) {
+            foreach ($links_temp[0] as $key => $value) {
+                $search = $links_temp[0][$key];
+                $replace = $links_temp[1][$key];
+                $this->post = str_replace($search, $replace, $this->post);
+            }
+        }
+
         return $this->post;
     }
 }

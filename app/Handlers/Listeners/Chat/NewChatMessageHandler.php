@@ -29,8 +29,9 @@ class NewChatMessageHandler
         $event->to->increment('notification_chat_count', 1);
         //友盟消息推送
 
+        $message = mb_substr(app('parser.emotion')->reverseParseEmotionAndImage($event->message), 0, 100);
         $data = [
-            "content" => mb_substr($event->message, 0, 100),
+            "content" => $message,
             "type" => '1004',
             "source" => '1',
             "producer" => '2',
@@ -41,8 +42,7 @@ class NewChatMessageHandler
             "time" => date('Y-m-d H:i', strtotime('now')),
             "userId" => $event->from->id,
         ];
-        $outline = mb_substr(app('parser.emotion')->reverseParseEmotionAndImage($event->message), 0, 26);
 
-        app('push')->push($event->to->phicomm_id, $data, $outline);
+        app('push')->push($event->to->phicomm_id, $data, $message);
     }
 }

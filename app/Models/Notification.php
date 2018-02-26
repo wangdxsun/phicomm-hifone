@@ -91,10 +91,17 @@ class Notification extends BaseModel implements HasPresenter
         //reply_like 点赞回复
         //thread_like 点赞帖子
         //user_follow 用户关注
-        //thread_pin 帖子被置顶
         //thread_favorite 收藏帖子
+        //thread_pin 帖子被置顶
         //thread_mark_excellent 帖子被置为精华
-        return $query->whereIn('type', ['reply_like', 'thread_like', 'user_follow']);
+        return $query->whereIn('type', [
+            'reply_like',
+            'thread_like',
+            'user_follow',
+            'thread_favorite',
+            'thread_pin',
+            'thread_mark_excellent'
+        ]);
     }
 
     public function thread()

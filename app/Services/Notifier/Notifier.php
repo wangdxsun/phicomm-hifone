@@ -35,8 +35,9 @@ class Notifier
             'type'          => $type,
         ];
         //小红点 以下类型暂不计数
-//        || thread_favorite || $type == 'thread_pin' || $type == 'reply_pin' || thread_mark_excellent
-        if ($type == 'reply_like' || $type == 'thread_like' || $type == 'user_follow') {
+//        || $type == 'reply_pin'
+        if ($type == 'reply_like' || $type == 'thread_like' || $type == 'user_follow'
+        || $type == 'thread_favorite' || $type == 'thread_pin' || $type == 'thread_mark_excellent') {
             $toUser->increment('notification_system_count', 1);
         } elseif ($type == 'reply_reply' || $type == 'reply_mention') {
             $toUser->increment('notification_at_count', 1);
