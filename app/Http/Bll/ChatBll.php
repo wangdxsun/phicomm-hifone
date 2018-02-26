@@ -22,11 +22,14 @@ class ChatBll extends BaseBll
     public function chats()
     {
         $chatIds = Chat::my()->selectRaw('max(id) as id')->groupBy('from_to')->pluck('id');
-        $messages = Chat::whereIn('id', $chatIds)->with(['from', 'to'])->recent()->paginate();
+        $chats = Chat::whereIn('id', $chatIds)->with(['from', 'to'])->recent()->paginate();
+        foreach ($chats as $chat) {
+            $chat->message = app('parser.emotion')->reverseParseEmotionAndImage($chat->message);
+        }
         Auth::user()->notification_chat_count = 0;
         Auth::user()->save();
 
-        return $messages;
+        return $chats;
     }
 
     //for h5 and new web
