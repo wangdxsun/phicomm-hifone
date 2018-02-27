@@ -25,7 +25,12 @@ class Notifier
 
     public function notify($type, User $author, User $toUser, $object)
     {
+        //判断是否通知过
         if ($this->isNotified($author->id, $toUser->id, $object, $type)) {
+            return;
+        }
+        //自己操作自己不通知
+        if ($author->id == $toUser->id) {
             return;
         }
         $data = [
@@ -51,6 +56,7 @@ class Notifier
     {
         foreach ($users as $user) {
             $toUser = (!$user instanceof User) ? $user->user : $user;
+            //自己操作自己不通知
             if ($author->id == $toUser->id) {
                 continue;
             }
