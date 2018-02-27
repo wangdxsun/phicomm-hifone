@@ -33,8 +33,10 @@
                         <td>{{ $role->created_at }}</td>
                         <td>
                             @if (Auth::user()->can('user_group'))
-                            <a href="/dashboard/group/admin/{{ $role->id }}/edit"><i class="fa fa-pencil" title="编辑"></i></a>
-                            <a data-url="/dashboard/group/admin/{{ $role->id }}" data-method="delete" class="confirm-action" title="删除"><i class="fa fa-trash"></i></a>
+                                <a href="/dashboard/group/admin/{{ $role->id }}/edit"><i class="fa fa-pencil" title="编辑"></i></a>
+                                @if ($role->display_name != '管理员' && $role->display_name != '版主' && $role->display_name != '实习版主')
+                                    <a data-url="/dashboard/group/admin/{{ $role->id }}" data-method="delete" class="confirm-action" title="删除"><i class="fa fa-trash"></i></a>
+                                @endif
                             @endif
                         </td>
                     </tr>
