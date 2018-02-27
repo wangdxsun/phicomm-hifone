@@ -36,6 +36,9 @@ class Pusher
      */
     public function push($uid, $data, $outline = '', $msg_type = '1')
     {
+        if (empty($uid)) {
+            return;
+        }
         $ticker = $msg_type == '0' ? 'ticker' : '';
 
         //云服务参数
