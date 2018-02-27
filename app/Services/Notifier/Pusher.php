@@ -64,10 +64,10 @@ class Pusher
         $output = json_decode($json, true);
         if (is_null($output)) {//html
             $message = "Required String parameter 'uid' is not present";
-            throw new HifoneException($message);
+            \Log::error($message);
         } elseif (0 != $output['error']) {
-            $message = $output['message'];
-            throw new HifoneException($message);
+            $message = 'error : ' . $output['error'] . 'message : ' . $output['message'];
+            \Log::error($message);
         }
 
         return $output;
