@@ -54,7 +54,7 @@ class NotificationBll extends BaseBll
     {
         $notifications = Notification::forUser(Auth::id())->system()->recent()->with(['object', 'author'])->paginate();
         foreach ($notifications as $notification) {
-            if ($notification->type == 'reply_like') {
+            if ($notification->type == 'reply_like' || $notification->type == 'reply_pin') {
                 $notification->object->thread;
                 if ($notification->object->reply) {
                     $notification->object->reply->user;
