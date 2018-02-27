@@ -115,10 +115,11 @@ class Notifier
         $message = $this->makeMessage($type, $object);
         $avatar = $this->makeAvatar($from, $type);
         $title = $this->makeTitle($from, $type);
-        $type = $this->getType($type);
+
+        $typeNum = $this->getType($type);
         $data = [
             "content" => mb_substr($message, 0, 100),
-            "type" => $type,
+            "type" => $typeNum,
             "source" => '1',
             "producer" => '2',
             "isBroadcast" => '0',
