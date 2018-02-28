@@ -1,6 +1,7 @@
 <?php
 namespace Hifone\Http\Controllers\Dashboard;
 
+use Hifone\Events\Chat\NewChatMessageEvent;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Jobs\SendChat;
 use Hifone\Models\Chat;
@@ -44,8 +45,6 @@ class ChatController extends Controller
 
     public function chatStore(ChatBll $chatBll)
     {
-        ini_set('memory_limit', '-1');
-        ini_set('max_execution_time', 0);
         $data = Request::get('chat');
         if (empty($data['userType'])) {
             return Redirect::route('dashboard.chat.send')
