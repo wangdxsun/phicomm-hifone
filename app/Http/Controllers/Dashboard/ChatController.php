@@ -38,7 +38,7 @@ class ChatController extends Controller
         $messages = $chatBll->getMessages();
         foreach ($users as $user) {
             foreach ($messages as $message) {
-                $this->dispatch(new SendChat(Auth::user(), $user, $message))->onQueue('low');
+                $this->dispatch((new SendChat(Auth::user(), $user, $message))->onQueue('low'));
             }
         }
     }
