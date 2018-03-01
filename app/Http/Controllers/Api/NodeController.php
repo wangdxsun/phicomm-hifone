@@ -31,47 +31,43 @@ class NodeController extends ApiController
 
     /**
      * 版块列表(含分类）
-     * @param NodeBll $nodeBll
      * @return mixed
      */
-    public function sections(NodeBll $nodeBll)
+    public function sections()
     {
-        $sections = $nodeBll->sections();
+        $sections = $this->nodeBll->sections();
         return $sections;
     }
 
     /**
      * 发帖选择子版块
-     * @param NodeBll $nodeBll
      * @return mixed
      */
-    public function subNodes(NodeBll $nodeBll)
+    public function subNodes()
     {
-        $sections = $nodeBll->subNodes();
+        $sections = $this->nodeBll->subNodes();
         return $sections;
     }
 
     /**
      * 版块详情
      * @param Node $node
-     * @param NodeBll $nodeBll
      * @return Node
      */
-    public function show(Node $node, NodeBll $nodeBll)
+    public function show(Node $node)
     {
-        $node = $nodeBll->show($node, $nodeBll);
+        $node = $this->nodeBll->show($node);
         return $node;
     }
 
     /**
      * 版块内按子版块筛选
      * @param SubNode $subNode
-     * @param NodeBll $nodeBll
      * @return Node
      */
-    public function showOfSubNode(SubNode $subNode, NodeBll $nodeBll)
+    public function showOfSubNode(SubNode $subNode)
     {
-        $node = $nodeBll->showOfSubNode($subNode, $nodeBll);
+        $node = $this->nodeBll->showOfSubNode($subNode);
         return $node;
     }
 

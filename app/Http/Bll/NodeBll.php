@@ -84,10 +84,10 @@ class NodeBll extends BaseBll
         return $nodes;
     }
 
-    public function show(Node $node, NodeBll $nodeBll)
+    public function show(Node $node)
     {
-        $hot = $nodeBll->hotThreadsOfNode($node);
-        $recent = $nodeBll->recentThreadsOfNode($node);
+        $hot = $this->hotThreadsOfNode($node);
+        $recent = $this->recentThreadsOfNode($node);
         $moderators = $node->moderators()->with(['user'])->get();
         $subNodes = $node->subNodes()->select(['name', 'id'])->get();
 
@@ -121,11 +121,11 @@ class NodeBll extends BaseBll
         return $threads;
     }
 
-    public function showOfSubNode(SubNode $subNode, NodeBll $nodeBll)
+    public function showOfSubNode(SubNode $subNode)
     {
-        $hot = $nodeBll->hotThreadsOfSubNode($subNode);
-        $recent = $nodeBll->recentThreadsOfSubNode($subNode);
-        $excellent = $nodeBll->excellentThreadsOfSubNode($subNode);
+        $hot = $this->hotThreadsOfSubNode($subNode);
+        $recent = $this->recentThreadsOfSubNode($subNode);
+        $excellent = $this->excellentThreadsOfSubNode($subNode);
         $moderators = $subNode->node->moderators()->with(['user'])->get();
 
         $node['hot'] = $hot;
