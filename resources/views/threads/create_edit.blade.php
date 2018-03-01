@@ -42,7 +42,7 @@
                         @include('vendor.ueditor.assets')
                         <div class="form-group">
                             <label>{{ trans('hifone.threads.body') }}</label>
-                            <script id="container" name="thread[body]" type="text/plain">{!! isset($thread) ? $thread->body : null !!}</script>
+                            <script id="container" :name="thread[body]" type="text/plain">{!! isset($thread) ? $thread->body : null !!}</script>
                         </div>
 
                         <div class="form-group status-post-submit">

@@ -194,7 +194,8 @@ class ThreadBll extends BaseBll
         $badWord = '';
         $thread->body = app('parser.at')->parse($thread->body);
         $thread->body = app('parser.emotion')->parse($thread->body);
-        if (Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($post)) || $this->isContainsImageOrUrl($post)) {
+        //新增判断逻辑：不具有免审核权限的用户才需要自动审核
+        if ( !Auth::user()->can('free_audit') && Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($post)) || $this->isContainsImageOrUrl($post)) {
             $thread->bad_word = $badWord;
             $msg = '帖子已提交，待审核';
         } else {

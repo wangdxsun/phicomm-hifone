@@ -50,7 +50,7 @@ class Role extends EntrustRole implements HasPresenter
         return $this::belongsToMany(Permission::class);
     }
 
-    public function Users()
+    public function users()
     {
         return $this->belongsToMany(User::class);
     }

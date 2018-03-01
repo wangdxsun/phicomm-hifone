@@ -141,6 +141,7 @@ class Thread extends BaseModel implements TaggableInterface
         return $this->belongsTo(SubNode::class);
     }
 
+    //查询主板块下的帖子
     public function scopeOfNode($query, Node $node)
     {
         return $query->where('node_id', $node->id);

@@ -13,25 +13,25 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-            <div class="toolbar">
-                <form class="form-inline">
-                    <div class="form-group">
-                        <input type="text" name="user[id]" class="form-control" value="" placeholder="用户ID">
-                        <input type="text" name="user[username]" class="form-control" value="" placeholder="用户名">
-                        <input type="text" name="user[regip]" class="form-control" value="" placeholder="注册IP">
-                    </div>
-                    <select class="form-control " name="user[orderType]">
-                        <option value="" selected>排列方式</option>
-                        @foreach ($orderTypes as $key => $orderType)
-                            <option value="{{ $key }}">{{ $orderType }}</option>
-                        @endforeach
-                    </select>
-                    <button class="btn btn-default">搜索</button>
-                </form>
-            </div>
+                <div class="toolbar">
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <input type="text" name="user[id]" class="form-control" value="" placeholder="用户ID">
+                            <input type="text" name="user[username]" class="form-control" value="" placeholder="用户名">
+                            <input type="text" name="user[regip]" class="form-control" value="" placeholder="注册IP">
+                        </div>
+                        <select class="form-control " name="user[orderType]">
+                            <option value="" selected>排列方式</option>
+                            @foreach ($orderTypes as $key => $orderType)
+                                <option value="{{ $key }}">{{ $orderType }}</option>
+                            @endforeach
+                        </select>
+                        <button class="btn btn-default">搜索</button>
+                    </form>
+                </div>
 
             @include('partials.errors')
-            <table class="table table-bordered table-striped table-condensed">
+                <table class="table table-bordered table-striped table-condensed">
                 <tbody>
                 <tr class="head">
                     <td class="first">ID</td>
@@ -82,11 +82,12 @@
                 @endforeach
                 </tbody>
             </table>
-            <div class="text-right">
-                <!-- Pager -->
-                {!! $users->appends(Request::except('page', '_pjax'))->render() !!}
+                <div class="text-right">
+                    <!-- Pager -->
+                    {!! $users->appends(Request::except('page', '_pjax'))->render() !!}
+                </div>
             </div>
+
         </div>
-        <div class="col-sm-12">
     </div>
 @stop

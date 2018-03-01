@@ -70,8 +70,13 @@ class NodeController extends Controller
      */
     public function create()
     {
+        //添加主板块时，为页面传入所有组别为版主和实习版主的用户
+        $moderators = Role::where('name', 'NodeMaster')->first()->users;
+        $praModerators = Role::where('name', 'NodePraMaster')->first()->users;
         return View::make('dashboard.nodes.create_edit')
             ->withSections(Section::orderBy('order')->get())
+            ->with('moderators', $moderators)
+            ->with('praModerators', $praModerators)
             ->withPageTitle('添加主版块');
     }
 
@@ -82,44 +87,41 @@ class NodeController extends Controller
      */
     public function store()
     {
-        $this->validate(request(),[
-            'node.icon'                => 'required',
-            'node.icon_list'           => 'required',
-            'node.icon_detail'         => 'required',
-            'node.android_icon'        => 'required',
-            'node.android_icon_list'   => 'required',
-            'node.android_icon_detail' => 'required',
-            'node.ios_icon'            => 'required',
-            'node.ios_icon_list'       => 'required',
-            'node.ios_icon_detail'     => 'required',
-            'node.web_icon_detail'     => 'required',
-            'node.web_icon_list'       => 'required',
-        ], [
-            'node.icon.required'               => 'H5首页热门版块图片是必填字段',
-            'node.icon_list.required'          => 'H5版块列表图片是必填字段',
-            'node.icon_detail.required'        => 'H5版块详情页是必填字段',
-            'node.ios_icon.required'           => 'IOS首页热门版块图片是必填字段',
-            'node.ios_icon_list.required'      => 'IOS版块列表图片是必填字段',
-            'node.ios_icon_detail.required'    => 'IOS版块详情页是必填字段',
-            'node.android_icon.required'       => '安卓首页热门版块图片是必填字段',
-            'node.android_icon_list.required'  => '安卓版块列表图片是必填字段',
-            'node.android_icon_detail.required'=> '安卓版块详情页是必填字段',
-            'node.web_icon_list.required'      => 'WEB右侧列表图片是必填字段',
-            'node.web_icon_detail.required'    => 'WEB版块详情页是必填字段',
-        ]);
+
+        //$userIds = explode(',',$data['userIds']);
+        //dd(Request::all());
+//        $this->validate(request(),[
+//            'node.icon'                => 'required',
+//            'node.icon_list'           => 'required',
+//            'node.icon_detail'         => 'required',
+//            'node.android_icon'        => 'required',
+//            'node.android_icon_list'   => 'required',
+//            'node.android_icon_detail' => 'required',
+//            'node.ios_icon'            => 'required',
+//            'node.ios_icon_list'       => 'required',
+//            'node.ios_icon_detail'     => 'required',
+//            'node.web_icon_detail'     => 'required',
+//            'node.web_icon_list'       => 'required',
+//        ], [
+//            'node.icon.required'               => 'H5首页热门版块图片是必填字段',
+//            'node.icon_list.required'          => 'H5版块列表图片是必填字段',
+//            'node.icon_detail.required'        => 'H5版块详情页是必填字段',
+//            'node.ios_icon.required'           => 'IOS首页热门版块图片是必填字段',
+//            'node.ios_icon_list.required'      => 'IOS版块列表图片是必填字段',
+//            'node.ios_icon_detail.required'    => 'IOS版块详情页是必填字段',
+//            'node.android_icon.required'       => '安卓首页热门版块图片是必填字段',
+//            'node.android_icon_list.required'  => '安卓版块列表图片是必填字段',
+//            'node.android_icon_detail.required'=> '安卓版块详情页是必填字段',
+//            'node.web_icon_list.required'      => 'WEB右侧列表图片是必填字段',
+//            'node.web_icon_detail.required'    => 'WEB版块详情页是必填字段',
+//        ]);
         $userData = Request::get('user');
         $nodeData = Request::get('node');
-        $moderatorData = Request::get('moderator');
-        if ('' != $userData['name']) {
-            $user = User::where('username',$userData['name'])->get();
-            if ([] == $user->toArray()) {
-                return Redirect::route('dashboard.node.create')
-                    ->withInput(Request::all())
-                    ->withErrors('添加版主失败，用户不存在！');
-            }
-            $user->role_id = $moderatorData['role'];
-            $moderatorData['user_id'] = $user->id;
-        }
+        $moderatorData = explode(',', Request::get('moderatorArr'));
+        $praModeratorData = explode(',', Request::get('praModeratorArr'));
+        dd($moderatorData, $praModeratorData);
+
+
         $nodeData['order'] = Node::max('order') + 1;
 
         try {
@@ -150,10 +152,19 @@ class NodeController extends Controller
      */
     public function edit(Node $node)
     {
+        //添加主板块时，为页面传入所有组别为版主和实习版主的用户
+        $moderators = Role::where('name', 'NodeMaster')->first()->users;
+        $praModerators = Role::where('name', 'NodePraMaster')->first()->users;
+        //传入主板块的版主和实习版主
+        $nodeModerators = $node->moderators;
+        $nodePraModerators = $node->praModerators;
         return View::make('dashboard.nodes.create_edit')
             ->withPageTitle(trans('dashboard.nodes.edit.title').' - '.trans('dashboard.dashboard'))
             ->withSections(Section::orderBy('order')->get())
-            ->withModerators(Moderator::get())
+            ->with('moderators', $moderators)
+            ->with('praModerators', $praModerators)
+            ->with('nodeModerators', $nodeModerators)
+            ->with('nodePraModerators', $nodePraModerators)
             ->withRole(Role::get())
             ->withNode($node);
     }

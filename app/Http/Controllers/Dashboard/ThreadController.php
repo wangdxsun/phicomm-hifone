@@ -11,7 +11,6 @@
 
 namespace Hifone\Http\Controllers\Dashboard;
 
-use AltThree\Validator\ValidationException;
 use Hifone\Commands\Thread\RemoveThreadCommand;
 use Hifone\Commands\Thread\UpdateThreadCommand;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
@@ -30,6 +29,7 @@ use DB;
 use Redirect;
 use View;
 use Input;
+use Auth;
 use Hifone\Events\Thread\ThreadWasPinnedEvent;
 use Hifone\Events\Thread\ThreadWasAuditedEvent;
 use Hifone\Events\Thread\ThreadWasTrashedEvent;
@@ -53,7 +53,12 @@ class ThreadController extends Controller
         if (array_key_exists('sub_node_id',$search) && array_key_exists('node_id',$search) && $search['node_id'] != SubNode::find($search['sub_node_id'])->node->id) {
             return Redirect::route('dashboard.thread.index')->withErrors('主版块信息和子版块信息不一致！');
         }
-        $threads = Thread::visible()->search($search)->with('node', 'user', 'lastOpUser', 'subNode')->orderBy('last_op_time', 'desc')->paginate(20);
+        if (Auth::user()->hasRole('NodeMaster') || Auth::user()->hasRole('NodePraMaster')) {
+            $threads = Thread::visible()->search($search)->ofNode(Auth::user()->nodes)->with('node', 'user', 'lastOpUser', 'subNode')->orderBy('last_op_time', 'desc')->paginate(20);
+        } else {
+            $threads = Thread::visible()->search($search)->with('node', 'user', 'lastOpUser', 'subNode')->orderBy('last_op_time', 'desc')->paginate(20);
+        }
+
         $sections = Section::orderBy('order')->get();
         $nodes = Node::orderBy('order')->get();
         $orderTypes = Thread::$orderTypes;

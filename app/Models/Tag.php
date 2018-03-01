@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 class Tag extends Model
 {
     protected $fillable = [
-        'name', 'slug', 'count',
+        'name', 'type', 'count',
     ];
 
     /**
@@ -28,4 +28,11 @@ class Tag extends Model
     {
         return $this->morphedByMany(Thread::class, 'taggable');
     }
+
+    //根据标签类别查询标签
+    public function scopeOfType($query, TagType $tagType)
+    {
+        return $query->where('type', $tagType->id);
+    }
+
 }

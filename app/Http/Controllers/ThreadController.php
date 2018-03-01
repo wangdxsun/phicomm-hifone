@@ -35,6 +35,7 @@ use Input;
 use Redirect;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Hifone\Events\Thread\ThreadWasPinnedEvent;
+use Symfony\Component\VarDumper\Dumper\DataDumperInterface;
 
 class ThreadController extends Controller
 {
@@ -120,8 +121,10 @@ class ThreadController extends Controller
             ->with('subNodes',$subNodes);
     }
 
+
     public function store(ThreadBll $threadBll, WordsFilter $wordsFilter)
     {
+        dd('here');
         if (Auth::user()->hasRole('NoComment')) {
             return Redirect::back()->withErrors('您已被系统管理员禁言');
         } elseif (!Auth::user()->can('manage_threads') && Auth::user()->score < 0) {

@@ -31,6 +31,13 @@
                 </a>
             </li>
             @if (Auth::user()->hasRole('Admin')  || Auth::user()->hasRole('Founder'))
+                <li {!! set_active('dashboard/tag*') !!}>
+                    <a href="{{ route('dashboard.tag.index') }}">
+                        <i class="fa fa-tags"></i>
+                        <span>标签管理</span>
+                    </a>
+                </li>
+
                 <li {!! set_active('dashboard/user*') !!}>
                     <a href="{{ route('dashboard.user.index') }}">
                         <i class="fa fa-user"></i>

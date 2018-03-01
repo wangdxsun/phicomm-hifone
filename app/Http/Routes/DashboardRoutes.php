@@ -11,6 +11,7 @@
 
 namespace Hifone\Http\Routes;
 
+use Hifone\Http\Controllers\Dashboard\TagController;
 use Hifone\Http\Controllers\Dashboard\ThreadController;
 use Illuminate\Contracts\Routing\Registrar;
 
@@ -88,7 +89,7 @@ class DashboardRoutes
             $router->post('node/{moderator}/audit/to/trash', 'NodeController@auditToTrash');
             $router->post('report/{report}/trash', 'ReportController@trash');
             $router->post('report/{report}/ignore', 'ReportController@ignore');
-            $router->post('carousel/{carousel}/close', 'CarouselController@close')->name('carousel.close');
+
             $router->get('stat', 'StatController@index')->name('stat.index');
             $router->get('stat/node', 'StatController@node')->name('stat.node');
             $router->get('stat/node/{node}', 'StatController@node_detail')->name('stat.node.show');
@@ -120,6 +121,10 @@ class DashboardRoutes
             $router->get('carousel/{carousel}/app/edit', 'CarouselController@editApp')->name('carousel.edit.app');
             $router->patch('carousel/{carousel}/app/update', 'CarouselController@updateApp')->name('carousel.update.app');
             $router->post('carousel/app/store', 'CarouselController@storeApp')->name('carousel.store.app');
+            $router->post('carousel/{carousel}/close', 'CarouselController@close')->name('carousel.close');
+
+            $router->get('tag/index','TagController@index')->name('tag.index');
+            $router->get('tag/type/create','TagTypeController@index')->name('tag.type.create');
 
             // Settings
             $router->group(['as' => 'settings.', 'prefix' => 'settings'], function (Registrar $router) {

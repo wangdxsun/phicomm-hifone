@@ -2,15 +2,16 @@
 /**
  * Created by PhpStorm.
  * User: meng.dai
- * Date: 2017/8/18
- * Time: 14:12
- * 版主
+ * Date: 2018/2/28
+ * Time: 17:05
  */
+
 namespace Hifone\Models;
 
-class Moderator extends BaseModel
+
+class PraModerator extends BaseModel
 {
-    public $table = 'moderators';
+    public $table = 'pra_moderators';
 
     protected $fillable = [
         'node_id',
@@ -19,7 +20,7 @@ class Moderator extends BaseModel
         'updated_at',
     ];
 
-    //
+    //查询
     public function node()
     {
         return $this->belongsTo(Node::class);

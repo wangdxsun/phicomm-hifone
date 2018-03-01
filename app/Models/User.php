@@ -394,4 +394,35 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
             $this->attributes['notification_system_count'] + $this->attributes['notification_chat_count'] +
             $this->attributes['notification_follow_count'];
     }
+
+    //根据用户信息查询版主信息
+    public function moderators()
+    {
+        return $this->hasMany(Moderator::class);
+    }
+
+    //根据用户信息查询实习版主信息
+    public function praModerators()
+    {
+        return $this->hasMany(PraModerator::class);
+    }
+
+
+    //根据用户信息查询所管理的主板块信息
+    public function scopeNodes()
+    {
+        //拿到该用户的所有版主、实习版主信息
+        $moderators = $this->moderators == null ? $this->praModerators : $this->moderators;
+        $nodes = [];
+        foreach ($moderators as $moderator) {
+            $nodes[] = $moderator->node;
+        }
+        return collect($nodes);
+    }
+
+    //主板块和用户建立多对多关系，通过用户查询用户所管理的主板块信息
+    public function nodes()
+    {
+        return $this->belongsToMany(Node::class);
+    }
 }

@@ -19,256 +19,236 @@
             @endif
             @include('partials.errors')
                 <fieldset>
-                {{--安卓端版块图片--}}
-                <div class="form-group row">
-                    <div class="col-xs-4">
-                        <label>{{ '安卓端首页热门版块图片' }}</label><br>
-                        <el-upload
-                                class="avatar-uploader"
-                                action="/upload_image"
-                                :show-file-list="false"
-                                :on-success="imageUrlAndroidHandle">
-                            <img v-if="imageUrlAndroid" :src="imageUrlAndroid" class="el-avatar">
-                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                        </el-upload>
-                        <el-input v-model="imageUrlAndroid" type="hidden" name="node[android_icon]"></el-input>
+                    {{--安卓端版块图片--}}
+                    {{--<div class="form-group row">--}}
+                        {{--<div class="col-xs-4">--}}
+                            {{--<label>{{ '安卓端首页热门版块图片' }}</label><br>--}}
+                            {{--<el-upload--}}
+                                    {{--class="avatar-uploader"--}}
+                                    {{--action="/upload_image"--}}
+                                    {{--:show-file-list="false"--}}
+                                    {{--:on-success="imageUrlAndroidHandle">--}}
+                                {{--<img v-if="imageUrlAndroid" :src="imageUrlAndroid" class="el-avatar">--}}
+                                {{--<i v-else class="el-icon-plus avatar-uploader-icon"></i>--}}
+                            {{--</el-upload>--}}
+                            {{--<el-input v-model="imageUrlAndroid" type="hidden" name="node[android_icon]"></el-input>--}}
+                        {{--</div>--}}
+
+                        {{--<div class="col-xs-4">--}}
+                            {{--<label>{{ '安卓端版块列表图片' }}</label><br>--}}
+                            {{--<el-upload--}}
+                                    {{--class="avatar-uploader"--}}
+                                    {{--action="/upload_image"--}}
+                                    {{--:show-file-list="false"--}}
+                                    {{--:on-success="imageListUrlAndroidHandle">--}}
+                                {{--<img v-if="imageListUrlAndroid" :src="imageListUrlAndroid" class="el-avatar">--}}
+                                {{--<i v-else class="el-icon-plus avatar-uploader-icon"></i>--}}
+                            {{--</el-upload>--}}
+                            {{--<el-input  v-model="imageListUrlAndroid" placeholder="请输入内容" type="hidden" name="node[android_icon_list]"></el-input>--}}
+                        {{--</div>--}}
+
+                        {{--<div class="col-xs-4">--}}
+                            {{--<label>{{ '安卓端版块详情页图片' }}</label><br>--}}
+                            {{--<el-upload--}}
+                                {{--class="avatar-uploader"--}}
+                                {{--action="/upload_image"--}}
+                                {{--:show-file-list="false"--}}
+                                {{--:on-success="imageDetailUrlAndroidHandle">--}}
+                            {{--<img v-if="imageDetailUrlAndroid" :src="imageDetailUrlAndroid" class="el-avatar">--}}
+                            {{--<i v-else class="el-icon-plus avatar-uploader-icon"></i>--}}
+                        {{--</el-upload>--}}
+                        {{--<el-input  v-model="imageDetailUrlAndroid" placeholder="请输入内容" type="hidden" name="node[android_icon_detail]"></el-input>--}}
+                    {{--</div>--}}
+                    {{--</div>--}}
+                    {{--IOS端版块图片--}}
+                    {{--<div class="form-group row">--}}
+                        {{--<div class="col-xs-4">--}}
+                            {{--<label>{{ 'IOS端首页热门版块图片' }}</label><br>--}}
+                            {{--<el-upload--}}
+                                    {{--class="avatar-uploader"--}}
+                                    {{--action="/upload_image"--}}
+                                    {{--:show-file-list="false"--}}
+                                    {{--:on-success="imageUrlIosHandle">--}}
+                                {{--<img v-if="imageUrlIos" :src="imageUrlIos" class="el-avatar">--}}
+                                {{--<i v-else class="el-icon-plus avatar-uploader-icon"></i>--}}
+                            {{--</el-upload>--}}
+                            {{--<el-input v-model="imageUrlIos" type="hidden" name="node[ios_icon]"></el-input>--}}
+                        {{--</div>--}}
+
+                        {{--<div class="col-xs-4">--}}
+                            {{--<label>{{ 'IOS端版块列表图片' }}</label><br>--}}
+                            {{--<el-upload--}}
+                                    {{--class="avatar-uploader"--}}
+                                    {{--action="/upload_image"--}}
+                                    {{--:show-file-list="false"--}}
+                                    {{--:on-success="imageListUrlIosHandle">--}}
+                                {{--<img v-if="imageListUrlIos" :src="imageListUrlIos" class="el-avatar">--}}
+                                {{--<i v-else class="el-icon-plus avatar-uploader-icon"></i>--}}
+                            {{--</el-upload>--}}
+                            {{--<el-input  v-model="imageListUrlIos" placeholder="请输入内容" type="hidden" name="node[ios_icon_list]"></el-input>--}}
+                        {{--</div>--}}
+
+                        {{--<div class="col-xs-4">--}}
+                            {{--<label>{{ 'IOS端版块详情页图片' }}</label><br>--}}
+                            {{--<el-upload--}}
+                                    {{--class="avatar-uploader"--}}
+                                    {{--action="/upload_image"--}}
+                                    {{--:show-file-list="false"--}}
+                                    {{--:on-success="imageDetailUrlIosHandle">--}}
+                                {{--<img v-if="imageDetailUrlIos" :src="imageDetailUrlIos" class="el-avatar">--}}
+                                {{--<i v-else class="el-icon-plus avatar-uploader-icon"></i>--}}
+                            {{--</el-upload>--}}
+                            {{--<el-input  v-model="imageDetailUrlIos" type="hidden" name="node[ios_icon_detail]"></el-input>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
+                    {{--H5端版块图片--}}
+                    {{--<div class="form-group row">--}}
+                        {{--<div class="col-xs-4">--}}
+                            {{--<label>{{ 'H5端首页热门版块图片' }}</label><br>--}}
+                            {{--<el-upload--}}
+                                    {{--class="avatar-uploader"--}}
+                                    {{--action="/upload_image"--}}
+                                    {{--:show-file-list="false"--}}
+                                    {{--:on-success="imageUrlHandle">--}}
+                                {{--<img v-if="imageUrl" :src="imageUrl" class="el-avatar">--}}
+                                {{--<i v-else class="el-icon-plus avatar-uploader-icon"></i>--}}
+                            {{--</el-upload>--}}
+                            {{--<el-input v-model="imageUrl" type="hidden" name="node[icon]"></el-input>--}}
+                        {{--</div>--}}
+
+                        {{--<div class="col-xs-4">--}}
+                            {{--<label>{{ 'H5端版块列表图片' }}</label><br>--}}
+                            {{--<el-upload--}}
+                                    {{--class="avatar-uploader"--}}
+                                    {{--action="/upload_image"--}}
+                                    {{--:show-file-list="false"--}}
+                                    {{--:on-success="imageListUrlHandle">--}}
+                                {{--<img v-if="imageListUrl" :src="imageListUrl" class="el-avatar">--}}
+                                {{--<i v-else class="el-icon-plus avatar-uploader-icon"></i>--}}
+                            {{--</el-upload>--}}
+                            {{--<el-input  v-model="imageListUrl" type="hidden" name="node[icon_list]"></el-input>--}}
+                        {{--</div>--}}
+
+                        {{--<div class="col-xs-4">--}}
+                            {{--<label>{{ 'H5端版块详情页图片' }}</label><br>--}}
+                            {{--<el-upload--}}
+                                    {{--class="avatar-uploader"--}}
+                                    {{--action="/upload_image"--}}
+                                    {{--:show-file-list="false"--}}
+                                    {{--:on-success="imageDetailUrlHandle">--}}
+                                {{--<img v-if="imageDetailUrl" :src="imageDetailUrl" class="el-avatar">--}}
+                                {{--<i v-else class="el-icon-plus avatar-uploader-icon"></i>--}}
+                                {{--<el-input  v-model="imageDetailUrl" type="hidden" name="node[icon_detail]"></el-input>--}}
+                            {{--</el-upload>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
+                    {{--WEB端版块图片--}}
+                    {{--<div class="form-group row">--}}
+                        {{--<div class="col-xs-4">--}}
+                            {{--<label>{{ 'WEB端版块详情页图片' }}</label><br>--}}
+                            {{--<el-upload--}}
+                                    {{--class="avatar-uploader"--}}
+                                    {{--action="/upload_image"--}}
+                                    {{--:show-file-list="false"--}}
+                                    {{--:on-success="imageDetailUrlWebHandle">--}}
+                                {{--<img v-if="imageDetailUrlWeb" :src="imageDetailUrlWeb" class="el-avatar">--}}
+                                {{--<i v-else class="el-icon-plus avatar-uploader-icon"></i>--}}
+                            {{--</el-upload>--}}
+                            {{--<el-input v-model="imageDetailUrlWeb" type="hidden" name="node[web_icon_detail]"></el-input>--}}
+                        {{--</div>--}}
+
+                        {{--<div class="col-xs-4">--}}
+                            {{--<label>{{ 'WEB端右侧列表页图片' }}</label><br>--}}
+                            {{--<el-upload--}}
+                                    {{--class="avatar-uploader"--}}
+                                    {{--action="/upload_image"--}}
+                                    {{--:show-file-list="false"--}}
+                                    {{--:on-success="imageListUrlWebHandle">--}}
+                                {{--<img v-if="imageListUrlWeb" :src="imageListUrlWeb" class="el-avatar">--}}
+                                {{--<i v-else class="el-icon-plus avatar-uploader-icon"></i>--}}
+                            {{--</el-upload>--}}
+                            {{--<el-input  v-model="imageListUrlWeb" type="hidden" name="node[web_icon_list]"></el-input>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
+                    {{--板块相关信息--}}
+                    {{--<div>--}}
+                        {{--<div class="form-group">--}}
+                            {{--<label>{{ trans('dashboard.nodes.name') }}</label>--}}
+                            {{--{!! Form::text('node[name]', isset($node) ? $node->name : null, ['class' => 'form-control', 'required']) !!}--}}
+                        {{--</div>--}}
+
+                        {{--@if($sections->count() > 0)--}}
+                            {{--<div class="form-group">--}}
+                                {{--<label>{{ trans('dashboard.sections.sections') }}</label>--}}
+                                {{--<select name="node[section_id]" class="form-control">--}}
+                                    {{--@foreach($sections as $section)--}}
+                                        {{--<option value="{{ $section->id }}" {{ option_is_selected([$section, 'section_id', isset($node) ? $node : null]) }}>{{ $section->name }}</option>--}}
+                                    {{--@endforeach--}}
+                                {{--</select>--}}
+                            {{--</div>--}}
+                        {{--@else--}}
+                            {{--<input type="hidden" name="node[section_id]" value="0">--}}
+                        {{--@endif--}}
+                        {{--板块描述--}}
+                        {{--<div class="form-group">--}}
+                            {{--<label>{{ trans('dashboard.nodes.description') }}</label>--}}
+                            {{--{!! Form::textarea('node[description]', isset($node) ? $node->description : null , ['class' => 'form-control', 'required', 'rows' => 5]) !!}--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
+
+                    {{--添加版主--}}
+                    <div>
+                        <el-select v-model="moderatorArr" multiple placeholder="添加版主">
+                            @foreach($moderators as $moderator)
+                                <el-option value="{{ $moderator->id }}" label="{{ $moderator->username }}">
+                                    {{ $moderator->username }}
+                                </el-option>
+                            @endforeach
+                        </el-select>
+                        <input type="hidden" class="form-control" :value="moderatorArr" name="moderatorArr">
+                    </div>
+                    {{--添加实习版主--}}
+                    <div>
+                        <el-select v-model="praModeratorArr" multiple placeholder="添加实习版主">
+                            @foreach($praModerators as $praModerator)
+                                <el-option value="{{ $praModerator->id }}" label="{{ $praModerator->username }}">
+                                    {{ $praModerator->username }}
+                                </el-option>
+                            @endforeach
+                        </el-select>
+                        <input type="hidden" class="form-control" :value="praModeratorArr" name="praModeratorArr">
                     </div>
 
-                    <div class="col-xs-4">
-                        <label>{{ '安卓端版块列表图片' }}</label><br>
-                        <el-upload
-                                class="avatar-uploader"
-                                action="/upload_image"
-                                :show-file-list="false"
-                                :on-success="imageListUrlAndroidHandle">
-                            <img v-if="imageListUrlAndroid" :src="imageListUrlAndroid" class="el-avatar">
-                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                        </el-upload>
-                        <el-input  v-model="imageListUrlAndroid" placeholder="请输入内容" type="hidden" name="node[android_icon_list]"></el-input>
-                    </div>
-
-                    <div class="col-xs-4">
-                        <label>{{ '安卓端版块详情页图片' }}</label><br>
-                        <el-upload
-                                class="avatar-uploader"
-                                action="/upload_image"
-                                :show-file-list="false"
-                                :on-success="imageDetailUrlAndroidHandle">
-                            <img v-if="imageDetailUrlAndroid" :src="imageDetailUrlAndroid" class="el-avatar">
-                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                        </el-upload>
-                        <el-input  v-model="imageDetailUrlAndroid" placeholder="请输入内容" type="hidden" name="node[android_icon_detail]"></el-input>
-                    </div>
-                </div>
-                {{--IOS端版块图片--}}
-                <div class="form-group row">
-                    <div class="col-xs-4">
-                        <label>{{ 'IOS端首页热门版块图片' }}</label><br>
-                        <el-upload
-                                class="avatar-uploader"
-                                action="/upload_image"
-                                :show-file-list="false"
-                                :on-success="imageUrlIosHandle">
-                            <img v-if="imageUrlIos" :src="imageUrlIos" class="el-avatar">
-                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                        </el-upload>
-                        <el-input v-model="imageUrlIos" type="hidden" name="node[ios_icon]"></el-input>
-                    </div>
-
-                    <div class="col-xs-4">
-                        <label>{{ 'IOS端版块列表图片' }}</label><br>
-                        <el-upload
-                                class="avatar-uploader"
-                                action="/upload_image"
-                                :show-file-list="false"
-                                :on-success="imageListUrlIosHandle">
-                            <img v-if="imageListUrlIos" :src="imageListUrlIos" class="el-avatar">
-                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                        </el-upload>
-                        <el-input  v-model="imageListUrlIos" placeholder="请输入内容" type="hidden" name="node[ios_icon_list]"></el-input>
-                    </div>
-
-                    <div class="col-xs-4">
-                        <label>{{ 'IOS端版块详情页图片' }}</label><br>
-                        <el-upload
-                                class="avatar-uploader"
-                                action="/upload_image"
-                                :show-file-list="false"
-                                :on-success="imageDetailUrlIosHandle">
-                            <img v-if="imageDetailUrlIos" :src="imageDetailUrlIos" class="el-avatar">
-                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                        </el-upload>
-                        <el-input  v-model="imageDetailUrlIos" type="hidden" name="node[ios_icon_detail]"></el-input>
-                    </div>
-                </div>
-                {{--H5端版块图片--}}
-                <div class="form-group row">
-                    <div class="col-xs-4">
-                        <label>{{ 'H5端首页热门版块图片' }}</label><br>
-                        <el-upload
-                                class="avatar-uploader"
-                                action="/upload_image"
-                                :show-file-list="false"
-                                :on-success="imageUrlHandle">
-                            <img v-if="imageUrl" :src="imageUrl" class="el-avatar">
-                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                        </el-upload>
-                        <el-input v-model="imageUrl" type="hidden" name="node[icon]"></el-input>
-                    </div>
-
-                    <div class="col-xs-4">
-                        <label>{{ 'H5端版块列表图片' }}</label><br>
-                        <el-upload
-                                class="avatar-uploader"
-                                action="/upload_image"
-                                :show-file-list="false"
-                                :on-success="imageListUrlHandle">
-                            <img v-if="imageListUrl" :src="imageListUrl" class="el-avatar">
-                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                        </el-upload>
-                        <el-input  v-model="imageListUrl" type="hidden" name="node[icon_list]"></el-input>
-                    </div>
-
-                    <div class="col-xs-4">
-                        <label>{{ 'H5端版块详情页图片' }}</label><br>
-                        <el-upload
-                                class="avatar-uploader"
-                                action="/upload_image"
-                                :show-file-list="false"
-                                :on-success="imageDetailUrlHandle">
-                            <img v-if="imageDetailUrl" :src="imageDetailUrl" class="el-avatar">
-                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                            <el-input  v-model="imageDetailUrl" type="hidden" name="node[icon_detail]"></el-input>
-                        </el-upload>
-                    </div>
-                </div>
-                {{--WEB端版块图片--}}
-                <div class="form-group row">
-                    <div class="col-xs-4">
-                        <label>{{ 'WEB端版块详情页图片' }}</label><br>
-                        <el-upload
-                                class="avatar-uploader"
-                                action="/upload_image"
-                                :show-file-list="false"
-                                :on-success="imageDetailUrlWebHandle">
-                            <img v-if="imageDetailUrlWeb" :src="imageDetailUrlWeb" class="el-avatar">
-                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                        </el-upload>
-                        <el-input v-model="imageDetailUrlWeb" type="hidden" name="node[web_icon_detail]"></el-input>
-                    </div>
-
-                    <div class="col-xs-4">
-                        <label>{{ 'WEB端右侧列表页图片' }}</label><br>
-                        <el-upload
-                                class="avatar-uploader"
-                                action="/upload_image"
-                                :show-file-list="false"
-                                :on-success="imageListUrlWebHandle">
-                            <img v-if="imageListUrlWeb" :src="imageListUrlWeb" class="el-avatar">
-                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                        </el-upload>
-                        <el-input  v-model="imageListUrlWeb" type="hidden" name="node[web_icon_list]"></el-input>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>{{ trans('dashboard.nodes.name') }}</label>
-                    {!! Form::text('node[name]', isset($node) ? $node->name : null, ['class' => 'form-control', 'required']) !!}
-                </div>
-
-                @if($sections->count() > 0)
                     <div class="form-group">
-                        <label>{{ trans('dashboard.sections.sections') }}</label>
-                        <select name="node[section_id]" class="form-control">
-                            @foreach($sections as $section)
-                            <option value="{{ $section->id }}" {{ option_is_selected([$section, 'section_id', isset($node) ? $node : null]) }}>{{ $section->name }}</option>
-                            @endforeach
-                        </select>
+                        <label>{{ '主版块发帖时是否对普通用户开放' }}</label>
+                        <el-tooltip  placement="hidden" >
+                            <el-switch
+                                    v-model="valueShow"
+                                    on-color="#13ce66"
+                                    off-color="#ff4949"
+                                    on-value=1
+                                    off-value=0>
+                            </el-switch>
+                        </el-tooltip>
+                        <el-input  v-model="valueShow" placeholder="请输入内容" type="hidden" name="node[is_show]"></el-input>
                     </div>
-                @else
-                    <input type="hidden" name="node[section_id]" value="0">
-                @endif
-                {{--板块描述--}}
-                <div class="form-group">
-                    <label>{{ trans('dashboard.nodes.description') }}</label>
-                    {!! Form::textarea('node[description]', isset($node) ? $node->description : null , ['class' => 'form-control', 'required', 'rows' => 5]) !!}
-                </div>
-                {{--添加版主--}}
-                <div class="form-group">
-                    <label >{{ trans('dashboard.nodes.moderator.add') }}</label>
-                    <input type="text" name="user[name]" class="form-control"
-                    @if (isset($user['name']))
-                    value="{{ $user['name'] }}"
-                    @endif >
-                </div>
 
-                {{--添加实习版主--}}
-                <div class="form-group">
-                    <label >{{ trans('dashboard.nodes.pre-moderator.add') }}</label>
-                    <input type="text" name="user[name]" class="form-control"
-                           @if (isset($user['name']))
-                           value="{{ $user['name'] }}"
-                            @endif >
-                </div>
+                    <div class="form-group">
+                        <label>{{ trans('dashboard.nodes.prompt.node') }}</label>
+                        <el-tooltip  placement="hidden" >
+                            <el-switch
+                                    v-model="valuePrompt"
+                                    on-color="#13ce66"
+                                    off-color="#ff4949"
+                                    on-value=1
+                                    off-value=0>
+                            </el-switch>
+                        </el-tooltip>
+                        <el-input  v-model="valuePrompt" placeholder="请输入内容" type="hidden" name="node[is_prompt]"></el-input>
 
-
-                <div class="form-group">
-                    <label>{{ '主版块发帖时是否对普通用户开放' }}</label>
-                    <el-tooltip  placement="hidden" >
-                        <el-switch
-                                v-model="valueShow"
-                                on-color="#13ce66"
-                                off-color="#ff4949"
-                                on-value=1
-                                off-value=0>
-                        </el-switch>
-                    </el-tooltip>
-                    <el-input  v-model="valueShow" placeholder="请输入内容" type="hidden" name="node[is_show]"></el-input>
-                </div>
-
-                <div class="form-group">
-                    <label>{{ trans('dashboard.nodes.prompt.node') }}</label>
-                    <el-tooltip  placement="hidden" >
-                        <el-switch
-                                v-model="valuePrompt"
-                                on-color="#13ce66"
-                                off-color="#ff4949"
-                                on-value=1
-                                off-value=0>
-                        </el-switch>
-                    </el-tooltip>
-                    <el-input  v-model="valuePrompt" placeholder="请输入内容" type="hidden" name="node[is_prompt]"></el-input>
-
-                    <label>{{ trans('dashboard.nodes.prompt.nodeDetail') }}</label>
-                    {!! Form::textarea('node[prompt]', isset($node) ? $node->prompt : null , ['class' => 'form-control', 'rows' => 3]) !!}
-                </div>
-
-
-                @if(isset($node))
-                <div>
-                    <label>{{ trans('dashboard.nodes.moderator.list') }}</label>
-                    <table class="table table-bordered table-striped table-condensed">
-                        <tbody>
-                            <tr class="head">
-                                <td>版主用户名</td>
-                                <td>所在组别</td>
-                                <td>操作</td>
-                            </tr>
-                            @foreach($node->moderators as $moderator)
-                            <tr>
-                                <td>{{ $moderator->user->username }}</td>
-                                <td>{{ $moderator->user->role }}</td>
-                                <td>
-                                <a data-url="/dashboard/node/{{ $moderator->id }}/audit/to/trash" data-method="post" class="need-reason" title="删除"><i class="fa fa-trash"></i></a>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-
-                    </table>
-                </div>
-                @endif
-
+                        <label>{{ trans('dashboard.nodes.prompt.nodeDetail') }}</label>
+                        {!! Form::textarea('node[prompt]', isset($node) ? $node->prompt : null , ['class' => 'form-control', 'rows' => 3]) !!}
+                    </div>
                 </fieldset>
 
                 <div class="row">
@@ -305,6 +285,11 @@
                 imageListUrlWeb: "{{ isset($node) ? ($node->web_icon_list) : (Input::old('node')['web_icon_list']) }}",
                 valuePrompt: "{{  $node->is_prompt or 0  }}",
                 valueShow: "{{  $node->is_show or 1  }}",
+                moderatorArr:[],
+                praModeratorArr: [],
+                {{--moderatorArr: "{{ isset($node) ? ($nodeModerators->toArray()) : [] }}",--}}
+                {{--praModeratorArr: "{{ isset($node) ? ($nodePraModerators->toArray()) : [] }}",--}}
+                {{--moderators: "{!! isset($moderators) ? ['a', 'b'] : [] !!}",--}}
             };
         },
         methods: {

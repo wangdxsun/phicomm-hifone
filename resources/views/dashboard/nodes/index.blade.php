@@ -35,11 +35,11 @@
                 <div class="col-xs-2 drag-handle">
                     {{ $node->description }}
                 </div>
-                <div class="col-xs-2 drag-handle">
-                    @foreach($node->moderators as $moderator)
-                    <a data-name="{{ $moderator->user->username }}" href="{{ $moderator->user->url }}">{{ $moderator->user->username . ' ' }}</a>
-                    @endforeach
-                </div>
+                {{--<div class="col-xs-2 drag-handle">--}}
+                    {{--@foreach($node->moderators as $moderator)--}}
+                    {{--<a data-name="{{ $moderator->user->username }}" href="{{ $moderator->user->url }}">{{ $moderator->user->username . ' ' }}</a>--}}
+                    {{--@endforeach--}}
+                {{--</div>--}}
 
                 <div class="col-xs-2 text-right">
                     <a href="{{ route('dashboard.node.edit',['id'=>$node->id]) }}" class="btn btn-default btn-sm">{{ trans('forms.edit') }}</a>

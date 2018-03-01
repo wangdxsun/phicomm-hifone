@@ -13,7 +13,6 @@ namespace Hifone\Models;
 
 use Hifone\Presenters\NodePresenter;
 use McCool\LaravelAutoPresenter\HasPresenter;
-use DB;
 
 class Node extends BaseModel implements HasPresenter
 {
@@ -149,11 +148,6 @@ class Node extends BaseModel implements HasPresenter
         return $this->hasMany(SubNode::class)->orderBy('order');
     }
 
-    public function moderators()
-    {
-        return $this->hasMany(Moderator::class);
-    }
-
     public function scopeShow($query)
     {
         return $query->where('is_show', 1);
@@ -163,4 +157,20 @@ class Node extends BaseModel implements HasPresenter
     {
         return $this->hasManyThrough(Reply::class,Thread::class);
     }
+
+    //查询主板块下版主信息
+    public function moderators()
+    {
+        return $this->hasMany(Moderator::class);
+    }
+
+    //查询主板块下实习版主信息
+    public function praModerators()
+    {
+        return $this->hasMany(PraModerator::class, 'node_id', 'id');
+    }
+
+    //获取主板块下所有的版主和实习版主信息
+
+
 }
