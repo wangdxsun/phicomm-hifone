@@ -38,13 +38,15 @@ class ChatController extends Controller
         $messages = $chatBll->getMessages();
         foreach ($users as $user) {
             foreach ($messages as $message) {
-                $this->dispatch(new SendChat(Auth::user(), $user, $message));
+                $this->dispatch(new SendChat(Auth::user(), $user, $message))->onQueue('low');
             }
         }
     }
 
     public function chatStore(ChatBll $chatBll)
     {
+        ini_set('memory_limit', '-1');
+        ini_set('max_execution_time', 0);
         $data = Request::get('chat');
         if (empty($data['userType'])) {
             return Redirect::route('dashboard.chat.send')
