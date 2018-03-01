@@ -9,7 +9,7 @@ class SendChatHandler
 {
     public function handle(SendChat $sendChat)
     {
-        event(new NewChatMessageEvent($sendChat->from, $sendChat->to, $sendChat->message));
+        event(new NewChatMessageEvent($sendChat->from, $sendChat->to, $sendChat->message, 'low'));
     }
 
 }

@@ -372,8 +372,14 @@ class Thread extends BaseModel implements TaggableInterface
                 $value = substr($value, 3, sizeof($value)-5);
                 $query->where('title', 'LIKE', "%$value%");
             } elseif ($key == 'date_start') {
+                if ($value == "") {
+                    continue;
+                }
                 $query->where('created_at', '>=', $value);
             } elseif ($key == 'date_end') {
+                if ($value == "") {
+                    continue;
+                }
                 $query->where('created_at', '<=', $value);
             } elseif ($key == 'orderType'){
                 if ($value == 'reply_count') {

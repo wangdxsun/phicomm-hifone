@@ -25,7 +25,12 @@ class Notifier
 
     public function notify($type, User $author, User $toUser, $object)
     {
+        //判断是否通知过
         if ($this->isNotified($author->id, $toUser->id, $object, $type)) {
+            return;
+        }
+        //自己操作自己不通知
+        if ($author->id == $toUser->id) {
             return;
         }
         $data = [
@@ -34,27 +39,24 @@ class Notifier
             'body'          => ($object instanceof Thread) ? '': (isset($object->body) ? $object->body : ''),
             'type'          => $type,
         ];
-        //小红点 以下类型暂不计数
-//        || $type == 'reply_pin'
         if ($type == 'reply_like' || $type == 'thread_like' || $type == 'user_follow'
-        || $type == 'thread_favorite' || $type == 'thread_pin' || $type == 'thread_mark_excellent') {
+        || $type == 'thread_favorite' || $type == 'thread_pin' || $type == 'thread_mark_excellent' || $type == 'reply_pin') {
             $toUser->increment('notification_system_count', 1);
         } elseif ($type == 'reply_reply' || $type == 'reply_mention') {
             $toUser->increment('notification_at_count', 1);
         } elseif ($type == 'thread_new_reply') {
             $toUser->increment('notification_reply_count', 1);
         }
-
+        $object->notifications()->create($data);
         //消息推送
         $this->pushNotify($author, $toUser, $type, $object);
-
-        $object->notifications()->create($data);
     }
 
     public function batchNotify($type, User $author, $users, $object, $content = null)
     {
         foreach ($users as $user) {
             $toUser = (!$user instanceof User) ? $user->user : $user;
+            //自己操作自己不通知
             if ($author->id == $toUser->id) {
                 continue;
             }
@@ -115,10 +117,11 @@ class Notifier
         $message = $this->makeMessage($type, $object);
         $avatar = $this->makeAvatar($from, $type);
         $title = $this->makeTitle($from, $type);
-        $type = $this->getType($type);
+
+        $typeNum = $this->getType($type);
         $data = [
             "content" => mb_substr($message, 0, 100),
-            "type" => $type,
+            "type" => $typeNum,
             "source" => '1',
             "producer" => '2',
             "isBroadcast" => '0',

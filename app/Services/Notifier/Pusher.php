@@ -36,6 +36,9 @@ class Pusher
      */
     public function push($uid, $data, $outline = '', $msg_type = '1')
     {
+        if (empty($uid)) {
+            return;
+        }
         $ticker = $msg_type == '0' ? 'ticker' : '';
 
         //云服务参数
@@ -59,6 +62,13 @@ class Pusher
         //测试环境 114.141.173.53外网 192.168.43.111内网
         $json = curlPost(env('PHIDELIVER'), $parameters);
         $output = json_decode($json, true);
+        if (is_null($output)) {//html
+            $message = "Required String parameter 'uid' is not present";
+            \Log::error($message);
+        } elseif (0 != $output['error']) {
+            $message = 'error : ' . $output['error'] . 'message : ' . $output['message'];
+            \Log::error($message);
+        }
 
         return $output;
     }
