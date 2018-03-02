@@ -37,7 +37,7 @@ class ThreadController extends AppController
     }
 
     //首页精华帖子
-    public function excellentThreads()
+    public function excellent()
     {
         $threads = Thread::visible()->with(['user', 'node'])->excellent()->paginate();
         return $threads;

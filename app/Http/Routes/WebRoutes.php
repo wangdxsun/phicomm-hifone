@@ -38,7 +38,7 @@ class WebRoutes
             //内容相关
             $router->get('threads/hot', 'ThreadController@index');
             $router->get('threads/recent', 'ThreadController@recent')->middleware('active:web');
-            $router->get('threads/excellent', 'ThreadController@excellentThreads')->middleware('active:web');
+            $router->get('threads/excellent', 'ThreadController@excellent')->middleware('active:web');
             $router->get('thread/search/{keyword}', 'ThreadController@search')->middleware('active:web');
             $router->get('user/search/{keyword}', 'UserController@search')->middleware('active:web');
             $router->get('threads/{thread}', 'ThreadController@show')->middleware('active:web');
@@ -116,7 +116,7 @@ class WebRoutes
 
             //后台管理员
             $router->group(['middleware' => ['auth', 'role:Admin|Founder|NodeMaster']], function ($router) {
-                $router->post('threads/{thread}/excellent', 'ThreadController@excellent');
+                $router->post('threads/{thread}/excellent', 'ThreadController@setExcellent');
                 $router->post('threads/{thread}/pin', 'ThreadController@pin');
                 $router->post('threads/{thread}/sink', 'ThreadController@sink');
             });

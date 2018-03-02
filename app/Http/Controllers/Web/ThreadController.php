@@ -34,7 +34,7 @@ class ThreadController extends WebController
     }
 
     //首页精华帖子
-    public function excellentThreads()
+    public function excellent()
     {
         $threads = Thread::visible()->with(['user', 'node'])->excellent()->paginate();
         return $threads;
@@ -110,13 +110,14 @@ class ThreadController extends WebController
         return $threadBll->replies($thread, 'web');
     }
 
-    public function excellent(Thread $thread)
+    public function setExcellent(Thread $thread)
     {
         if ($thread->is_excellent > 0) {
             $thread->decrement('is_excellent', 1);
             $this->updateOpLog($thread, '取消精华');
         } else {
-            $thread->increment('is_excellent', 1);
+            $thread->increment('is_', 1);
+            $thread->excellent_time = Carbon::now()->toDateTimeString();
             $this->updateOpLog($thread, '精华');
             event(new ExcellentWasAddedEvent($thread->user));
             event(new ThreadWasMarkedExcellentEvent($thread));

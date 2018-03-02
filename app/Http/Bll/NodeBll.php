@@ -45,7 +45,7 @@ class NodeBll extends BaseBll
         return $threads;
     }
 
-    //主板块中的精华帖子
+    //主版块中的精华帖子
     public function excellentThreadsOfNode(Node $node)
     {
         $threads = Thread::visible()->ofNode($node)->excellent()->with(['user', 'subNode'])->paginate();

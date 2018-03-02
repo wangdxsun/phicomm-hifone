@@ -59,7 +59,7 @@ class DashboardRoutes
             $router->post('reply/{reply}/recycle', 'ReplyController@recycle');
             $router->post('thread/{thread}/pin', 'ThreadController@pin');
             $router->post('thread/{thread}/sink', 'ThreadController@sink');
-            $router->post('thread/{thread}/excellent', 'ThreadController@excellent');
+            $router->post('thread/{thread}/excellent', 'ThreadController@setExcellent');
             $router->post('thread/{thread}/recycle', 'ThreadController@recycle');
             $router->post('report/{report}/trash', 'ReportController@trash');
             $router->post('report/{report}/ignore', 'ReportController@ignore');

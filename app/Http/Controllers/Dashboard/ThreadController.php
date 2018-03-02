@@ -188,13 +188,14 @@ class ThreadController extends Controller
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
-    public function excellent(Thread $thread)
+    public function setExcellent(Thread $thread)
     {
         if ($thread->is_excellent > 0) {
             $thread->is_excellent = 0;
             $this->updateOpLog($thread, '取消精华');
         } else {
             $thread->is_excellent = 1;
+            $thread->excellent_time = Carbon::now()->toDateTimeString();
             $this->updateOpLog($thread, '精华');
             event(new ExcellentWasAddedEvent($thread->user));
             event(new ThreadWasMarkedExcellentEvent($thread));

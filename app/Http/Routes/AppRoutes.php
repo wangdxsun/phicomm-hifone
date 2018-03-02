@@ -39,7 +39,7 @@ class AppRoutes
             $router->get('banners/{carousel}', 'BannerController@bannerViewCount')->name('banner.show')->where('carousel', '[0-9]+')->middleware('active:app');
             $router->get('threads', 'ThreadController@index');
             $router->get('threads/recent', 'ThreadController@recent')->middleware('active:app');
-            $router->get('threads/excellent', 'ThreadController@excellentThreads')->middleware('active:app');
+            $router->get('threads/excellent', 'ThreadController@excellent')->middleware('active:app');
             $router->get('threads/search/{keyword}', 'ThreadController@search');
             $router->get('users/search/{keyword}', 'UserController@search');
             $router->get('threads/{thread}', 'ThreadController@show')->where('thread', '[0-9]+')->middleware('active:app');
