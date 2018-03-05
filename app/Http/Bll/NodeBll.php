@@ -88,11 +88,13 @@ class NodeBll extends BaseBll
     {
         $hot = $this->hotThreadsOfNode($node);
         $recent = $this->recentThreadsOfNode($node);
+        $excellent = $this->excellentThreadsOfNode($node);
         $moderators = $node->moderators()->with(['user'])->get();
         $subNodes = $node->subNodes()->select(['name', 'id'])->get();
 
         $node['hot'] = $hot;
         $node['recent'] = $recent;
+        $node['excellent'] = $excellent;
         $node['moderators'] = $moderators;
         $node['subNodes'] = $subNodes;
 
