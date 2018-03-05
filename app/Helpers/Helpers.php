@@ -88,7 +88,7 @@ if (!function_exists('thread_filter')) {
         $node_id = Request::segment(2);
         $node_append = '';
         if ($node_id) {
-            $link = URL::to(is_numeric($node_id) ? 'nodes' : 'go', $node_id).'?filter='.$filter;
+            $link = URL::to(is_numeric($node_id) ? 'node' : 'go', $node_id).'?filter='.$filter;
         } else {
             $query_append = '';
             $query = Input::except('filter', '_pjax');
