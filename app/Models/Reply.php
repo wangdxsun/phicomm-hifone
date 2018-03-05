@@ -129,9 +129,22 @@ class Reply extends BaseModel
         return $query->whereIn('status', [static::VISIBLE, static::DELETED]);
     }
 
-    public function scopePinAndRecent($query)
+    //评论默认排序：点赞最多优先
+    public function scopePinLikeAndRecent($query)
     {
-        return $query->orderBy('order', 'desc')->orderBy('created_at', 'desc');
+        return $query->orderBy('order', 'desc')->orderBy('like_count', 'desc')->orderBy('created_at', 'desc');
+    }
+
+    //评论按时间倒序
+    public function scopeRecentDesc($query)
+    {
+        return $query->orderBy('created_at', 'desc');
+    }
+
+    //评论按时间正序
+    public function scopeRecentAsc($query)
+    {
+        return $query->orderBy('created_at');
     }
 
     //评论可见性

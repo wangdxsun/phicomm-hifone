@@ -224,12 +224,37 @@ class ThreadBll extends BaseBll
         return $thread;
     }
 
-    public function replies(Thread $thread, $source = '')
+    public function replies(Thread $thread, $sort = 'desc', $source = '')
     {
-        if ($source == 'web') {
-            $replies = $thread->replies()->visible()->with(['user', 'reply.user'])->pinAndRecent()->paginate();
+        //三种排序方式 like：点赞最多  desc：时间逆序  asc:时间正序
+        if ($source == 'web') {//web端查看评论列表只显示状态正常的
+            switch ($sort) {
+                case 'like':
+                    $replies = $thread->replies()->visible()->with(['user', 'reply.user'])->pinLikeAndRecent()->paginate();
+                    break;
+                case 'desc':
+                    $replies = $thread->replies()->visible()->with(['user', 'reply.user'])->recentDesc()->paginate();
+                    break;
+                case 'asc':
+                    $replies = $thread->replies()->visible()->with(['user', 'reply.user'])->recentAsc()->paginate();
+                    break;
+                default :
+                    $replies = $thread->replies()->visible()->with(['user', 'reply.user'])->pinLikeAndRecent()->paginate();
+            }
         } else {
-            $replies = $thread->replies()->visibleAndDeleted()->with(['user', 'reply.user'])->pinAndRecent()->paginate();
+            switch ($sort) {
+                case 'like':
+                    $replies = $thread->replies()->visibleAndDeleted()->with(['user', 'reply.user'])->pinLikeAndRecent()->paginate();
+                    break;
+                case 'desc':
+                    $replies = $thread->replies()->visibleAndDeleted()->with(['user', 'reply.user'])->recentDesc()->paginate();
+                    break;
+                case 'asc':
+                    $replies = $thread->replies()->visibleAndDeleted()->with(['user', 'reply.user'])->recentAsc()->paginate();
+                    break;
+                default :
+                    $replies = $thread->replies()->visibleAndDeleted()->with(['user', 'reply.user'])->pinLikeAndRecent()->paginate();
+            }
         }
         foreach ($replies as $reply) {
             $reply['liked'] = Auth::check() ? Auth::user()->hasLikeReply($reply) : false;

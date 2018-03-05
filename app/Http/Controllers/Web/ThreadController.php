@@ -105,9 +105,12 @@ class ThreadController extends WebController
         ];
     }
 
-    public function replies(Thread $thread, ThreadBll $threadBll)
+
+
+    public function replies(Thread $thread, $sort, ThreadBll $threadBll)
     {
-        return $threadBll->replies($thread, 'web');
+        //$sort : like desc asc
+        return $threadBll->replies($thread, $sort, 'web');
     }
 
     public function setExcellent(Thread $thread)
@@ -116,7 +119,7 @@ class ThreadController extends WebController
             $thread->decrement('is_excellent', 1);
             $this->updateOpLog($thread, '取消精华');
         } else {
-            $thread->increment('is_', 1);
+            $thread->increment('is_excellent', 1);
             $thread->excellent_time = Carbon::now()->toDateTimeString();
             $this->updateOpLog($thread, '精华');
             event(new ExcellentWasAddedEvent($thread->user));
