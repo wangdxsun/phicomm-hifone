@@ -32,7 +32,7 @@ class ThreadController extends AppController
 
     public function recent()
     {
-        $threads = Thread::visible()->with(['user', 'node'])->recent()->paginate();
+        $threads = Thread::visible()->with(['user', 'node'])->recentEdit()->paginate();
         return $threads;
     }
 

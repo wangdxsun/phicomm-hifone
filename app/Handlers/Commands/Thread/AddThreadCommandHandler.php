@@ -40,6 +40,7 @@ class AddThreadCommandHandler
             'body'          => $body,
             'body_original' => $command->body,
             'created_at'    => Carbon::now()->toDateTimeString(),
+            'edit_time'     => Carbon::now()->toDateTimeString(),
             'updated_at'    => Carbon::now()->toDateTimeString(),
             'thumbnails'    => $thumbnails,
             'ip'            => getClientIp().':'.$_SERVER['REMOTE_PORT'],

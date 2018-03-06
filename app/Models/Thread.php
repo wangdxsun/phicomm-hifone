@@ -277,6 +277,12 @@ class Thread extends BaseModel implements TaggableInterface
         return $query->orderBy('created_at', 'desc');
     }
 
+    //最新列表和个人中心列表按照edit_time倒序排列
+    public function scopeRecentEdit($query)
+    {
+        return $query->orderBy('edit_time', 'desc');
+    }
+
     //精华帖子
     public function scopeExcellent($query)
     {
