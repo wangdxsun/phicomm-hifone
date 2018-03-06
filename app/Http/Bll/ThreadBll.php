@@ -196,16 +196,11 @@ class ThreadBll extends BaseBll
         $thread->body = app('parser.emotion')->parse($thread->body);
         if (Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($post)) || $this->isContainsImageOrUrl($post)) {
             $thread->bad_word = $badWord;
-            $msg = '帖子已提交，待审核';
         } else {
             $this->autoAudit($thread);
-            $msg = '发布成功';
         }
         $thread->save();
-        return [
-            'msg' => $msg,
-            'thread' => $thread
-        ];
+        return $thread;
     }
 
     public function showThread(Thread $thread)

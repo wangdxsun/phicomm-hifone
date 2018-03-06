@@ -81,8 +81,12 @@ class ThreadController extends ApiController
         $threadData = request('thread');
         $threadData['body'] = e($threadData['body']);
         $thread = $threadBll->createThread($threadData);
-        $result = $threadBll->auditThread($thread, $wordsFilter);
-        return $result;
+        $thread = $threadBll->auditThread($thread, $wordsFilter);
+        $msg = $thread->status == Thread::VISIBLE ? '发布成功' : '帖子已提交，待审核';
+        return [
+            'msg' => $msg,
+            'thread' => $thread
+        ];
     }
 
     public function replies(Thread $thread, ThreadBll $threadBll)

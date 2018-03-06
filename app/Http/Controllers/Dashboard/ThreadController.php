@@ -12,6 +12,7 @@
 namespace Hifone\Http\Controllers\Dashboard;
 
 use AltThree\Validator\ValidationException;
+use Carbon\Carbon;
 use Hifone\Commands\Thread\RemoveThreadCommand;
 use Hifone\Commands\Thread\UpdateThreadCommand;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
@@ -124,12 +125,14 @@ class ThreadController extends Controller
     }
 
     /**
+     * 只有管理员能操作该方法
      * Edit an thread.
-     * @param int $id
+     * @param Thread $thread
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Thread $thread)
     {
+        //修改帖子标题，版块和正文
         $threadData = Input::get('thread');
         $threadData['node_id'] = SubNode::find($threadData['sub_node_id'])->node->id;
 

@@ -3,6 +3,7 @@
 namespace Hifone\Http\Controllers\Web;
 
 use Auth;
+use Carbon\Carbon;
 use Hifone\Commands\Thread\UpdateThreadCommand;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
@@ -77,15 +78,24 @@ class ThreadController extends WebController
             throw new HifoneException('帖子内容不得多于10000个字符');
         }
         $thread = $threadBll->createThread(request('thread'));
-        $result = $threadBll->auditThread($thread, $wordsFilter);
-        return $result;
+        $thread = $threadBll->auditThread($thread, $wordsFilter);
+        $msg = $thread->status == Thread::VISIBLE ? '发布成功' : '帖子已提交，待审核';
+        return [
+            'msg' => $msg,
+            'thread' => $thread
+        ];
     }
 
-    public function update(Thread $thread)
+    /**
+     * 编辑帖子
+     * 管理员：编辑任何用户的帖子，编辑后精华有效，不重新审核
+     * 普通用户：只能编辑属于自己的帖子，编辑后精华失效，重新进入审核流程
+     * @param Thread $thread
+     * @return array
+     * @throws HifoneException
+     */
+    public function update(Thread $thread, ThreadBll $threadBll, WordsFilter $wordsFilter)
     {
-        if (!Auth::user()->hasRole(['Admin', 'Founder'])) {
-            throw new HifoneException('只有管理员才可以编辑帖子');
-        }
         //修改帖子标题，版块和正文
         $threadData = request('thread');
         $threadData['node_id'] = SubNode::find($threadData['sub_node_id'])->node->id;
@@ -93,23 +103,28 @@ class ThreadController extends WebController
         $threadData['body_original'] = $threadData['body'];
         $threadData['body'] = (new Markdown())->convertMarkdownToHtml($threadData['body']);
         $threadData['excerpt'] = Thread::makeExcerpt($threadData['body']);
-        try {
+
+        if (Auth::user()->hasRole(['Admin', 'Founder']) || Auth::id() == $thread->user_id) {
             $this->updateOpLog($thread, '修改帖子');
             $thread = dispatch(new UpdateThreadCommand($thread, $threadData));
-        } catch (\Exception $e) {
-            throw new HifoneException($e->getMessage());
+            if (Auth::user()->hasRole(['Admin', 'Founder'])) {
+                $msg = '恭喜，操作成功！';
+            } else {
+                $thread = $threadBll->auditThread($thread, $wordsFilter);
+                $msg = $thread->status == Thread::VISIBLE ? '编辑成功' : '帖子已提交，待审核';
+            }
+            return [
+                'msg' => $msg,
+                'thread' => $thread
+            ];
+        } else {
+            throw new HifoneException('您没有权限编辑这个帖子！');
         }
-        return [
-            'msg' => '恭喜，操作成功！',
-            'thread' => $thread
-        ];
     }
-
-
 
     public function replies(Thread $thread, $sort, ThreadBll $threadBll)
     {
-        //$sort : like desc asc
+        //$sort : [like, desc, asc]
         return $threadBll->replies($thread, $sort, 'web');
     }
 
