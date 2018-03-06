@@ -352,7 +352,7 @@ class ThreadController extends Controller
         DB::beginTransaction();
         try {
             foreach ($threadIds as $threadId) {
-                self::moveThread(Thread::find($threadId), $threadData);
+                dispatch(new UpdateThreadCommand(Thread::find($threadId), $threadData));
                 $count++;
             }
             DB::commit();
@@ -361,18 +361,5 @@ class ThreadController extends Controller
             return Redirect::back()->withErrors($e->getMessage());
         }
         return  Redirect::back()->withSuccess('恭喜，成功将'.$count.'个帖子移动到相应子版块！');
-    }
-
-    //移动帖子,将帖子移入别的版块
-    public function moveThread(Thread $thread, $threadData)
-    {
-        DB::beginTransaction();
-        try {
-            dispatch(new UpdateThreadCommand($thread, $threadData));
-            DB::commit();
-        } catch(\Exception $e) {
-            DB::rollBack();
-            return Redirect::back()->withErrors($e->getMessage());
-        }
     }
 }
