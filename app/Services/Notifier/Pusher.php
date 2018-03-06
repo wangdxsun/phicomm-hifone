@@ -64,10 +64,10 @@ class Pusher
         $output = json_decode($json, true);
         if (is_null($output)) {//html
             $message = "Required String parameter 'uid' is not present";
-            \Log::error($message);
+            \Log::error($message, ['uid' => $uid]);
         } elseif (0 != $output['error']) {
             $message = 'error : ' . $output['error'] . 'message : ' . $output['message'];
-            \Log::error($message);
+            \Log::error($message, ['error' => $output['error']]);
         }
 
         return $output;

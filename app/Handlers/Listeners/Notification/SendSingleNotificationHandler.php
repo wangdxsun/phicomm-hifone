@@ -40,8 +40,8 @@ class SendSingleNotificationHandler
             $this->favorite($event->thread);
         } elseif ($event instanceof ThreadWasMarkedExcellentEvent) {
             $this->markedExcellent($event->target);
-        } elseif ($event instanceof ThreadWasMovedEvent) {
-            $this->movedThread($event->target);
+//        } elseif ($event instanceof ThreadWasMovedEvent) {
+//            $this->movedThread($event->target);
         } elseif ($event instanceof ThreadWasPinnedEvent){
             $this->threadPinned($event->target);
         } elseif ($event instanceof ReplyWasPinnedEvent){
