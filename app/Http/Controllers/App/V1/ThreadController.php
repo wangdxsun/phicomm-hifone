@@ -30,9 +30,10 @@ class ThreadController extends AppController
         return $threads;
     }
 
+    //新帖榜：48小时内的新帖按照热度值高低取前50个
     public function recent()
     {
-        $threads = Thread::visible()->with(['user', 'node'])->recentEdit()->paginate();
+        $threads = Thread::visible()->with(['user', 'node'])->newRank()->get();
         return $threads;
     }
 

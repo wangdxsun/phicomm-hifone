@@ -277,6 +277,13 @@ class Thread extends BaseModel implements TaggableInterface
         return $query->orderBy('created_at', 'desc');
     }
 
+    //原生化新帖榜
+    public function scopeNewRank($query)
+    {
+        return $query->where('created_at', '>', Carbon::now()->subDays(2))
+            ->limit(50)->orderBy('heat', 'desc')->orderBy('created_at', 'desc');
+    }
+
     //最新列表和个人中心列表按照edit_time倒序排列
     public function scopeRecentEdit($query)
     {
