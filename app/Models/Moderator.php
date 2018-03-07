@@ -19,10 +19,9 @@ class Moderator extends BaseModel
         'updated_at',
     ];
 
-    //
     public function node()
     {
-        return $this->belongsTo(Node::class);
+        return $this->belongsTo(Node::class, 'node_id','id');
     }
 
     public function user()

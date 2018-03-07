@@ -14,6 +14,7 @@ namespace Hifone\Http\Controllers\Dashboard;
 use Hifone\Commands\Thread\RemoveThreadCommand;
 use Hifone\Commands\Thread\UpdateThreadCommand;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
+use Hifone\Events\Pin\NodePinWasAddedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Pin\SinkWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasAddedEvent;
@@ -158,7 +159,7 @@ class ThreadController extends Controller
 
     public function pin(Thread $thread)
     {
-        if ($thread->order > 0) {
+        if ($thread->order >= 1) {
             $thread->decrement('order', 1);
             $this->updateOpLog($thread, '取消置顶');
         } elseif ($thread->order == 0) {
@@ -173,6 +174,24 @@ class ThreadController extends Controller
             event(new PinWasAddedEvent($thread->user, 'Thread'));
         }
 
+        return Redirect::back()->withSuccess('恭喜，操作成功！');
+    }
+
+    //板块置顶帖子
+    public function nodePin(Thread $thread)
+    {
+        if ($thread->order == 1) {
+            $thread->increment('order', 1);
+        } elseif ($thread->order == 0) {
+            $thread->increment('order', 2);
+            //event(new NodePinWasAddedEvent($thread->user, 'thread_node_pin'));
+        } elseif ($thread->order == 2) {
+            $thread->decrement('order', 2);
+            //event(new NodePinWasAddedEvent($thread->user, 'thread_node_pin'));
+        } elseif ($thread->order < 0 ) {
+            $thread->update(['order' => 2]);
+            //event(new NodePinWasAddedEvent($thread->user, 'thread_node_pin'));
+        }
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 

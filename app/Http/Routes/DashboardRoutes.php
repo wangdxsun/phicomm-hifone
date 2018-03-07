@@ -47,6 +47,7 @@ class DashboardRoutes
             $router->post('thread/{thread}/index/to/trash', 'ThreadController@indexToTrash');
             $router->post('thread/{thread}/audit/to/trash', 'ThreadController@auditToTrash');
             $router->post('thread/{thread}/pin', 'ThreadController@pin');
+            $router->post('thread/{thread}/node/pin', 'ThreadController@nodePin');
             $router->post('thread/{thread}/sink', 'ThreadController@sink');
             $router->post('thread/{thread}/excellent', 'ThreadController@excellent');
             $router->post('thread/{thread}/recycle', 'ThreadController@recycle');
@@ -123,8 +124,19 @@ class DashboardRoutes
             $router->post('carousel/app/store', 'CarouselController@storeApp')->name('carousel.store.app');
             $router->post('carousel/{carousel}/close', 'CarouselController@close')->name('carousel.close');
 
+            $router->get('tag/type/index','TagTypeController@index')->name('tag.type.index');
+            $router->get('tag/type/create','TagTypeController@create')->name('tag.type.create');
+            $router->get('tag/type/{tagType}/edit','TagTypeController@edit')->name('tag.type.edit');
+            $router->patch('tag/type/{tagType}/update','TagTypeController@update')->name('tag.type.update');
+            $router->post('tag/type/store','TagTypeController@store')->name('tag.type.store');
+            $router->get('tag/type/{tagType}/destroy','TagTypeController@destroy')->name('tag.type.destroy');
+
             $router->get('tag/index','TagController@index')->name('tag.index');
-            $router->get('tag/type/create','TagTypeController@index')->name('tag.type.create');
+            $router->get('tag/create','TagController@create')->name('tag.create');
+            $router->get('tag/{tag}/edit','TagController@edit')->name('tag.edit');
+            $router->patch('tag/{tag}/update','TagController@update')->name('tag.update');
+            $router->post('tag/store','TagController@store')->name('tag.store');
+            $router->get('tag/{tag}/destroy','TagController@destroy')->name('tag.destroy');
 
             // Settings
             $router->group(['as' => 'settings.', 'prefix' => 'settings'], function (Registrar $router) {

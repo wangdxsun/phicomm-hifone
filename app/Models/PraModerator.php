@@ -20,10 +20,10 @@ class PraModerator extends BaseModel
         'updated_at',
     ];
 
-    //查询
+    //查询板块信息
     public function node()
     {
-        return $this->belongsTo(Node::class);
+        return $this->belongsTo(Node::class, 'node_id','id');
     }
 
     public function user()

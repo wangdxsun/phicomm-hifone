@@ -4,7 +4,7 @@
     @if(isset($sub_menu))
         @include('dashboard.partials.sub-sidebar')
     @endif
-    <div class="content-wrapper">
+    <div class="content-wrapper" id="app">
         <div class="header sub-header">
             <i class="fa fa-user"></i> 用户管理
             @if(Auth::user()->can('new_user'))
@@ -24,6 +24,27 @@
                             <option value="" selected>排列方式</option>
                             @foreach ($orderTypes as $key => $orderType)
                                 <option value="{{ $key }}">{{ $orderType }}</option>
+                            @endforeach
+                        </select>
+                        <el-select v-model="userTags" multiple placeholder="选择标签">
+                            <el-option-group
+                                    v-for="userTagType in userTagTypes"
+                                    :key="userTagType.id"
+                                    :label="userTagType.display_name">
+                                <el-option
+                                        v-for="tag in userTagType.tags"
+                                        :key="tag.id"
+                                        :label="tag.name"
+                                        :value="tag.id">
+                                </el-option>
+                            </el-option-group>
+                        </el-select>
+                        <input type="hidden" class="form-control" :value="userTags" name="user[tags]">
+
+                        <select class="form-control " name="tag[tagCount]">
+                            <option value="" selected>标签个数</option>
+                            @foreach ($tagCounts as $tagCount)
+                                <option value="{{ $tagCount }}">{{ $tagCount }}</option>
                             @endforeach
                         </select>
                         <button class="btn btn-default">搜索</button>
@@ -49,13 +70,14 @@
                     <td>注册IP</td>
                     <td>操作人</td>
                     <td>操作时间</td>
+                    <td>标签</td>
                     <td>操作</td>
                 </tr>
                 @foreach($users as $user)
                     <tr>
                         <td>{{ $user->id }}</td>
                         <td><img src="{{ $user->avatar_small }}" style="width: 20px; height: 20px;"></td>
-                        <td><a href="{{ route('user.show',['id'=>$user->id]) }}" target="_blank">{{ $user->username }}</a></td>
+                        <td><a href="{{ route('user.show', ['id'=>$user->id]) }}" target="_blank">{{ $user->username }}</a></td>
                         <td>{{ $user->phicomm_id }}</td>
                         <td>{{ $user->role }}</td>
                         <td>{{ $user->thread_count }}</td>
@@ -69,12 +91,17 @@
                         <td>{{ $user->lastOpUser->username }}</td>
                         <td>{{ $user->last_op_time }}</td>
                         <td>
-                            @if(Auth::user()->id <> $user->id)
+                            @foreach($user->tags as $tag)
+                                {{ $tag->name . '， ' }}
+                            @endforeach
+                        </td>
+                        <td>
+                            @if(Auth::user()->id <> $user->id && $user->id != 0 )
                                 @if(Auth::user()->can('edit_users'))
                                     <a href="/dashboard/user/{{ $user->id }}/edit" title="编辑"><i class="fa fa-pencil"></i></a>
                                     <a data-url="/dashboard/user/{{ $user->id }}/comment" data-method="post" title="禁止发言"><i class="{{ $user->comment }}"></i></a>
                                     <a data-url="/dashboard/user/{{ $user->id }}/login" data-method="post" title="禁止登录"><i class="{{ $user->login }}"></i></a>
-                                    {{--<a data-url="/dashboard/user/{{ $user->id }}" data-method="delete" class="confirm-action"><i class="fa fa-trash"></i></a>--}}
+                                    <a href="/dashboard/user/{{ $user->id }}/edit"  title="添加标签"><i class="fa fa-tags"></i></a>
                                 @endif
                             @endif
                         </td>
@@ -90,4 +117,17 @@
 
         </div>
     </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    userTags: {!! $userTags or json_encode([]) !!},
+                    userTagTypes: {!! $userTagTypes !!},
+                };
+            },
+
+        })
+    </script>
 @stop

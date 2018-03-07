@@ -32,7 +32,7 @@
             </li>
             @if (Auth::user()->hasRole('Admin')  || Auth::user()->hasRole('Founder'))
                 <li {!! set_active('dashboard/tag*') !!}>
-                    <a href="{{ route('dashboard.tag.index') }}">
+                    <a href="{{ route('dashboard.tag.type.index') }}">
                         <i class="fa fa-tags"></i>
                         <span>标签管理</span>
                     </a>

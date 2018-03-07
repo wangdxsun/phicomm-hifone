@@ -35,4 +35,13 @@ class Tag extends Model
         return $query->where('type', $tagType->id);
     }
 
+
+
+    //查询标签所属类别
+    public function tagType()
+    {
+        return $this->belongsTo(TagType::class,'type','id');
+    }
+
+
 }

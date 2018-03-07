@@ -20,6 +20,7 @@ use Hifone\Events\Favorite\FavoriteThreadWasRemovedEvent;
 use Hifone\Events\Follow\FollowWasRemovedEvent;
 use Hifone\Events\Image\ImageWasUploadedEvent;
 use Hifone\Events\Like\LikeWasRemovedEvent;
+use Hifone\Events\Pin\NodePinWasAddedEvent;
 use Hifone\Events\Reply\ReplyWasAddedEvent;
 use Hifone\Events\Reply\RepliedWasAddedEvent;
 use Hifone\Events\Reply\ReplyWasTrashedEvent;
@@ -107,7 +108,11 @@ class AddCreditHandler
                 $action = 'replied_pin';
             }
             $user = $event->user;
-        }elseif ($event instanceof SinkWasAddedEvent) {
+        } elseif($event instanceof  NodePinWasAddedEvent){
+            dd('here');
+            $user = $event->user;
+            $action = 'thread_node_pin';
+        }  elseif ($event instanceof SinkWasAddedEvent) {
             $action = 'thread_down';
             $user = $event->user;
         } elseif ($event instanceof FollowWasAddedEvent) {

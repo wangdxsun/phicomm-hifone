@@ -15,6 +15,8 @@ use AltThree\Validator\ValidationException;
 use Hifone\Hashing\PasswordHasher;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Role;
+use Hifone\Models\Tag;
+use Hifone\Models\TagType;
 use Hifone\Models\User;
 use Redirect;
 use View;
@@ -22,6 +24,8 @@ use Input;
 
 class UserController extends Controller
 {
+    const THREAD = 0;
+    const USER = 1;
     protected $hasher;
 
     /**
@@ -46,16 +50,30 @@ class UserController extends Controller
     public function index()
     {
         $search = $this->filterEmptyValue(Input::get('user'));
-        $users = User::search($search)->with('roles', 'lastOpUser')->paginate(20);
+        $tagCount = Input::get('tag');
+        if (array_key_exists('tags', $search)){
+            $search['tags'] = explode(',', $search['tags']);
+        }
+
+        if ($tagCount['tagCount'] != "" ) {
+            $users = User::has('tags', '=', $tagCount['tagCount'])->search($search)->with('roles', 'lastOpUser')->paginate(20);
+        } else {
+            $users = User::search($search)->with('roles', 'lastOpUser')->paginate(20);
+        }
         $roles = Role::all();
         $orderTypes = User::$orderTypes;
+        //传入所有用户标签类
+        $userTagTypes = TagType::ofType(UserController::USER)->with('tags')->get();
+        $tagCounts = range(1, count(Tag::whereIn('type', TagType::ofType(TagType::USER)->pluck('id')->toArray())->get()));
 
         return View::make('dashboard.users.index')
             ->withPageTitle(trans('dashboard.users.users').' - '.trans('dashboard.dashboard'))
             ->withUsers($users)
             ->with('orderTypes',$orderTypes)
             ->withRoles($roles)
+            ->with('userTagTypes', $userTagTypes)
             ->withSearch($search)
+            ->with('tagCounts', $tagCounts)
             ->withAllUsers([]);
     }
 
@@ -67,8 +85,11 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::adminGroup()->get();
+        //传入所有用户标签类
+        $userTagTypes = TagType::ofType(UserController::USER)->with('tags')->get();
         return View::make('dashboard.users.create_edit')
             ->withRoles($roles)
+            ->with('userTagTypes', $userTagTypes)
             ->withPageTitle(trans('dashboard.users.add.title').' - '.trans('dashboard.dashboard'));
     }
 
@@ -81,11 +102,12 @@ class UserController extends Controller
     {
         $userData = Input::get('user');
         $roleId = Input::get('roleId');
+        $tagData = explode(',',Input::get('userTags'));
         if (User::where('username', $userData['username'])->count() > 0) {
             return back()->withErrors('昵称已存在');
         }
         try {
-            \DB::transaction(function () use ($userData, $roleId) {
+            \DB::transaction(function () use ($userData, $roleId, $tagData) {
                 //创建用户密码
                 if (array_get($userData, 'password')) {
                     $userData['salt'] = str_random(8);
@@ -93,7 +115,7 @@ class UserController extends Controller
                 }
 
                 $user = User::create($userData);
-                $user->role_id = $roleId;
+                $user->tags()->sync($tagData);
                 $this->updateOpLog($user, '创建用户');
                 $user->addToIndex();
             });
@@ -110,9 +132,15 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $roles = Role::adminGroup()->get();
+        //查询出用户的标签
+        $userTags = $user->tags->pluck('id');
+        //传入所有用户标签类
+        $userTagTypes = TagType::ofType(UserController::USER)->with('tags')->get();
 
         return View::make('dashboard.users.create_edit')
             ->withPageTitle(trans('dashboard.users.add.title').' - '.trans('dashboard.dashboard'))
+            ->with('userTags', json_encode($userTags->toArray()))
+            ->with('userTagTypes', $userTagTypes)
             ->withUser($user)
             ->withRoles($roles);
     }
@@ -120,10 +148,11 @@ class UserController extends Controller
     public function update(User $user)
     {
         $userData = Input::get('user');
-
+        $tagData = explode(',', Input::get('userTags'));
         $roleId = Input::get('roleId');
+
         try {
-            \DB::transaction(function () use ($user, $userData, $roleId) {
+            \DB::transaction(function () use ($user, $userData, $roleId, $tagData) {
                 //修改用户密码，如果未设置则跳过
                 if (array_get($userData, 'password')) {
                     $userData['salt'] = $user->salt;
@@ -131,8 +160,8 @@ class UserController extends Controller
                 } else {
                     unset($userData['password']);
                 }
-
                 $user->update($userData);
+                $user->tags()->sync($tagData);
                 $user->role_id = $roleId;
                 $this->updateOpLog($user, '修改用户信息');
                 $user->updateIndex();
@@ -143,7 +172,7 @@ class UserController extends Controller
                 ->withTitle(sprintf('%s %s', trans('hifone.whoops'), '用户修改失败'))
                 ->withErrors($e->getMessageBag());
         }
-        return Redirect::back()
+        return Redirect::route('dashboard.user.index')
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.users.edit.success')));
     }
 
@@ -187,4 +216,5 @@ class UserController extends Controller
     {
         return $this->hasher->make($password, ['salt' => $salt]);
     }
+
 }

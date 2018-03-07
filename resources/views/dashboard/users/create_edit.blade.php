@@ -10,7 +10,7 @@
         </span>
         > <small>{{ trans(isset($user) ? 'dashboard.users.edit.title' : 'dashboard.users.add.title') }}</small>
     </div>
-    <div class="content-wrapper">
+    <div class="content-wrapper" id="app">
         <div class="row">
             <div class="col-md-12">
                     @include('partials.errors')
@@ -47,6 +47,23 @@
                             <label for="user-password">{{ trans('dashboard.users.password') }}</label>
                             <input type="password" name="user[password]" class="form-control" min="6" id="user-password">
                         </div>
+                        <label>{{ '用户标签' }}</label>
+                        <div>
+                            <el-select v-model="userTags" multiple placeholder="选择标签">
+                                <el-option-group
+                                        v-for="userTagType in userTagTypes"
+                                        :key="userTagType.id"
+                                        :label="userTagType.display_name">
+                                    <el-option
+                                            v-for="tag in userTagType.tags"
+                                            :key="tag.id"
+                                            :label="tag.name"
+                                            :value="tag.id">
+                                    </el-option>
+                                </el-option-group>
+                            </el-select>
+                            <input type="hidden" class="form-control" :value="userTags" name="userTags">
+                        </div>
                     </fieldset>
                     <div class='form-group'>
                         <div class='btn-group'>
@@ -58,4 +75,20 @@
             </div>
         </div>
     </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    userTags: {!! $userTags or json_encode([]) !!},
+                    userTagTypes: {!! $userTagTypes !!},
+                };
+            },
+
+        })
+    </script>
+    <style>
+
+    </style>
 @stop

@@ -23,7 +23,13 @@ trait SearchTrait
                 $query->where('username', 'LIKE', "%$value%");
             } elseif ($key == 'orderType'){
                 $query->orderBy($value,'desc');
-            } else {
+            } elseif ($key == 'tags'){
+                foreach ($value as $tagId) {
+                    $query->whereHas('tags', function ($query) use ($tagId){
+                        $query->where('tag_id', $tagId);
+                    });
+                }
+            }  else {
                 $query->where($key, $value);
             }
         }

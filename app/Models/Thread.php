@@ -331,7 +331,12 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function getPinAttribute()
     {
-        return $this->order > 0 ? 'fa fa-thumb-tack text-danger' : 'fa fa-thumb-tack';
+        return $this->order == 1 ? 'fa fa-thumb-tack text-danger' : 'fa fa-thumb-tack';
+    }
+
+    public function getNodePinAttribute()
+    {
+        return $this->order == 2  ? 'fa fa-hand-pointer-o text-danger' : 'fa fa-hand-pointer-o';
     }
 
     public function getExcellentAttribute()
@@ -461,19 +466,8 @@ class Thread extends BaseModel implements TaggableInterface
         return $value;
     }
 
-//    public function getDeviceAttribute($value)
+//    public function tags()
 //    {
-//        switch ($value) {
-//            case Thread::H5:
-//                return 'H5';
-//            case Thread::ANDROID:
-//                return 'Android';
-//            case Thread::IOS:
-//                return 'iOS';
-//            case Thread::WEB:
-//                return 'Web';
-//            default:
-//                return '未知';
-//        }
+//        return $this->morphMany(Taggable::class, 'taggable');
 //    }
 }

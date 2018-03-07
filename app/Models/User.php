@@ -17,6 +17,7 @@ use Cmgmyr\Messenger\Traits\Messagable;
 use Elasticquent\ElasticquentTrait;
 use Hifone\Models\Traits\SearchTrait;
 use Hifone\Presenters\UserPresenter;
+use Hifone\Services\Tag\TaggableInterface;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -24,10 +25,11 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use McCool\LaravelAutoPresenter\HasPresenter;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
+use Hifone\Models\Traits\Taggable;
 
-class User extends BaseModel implements AuthenticatableContract, CanResetPasswordContract, HasPresenter
+class User extends BaseModel implements AuthenticatableContract, CanResetPasswordContract, HasPresenter, TaggableInterface
 {
-    use Authenticatable, CanResetPassword, EntrustUserTrait, ValidatingTrait, Messagable, SearchTrait, ElasticquentTrait;
+    use Authenticatable, CanResetPassword, EntrustUserTrait, ValidatingTrait, Messagable, SearchTrait, ElasticquentTrait, Taggable;
 
     // Enable hasRole( $name ), can( $permission ),
     //   and ability($roles, $permissions, $options)
@@ -395,34 +397,16 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
             $this->attributes['notification_follow_count'];
     }
 
-    //根据用户信息查询版主信息
-    public function moderators()
-    {
-        return $this->hasMany(Moderator::class);
-    }
-
-    //根据用户信息查询实习版主信息
-    public function praModerators()
-    {
-        return $this->hasMany(PraModerator::class);
-    }
-
-
-    //根据用户信息查询所管理的主板块信息
-    public function scopeNodes()
-    {
-        //拿到该用户的所有版主、实习版主信息
-        $moderators = $this->moderators == null ? $this->praModerators : $this->moderators;
-        $nodes = [];
-        foreach ($moderators as $moderator) {
-            $nodes[] = $moderator->node;
-        }
-        return collect($nodes);
-    }
-
-    //主板块和用户建立多对多关系，通过用户查询用户所管理的主板块信息
+    //根据用户版主信息查询版块信息
     public function nodes()
     {
-        return $this->belongsToMany(Node::class);
+        return $this->belongsToMany(Node::class, 'moderators', 'user_id','node_id');
     }
+
+    //根据用户实习版主信息查询版块信息
+    public function praModerators()
+    {
+        return $this->belongsToMany(Node::class,'pra_moderators', 'user_id','node_id');
+    }
+
 }
