@@ -100,6 +100,7 @@ class Notification extends BaseModel implements HasPresenter
             'user_follow',
             'thread_favorite',
             'thread_pin',
+            'reply_pin',
             'thread_mark_excellent'
         ]);
     }

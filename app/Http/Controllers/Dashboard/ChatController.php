@@ -1,6 +1,7 @@
 <?php
 namespace Hifone\Http\Controllers\Dashboard;
 
+use Hifone\Events\Chat\NewChatMessageEvent;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Jobs\SendChat;
 use Hifone\Models\Chat;
@@ -37,7 +38,7 @@ class ChatController extends Controller
         $messages = $chatBll->getMessages();
         foreach ($users as $user) {
             foreach ($messages as $message) {
-                $this->dispatch(new SendChat(Auth::user(), $user, $message));
+                $this->dispatch((new SendChat(Auth::user(), $user, $message))->onQueue('low'));
             }
         }
     }
