@@ -32,6 +32,7 @@ class Thread extends BaseModel implements TaggableInterface
     const TRASH = -1;//审核未通过
     const AUDIT = -2;//待审核 or 审核中
     const DELETED = -3;//已删除
+    const DRAFT = -4;//草稿
 
     //发帖渠道channel -1:意见反馈；0:社区
     const FEEDBACK = -1;
@@ -193,15 +194,29 @@ class Thread extends BaseModel implements TaggableInterface
         $this->save();
     }
 
-    //帖子详情处判定是否可见
-    public function inVisible()
+    //帖子详情是否可见
+    public function isVisible()
     {
-        //未登录，帖子可见性取决于帖子本身
-        if (Auth::guest() && !$this->getVisibleAttribute()) {
+        //按照帖子状态、用户登录态、用户是否帖子作者编排
+        if ($this->status == Thread::VISIBLE) {
             return true;
+        } elseif ($this->status == Thread::TRASH || $this->status == Thread::DRAFT) {
+            if (Auth::guest()) {
+                return false;
+            } elseif (Auth::id() == $this->user->id) {
+                return true;
+            } else {
+                return false;
+            }
+        } elseif ($this->status == Thread::AUDIT || $this->status == Thread::DELETED) {
+            if (Auth::guest()) {
+                return false;
+            } elseif (Auth::id() == $this->user->id || Auth::user()->can('view_thread')) {
+                return true;
+            } else {
+                return false;
+            }
         }
-        //已登录，帖子可见取决于帖子状态和是否当前用户或管理员
-        return !$this->getVisibleAttribute() && !(Auth::id() == $this->user->id || Auth::user()->can('view_thread'));
     }
 
     //正常
@@ -226,6 +241,12 @@ class Thread extends BaseModel implements TaggableInterface
     public function scopeVisibleAndDeleted($query)
     {
         return $query->whereIn('status', [static::VISIBLE, static::DELETED]);
+    }
+
+    //草稿箱
+    public function scopeDraft($query)
+    {
+        return $query->where('status', static::DRAFT);
     }
 
     public function scopeTitle($query, $search)

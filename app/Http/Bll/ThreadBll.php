@@ -102,7 +102,7 @@ class ThreadBll extends BaseBll
         $tags = isset($threadData['tags']) ? $threadData['tags'] : '';
         $images = '';
 
-        //base64上传
+        //base64上传 兼容H5
         if (Input::has('images')) {
             foreach ($threadImages = Input::get('images') as $image) {
                 $upload = dispatch(new UploadBase64ImageCommand($image));
@@ -117,6 +117,32 @@ class ThreadBll extends BaseBll
             $threadData['sub_node_id'],
             $tags,
             $images
+        ));
+
+        $thread = Thread::find($threadTemp->id);
+        return $thread;
+    }
+
+    //web保存草稿
+    public function createDraft($threadData)
+    {
+        $node_id = '';
+        if (isset($threadData['sub_node_id'])) {
+            $node_id = SubNode::find($threadData['sub_node_id'])->node_id;
+        }
+
+        $tags = isset($threadData['tags']) ? $threadData['tags'] : '';
+        $images = '';
+
+        $threadTemp = dispatch(new AddThreadCommand(
+            $threadData['title'],
+            $threadData['body'],
+            Auth::id(),
+            $node_id,
+            $threadData['sub_node_id'],
+            $tags,
+            $images,
+            $threadData['status']
         ));
 
         $thread = Thread::find($threadTemp->id);
@@ -179,6 +205,7 @@ class ThreadBll extends BaseBll
             $sub_node_id,
             $tags,
             $images,
+            Thread::AUDIT,
             $channel,
             $dev_info,
             $contact
@@ -205,7 +232,7 @@ class ThreadBll extends BaseBll
 
     public function showThread(Thread $thread)
     {
-        if ($thread->inVisible()) {
+        if (!$thread->isVisible()) {
             throw new HifoneException('该帖子已被删除', 410);
         }
         event(new ThreadWasViewedEvent(clone $thread));

@@ -78,6 +78,7 @@ class WebRoutes
             $router->get('users/{user}/threads', 'UserController@threads');
             $router->get('users/{user}/replies', 'UserController@replies');
             $router->get('users/{user}/favorites', 'UserController@favorites');
+            $router->get('users/{user}/drafts', 'UserController@drafts');
             $router->get('rank', 'RankController@ranks');
 
             // Authorization Required
@@ -85,6 +86,7 @@ class WebRoutes
                 $router->post('upload', 'CommonController@upload');
                 $router->post('upload/base64', 'CommonController@uploadBase64');
                 $router->post('threads', 'ThreadController@store')->middleware('active:web');
+                $router->post('drafts', 'ThreadController@storeDraft')->middleware('active:web');
                 $router->post('threads/{thread}', 'ThreadController@update');
                 $router->post('replies', 'ReplyController@store');
                 $router->post('follow/users/{user}', 'FollowController@user');

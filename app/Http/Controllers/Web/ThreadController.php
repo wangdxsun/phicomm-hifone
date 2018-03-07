@@ -51,7 +51,7 @@ class ThreadController extends WebController
     public function show(Thread $thread, ThreadBll $threadBll, CommonBll $commonBll)
     {
         $commonBll->loginWeb();
-        $threadBll->showThread($thread);
+        $thread = $threadBll->showThread($thread);
 
         return $thread;
     }
@@ -65,7 +65,7 @@ class ThreadController extends WebController
         }
         $this->validate(request(), [
             'thread.title' => 'required|min:5|max:40',
-            'thread.body' => 'required|min:5|max:10000',
+            'thread.body' => 'required|min:5',
             'thread.sub_node_id' => 'required',
         ], [
             'thread.title.required' => '帖子标题必填',
@@ -84,6 +84,24 @@ class ThreadController extends WebController
             'msg' => $msg,
             'thread' => $thread
         ];
+    }
+
+    public function storeDraft(ThreadBll $threadBll)
+    {
+        $this->validate(request(), [
+            'thread.body' => 'required|min:5',
+        ], [
+            'thread.body.required' => '帖子内容必填',
+            'thread.body.min' => '帖子内容输入过少'
+        ]);
+        if (mb_strlen(strip_tags(array_get(request('thread'), 'body'))) > 10000) {
+            throw new HifoneException('帖子内容不得多于10000个字符');
+        }
+        $threadData = request('thread');
+        $threadData['status'] = Thread::DRAFT;
+        $threadBll->createDraft($threadData);
+
+        return ['msg' => '保存成功'];
     }
 
     /**

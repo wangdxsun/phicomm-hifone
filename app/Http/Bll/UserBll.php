@@ -11,6 +11,7 @@ namespace Hifone\Http\Bll;
 use Auth;
 use Config;
 use Hifone\Events\User\UserWasActiveEvent;
+use Hifone\Exceptions\HifoneException;
 use Hifone\Models\User;
 
 class UserBll extends BaseBll
@@ -41,6 +42,17 @@ class UserBll extends BaseBll
         })->with(['user', 'thread', 'reply.user'])->recent()->paginate();
 
         return $replies;
+    }
+
+    public function getDrafts(User $user)
+    {
+        if (Auth::check() && $user->id == Auth::id()) {
+            $drafts = $user->threads()->draft()->with(['user', 'node'])->recentEdit()->paginate();
+        } else {
+            throw new HifoneException('您无权查看他人的草稿箱');
+        }
+
+        return $drafts;
     }
 
     //全局搜索用户
