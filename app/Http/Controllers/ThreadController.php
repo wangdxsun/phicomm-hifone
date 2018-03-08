@@ -66,13 +66,13 @@ class ThreadController extends Controller
     /**
      * Shows a thread in more detail.
      *
-     * @param \Hifone\Models\Thread $thread
-     *
-     * @return \Illuminate\View\View
+     * @param Thread $thread
+     * @return mixed
+     * @throws HifoneException
      */
     public function show(Thread $thread)
     {
-        if ($thread->inVisible()) {
+        if (!$thread->isVisible()) {
             throw new HifoneException('该帖子已被删除', 410);
         }
         $this->breadcrumb->push([

@@ -93,6 +93,13 @@ class UserController extends WebController
         return $replies;
     }
 
+    public function drafts(User $user, UserBll $userBll)
+    {
+        $drafts = $userBll->getDrafts($user);
+
+        return $drafts;
+    }
+
     public function credit(UserBll $userBll, CommonBll $commonBll)
     {
         $commonBll->loginWeb();
@@ -135,4 +142,5 @@ class UserController extends WebController
         $users = $userBll->getExcellentUsers();
         return $users;
     }
+
 }

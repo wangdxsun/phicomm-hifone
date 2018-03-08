@@ -37,6 +37,8 @@ final class AddThreadCommand
 
     public $contact;
 
+    public $status;
+
     /**
      * The validation rules.
      *
@@ -50,7 +52,7 @@ final class AddThreadCommand
         'sub_node_id' => 'int',
     ];
 
-    public function __construct($title, $body, $user_id, $node_id, $sub_node_id, $tags, $images = '', $channel = Thread::THREAD, $dev_info = NULL, $contact = NULL)
+    public function __construct($title, $body, $user_id, $node_id, $sub_node_id, $tags, $images = '', $status = Thread::AUDIT, $channel = Thread::THREAD, $dev_info = NULL, $contact = NULL)
     {
         $this->title = $title;
         $this->body = $body;
@@ -59,6 +61,7 @@ final class AddThreadCommand
         $this->sub_node_id = $sub_node_id;
         $this->tags = $tags;
         $this->images = $images;
+        $this->status = $status;
         $this->channel = $channel;
         $this->dev_info = $dev_info;
         $this->contact = $contact;

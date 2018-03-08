@@ -22,7 +22,7 @@ class UpdateThreadViewCountHandler
     {
         $thread = $event->thread;
 
-        if (!$this->hasViewedThread($thread)) {
+        if ($thread->status != Thread::DRAFT && !$this->hasViewedThread($thread)) {
             $thread->increment('view_count', 1);
             $this->storeViewedThread($thread);
             $thread->updateIndex();
