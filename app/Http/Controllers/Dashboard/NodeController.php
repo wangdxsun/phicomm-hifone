@@ -19,6 +19,7 @@ use Hifone\Models\PraModerator;
 use Hifone\Models\Role;
 use Hifone\Models\Section;
 use Hifone\Models\SubNode;
+use Hifone\Models\Thread;
 use Hifone\Models\User;
 use Redirect;
 use Request;
@@ -100,6 +101,7 @@ class NodeController extends Controller
             'node.ios_icon_detail'     => 'required',
             'node.web_icon_detail'     => 'required',
             'node.web_icon_list'       => 'required',
+            'node.feedback_thread_id'  => 'numeric',
         ], [
             'node.icon.required'               => 'H5首页热门版块图片是必填字段',
             'node.icon_list.required'          => 'H5版块列表图片是必填字段',
@@ -112,13 +114,22 @@ class NodeController extends Controller
             'node.android_icon_detail.required'=> '安卓版块详情页是必填字段',
             'node.web_icon_list.required'      => 'WEB右侧列表图片是必填字段',
             'node.web_icon_detail.required'    => 'WEB版块详情页是必填字段',
+            'node.feedback_thread_id.numeric'  => '帖子id是数字类型',
         ]);
         $nodeData = Request::get('node');
+
         $moderatorData = explode(',', Request::get('nodeModerators'));
         $praModeratorData = explode(',', Request::get('nodePraModerators'));
         $nodeData['order'] = Node::max('order') + 1;
         try {
             $node = Node::create($nodeData);
+//            if ($nodeData['is_feedback'] == 1 && $nodeData['feedback_thread_id'] == "") {
+//                return Redirect::back()->withErrors('支持反馈建议的主板块必须配置反馈建议帖子Id！');
+//            } elseif (Thread::max('id') < $nodeData['feedback_thread_id'] || $nodeData['feedback_thread_id'] < Thread::min('id')) {
+//                return Redirect::back()->withErrors('反馈建议帖子Id不存在！');
+//            } elseif ($node->id != Thread::find($nodeData['feedback_thread_id'])->node->id) {
+//                return Redirect::back()->withErrors('反馈建议帖子Id不属于该主板块！');
+//            }
             if (count($moderatorData) > 4 || count($praModeratorData) > 4 || count($moderatorData) + count($praModeratorData) > 4) {
                 return Redirect::back()->withErrors('版主、实习版主累计不能超过四个人！');
             }
@@ -192,6 +203,7 @@ class NodeController extends Controller
             'node.ios_icon_detail'     => 'required',
             'node.web_icon_detail'     => 'required',
             'node.web_icon_list'       => 'required',
+            'node.feedback_thread_id'  => 'numeric',
         ], [
             'node.icon.required'               => 'H5首页热门版块图片是必填字段',
             'node.icon_list.required'          => 'H5版块列表图片是必填字段',
@@ -204,10 +216,18 @@ class NodeController extends Controller
             'node.android_icon_detail.required'=> '安卓版块详情页是必填字段',
             'node.web_icon_list.required'      => 'WEB右侧列表图片是必填字段',
             'node.web_icon_detail.required'    => 'WEB版块详情页是必填字段',
+            'node.feedback_thread_id.numeric'  => '帖子id是数字类型',
          ]);
         $nodeData = Request::get('node');
         $moderatorData = explode(',', Request::get('nodeModerators'));
         $praModeratorData = explode(',', Request::get('nodePraModerators'));
+//        if ($nodeData['is_feedback'] == 1 && $nodeData['feedback_thread_id'] == "") {
+//            return Redirect::back()->withErrors('支持反馈建议的主板块必须配置反馈建议帖子Id！');
+//        } elseif (Thread::max('id') < $nodeData['feedback_thread_id'] || $nodeData['feedback_thread_id'] < Thread::min('id')) {
+//            return Redirect::back()->withErrors('反馈建议帖子Id不存在！');
+//        } elseif ($node->id != Thread::find($nodeData['feedback_thread_id'])->node->id) {
+//            return Redirect::back()->withErrors('反馈建议帖子Id不属于该主板块！');
+//        }
         if (count($moderatorData) > 4 || count($praModeratorData) > 4 || count($moderatorData) + count($praModeratorData) > 4) {
             return Redirect::back()->withErrors('版主、实习版主累计不能超过四个人！');
         }

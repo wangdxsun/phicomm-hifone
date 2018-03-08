@@ -54,7 +54,9 @@ class Node extends BaseModel implements HasPresenter
         'updated_at',
         'is_prompt',
         'prompt',
-        'is_show'
+        'is_show',
+        'is_feedback',
+        'feedback_thread_id'
     ];
 
     protected $hidden = [

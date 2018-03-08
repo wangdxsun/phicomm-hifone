@@ -237,6 +237,22 @@
                         <el-input  v-model="valueShow" placeholder="请输入内容" type="hidden" name="node[is_show]"></el-input>
                     </div>
 
+                    {{--<div class="form-group">--}}
+                        {{--<label>{{ '主版块是否支持反馈与建议' }}</label>--}}
+                        {{--<el-tooltip  placement="hidden" >--}}
+                            {{--<el-switch--}}
+                                    {{--v-model="valueFeedback"--}}
+                                    {{--on-color="#13ce66"--}}
+                                    {{--off-color="#ff4949"--}}
+                                    {{--on-value=1--}}
+                                    {{--off-value=0>--}}
+                            {{--</el-switch>--}}
+                        {{--</el-tooltip>--}}
+                        {{--<el-input name="node[feedback_thread_id]" placeholder="反馈与建议专用贴Id" value="{{ isset($node) ? $node->feedback_thread_id : null }}" ></el-input>--}}
+                        {{--<el-input  v-model="valueFeedback" placeholder="请输入内容" type="hidden" name="node[is_feedback]"></el-input>--}}
+                    {{--</div>--}}
+
+
                     <div class="form-group">
                         <label>{{ trans('dashboard.nodes.prompt.node') }}</label>
                         <el-tooltip  placement="hidden" >
@@ -289,6 +305,7 @@
                 imageListUrlWeb: "{{ isset($node) ? ($node->web_icon_list) : (Input::old('node')['web_icon_list']) }}",
                 valuePrompt: "{{  $node->is_prompt or 0  }}",
                 valueShow: "{{  $node->is_show or 1  }}",
+                valueFeedback: "{{  $node->is_feedback or 0  }}",
                 nodeModerators: {!! $nodeModerators or json_encode([])  !!} ,
                 nodePraModerators: {!! $nodePraModerators or json_encode([])  !!} ,
                 praModerators: {!! $praModerators !!},

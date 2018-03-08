@@ -195,4 +195,15 @@ class Reply extends BaseModel
         return $this->likes()->where('user_id',$reply->user_id)->count();
     }
 
+    public function getDevInfoAttribute($value)
+    {
+        if (!$value) {
+            return [];
+        }
+        if (!is_array($value)) {
+            return json_decode($value, true);
+        }
+        return $value;
+    }
+
 }
