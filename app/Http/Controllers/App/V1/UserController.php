@@ -138,8 +138,13 @@ class UserController extends AppController
         return $threads;
     }
 
-    public function feedbacks(UserBll $userBll)
+    public function threadFeedbacks(UserBll $userBll)
     {
-        return $userBll->getFeedbacks();
+        return $userBll->getThreadFeedbacks();
+    }
+
+    public function replyFeedbacks(UserBll $userBll)
+    {
+        return $userBll->getReplyFeedbacks();
     }
 }

@@ -61,14 +61,27 @@ class UserBll extends BaseBll
     }
 
     //查看自己反馈历史记录（含所有状态）
-    public function getFeedbacks()
+    public function getThreadFeedbacks()
     {
         if (Auth::check()){
-            $feedbacks = Auth::user()->threads()->feedback()->recent()->paginate();
+            $threadFeedbacks = Auth::user()->threads()->feedback()->recent()->paginate();
+
         } else {
-            $feedbacks = [];
+            $threadFeedbacks = [];
         }
-        return $feedbacks;
+        return $threadFeedbacks;
+    }
+
+    //查看自己反馈历史记录（含所有状态）
+    public function getReplyFeedbacks()
+    {
+        if (Auth::check()){
+            $replyFeedbacks = Auth::user()->replies()->feedback()->recent()->paginate();
+
+        } else {
+            $replyFeedbacks = [];
+        }
+        return $replyFeedbacks;
     }
 
 }

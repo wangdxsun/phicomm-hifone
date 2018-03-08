@@ -228,4 +228,10 @@ class Node extends BaseModel implements HasPresenter
     {
         return $this->attributes['icon_list'];
     }
+
+    //是否在意见反馈显示该主板块
+    public function scopeFeedback($query)
+    {
+        return $query->where('is_feedback', 1);
+    }
 }

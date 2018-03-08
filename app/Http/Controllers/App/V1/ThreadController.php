@@ -8,18 +8,14 @@
 
 namespace Hifone\Http\Controllers\App\V1;
 
-use Hifone\Events\Thread\ThreadWasViewedEvent;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\ThreadBll;
 use Hifone\Http\Controllers\App\AppController;
 use Hifone\Models\Thread;
-use Hifone\Models\User;
 use Auth;
 use Hifone\Services\Filter\WordsFilter;
-use Config;
-use Input;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 
 class ThreadController extends AppController
 {

@@ -11,6 +11,8 @@
 
 namespace Hifone\Commands\Reply;
 
+use Hifone\Models\Reply;
+
 final class AddReplyCommand
 {
     public $body;
@@ -19,6 +21,11 @@ final class AddReplyCommand
 
     public $thread_id;
 
+    public $channel;
+
+    public $dev_info;
+
+    public $contact;
     /**
      * The validation rules.
      *
@@ -35,12 +42,15 @@ final class AddReplyCommand
      *
      * @param string $body
      */
-    public function __construct($body, $userId, $threadId, $replyId, $images)
+    public function __construct($body, $userId, $threadId, $replyId, $images = '', $channel = Reply::REPLY, $dev_info = NULL, $contact = NULL)
     {
         $this->body = $body;
         $this->user_id = $userId;
         $this->thread_id = $threadId;
         $this->reply_id = $replyId;
         $this->images = $images;
+        $this->channel = $channel;
+        $this->dev_info = $dev_info;
+        $this->contact = $contact;
     }
 }

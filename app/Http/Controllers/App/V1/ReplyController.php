@@ -29,4 +29,22 @@ class ReplyController extends AppController
         return $reply;
     }
 
+    public function feedback(ReplyBll $replyBll, WordsFilter $wordsFilter)
+    {
+        $this->validate(request(), [
+            'reply.body'    => 'required|min:1|max:800',
+            'reply.node_id' => 'required',
+            'reply.contact' => 'phone',
+        ], [
+            'reply.node_id.required' => '请选择系列',
+            'reply.body.required'    => '请输入反馈或建议',
+            'reply.body.min'         => '请输入反馈或建议',
+            'reply.body.max'         => '详情最多800个字符',
+            'reply.contact.phone'    => '请填写正确的联系方式',
+        ]);
+        $reply = $replyBll->createFeedbackApp();
+        $result = $replyBll->auditReply($reply, $wordsFilter);
+        return $result;
+    }
+
 }

@@ -93,6 +93,15 @@ class NodeController extends AppController
         return $nodes;
     }
 
+    /**
+     * 意见反馈发帖选择主版块
+     */
+    public function nodesInFeedback()
+    {
+        $nodes = $this->nodeBll->nodesInFeedback();
+        return $nodes;
+    }
+
     public function hot(Node $node)
     {
         $threads = $this->nodeBll->hotThreadsOfNode($node);

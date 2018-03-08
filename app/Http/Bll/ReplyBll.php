@@ -14,6 +14,7 @@ use Hifone\Events\Reply\RepliedWasAddedEvent;
 use Hifone\Events\Reply\ReplyWasAddedEvent;
 use Hifone\Events\Reply\ReplyWasAuditedEvent;
 use Hifone\Exceptions\HifoneException;
+use Hifone\Models\Node;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
 use Hifone\Services\Filter\WordsFilter;
@@ -21,7 +22,6 @@ use DB;
 use Input;
 use Auth;
 use Config;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ReplyBll extends BaseBll
 {
@@ -75,6 +75,38 @@ class ReplyBll extends BaseBll
         return $reply->load('user', 'reply.user');
     }
 
+    //用户反馈回帖逻辑
+    public function createFeedbackApp()
+    {
+        $this->checkPermission();
+        $this->checkThread(Node::find(request('reply.node_id'))->feedback_thread_id);
+        $replyData = request('reply');
+        $replyData['body'] = e($replyData['body']);
+        $replyData['thread_id'] = Node::find(request('reply.node_id'))->feedback_thread_id;
+        $images = '';
+        if (Input::has('images')) {
+            foreach ($replyImages = json_decode(Input::get('images'), true) as $image) {
+                $images.= "<img src='".$image['image']."'/>";
+            }
+        }
+        $channel = Reply::FEEDBACK;
+        $dev_info = $replyData['dev_info'];
+        $contact  = isset($replyData['contact']) ? $replyData['contact'] : null;
+
+        $replyTemp = dispatch(new AddReplyCommand(
+            $replyData['body'],
+            Auth::id(),
+            $replyData['thread_id'],
+            array_get($replyData, 'reply_id'),
+            $images,
+            $channel,
+            $dev_info,
+            $contact
+        ));
+        $reply = Reply::find($replyTemp->id);
+        return $reply->load('user', 'reply.user');
+    }
+
     public function auditReply($reply, WordsFilter $wordsFilter)
     {
         $badWord = '';
@@ -83,10 +115,10 @@ class ReplyBll extends BaseBll
         $reply->body = app('parser.emotion')->parse($reply->body);
         if ($needManAudit) {
             $reply->bad_word = $badWord;
-            $msg = $this->getMsg($reply->reply_id, false);
+            $msg = $this->getMsg($reply->reply_id, false, $reply->channel);
         } else {
             $this->autoAudit($reply);
-            $msg = $this->getMsg($reply->reply_id, true);
+            $msg = $this->getMsg($reply->reply_id, true, $reply->channel);
         }
         $reply->save();
         $reply = Reply::find($reply->id);
@@ -132,8 +164,11 @@ class ReplyBll extends BaseBll
         }
     }
 
-    public function getMsg($reply_id, $isAutoAudit)
+    public function getMsg($reply_id, $isAutoAudit, $channel = Reply::REPLY)
     {
+        if ($channel == Reply::FEEDBACK) {
+            return $msg = '提交成功';
+        }
         if (!$isAutoAudit) {
             if ($reply_id) {
                 return $msg = '回复已提交，待审核';
