@@ -188,7 +188,7 @@
                 @else
                     <input type="hidden" name="node[section_id]" value="0">
                 @endif
-                {{--板块描述--}}
+                {{--版块描述--}}
                 <div class="form-group">
                     <label>{{ trans('dashboard.nodes.description') }}</label>
                     {!! Form::textarea('node[description]', isset($node) ? $node->description : null , ['class' => 'form-control', 'required', 'rows' => 5]) !!}

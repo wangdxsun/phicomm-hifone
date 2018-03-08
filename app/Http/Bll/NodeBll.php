@@ -84,7 +84,7 @@ class NodeBll extends BaseBll
         return $nodes;
     }
 
-    //支持用户反馈的主板块
+    //支持用户反馈的主版块
     public function nodesInFeedback()
     {
         //意见反馈处显示的子版块

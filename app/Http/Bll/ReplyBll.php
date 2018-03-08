@@ -79,10 +79,11 @@ class ReplyBll extends BaseBll
     public function createFeedbackApp()
     {
         $this->checkPermission();
-        $this->checkThread(Node::find(request('reply.node_id'))->feedback_thread_id);
+        $feedback_thread_id = Node::find(request('reply.node_id'))->feedback_thread_id;
+        $this->checkThread($feedback_thread_id);
         $replyData = request('reply');
         $replyData['body'] = e($replyData['body']);
-        $replyData['thread_id'] = Node::find(request('reply.node_id'))->feedback_thread_id;
+        $replyData['thread_id'] = $feedback_thread_id;
         $images = '';
         if (Input::has('images')) {
             foreach ($replyImages = json_decode(Input::get('images'), true) as $image) {

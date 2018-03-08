@@ -21,7 +21,7 @@
                     <span class="drag-handle"><i class="fa fa-navicon"></i></span>
                 </div>
                 <div class="col-xs-1">
-                    <span>{{'主板块ID： '. $node->id }}</span>
+                    <span>{{'主版块ID： '. $node->id }}</span>
                 </div>
                 <div class="col-xs-2 drag-handle">
                     <img src="{{ $node->icon }}" alt="" style="max-width: 200px; max-height: 50px;">

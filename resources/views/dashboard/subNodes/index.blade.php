@@ -30,7 +30,7 @@
                         {{ $subNode->name }}
                     </div>
                     <div class="col-xs-2 drag-handle">
-                        {{'主板块：'}}<br>{{ $subNode->node->name }}
+                        {{'主版块：'}}<br>{{ $subNode->node->name }}
                     </div>
                     <div class="col-xs-3 drag-handle">
                         {{ $subNode->description }}
