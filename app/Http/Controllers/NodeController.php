@@ -26,6 +26,7 @@ class NodeController extends Controller
     public function __construct()
     {
         $this->middleware('active:web')->only('show');
+        parent::__construct();
     }
 
     public function index()

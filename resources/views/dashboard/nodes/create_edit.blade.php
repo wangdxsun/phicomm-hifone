@@ -281,9 +281,9 @@
                 imageListUrlIos: "{{ isset($node) ? ($node->ios_icon_list) : (Input::old('node')['ios_icon_list']) }}",
                 imageDetailUrlIos: "{{ isset($node) ? ($node->ios_icon_detail) : (Input::old('node')['ios_icon_detail']) }}",
                 //H5端版块图片
-                imageUrl: "{{ isset($node) ? ($node->icon) : (Input::old('node')['icon']) }}",
-                imageListUrl: "{{ isset($node) ? ($node->icon_list) : (Input::old('node')['icon_list']) }}",
-                imageDetailUrl: "{{ isset($node) ? ($node->icon_detail) : (Input::old('node')['icon_detail']) }}",
+                imageUrl: "{{ isset($node) ? ($node->h5_icon) : (Input::old('node')['icon']) }}",
+                imageListUrl: "{{ isset($node) ? ($node->h5_icon_list) : (Input::old('node')['icon_list']) }}",
+                imageDetailUrl: "{{ isset($node) ? ($node->h5_icon_detail) : (Input::old('node')['icon_detail']) }}",
                 //Web端版块图片
                 imageDetailUrlWeb: "{{ isset($node) ? ($node->web_icon_detail) : (Input::old('node')['web_icon_detail']) }}",
                 imageListUrlWeb: "{{ isset($node) ? ($node->web_icon_list) : (Input::old('node')['web_icon_list']) }}",

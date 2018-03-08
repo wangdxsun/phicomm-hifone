@@ -66,7 +66,15 @@ class Node extends BaseModel implements HasPresenter
         'order',
         'slug',
         'section_id',
-        'reply_count'
+        'reply_count',
+        'ios_icon',
+        'android_icon',
+        'ios_icon_detail',
+        'ios_icon_list',
+        'android_icon_detail',
+        'android_icon_list',
+        'web_icon_detail',
+        'web_icon_list'
     ];
 
     /**
@@ -157,7 +165,7 @@ class Node extends BaseModel implements HasPresenter
     {
         return $this->hasManyThrough(Reply::class,Thread::class);
     }
-
+    
     //查询主板块下版主信息
     public function moderators()
     {
@@ -170,4 +178,60 @@ class Node extends BaseModel implements HasPresenter
         return $this->belongsToMany(User::class, 'pra_moderators', 'node_id','user_id');
     }
 
+    public function getIconAttribute($value)
+    {
+        $userAgent = get_request_agent();
+        if ($userAgent == Thread::IOS) {
+            return $this->attributes['ios_icon'];
+        } elseif ($userAgent == Thread::ANDROID) {
+            return $this->attributes['android_icon'];
+        } elseif ($userAgent == Thread::H5) {
+            return $this->attributes['icon'];
+        } else {
+            return '';
+        }
+    }
+
+    public function getIconDetailAttribute($value)
+    {
+        $userAgent = get_request_agent();
+        if ($userAgent == Thread::IOS) {
+            return $this->attributes['ios_icon_detail'];
+        } elseif ($userAgent == Thread::ANDROID) {
+            return $this->attributes['android_icon_detail'];
+        } elseif ($userAgent == Thread::H5) {
+            return $this->attributes['icon_detail'];
+        } else {
+            return $this->attributes['web_icon_detail'];
+        }
+    }
+
+    public function getIconListAttribute($value)
+    {
+        $userAgent = get_request_agent();
+        if ($userAgent == Thread::IOS) {
+            return $this->attributes['ios_icon_list'];
+        } elseif ($userAgent == Thread::ANDROID) {
+            return $this->attributes['android_icon_list'];
+        } elseif ($userAgent == Thread::H5) {
+            return $this->attributes['icon_list'];
+        } else {
+            return $this->attributes['web_icon_list'];
+        }
+    }
+
+    public function getH5IconAttribute()
+    {
+        return $this->attributes['icon'];
+    }
+
+    public function getH5IconDetailAttribute()
+    {
+        return $this->attributes['icon_detail'];
+    }
+
+    public function getH5IconListAttribute()
+    {
+        return $this->attributes['icon_list'];
+    }
 }

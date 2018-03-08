@@ -23,11 +23,14 @@ final class NewChatMessageEvent implements EventInterface, ShouldBroadcast
 
     public $message;
 
-    public function __construct(User $from, User $to, $message)
+    private $queue;
+
+    public function __construct(User $from, User $to, $message, $queue = 'default')
     {
         $this->from = $from;
         $this->to = $to;
         $this->message = $message;
+        $this->queue = $queue;
     }
 
     /**
@@ -43,5 +46,10 @@ final class NewChatMessageEvent implements EventInterface, ShouldBroadcast
     public function broadcastAs()
     {
         return 'newMessage';
+    }
+
+    public function onQueue()
+    {
+        return $this->queue;
     }
 }
