@@ -214,10 +214,22 @@ class Reply extends BaseModel
         return $this->likes()->where('user_id',$reply->user_id)->count();
     }
 
+
     //反馈建议的回复
     public function scopeFeedback($query)
     {
         return $query->where('channel', Reply::FEEDBACK);
+    }
+
+    public function getDevInfoAttribute($value)
+    {
+        if (!$value) {
+            return [];
+        }
+        if (!is_array($value)) {
+            return json_decode($value, true);
+        }
+        return $value;
     }
 
 }

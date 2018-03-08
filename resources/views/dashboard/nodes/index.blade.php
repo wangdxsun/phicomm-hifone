@@ -37,7 +37,14 @@
                 </div>
                 <div class="col-xs-2 drag-handle">
                     @foreach($node->moderators as $moderator)
-                    <a data-name="{{ $moderator->user->username }}" href="{{ $moderator->user->url }}">{{ $moderator->user->username . ' ' }}</a>
+                        @if (isset($moderator))
+                            <a data-name="{{ $moderator->username }}" href="{{ $moderator->url }}">{{ $moderator->username . ' ' }}</a>
+                        @endif
+                    @endforeach
+                    @foreach($node->praModerators as $praModerator)
+                        @if (isset($praModerator))
+                            <a data-name="{{ $praModerator->username }}" href="{{ $praModerator->url }}">{{ $praModerator->username . ' ' }}</a>
+                        @endif
                     @endforeach
                 </div>
 

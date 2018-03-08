@@ -44,12 +44,13 @@ class Role extends EntrustRole implements HasPresenter
         });
     }
 
+    //定义角色的权限
     public function permissions()
     {
         return $this::belongsToMany(Permission::class);
     }
 
-    public function Users()
+    public function users()
     {
         return $this->belongsToMany(User::class);
     }
@@ -69,11 +70,13 @@ class Role extends EntrustRole implements HasPresenter
         return RolePresenter::class;
     }
 
+    //所有的用户组
     public function scopeUserGroup($query)
     {
         return $query->where('type', static::USER);
     }
 
+    //所有的管理组
     public function scopeAdminGroup($query)
     {
         return $query->where('type', static::ADMIN);

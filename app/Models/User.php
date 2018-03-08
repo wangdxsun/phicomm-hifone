@@ -17,6 +17,7 @@ use Cmgmyr\Messenger\Traits\Messagable;
 use Elasticquent\ElasticquentTrait;
 use Hifone\Models\Traits\SearchTrait;
 use Hifone\Presenters\UserPresenter;
+use Hifone\Services\Tag\TaggableInterface;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -24,10 +25,11 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use McCool\LaravelAutoPresenter\HasPresenter;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
+use Hifone\Models\Traits\Taggable;
 
-class User extends BaseModel implements AuthenticatableContract, CanResetPasswordContract, HasPresenter
+class User extends BaseModel implements AuthenticatableContract, CanResetPasswordContract, HasPresenter, TaggableInterface
 {
-    use Authenticatable, CanResetPassword, EntrustUserTrait, ValidatingTrait, Messagable, SearchTrait, ElasticquentTrait;
+    use Authenticatable, CanResetPassword, EntrustUserTrait, ValidatingTrait, Messagable, SearchTrait, ElasticquentTrait, Taggable;
 
     // Enable hasRole( $name ), can( $permission ),
     //   and ability($roles, $permissions, $options)
@@ -394,4 +396,17 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
             $this->attributes['notification_system_count'] + $this->attributes['notification_chat_count'] +
             $this->attributes['notification_follow_count'];
     }
+
+    //根据用户版主信息查询版块信息
+    public function nodes()
+    {
+        return $this->belongsToMany(Node::class, 'moderators', 'user_id','node_id');
+    }
+
+    //根据用户实习版主信息查询版块信息
+    public function praModerators()
+    {
+        return $this->belongsToMany(Node::class,'pra_moderators', 'user_id','node_id');
+    }
+
 }

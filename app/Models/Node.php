@@ -13,7 +13,6 @@ namespace Hifone\Models;
 
 use Hifone\Presenters\NodePresenter;
 use McCool\LaravelAutoPresenter\HasPresenter;
-use DB;
 
 class Node extends BaseModel implements HasPresenter
 {
@@ -55,7 +54,9 @@ class Node extends BaseModel implements HasPresenter
         'updated_at',
         'is_prompt',
         'prompt',
-        'is_show'
+        'is_show',
+        'is_feedback',
+        'feedback_thread_id'
     ];
 
     protected $hidden = [
@@ -157,11 +158,6 @@ class Node extends BaseModel implements HasPresenter
         return $this->hasMany(SubNode::class)->orderBy('order');
     }
 
-    public function moderators()
-    {
-        return $this->hasMany(Moderator::class);
-    }
-
     public function scopeShow($query)
     {
         return $query->where('is_show', 1);
@@ -170,6 +166,18 @@ class Node extends BaseModel implements HasPresenter
     public function replies()
     {
         return $this->hasManyThrough(Reply::class,Thread::class);
+    }
+    
+    //查询主板块下版主信息
+    public function moderators()
+    {
+        return $this->belongsToMany(User::class,'moderators','node_id','user_id');
+    }
+
+    //查询主板块下实习版主信息
+    public function praModerators()
+    {
+        return $this->belongsToMany(User::class, 'pra_moderators', 'node_id','user_id');
     }
 
     public function getIconAttribute($value)

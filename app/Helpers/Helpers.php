@@ -323,6 +323,7 @@ if (!function_exists('parse_agent_version')) {
         $middle0 = array_get($middleArr, 0);
         $middle1 = array_get($middleArr, 1);
         $middle2 = array_get($middleArr, 2);
+        $middle2 = substr($middle2, 0, 1);
         if (is_null($middle0) || is_null($middle1) || is_null($middle2)
         || !is_numeric($middle0) || !is_numeric($middle1) || !is_numeric($middle2)) {
             throw new HifoneException('UserAgent格式不正确');

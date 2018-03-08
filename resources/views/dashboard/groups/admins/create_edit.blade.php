@@ -16,15 +16,20 @@
             @include('partials.errors')
             <fieldset>
                 <div class="form-group">
-                    <label>管理组名称</label>
-                     {!! Form::text('role[display_name]', isset($role) ? $role->display_name : null, ['class' => 'form-control', 'required']) !!}
+                    <label>管理组名称: </label>
+                    @if(isset($role) && ($role->display_name == '管理员' || $role->display_name == '版主' || $role->display_name == '实习版主'))
+                        {{ $role->display_name }}
+                    @else
+                        {!! Form::text('role[display_name]', isset($role) ? $role->display_name : null, ['class' => 'form-control', 'required']) !!}
+                    @endif
+
                 </div>
                 <div class="form-group">
-                    <label>管理组描述</label>
+                    <label>管理组描述: </label>
                     {!! Form::text('role[description]', isset($role) ? $role->description : null, ['class' => 'form-control']) !!}
                 </div>
                 <div class="form-group">
-                    <label>权限列表</label>
+                    <label>权限列表: </label>
                     @foreach($permissions as $permission)
                     <div class="checkbox">
                         <label>

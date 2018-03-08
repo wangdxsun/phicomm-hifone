@@ -121,7 +121,7 @@ class AdminGroupController extends Controller
     public function destroy(Role $role)
     {
         if ($role->users()->count() > 0) {
-            return Redirect::back()->withErrors('无法删除该管理组');
+            return Redirect::back()->withErrors('该组有用户存在，不可删除');
         }
         $role->delete();
         return Redirect::back()->withSuccess('删除成功');
