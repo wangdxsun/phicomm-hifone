@@ -73,13 +73,13 @@ class WebRoutes
             $router->get('user/info', 'UserController@me')->middleware('active:web');
             $router->get('u/{username}', 'UserController@showByUsername');
             $router->get('users/{user}', 'UserController@show')->where('user', '[0-9]+')->middleware('active:web');
-            $router->get('users/{user}/follows', 'UserController@follows');
-            $router->get('users/{user}/followers', 'UserController@followers');
-            $router->get('users/{user}/threads', 'UserController@threads');
-            $router->get('users/{user}/replies', 'UserController@replies');
-            $router->get('users/{user}/favorites', 'UserController@favorites');
-            $router->get('users/{user}/drafts', 'UserController@drafts');
-            $router->get('rank', 'RankController@ranks');
+            $router->get('users/{user}/follows', 'UserController@follows')->where('user', '[0-9]+');
+            $router->get('users/{user}/followers', 'UserController@followers')->where('user', '[0-9]+');
+            $router->get('users/{user}/threads', 'UserController@threads')->where('user', '[0-9]+');
+            $router->get('users/{user}/replies', 'UserController@replies')->where('user', '[0-9]+');
+            $router->get('users/{user}/favorites', 'UserController@favorites')->where('user', '[0-9]+');
+            $router->get('users/{user}/drafts', 'UserController@drafts')->where('user', '[0-9]+');
+            $router->get('ranks', 'RankController@ranks');
 
             // Authorization Required
             $router->group(['middleware' => 'auth:hifone'], function ($router) {

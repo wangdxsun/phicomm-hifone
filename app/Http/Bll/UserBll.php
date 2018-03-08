@@ -77,7 +77,6 @@ class UserBll extends BaseBll
     {
         if (Auth::check()){
             $threadFeedbacks = Auth::user()->threads()->feedback()->recent()->paginate();
-
         } else {
             $threadFeedbacks = [];
         }
@@ -89,7 +88,6 @@ class UserBll extends BaseBll
     {
         if (Auth::check()){
             $replyFeedbacks = Auth::user()->replies()->feedback()->recent()->paginate();
-
         } else {
             $replyFeedbacks = [];
         }

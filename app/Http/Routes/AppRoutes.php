@@ -24,6 +24,7 @@ class AppRoutes
             $router->get('users/{user}/threads', 'UserController@threads')->where('user', '[0-9]+');
             $router->get('users/{user}/replies', 'UserController@replies')->where('user', '[0-9]+');
             $router->get('users/{user}/favorites', 'UserController@favorites')->where('user', '[0-9]+');
+            $router->get('ranks', 'RankController@ranks');
 
             //内容相关
             $router->get('nodes', 'NodeController@index');
@@ -65,6 +66,8 @@ class AppRoutes
                 $router->get('user/thread/feedbacks', 'UserController@threadFeedbacks');
                 $router->get('user/credit', 'UserController@credit');
                 $router->post('user/avatar', 'UserController@upload');
+                $router->post('rank', 'RankController@rankStatus');
+                $router->get('rank/count', 'RankController@count');
 
                 $router->get('chats', 'ChatController@chats');
                 $router->get('chat/{user}/{scope}/{chat?}', 'ChatController@messages')->where('user', '[0-9]+')
