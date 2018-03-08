@@ -249,6 +249,12 @@ class Thread extends BaseModel implements TaggableInterface
         return $query->where('status', static::DRAFT);
     }
 
+    //非草稿
+    public function scopeNotDraft($query)
+    {
+        return $query->where('status', '<>', static::DRAFT);
+    }
+
     public function scopeTitle($query, $search)
     {
         if (!$search) {

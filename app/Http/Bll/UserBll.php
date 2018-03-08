@@ -28,7 +28,7 @@ class UserBll extends BaseBll
         //自己查看帖子，接口信息包括所有贴子;管理员和其他用户，只包括审核通过和审核通过被删除的贴子
         //个人中心按照帖子编辑时间排序
         if (Auth::check() && $user->id == Auth::id()) {
-            $threads = $user->threads()->with(['user', 'node'])->recentEdit()->paginate();
+            $threads = $user->threads()->notDraft()->with(['user', 'node'])->recentEdit()->paginate();
         } else {
             $threads = $user->threads()->visibleAndDeleted()->with(['user', 'node'])->recentEdit()->paginate();
         }
