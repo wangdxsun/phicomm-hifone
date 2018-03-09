@@ -88,6 +88,9 @@ class UserBll extends BaseBll
     {
         if (Auth::check()){
             $replyFeedbacks = Auth::user()->replies()->feedback()->recent()->paginate();
+            foreach ($replyFeedbacks as $reply) {
+                $reply['body_snapshot'] = strip_tags(app('parser.emotion')->reverseParseEmotionAndImage($reply->body));
+            }
         } else {
             $replyFeedbacks = [];
         }

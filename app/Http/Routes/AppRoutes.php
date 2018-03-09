@@ -20,6 +20,7 @@ class AppRoutes
             $router->post('user/bind', 'UserController@bind');
             $router->get('users/{user}', 'UserController@show')->where('user', '[0-9]+')->middleware('active:app');
             $router->get('users/{user}/follows', 'UserController@follows')->where('user', '[0-9]+');
+            $router->get('users/{user}/sections', 'UserController@sections')->where('user', '[0-9]+');
             $router->get('users/{user}/followers', 'UserController@followers')->where('user', '[0-9]+');
             $router->get('users/{user}/threads', 'UserController@threads')->where('user', '[0-9]+');
             $router->get('users/{user}/replies', 'UserController@replies')->where('user', '[0-9]+');
@@ -57,6 +58,7 @@ class AppRoutes
                 $router->post('replies', 'ReplyController@store');
                 $router->post('follow/user/{user}', 'FollowController@user')->where('user', '[0-9]+');
                 $router->post('follow/thread/{thread}', 'FollowController@thread')->where('thread', '[0-9]+');
+                $router->post('follow/node/{node}', 'FollowController@node')->where('node', '[0-9]+');
                 $router->post('like/thread/{thread}', 'LikeController@thread')->where('thread', '[0-9]+');
                 $router->post('like/reply/{reply}', 'LikeController@reply')->where('reply', '[0-9]+');
                 $router->post('report/thread/{thread}', 'ReportController@thread')->where('thread', '[0-9]+');

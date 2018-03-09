@@ -40,6 +40,12 @@ class FollowBll extends BaseBll
         return ['followed' => Auth::user()->hasFollowThread($thread)];
     }
 
+    public function followNode($node)
+    {
+        dispatch(new AddFollowCommand($node));
+        return ['followed' => Auth::user()->hasFollowNode($node)];
+    }
+
     public function follows(User $user)
     {
         return $user->follows()->ofType(User::class)->recent()->with('follower')->paginate(15);

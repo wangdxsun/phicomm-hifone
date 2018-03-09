@@ -354,6 +354,20 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         }
     }
 
+    //判断用户是否关注版块
+    public static function hasFollowNode(Node $node)
+    {
+        if (Auth::guest()) {
+            return 'unFollow';
+        }
+        if (Auth::user()->follows()->ofType(Node::class)->ofId($node->id)->count() > 0){
+            return "followed";
+        } else {
+            return "unFollow";
+        }
+
+    }
+
     public function hasLikeThread(Thread $thread)
     {
         return $this->likes()->ofType(Thread::class)->ofId($thread->id)->count() > 0;

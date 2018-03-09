@@ -43,6 +43,7 @@ class NodeController extends AppController
         foreach ($sections as $section) {
             foreach ($nodes = $section['nodes'] as $node) {
                 $node['detail_url'] = route('app.node.show', $node->id);
+                $node['followed'] = \Auth::user()->hasFollowNode($node);
             }
         }
 
