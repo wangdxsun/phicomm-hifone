@@ -46,7 +46,7 @@ class AppRoutes
             $router->get('threads/search/{keyword}', 'ThreadController@search');
             $router->get('users/search/{keyword}', 'UserController@search');
             $router->get('threads/{thread}', 'ThreadController@show')->where('thread', '[0-9]+')->middleware('active:app');
-            $router->get('threads/{thread}/replies', 'ThreadController@replies')->where('thread', '[0-9]+');
+            $router->get('threads/{thread}/replies/{sort}', 'ThreadController@replies')->where('thread', '[0-9]+');
             $router->get('replies/{reply}', 'ReplyController@show');
 
             // Authorization Required
