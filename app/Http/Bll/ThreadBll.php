@@ -131,8 +131,8 @@ class ThreadBll extends BaseBll
                 'vote_start' => $threadData['vote_start'],
                 'vote_end' => $threadData['vote_end'],
                 'vote_level' => isset($threadData['vote_level']) ? $threadData['vote_level'] : null,
-                'vote_voting' => isset($threadData['vote_voting']) ? $threadData['vote_voting'] : 1,
-                'vote_vote_finish' => isset($threadData['vote_vote_finish']) ? $threadData['vote_vote_finish'] : 1
+                'view_voting' => isset($threadData['view_voting']) ? $threadData['view_voting'] : 1,
+                'view_vote_finish' => isset($threadData['view_vote_finish']) ? $threadData['view_vote_finish'] : 1
             ]);
 
             //添加投票选项操作
