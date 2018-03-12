@@ -131,7 +131,7 @@ class StorageManager extends Manager
             $error = 'upload.ERROR_SIZE_EXCEED';
         } elseif (!empty($config['allow_files']) &&
             !in_array('.'.$file->guessExtension(), $config['allow_files'])) {
-//            $error = 'ERROR_TYPE_NOT_ALLOWED';
+            $error = 'ERROR_TYPE_NOT_ALLOWED';
         }
 
         return $error;
