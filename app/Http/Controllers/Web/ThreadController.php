@@ -66,7 +66,7 @@ class ThreadController extends WebController
             throw new HifoneException('对不起，你所在的用户组无法发言');
         }
         $threadData = request('thread');
-        if (array_has($threadData, 'is_vote') && 1 == $threadData['is_vote'] && !(Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Founder'))) {
+        if (isset($threadData['is_vote']) && 1 == $threadData['is_vote'] && !(Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Founder'))) {
             throw new HifoneException('普通用户暂不能发起投票');
         }
 

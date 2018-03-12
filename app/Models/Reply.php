@@ -221,6 +221,11 @@ class Reply extends BaseModel
         return $query->where('channel', Reply::FEEDBACK);
     }
 
+    public function scopeOfThread($query, $thread)
+    {
+        return $query->where('thread_id', $thread->id);
+    }
+
     public function getDevInfoAttribute($value)
     {
         if (!$value) {

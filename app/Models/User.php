@@ -398,6 +398,21 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         return $this->favorites()->ofThread($thread->id)->count() > 0;
     }
 
+    public function hasVoteThread(Thread $thread)
+    {
+        return $this->options()->ofThread($thread->id)->count() > 0;
+    }
+
+    public function hasVoteOption(Option $option)
+    {
+        return $this->options()->ofOption($option->id)->count() > 0;
+    }
+
+    public function hasCommentThread(Thread $thread)
+    {
+        return $this->replies()->ofThread($thread->id)->count() > 0;
+    }
+
     public function likes()
     {
         return $this->hasMany(Like::class);
@@ -407,7 +422,6 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
     {
         return $this->hasMany(Report::class);
     }
-
 
     public function getNotificationCountAttribute()
     {

@@ -131,7 +131,7 @@ class ThreadBll extends BaseBll
                 'vote_start' => $threadData['vote_start'],
                 'vote_end' => $threadData['vote_end'],
                 'vote_level' => isset($threadData['vote_level']) ? $threadData['vote_level'] : null,
-                'view_voting' => isset($threadData['view_voting']) ? $threadData['view_voting'] : 1,
+                'view_voting' => isset($threadData['view_voting']) ? $threadData['view_voting'] : Thread::VOTE_ONLY,
                 'view_vote_finish' => isset($threadData['view_vote_finish']) ? $threadData['view_vote_finish'] : 1
             ]);
 
@@ -260,6 +260,7 @@ class ThreadBll extends BaseBll
         return $thread;
     }
 
+    //帖子详情
     public function showThread(Thread $thread)
     {
         if (!$thread->isVisible()) {
@@ -267,13 +268,95 @@ class ThreadBll extends BaseBll
         }
         event(new ThreadWasViewedEvent(clone $thread));
 
-        $thread = $thread->load(['user', 'node']);
+        if ($thread->is_vote == 1) {//投票贴
+            $thread = $thread->load(['user', 'node', 'options']);
+            foreach ($thread['options'] as $option) {
+                $option['voted'] = Auth::check() ? Auth::user()->hasVoteOption($option) : false;
+            }
+            $thread['view_vote'] = $this->canViewVote($thread);
+        } else {
+            $thread = $thread->load(['user', 'node']);
+        }
+
         $thread['followed'] = User::hasFollowUser($thread->user);
         $thread['liked'] = Auth::check() ? Auth::user()->hasLikeThread($thread) : false;
         $thread['reported'] = Auth::check() ? Auth::user()->hasReportThread($thread) : false;
         $thread['favorite'] = Auth::check() ? Auth::user()->hasFavoriteThread($thread) : false;
 
         return $thread;
+    }
+
+    /**
+     * 是否可以查看投票结果
+     * 判断逻辑
+     *
+     * 管理员则可见，否则
+     * 投票中/投票结束
+     * 分别讨论各结果可见性（1仅投票可见，2仅回复可见，3投票和回复可见，4所有人可见，5只有管理员可见）
+     * （是否投票过，是否回复过（不需要审核通过））
+     */
+    protected function canViewVote(Thread $thread)
+    {
+        if (Carbon::now()->toDateTimeString() < $thread->vote_start) {
+            return false;
+        } elseif ($thread->vote_start <= Carbon::now()->toDateTimeString()
+            && Carbon::now()->toDateTimeString() <= $thread->vote_end) {//投票中
+            if ($thread->view_voting == Thread::VOTE_ONLY) {//1仅投票可见
+                if (Auth::check() && Auth::user()->hasVoteThread($thread)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } elseif ($thread->view_voting == Thread::REPLY_ONLY) {//2仅回复可见
+                if (Auth::check() && Auth::user()->hasCommentThread($thread)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } elseif ($thread->view_voting == Thread::VOTE_ONLY + Thread::REPLY_ONLY) {//3投票和回复可见
+                if (Auth::check() && (Auth::user()->hasCommentThread($thread) || Auth::user()->hasVoteThread($thread))) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } elseif ($thread->view_voting == Thread::ALL) {//4所有人可见
+                return true;
+            } else {//5只有管理员可见
+                if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Founder')) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } else {//投票结束后
+            if ($thread->view_vote_finish == Thread::VOTE_ONLY) {//1仅投票可见
+                if (Auth::check() && Auth::user()->hasVoteThread($thread)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } elseif ($thread->view_vote_finish == Thread::REPLY_ONLY) {//2仅回复可见
+                if (Auth::check() && Auth::user()->hasCommentThread($thread)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } elseif ($thread->view_vote_finish == Thread::VOTE_ONLY + Thread::REPLY_ONLY) {//3投票和回复可见
+                if (Auth::check() && (Auth::user()->hasCommentThread($thread) || Auth::user()->hasVoteThread($thread))) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } elseif ($thread->view_vote_finish == Thread::ALL) {//4所有人可见
+                return true;
+            } else {//5只有管理员可见
+                if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Founder')) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
     }
 
     public function replies(Thread $thread, $sort = 'desc', $source = '')
