@@ -123,8 +123,19 @@ class ThreadBll extends BaseBll
             $images
         ));
 
-        //添加投票选项操作
-        if (array_has($threadData, 'is_vote') && 1 == $threadData['is_vote']) {
+        //发布投票贴
+        if (isset($threadData['is_vote']) && 1 == $threadData['is_vote']) {
+            $threadTemp->update([
+                'is_vote' => 1,
+                'option_max' => isset($threadData['option_max']) ? $threadData['option_max'] : 1,
+                'vote_start' => $threadData['vote_start'],
+                'vote_end' => $threadData['vote_end'],
+                'vote_level' => isset($threadData['vote_level']) ? $threadData['vote_level'] : null,
+                'vote_voting' => isset($threadData['vote_voting']) ? $threadData['vote_voting'] : 1,
+                'vote_vote_finish' => isset($threadData['vote_vote_finish']) ? $threadData['vote_vote_finish'] : 1
+            ]);
+
+            //添加投票选项操作
             $contents = $threadData['options'];
             $order = 1;
             foreach ($contents as $content) {
@@ -240,7 +251,7 @@ class ThreadBll extends BaseBll
         $thread->body = app('parser.at')->parse($thread->body);
         $thread->body = app('parser.emotion')->parse($thread->body);
         //新增判断逻辑：不具有免审核权限的用户才需要自动审核
-        if ( !Auth::user()->can('free_audit') && Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($post)) || $this->isContainsImageOrUrl($post)) {
+        if (!Auth::user()->can('free_audit') && Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($post)) || $this->isContainsImageOrUrl($post)) {
             $thread->bad_word = $badWord;
         } else {
             $this->autoAudit($thread);
@@ -326,5 +337,41 @@ class ThreadBll extends BaseBll
         }
     }
 
+    public function vote(Thread $thread)
+    {
+        if (!$this->canVote()) {
+            throw new HifoneException('对不起，你的级别不可参与此次投票');
+        }
+        if (Carbon::now < $thread->vote_start) {
+            throw new HifoneException('投票还未开始');
+        } elseif (Carbon::now > $thread->vote_end) {
+            throw new HifoneException('投票已结束');
+        } else {
+            //用户投票选择了
+            $select = request('votes');
+            $optionIds = explode(',', $select);
+            if (option_max < sizeof($optionIds)) {
+                throw new HttpException('选项数超过上限');
+            }
+            $options = Option::whereIn('id',$optionIds)->get();
+            foreach ($options as $option) {
+                OptionUser::create(['option_id' => $option->id, 'user_id' => Auth::id()]);
+                $option->increment('vote_count', 1);
+            }
+        }
+    }
 
+    private function canVote($thread)
+    {
+        if (empty($thread->vote_level)) {//All
+            return true;
+        } else {
+            $role = Role::find($thread->vote_level);
+            if (Auth::user()->score >= $role->credit_low) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
 }

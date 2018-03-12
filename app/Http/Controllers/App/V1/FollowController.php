@@ -26,7 +26,7 @@ class FollowController extends AppController
         return $followBll->followThread($thread);
     }
 
-    //关注板块
+    //关注版块
     public function node(Node $node, FollowBll $followBll)
     {
         return $followBll->followNode($node);

@@ -243,7 +243,7 @@ class Node extends BaseModel implements HasPresenter
         return $query->where('is_feedback', 1);
     }
 
-    //板块的关注用户
+    //版块的关注用户
     public function followers()
     {
         return $this->morphMany(Follow::class,'followable');

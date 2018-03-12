@@ -174,6 +174,11 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         return $this->belongsTo(Location::class);
     }
 
+    public function options()
+    {
+        return $this->belongsToMany(Option::class, 'option_user')->withTimestamps();
+    }
+
     /**
      * ----------------------------------------
      * UserInterface

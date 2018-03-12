@@ -54,6 +54,7 @@ class AppRoutes
                 $router->post('upload', 'CommonController@upload');
                 $router->post('upload/base64', 'CommonController@uploadBase64');
                 $router->post('threads', 'ThreadController@store')->middleware('active:app');
+                $router->post('vote', 'ThreadController@vote');
                 $router->post('feedbacks', 'ReplyController@feedback');
                 $router->post('replies', 'ReplyController@store');
                 $router->post('follow/user/{user}', 'FollowController@user')->where('user', '[0-9]+');

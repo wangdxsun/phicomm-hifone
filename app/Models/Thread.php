@@ -70,6 +70,7 @@ class Thread extends BaseModel implements TaggableInterface
         'device',
         'edit_time',
         'status',
+        'is_vote',
     ];
 
     protected $hidden = ['body_original', 'bad_word', 'is_blocked', 'heat_offset', 'follower_count', 'ip',
@@ -174,6 +175,12 @@ class Thread extends BaseModel implements TaggableInterface
     public function replies()
     {
         return $this->hasMany(Reply::class);
+    }
+
+    //投票选项
+    public function options()
+    {
+        return $this->hasMany(Option::class);
     }
 
     public function appends()
