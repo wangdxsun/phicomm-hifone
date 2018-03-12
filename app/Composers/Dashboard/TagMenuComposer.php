@@ -15,13 +15,29 @@ class TagMenuComposer
             ],
             'tag' => [
                 'title'  => '标签',
-                'url'    => route('dashboard.tag.index'),
+                'url'    => route('dashboard.tag.user'),
                 'icon'   => 'fa fa-image',
                 'active' => false,
             ],
         ];
 
+        $subNav = [
+            'user'   => [
+                'title'  => '用户标签',
+                'url'    => route('dashboard.tag.user'),
+                'active' => false,
+                'icon'   => 'fa fa-user',
+            ],
+            'thread' => [
+                'title'  => '帖子标签',
+                'url'    => route('dashboard.tag.thread'),
+                'active' => false,
+                'icon'   => 'fa fa-file',
+            ],
+        ];
+
         $view->withSubMenu($subMenu);
+        $view->withSubNav($subNav);
         $view->withSubTitle('标签管理');
     }
 }

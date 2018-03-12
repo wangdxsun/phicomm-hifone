@@ -131,7 +131,8 @@ class DashboardRoutes
             $router->post('tag/type/store','TagTypeController@store')->name('tag.type.store');
             $router->get('tag/type/{tagType}/destroy','TagTypeController@destroy')->name('tag.type.destroy');
 
-            $router->get('tag/index','TagController@index')->name('tag.index');
+            $router->get('tag/user','TagController@user')->name('tag.user');
+            $router->get('tag/thread','TagController@thread')->name('tag.thread');
             $router->get('tag/create','TagController@create')->name('tag.create');
             $router->get('tag/{tag}/edit','TagController@edit')->name('tag.edit');
             $router->patch('tag/{tag}/update','TagController@update')->name('tag.update');

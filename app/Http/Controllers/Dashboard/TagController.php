@@ -17,11 +17,25 @@ class TagController extends Controller
             'current_menu'  => 'tag',
         ]);
     }
-    public function index()
+
+    public function user()
     {
+        //所有的用户标签
+        $tags = Tag::whereIn('type', TagType::ofType(TagType::USER)->pluck('id'))->get();
         return View::make('dashboard.tags.index')
-            ->with('tags', Tag::orderBy('type','desc')->get())
-            ->withCurrentMenu('tag');
+            ->with('tags', $tags)
+            ->withCurrentMenu('tag')
+            ->withCurrentNav('user');
+
+    }
+
+    public function thread()
+    {
+        $tags = Tag::whereIn('type', TagType::ofType(TagType::THREAD)->pluck('id'))->get();
+        return View::make('dashboard.tags.index')
+            ->with('tags', $tags)
+            ->withCurrentMenu('tag')
+            ->withCurrentNav('thread');
 
     }
 
