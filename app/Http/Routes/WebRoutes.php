@@ -88,6 +88,8 @@ class WebRoutes
                 $router->post('threads', 'ThreadController@store')->middleware('active:web');
                 $router->post('drafts', 'ThreadController@storeDraft');
                 $router->post('threads/{thread}', 'ThreadController@update');
+                $router->get('levels', 'ThreadController@voteLevels');
+                $router->post('vote', 'ThreadController@vote');
                 $router->post('replies', 'ReplyController@store');
                 $router->post('follow/users/{user}', 'FollowController@user');
                 $router->post('follow/threads/{thread}', 'FollowController@thread');

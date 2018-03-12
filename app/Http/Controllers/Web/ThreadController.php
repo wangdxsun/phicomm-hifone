@@ -13,8 +13,10 @@ use Hifone\Events\Thread\ThreadWasPinnedEvent;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\ThreadBll;
+use Hifone\Models\Role;
 use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
+use Hifone\Models\User;
 use Hifone\Services\Filter\WordsFilter;
 use Hifone\Services\Parsers\Markdown;
 
@@ -63,6 +65,11 @@ class ThreadController extends WebController
         } elseif (!Auth::user()->can('manage_threads') && Auth::user()->score < 0) {
             throw new HifoneException('对不起，你所在的用户组无法发言');
         }
+        $threadData = request('thread');
+        if (array_has($threadData, 'is_vote') && 1 == $threadData['is_vote'] && !(Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Founder'))) {
+            throw new HifoneException('普通用户暂不能发起投票');
+        }
+
         $this->validate(request(), [
             'thread.title' => 'required|min:5|max:40',
             'thread.body' => 'required|min:5',
@@ -77,7 +84,7 @@ class ThreadController extends WebController
         if (mb_strlen(strip_tags(array_get(request('thread'), 'body'))) > 10000) {
             throw new HifoneException('帖子内容不得多于10000个字符');
         }
-        $thread = $threadBll->createThread(request('thread'));
+        $thread = $threadBll->createThread($threadData);
         $thread = $threadBll->auditThread($thread, $wordsFilter);
         $msg = $thread->status == Thread::VISIBLE ? '发布成功' : '帖子已提交，待审核';
         return [
@@ -138,6 +145,25 @@ class ThreadController extends WebController
         } else {
             throw new HifoneException('您没有权限编辑这个帖子！');
         }
+    }
+
+    //投票贴设置用户权限
+    public function voteLevels()
+    {
+        $levels = Role::userGroup()->orderBy('credit_low')->select('id', 'display_name')->get();
+
+        return $levels;
+    }
+
+    //用户投票
+    public function vote(Thread $thread, ThreadBll $threadBll)
+    {
+        if ($thread->is_vote <> 1) {
+            throw new HifoneException('该帖子不具有投票功能');
+        }
+        $threadBll->vote($thread);
+
+        return success('投票成功');
     }
 
     public function replies(Thread $thread, $sort, ThreadBll $threadBll)

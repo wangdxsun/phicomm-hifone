@@ -14,6 +14,9 @@ use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasAuditedEvent;
 use Hifone\Events\Thread\ThreadWasViewedEvent;
 use Hifone\Exceptions\HifoneException;
+use Hifone\Models\Option;
+use Hifone\Models\OptionUser;
+use Hifone\Models\Role;
 use Hifone\Models\SearchWord;
 use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
@@ -22,6 +25,7 @@ use Hifone\Repositories\Criteria\Thread\Filter;
 use Hifone\Repositories\Criteria\Thread\Search;
 use DB;
 use Hifone\Services\Filter\WordsFilter;
+use Illuminate\Foundation\Testing\HttpException;
 use Illuminate\Pagination\Paginator;
 use Input;
 use Auth;
@@ -118,6 +122,20 @@ class ThreadBll extends BaseBll
             $tags,
             $images
         ));
+
+        //添加投票选项操作
+        if (array_has($threadData, 'is_vote') && 1 == $threadData['is_vote']) {
+            $contents = $threadData['options'];
+            $order = 1;
+            foreach ($contents as $content) {
+                Option::create([
+                    'thread_id' => $threadTemp->id,
+                    'order' => $order,
+                    'content' => $content
+                ]);
+                $order++;
+            }
+        }
 
         $thread = Thread::find($threadTemp->id);
         return $thread;
