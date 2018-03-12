@@ -71,6 +71,12 @@ class Thread extends BaseModel implements TaggableInterface
         'edit_time',
         'status',
         'is_vote',
+        'option_max',
+        'vote_start',
+        'vote_end',
+        'vote_level',
+        'vote_voting',
+        'vote_vote_finish',
     ];
 
     protected $hidden = ['body_original', 'bad_word', 'is_blocked', 'heat_offset', 'follower_count', 'ip',
