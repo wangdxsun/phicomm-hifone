@@ -149,6 +149,14 @@ class ThreadBll extends BaseBll
         }
 
         $thread = Thread::find($threadTemp->id);
+        if ($thread->is_vote == 1) {//投票贴
+            $thread = $thread->load(['options']);
+            foreach ($thread['options'] as $option) {
+                $option['voted'] = Auth::check() ? Auth::user()->hasVoteOption($option) : false;
+            }
+            $thread['view_vote'] = $this->canViewVote($thread);
+        }
+
         return $thread;
     }
 
