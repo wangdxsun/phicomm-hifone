@@ -82,8 +82,8 @@ class Thread extends BaseModel implements TaggableInterface
         'vote_start',
         'vote_end',
         'vote_level',
-        'vote_voting',
-        'vote_vote_finish',
+        'view_voting',
+        'view_vote_finish',
         'vote_count',
     ];
 

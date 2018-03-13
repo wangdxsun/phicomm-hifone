@@ -77,7 +77,6 @@ class ThreadBll extends BaseBll
         return $threads;
     }
 
-
     //记录搜索词
     public function searchWords($word)
     {
