@@ -31,7 +31,7 @@ class PhicommController extends WebController
         $captcha = request('captcha');
         if ($captcha != Session::get('phrase')) {
             // instructions if user phrase is good
-            throw new HifoneException('验证码有误');
+            throw new HifoneException('图形验证码有误');
         }
         Session::remove('phrase');
         Session::set('phone', request('phone'));
@@ -114,7 +114,7 @@ class PhicommController extends WebController
         $captcha = request('captcha');
         if ($captcha != Session::get('phrase')) {
             // instructions if user phrase is good
-            throw new HifoneException('验证码有误');
+            throw new HifoneException('图形验证码有误');
         }
         Session::remove('phrase');
         Session::set('phone', request('phone'));
