@@ -32,6 +32,19 @@ class ChatBll extends BaseBll
         return $chats;
     }
 
+    public function chatsApp(Chat $chat)
+    {
+        $chatIds = Chat::my()->after($chat)->selectRaw('max(id) as id')->groupBy('from_to')->pluck('id');
+        $chats = Chat::whereIn('id', $chatIds)->with(['from', 'to'])->recent()->paginate();
+        foreach ($chats as $chat) {
+            $chat->message = app('parser.emotion')->reverseParseEmotionAndImage($chat->message);
+        }
+        Auth::user()->notification_chat_count = 0;
+        Auth::user()->save();
+
+        return $chats;
+    }
+
     //for h5 and new web
     public function messages(User $user)
     {

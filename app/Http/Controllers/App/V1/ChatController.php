@@ -18,9 +18,14 @@ use Hifone\Models\User;
 class ChatController extends AppController
 {
     //私信列表
-    public function chats(ChatBll $chatBll)
+    public function chats(ChatBll $chatBll, Chat $chat)
     {
-        $chats = $chatBll->chats();
+        if ($chat->exists) {
+            $chats = $chatBll->chatsApp($chat);
+        } else {
+            $chats = $chatBll->chats();
+        }
+
         return $chats;
     }
 

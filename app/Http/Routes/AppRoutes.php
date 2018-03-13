@@ -73,7 +73,7 @@ class AppRoutes
                 $router->post('rank', 'RankController@rankStatus');
                 $router->get('rank/count', 'RankController@count');
 
-                $router->get('chats', 'ChatController@chats');
+                $router->get('chats/{chat?}', 'ChatController@chats')->where('chat', '[0-9]+');
                 $router->get('chat/{user}/{scope}/{chat?}', 'ChatController@messages')->where('user', '[0-9]+')
                     ->where('scope', 'after|before')->where('chat', '[0-9]+')->name('chat.message');
                 $router->post('chat/{user}', 'ChatController@store')->where('user', '[0-9]+');
