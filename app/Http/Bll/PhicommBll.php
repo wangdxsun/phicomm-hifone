@@ -69,7 +69,7 @@ class PhicommBll extends BaseBll
         $url = env('PHICLOUND_DOMAIN') . 'login';
         $output = json_decode(curlPost($url, $data), true);
         if ($output['error'] > 0) {
-            throw new HifoneException('手机号或密码错误');
+            throw new HifoneException('账号或密码错误，请重新输入');
         }
 
         Session::set('access_token', $output['access_token']);
@@ -111,7 +111,8 @@ class PhicommBll extends BaseBll
                 case 0:
                     return true;
                 case 14:
-                    throw new HifoneException('该手机号已注册！');
+                    throw new HifoneException('该手机号已注册，请直接登录');
+                    //TODO
                 default:
                     throw new HifoneException('操作失败，请联系客服！', 500);
             }
@@ -134,7 +135,7 @@ class PhicommBll extends BaseBll
         if ($output) {
             switch($output['error']) {
                 case 0:
-                    throw new HifoneException('该手机号未注册！');
+                    throw new HifoneException('手机号未注册');
                 case 14:
                     return true;
                 default:
