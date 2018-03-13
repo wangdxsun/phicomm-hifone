@@ -176,9 +176,16 @@ class ThreadBll extends BaseBll
     }
 
     //编辑草稿
-    public function updateDraft(Thread $thread)
+    public function updateDraft(Thread $thread, $threadData)
     {
-        //TODO
+        $node_id = '';
+        if (isset($threadData['sub_node_id'])) {
+            $node_id = SubNode::find($threadData['sub_node_id'])->node_id;
+        }
+        $threadData['node_id'] = $node_id;
+        $thread->update($threadData);
+
+        return $thread;
     }
 
     //APP发帖支持图文混排
