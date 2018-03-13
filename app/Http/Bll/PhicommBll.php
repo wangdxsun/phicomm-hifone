@@ -121,7 +121,7 @@ class PhicommBll extends BaseBll
     }
 
     /**
-     * 检测手机号是否未注册，重置密码用
+     * 检测手机号是否未注册，重置密码用，登录用
      * @param $phone
      * @return bool
      * @throws HifoneException

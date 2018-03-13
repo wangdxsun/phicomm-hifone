@@ -66,9 +66,11 @@ class PhicommController extends WebController
         $captcha = request('captcha');
         if ($captcha != Session::get('phrase')) {
             // instructions if user phrase is good
-            throw new HifoneException('验证码有误');
+            throw new HifoneException('图形验证码有误');
         }
         Session::remove('phrase');
+        //验证登录手机号是否注册，否则提示“手机号未注册”
+        $this->phicommBll->checkPhoneRegistered($phone);
 
         $res = $this->phicommBll->login($phone, $password);
         $phicommId = $res['uid'];
@@ -110,12 +112,14 @@ class PhicommController extends WebController
             'phone' => 'required|phone',
             'captcha' => 'required',
         ]);
-        $this->phicommBll->checkPhoneRegistered($request->phone);
         $captcha = request('captcha');
         if ($captcha != Session::get('phrase')) {
             // instructions if user phrase is good
             throw new HifoneException('图形验证码有误');
         }
+
+        $this->phicommBll->checkPhoneRegistered($request->phone);
+
         Session::remove('phrase');
         Session::set('phone', request('phone'));
 
