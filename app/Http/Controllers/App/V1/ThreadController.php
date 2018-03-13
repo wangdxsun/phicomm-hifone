@@ -12,6 +12,7 @@ use Hifone\Exceptions\HifoneException;
 use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\ThreadBll;
 use Hifone\Http\Controllers\App\AppController;
+use Hifone\Models\Role;
 use Hifone\Models\Thread;
 use Auth;
 use Hifone\Services\Filter\WordsFilter;
@@ -115,4 +116,16 @@ class ThreadController extends AppController
             'thread' => $thread
         ];
     }
+
+    //用户投票
+    public function vote(Thread $thread, ThreadBll $threadBll)
+    {
+        if ($thread->is_vote <> 1) {
+            throw new HifoneException('该帖子不具有投票功能');
+        }
+        $threadBll->vote($thread);
+
+        return success('投票成功');
+    }
+
 }

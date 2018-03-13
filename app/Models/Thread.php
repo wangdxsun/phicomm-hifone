@@ -28,6 +28,7 @@ class Thread extends BaseModel implements TaggableInterface
 {
     use ValidatingTrait, Taggable, Recent, RevisionableTrait, SoftDeletes, ElasticquentTrait;
 
+    //帖子状态
     const VISIBLE = 0;//正常帖子
     const TRASH = -1;//审核未通过
     const AUDIT = -2;//待审核 or 审核中
@@ -43,6 +44,12 @@ class Thread extends BaseModel implements TaggableInterface
     const ANDROID = 1;
     const IOS = 2;
     const WEB = 3;
+
+    //投票结果可见性
+    const VOTE_ONLY = 1;
+    const REPLY_ONLY = 2;
+    const ALL = 4;
+    const ADMIN = 5;
 
     // manually maintain
     public $timestamps = false;
@@ -70,6 +77,14 @@ class Thread extends BaseModel implements TaggableInterface
         'device',
         'edit_time',
         'status',
+        'is_vote',
+        'option_max',
+        'vote_start',
+        'vote_end',
+        'vote_level',
+        'vote_voting',
+        'vote_vote_finish',
+        'vote_count',
     ];
 
     protected $hidden = ['body_original', 'bad_word', 'is_blocked', 'heat_offset', 'follower_count', 'ip',
@@ -174,6 +189,12 @@ class Thread extends BaseModel implements TaggableInterface
     public function replies()
     {
         return $this->hasMany(Reply::class);
+    }
+
+    //投票选项
+    public function options()
+    {
+        return $this->hasMany(Option::class);
     }
 
     public function appends()

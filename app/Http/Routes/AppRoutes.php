@@ -54,6 +54,7 @@ class AppRoutes
                 $router->post('upload', 'CommonController@upload');
                 $router->post('upload/base64', 'CommonController@uploadBase64');
                 $router->post('threads', 'ThreadController@store')->middleware('active:app');
+                $router->post('threads/{thread}/vote', 'ThreadController@vote')->where('thread', '[0-9]+');
                 $router->post('feedbacks', 'ReplyController@feedback');
                 $router->post('feedback', 'ThreadController@feedback');
                 $router->post('replies', 'ReplyController@store');
@@ -72,7 +73,7 @@ class AppRoutes
                 $router->post('rank', 'RankController@rankStatus');
                 $router->get('rank/count', 'RankController@count');
 
-                $router->get('chats', 'ChatController@chats');
+                $router->get('chats/{chat?}', 'ChatController@chats')->where('chat', '[0-9]+');
                 $router->get('chat/{user}/{scope}/{chat?}', 'ChatController@messages')->where('user', '[0-9]+')
                     ->where('scope', 'after|before')->where('chat', '[0-9]+')->name('chat.message');
                 $router->post('chat/{user}', 'ChatController@store')->where('user', '[0-9]+');

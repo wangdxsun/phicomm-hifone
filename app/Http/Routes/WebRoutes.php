@@ -87,7 +87,9 @@ class WebRoutes
                 $router->post('upload/base64', 'CommonController@uploadBase64');
                 $router->post('threads', 'ThreadController@store')->middleware('active:web');
                 $router->post('drafts', 'ThreadController@storeDraft');
-                $router->post('threads/{thread}', 'ThreadController@update');
+                $router->post('threads/{thread}', 'ThreadController@update')->where('thread', '[0-9]+');
+                $router->get('levels', 'ThreadController@voteLevels');
+                $router->post('threads/{thread}/vote', 'ThreadController@vote')->where('thread', '[0-9]+');
                 $router->post('replies', 'ReplyController@store');
                 $router->post('follow/users/{user}', 'FollowController@user');
                 $router->post('follow/threads/{thread}', 'FollowController@thread');
