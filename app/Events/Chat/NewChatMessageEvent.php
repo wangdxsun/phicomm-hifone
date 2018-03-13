@@ -36,8 +36,8 @@ final class NewChatMessageEvent implements EventInterface, ShouldBroadcast
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return array
-     */
+     * ShouldBroadcast将事件标示为广播 broadcastOn方法返回一个必须被广播的频道的名称数组
+*/
     public function broadcastOn()
     {
         return ['messages'];
