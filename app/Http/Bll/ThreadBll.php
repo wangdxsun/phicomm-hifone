@@ -124,43 +124,33 @@ class ThreadBll extends BaseBll
         ));
 
         //发布投票贴
-        if (isset($threadData['is_vote']) && 1 == $threadData['is_vote']) {
+        if (1 == array_get($threadData, 'is_vote')) {
             $threadTemp->update([
                 'is_vote' => 1,
-                'option_max' => isset($threadData['option_max']) ? $threadData['option_max'] : 1,
+                'option_max' => array_get($threadData, 'option_max', 1),
                 'vote_start' => $threadData['vote_start'],
                 'vote_end' => $threadData['vote_end'],
-                'vote_level' => isset($threadData['vote_level']) ? $threadData['vote_level'] : null,
-                'view_voting' => isset($threadData['view_voting']) ? $threadData['view_voting'] : Thread::VOTE_ONLY,
-                'view_vote_finish' => isset($threadData['view_vote_finish']) ? $threadData['view_vote_finish'] : 1
+                'vote_level' => array_get($threadData, 'vote_level'),
+                'view_voting' => array_get($threadData,'view_voting', Thread::VOTE_ONLY),
+                'view_vote_finish' => array_get($threadData,'view_vote_finish', Thread::VOTE_ONLY)
             ]);
 
             //添加投票选项操作
             $contents = $threadData['options'];
-            $order = 1;
-            foreach ($contents as $content) {
+            foreach ($contents as $key => $content) {
                 Option::create([
                     'thread_id' => $threadTemp->id,
-                    'order' => $order,
+                    'order' => $key + 1,
                     'content' => $content
                 ]);
-                $order++;
             }
         }
-
         $thread = Thread::find($threadTemp->id);
-        if ($thread->is_vote == 1) {//投票贴
-            $thread = $thread->load(['options']);
-            foreach ($thread['options'] as $option) {
-                $option['voted'] = Auth::check() ? Auth::user()->hasVoteOption($option) : false;
-            }
-            $thread['view_vote'] = $this->canViewVote($thread);
-        }
 
         return $thread;
     }
 
-    //web保存草稿
+    //web创建草稿
     public function createDraft($threadData)
     {
         $node_id = '';
@@ -184,6 +174,12 @@ class ThreadBll extends BaseBll
 
         $thread = Thread::find($threadTemp->id);
         return $thread;
+    }
+
+    //编辑草稿
+    public function updateDraft(Thread $thread)
+    {
+        //TODO
     }
 
     //APP发帖支持图文混排
@@ -282,6 +278,7 @@ class ThreadBll extends BaseBll
                 $option['voted'] = Auth::check() ? Auth::user()->hasVoteOption($option) : false;
             }
             $thread['view_vote'] = $this->canViewVote($thread);
+            $thread['voted'] = $this->isVoted($thread);
         } else {
             $thread = $thread->load(['user', 'node']);
         }
@@ -294,6 +291,16 @@ class ThreadBll extends BaseBll
         return $thread;
     }
 
+    //是否已投票
+    public function isVoted(Thread $thread)
+    {
+        if (Auth::check() && Auth::user()->hasVoteThread($thread)) {//已投票
+            return true;
+        } else {
+            return false;//投票按钮可点击
+        }
+    }
+
     /**
      * 是否可以查看投票结果
      * 判断逻辑
@@ -303,7 +310,7 @@ class ThreadBll extends BaseBll
      * 分别讨论各结果可见性（1仅投票可见，2仅回复可见，3投票和回复可见，4所有人可见，5只有管理员可见）
      * （是否投票过，是否回复过（不需要审核通过））
      */
-    protected function canViewVote(Thread $thread)
+    public function canViewVote(Thread $thread)
     {
         if (Carbon::now()->toDateTimeString() < $thread->vote_start) {
             return false;
@@ -430,29 +437,35 @@ class ThreadBll extends BaseBll
 
     public function vote(Thread $thread)
     {
-        if (!$this->canVote()) {
+        if ($this->isVoted($thread)) {
+            throw new HifoneException('您已投票，请勿重复投票');
+        }
+        if (!$this->canVote($thread)) {
             throw new HifoneException('对不起，你的级别不可参与此次投票');
         }
-        if (Carbon::now < $thread->vote_start) {
+        if (Carbon::now()->toDateTimeString() < $thread->vote_start) {
             throw new HifoneException('投票还未开始');
-        } elseif (Carbon::now > $thread->vote_end) {
+        } elseif (Carbon::now()->toDateTimeString() > $thread->vote_end) {
             throw new HifoneException('投票已结束');
         } else {
             //用户投票选择了
             $select = request('votes');
             $optionIds = explode(',', $select);
-            if (option_max < sizeof($optionIds)) {
+            $options = Option::whereIn('id',$optionIds)->where('thread_id',$thread->id)->get();
+            if ($thread->option_max < count($options)) {
                 throw new HttpException('选项数超过上限');
+            } elseif (0 == count($optionIds)) {
+                throw new HttpException('选项数不足');
             }
-            $options = Option::whereIn('id',$optionIds)->get();
             foreach ($options as $option) {
                 OptionUser::create(['option_id' => $option->id, 'user_id' => Auth::id()]);
                 $option->increment('vote_count', 1);
             }
+            $thread->increment('vote_count');
         }
     }
 
-    private function canVote($thread)
+    private function canVote(Thread $thread)
     {
         if (empty($thread->vote_level)) {//All
             return true;

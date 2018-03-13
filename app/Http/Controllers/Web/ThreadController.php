@@ -66,7 +66,7 @@ class ThreadController extends WebController
             throw new HifoneException('对不起，你所在的用户组无法发言');
         }
         $threadData = request('thread');
-        if (isset($threadData['is_vote']) && 1 == $threadData['is_vote'] && !(Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Founder'))) {
+        if (1 == array_get($threadData, 'is_vote') && !(Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Founder'))) {
             throw new HifoneException('普通用户暂不能发起投票');
         }
 
@@ -86,6 +86,14 @@ class ThreadController extends WebController
         }
         $thread = $threadBll->createThread($threadData);
         $thread = $threadBll->auditThread($thread, $wordsFilter);
+        if ($thread->is_vote == 1) {//投票贴
+            $thread = $thread->load(['options']);
+            foreach ($thread['options'] as $option) {
+                $option['voted'] = Auth::check() ? Auth::user()->hasVoteOption($option) : false;
+            }
+            $thread['view_vote'] = $threadBll->canViewVote($thread);
+            $thread['voted'] = $threadBll->isVoted($thread);
+        }
         $msg = $thread->status == Thread::VISIBLE ? '发布成功' : '帖子已提交，待审核';
         return [
             'msg' => $msg,
@@ -145,6 +153,12 @@ class ThreadController extends WebController
         } else {
             throw new HifoneException('您没有权限编辑这个帖子！');
         }
+    }
+
+    public function updateDraft(Thread $thread, ThreadBll $threadBll)
+    {
+        //TODO
+
     }
 
     //投票贴设置用户权限
