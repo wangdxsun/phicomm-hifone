@@ -27,12 +27,12 @@ class PhicommController extends WebController
             'phone' => 'required|phone',
             'captcha' => 'required',
         ]);
-        $this->phicommBll->checkPhoneAvailable($request->phone);
         $captcha = request('captcha');
         if ($captcha != Session::get('phrase')) {
             // instructions if user phrase is good
             throw new HifoneException('图形验证码有误');
         }
+        $this->phicommBll->checkPhoneAvailable($request->phone);
         Session::remove('phrase');
         Session::set('phone', request('phone'));
 
@@ -155,14 +155,7 @@ class PhicommController extends WebController
         if (request('type') == 'register') {
             $this->phicommBll->checkPhoneAvailable(request('phone'));
         } elseif (request('type') == 'reset') {
-            try {
-                $this->phicommBll->checkPhoneAvailable(request('phone'));
-                throw new HifoneException('该手机号还没有注册');
-            } catch (\Exception $e) {
-                if ($e->getMessage() <> '该手机号已注册！') {
-                    throw $e;
-                }
-            }
+            $this->phicommBll->checkPhoneRegistered(request('phone'));
         }
         $this->phicommBll->sendVerifyCode(request('phone'));
 
