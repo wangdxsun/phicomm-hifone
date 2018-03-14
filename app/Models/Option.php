@@ -50,14 +50,14 @@ class Option extends BaseModel
         return $this->belongsToMany(User::class, 'option_user')->withTimestamps();
     }
 
-    public function scopeOfThread($query, $thread_id)
+    public function scopeOfThread($query, $thread)
     {
-        return $query->where('thread_id', $thread_id);
+        return $query->where('thread_id', $thread->id);
     }
 
-    public function scopeOfOption($query, $option_id)
+    public function scopeOfOption($query, $option)
     {
-        return $query->where('option_id', $option_id);
+        return $query->where('option_id', $option->id);
     }
 
 }

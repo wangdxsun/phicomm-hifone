@@ -400,17 +400,17 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
 
     public function hasVoteThread(Thread $thread)
     {
-        return $this->options()->ofThread($thread->id)->count() > 0;
+        return $this->options()->ofThread($thread)->count() > 0;
     }
 
     public function hasVoteOption(Option $option)
     {
-        return $this->options()->ofOption($option->id)->count() > 0;
+        return $this->options()->ofOption($option)->count() > 0;
     }
 
     public function hasCommentThread(Thread $thread)
     {
-        return $this->replies()->ofThread($thread->id)->count() > 0;
+        return $this->replies()->ofThread($thread)->count() > 0;
     }
 
     public function likes()

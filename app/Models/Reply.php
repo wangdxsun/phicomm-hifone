@@ -214,7 +214,6 @@ class Reply extends BaseModel
         return $this->likes()->where('user_id',$reply->user_id)->count();
     }
 
-
     //反馈建议的回复
     public function scopeFeedback($query)
     {
