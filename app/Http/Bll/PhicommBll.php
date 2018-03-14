@@ -207,7 +207,7 @@ class PhicommBll extends BaseBll
             throw new HifoneException('请勿重复关联');
         }
         if ($wordsFilter->filterWord(request('username')) || $wordsFilter->filterKeyWord(request('username'))) {
-            throw new HifoneException('昵称包含被系统屏蔽字符');
+            throw new HifoneException('昵称含有被屏蔽字符');
         }
         $user = User::create($userData);//直接通过create返回的用户信息不全
         $user = User::find($user->id);
