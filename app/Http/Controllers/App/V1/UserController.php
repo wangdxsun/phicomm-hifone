@@ -56,7 +56,8 @@ class UserController extends AppController
             'username.regex' => '昵称含有非法字符'
         ]);
         $user = $phicommBll->bind($wordsFilter);
-
+        $user = $user->toArray();
+        unset($user['roles']);
         return $user;
     }
 
