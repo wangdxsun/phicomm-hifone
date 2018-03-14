@@ -27,12 +27,12 @@ class PhicommController extends WebController
             'phone' => 'required|phone',
             'captcha' => 'required',
         ]);
-        $this->phicommBll->checkPhoneAvailable($request->phone);
         $captcha = request('captcha');
         if ($captcha != Session::get('phrase')) {
             // instructions if user phrase is good
             throw new HifoneException('图形验证码有误');
         }
+        $this->phicommBll->checkPhoneAvailable($request->phone);
         Session::remove('phrase');
         Session::set('phone', request('phone'));
 
