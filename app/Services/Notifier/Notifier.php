@@ -67,13 +67,13 @@ class Notifier
                 'type'          => $type,
             ];
             //小红点
-            if ($type == 'reply_mention') {
+            if ($type == 'reply_mention' || $type == 'thread_mention') {
                 $toUser->increment('notification_at_count');
             } elseif ($type == 'followed_user_new_thread') {
                 $toUser->increment('notification_follow_count');
             }
 
-            //消息推送 (暂不考虑thread_mention)
+            //消息推送
             if ($type == 'reply_mention' || $type == 'thread_mention') {
                 $this->pushNotify($author, $toUser, $type, $object);
             }
