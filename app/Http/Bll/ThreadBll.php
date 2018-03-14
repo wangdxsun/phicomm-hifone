@@ -298,6 +298,7 @@ class ThreadBll extends BaseBll
             }
             $thread['view_vote'] = $this->canViewVote($thread);
             $thread['voted'] = $this->isVoted($thread);
+            $thread['now'] = Carbon::now()->toDateTimeString();
         } else {
             $thread = $thread->load(['user', 'node']);
         }
@@ -305,7 +306,6 @@ class ThreadBll extends BaseBll
         $thread['liked'] = Auth::check() ? Auth::user()->hasLikeThread($thread) : false;
         $thread['reported'] = Auth::check() ? Auth::user()->hasReportThread($thread) : false;
         $thread['favorite'] = Auth::check() ? Auth::user()->hasFavoriteThread($thread) : false;
-        $thread['now'] = Carbon::now()->toDateTimeString();
 
         return $thread;
     }
