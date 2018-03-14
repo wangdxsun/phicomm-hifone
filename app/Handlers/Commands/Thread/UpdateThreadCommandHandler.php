@@ -55,17 +55,28 @@ class UpdateThreadCommandHandler
         }
         //更新编辑时间 if (created_at != edit_time) 帖子被修改过
         $command->data['edit_time'] = Carbon::now()->toDateTimeString();
-
+        //普通用户编辑状态回退、精华失效
         if (!Auth::user()->hasRole(['Admin', 'Founder'])) {
             $command->data['status'] = Thread::AUDIT;
             $command->data['is_excellent'] = 0;
         }
+        //投票贴相关参数（除选项外）
+        unset($command->data['options']);
+        if ($thread->is_vote == 0) {//非投票贴
+            unset($command->data['option_max']);
+            unset($command->data['vote_start']);
+            unset($command->data['vote_end']);
+            unset($command->data['vote_level']);
+            unset($command->data['view_voting']);
+            unset($command->data['view_vote_finish']);
+        }
+
         $thread->update($this->filter($command->data));
         $tags = isset($command->data['tags']) ? $command->data['tags'] : [];
         app(AddTag::class)->attach($thread, $tags);
         if (isset($command->data['sub_node_id']) && $original_subNode_id != intval($command->data['sub_node_id']) ) {
             $originalSubNode = SubNode::find($original_subNode_id);
-            event(new ThreadWasMovedEvent($command->thread, $originalSubNode));
+            event(new ThreadWasMovedEvent($thread, $originalSubNode));
         }
         $thread->updateIndex();
 

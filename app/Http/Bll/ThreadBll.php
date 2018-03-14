@@ -77,7 +77,6 @@ class ThreadBll extends BaseBll
         return $threads;
     }
 
-
     //记录搜索词
     public function searchWords($word)
     {
@@ -172,14 +171,34 @@ class ThreadBll extends BaseBll
             $threadData['status']
         ));
 
+        //投票贴存为草稿，不必添加选项
+        if (1 == array_get($threadData, 'is_vote')) {
+            $threadTemp->update([
+                'is_vote' => 1,
+                'option_max' => array_get($threadData, 'option_max', 1),
+                'vote_start' => $threadData['vote_start'],
+                'vote_end' => $threadData['vote_end'],
+                'vote_level' => array_get($threadData, 'vote_level'),
+                'view_voting' => array_get($threadData,'view_voting', Thread::VOTE_ONLY),
+                'view_vote_finish' => array_get($threadData,'view_vote_finish', Thread::VOTE_ONLY)
+            ]);
+        }
+
         $thread = Thread::find($threadTemp->id);
         return $thread;
     }
 
     //编辑草稿
-    public function updateDraft(Thread $thread)
+    public function updateDraft(Thread $thread, $threadData)
     {
-        //TODO
+        $node_id = '';
+        if (isset($threadData['sub_node_id'])) {
+            $node_id = SubNode::find($threadData['sub_node_id'])->node_id;
+        }
+        $threadData['node_id'] = $node_id;
+        $thread->update($threadData);
+
+        return $thread;
     }
 
     //APP发帖支持图文混排
@@ -279,10 +298,10 @@ class ThreadBll extends BaseBll
             }
             $thread['view_vote'] = $this->canViewVote($thread);
             $thread['voted'] = $this->isVoted($thread);
+            $thread['now'] = Carbon::now()->toDateTimeString();
         } else {
             $thread = $thread->load(['user', 'node']);
         }
-
         $thread['followed'] = User::hasFollowUser($thread->user);
         $thread['liked'] = Auth::check() ? Auth::user()->hasLikeThread($thread) : false;
         $thread['reported'] = Auth::check() ? Auth::user()->hasReportThread($thread) : false;

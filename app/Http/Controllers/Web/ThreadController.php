@@ -155,10 +155,26 @@ class ThreadController extends WebController
         }
     }
 
+    //编辑草稿
     public function updateDraft(Thread $thread, ThreadBll $threadBll)
     {
-        //TODO
+        $this->validate(request(), [
+            'thread.body' => 'required|min:5',
+        ], [
+            'thread.body.required' => '帖子内容必填',
+            'thread.body.min' => '帖子内容输入过少'
+        ]);
+        if (mb_strlen(strip_tags(array_get(request('thread'), 'body'))) > 10000) {
+            throw new HifoneException('帖子内容不得多于10000个字符');
+        }
+        if (Auth::id() == $thread->user_id) {
+            $threadData = request('thread');
+            $threadBll->updateDraft($thread, $threadData);
+        } else {
+            throw new HifoneException('您没有权限编辑该草稿！');
+        }
 
+        return ['msg' => '保存成功'];
     }
 
     //投票贴设置用户权限
