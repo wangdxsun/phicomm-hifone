@@ -57,7 +57,9 @@ class NodeBll extends BaseBll
     {
         $sections = Section::orderBy('order')->with(['nodes.subNodes', 'nodes' => function ($query) {
             $query->has('subNodes');
-        }])->has('nodes')->get();
+        }])->whereHas('nodes', function ($query) {
+            $query->has('subNodes');
+        })->get();
 
         return $sections;
     }

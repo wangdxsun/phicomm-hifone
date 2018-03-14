@@ -442,4 +442,8 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         return $this->belongsToMany(Node::class,'pra_moderators', 'user_id','node_id');
     }
 
+    public function followedNodes()
+    {
+        return $this->morphedByMany(Node::class, 'followable', 'follows');
+    }
 }

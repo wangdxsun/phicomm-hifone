@@ -153,9 +153,11 @@ class UserController extends AppController
     //用户关注版块列表
     public function sections(User $user)
     {
-        $sections = Section::orderBy('order')->with([ 'nodes' => function ($query) use ($user) {
-            $query->whereIn('id', $user->follows()->ofType(Node::class)->pluck('followable_id'));
-        }])->has('nodes')->get();
+        $sections = Section::orderBy('order')->whereHas('nodes', function ($query) use ($user) {
+            $query->has('subNodes')->whereIn('id', $user->followedNodes->pluck('id'));
+        })->with(['nodes' => function ($query) use ($user) {
+            $query->whereIn('id', $user->followedNodes->pluck('id'));
+        }])->get();
 
         return $sections;
 
