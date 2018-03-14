@@ -39,7 +39,9 @@ class NotificationBll extends BaseBll
 
     public function at()
     {
-        $notifications = Notification::forUser(Auth::id())->at()->whereHas('reply', function ($query) {
+        $notifications = Notification::forUser(Auth::id())->at()->orWhereHas('thread', function ($query) {
+            $query->visibleAndDeleted();
+        })->with(['thread.user', 'thread.node'])->whereHas('reply', function ($query) {
             $query->visibleAndDeleted();
         })->whereHas('reply.thread', function ($query) {
             $query->visibleAndDeleted();
