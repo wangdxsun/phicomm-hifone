@@ -294,7 +294,7 @@ class Thread extends BaseModel implements TaggableInterface
         //将[表情]转成表情
         $body = app('parser.emotion')->parse($body);
 
-        return mb_substr($body, 0, 100);
+        return $body;
     }
 
     public function replyFloorFromIndex($index)
