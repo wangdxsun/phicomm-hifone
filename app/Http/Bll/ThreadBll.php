@@ -229,6 +229,7 @@ class ThreadBll extends BaseBll
             $tags
         ));
         $thread = Thread::find($threadTemp->id);
+        
         return $thread;
     }
 

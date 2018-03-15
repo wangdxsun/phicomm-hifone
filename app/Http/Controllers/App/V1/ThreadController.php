@@ -16,6 +16,7 @@ use Hifone\Models\Role;
 use Hifone\Models\Thread;
 use Auth;
 use Hifone\Services\Filter\WordsFilter;
+use Illuminate\Support\Facades\Redis;
 
 
 class ThreadController extends AppController
@@ -49,6 +50,12 @@ class ThreadController extends AppController
 
     public function store(ThreadBll $threadBll, WordsFilter $wordsFilter)
     {
+        //防灌水
+        $redisKey = 'thread_user:' . Auth::id();
+        if (Redis::exists($redisKey)) {
+            throw new HifoneException('发帖间隔时间短，请稍后再试');
+        }
+
         if (Auth::user()->hasRole('NoComment')) {
             throw new HifoneException('对不起，你已被管理员禁止发言');
         } elseif (!Auth::user()->can('manage_threads') && Auth::user()->score < 0) {
@@ -68,6 +75,9 @@ class ThreadController extends AppController
         $thread = $threadBll->createThreadImageMixed();
         $thread = $threadBll->auditThread($thread, $wordsFilter);
         $msg = $thread->status == Thread::VISIBLE ? '发布成功' : '帖子已提交，待审核';
+        Redis::set($redisKey, $redisKey);
+        Redis::expire($redisKey, 60);//设置发帖防灌水倒计时
+
         return [
             'msg' => $msg,
             'thread' => $thread
