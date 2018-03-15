@@ -35,17 +35,20 @@ class UserController extends AppController
         if (!$user) {
             throw new HifoneException('请先关联社区账号', 500);
         }
-        $cloudUser = $phicommBll->userInfo();
-        if (array_get($cloudUser, 'img') && $cloudUser['img'] && $user->avatar_url != $cloudUser['img'] && $cloudUser['img'] != 'Uploads/default/default.jpg') {
-            $user->avatar_url = $cloudUser['img'];
-            $user->save();
-            $user->updateIndex();
-        }
-        if (array_get($cloudUser, 'phonenumber') && $cloudUser['phonenumber'] !== $user->phone) {
-            $user->phone = $cloudUser['phonenumber'];
-            $user->save();
+        if (array_get($user, 'phicomm_id')) {
+            $cloudUser = $phicommBll->userInfo();
+            if (array_get($cloudUser, 'img') && $user->avatar_url != $cloudUser['img'] && $cloudUser['img'] != 'Uploads/default/default.jpg') {
+                $user->avatar_url = $cloudUser['img'];
+                $user->save();
+                $user->updateIndex();
+            }
+            if (array_get($cloudUser, 'phonenumber') && $cloudUser['phonenumber'] !== $user->phone) {
+                $user->phone = $cloudUser['phonenumber'];
+                $user->save();
+            }
         }
         $user['isAdmin'] = ($user->role =='管理员' || $user->role =='创始人');
+
         return $user;
     }
 
@@ -58,7 +61,8 @@ class UserController extends AppController
             'username.regex' => '昵称含有非法字符'
         ]);
         $user = $phicommBll->bind($wordsFilter);
-
+        $user = $user->toArray();
+        unset($user['roles']);
         return $user;
     }
 

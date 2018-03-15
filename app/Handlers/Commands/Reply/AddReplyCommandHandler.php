@@ -30,16 +30,17 @@ class AddReplyCommandHandler
      */
     public function handle(AddReplyCommand $command)
     {
-        $body = app('parser.markdown')->convertMarkdownToHtml($command->body);
+        $command->body= app('parser.at')->parse($command->body);
+        $command->body = app('parser.link')->parse($command->body);
+        $command->body = app('parser.emotion')->parse($command->body);
         //如果有单独上传图片，将图片拼接到正文后面
-        $body .= $command->images;
         $command->body .= $command->images;
 
         $data = [
             'user_id'       => $command->user_id,
             'thread_id'     => $command->thread_id,
             'reply_id'      => $command->reply_id,
-            'body'          => $body,
+            'body'          => $command->body,
             'body_original' => $command->body,
             'created_at'    => Carbon::now()->toDateTimeString(),
             'updated_at'    => Carbon::now()->toDateTimeString(),

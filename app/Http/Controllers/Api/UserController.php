@@ -19,12 +19,13 @@ class UserController extends ApiController
     public function me(PhicommBll $phicommBll)
     {
         $user = Auth::user();
-        if (Auth::bind() == false) {
+        if (Auth::bind() == false) {//如果云账号已登录，但是未关联社区账号，$user也为null，所以这个逻辑要放在前面
             return 'Unbind';
-        }
-        if (! is_null($user)) {
+        }elseif (is_null($user)) {
+            return 'PhicommNoLogin';
+        } elseif (array_get($user, 'phicomm_id')) {//如果有云账号id，要同步云账号信息
             $cloudUser = $phicommBll->userInfo();
-            if (array_get($cloudUser, 'img') && $cloudUser['img'] && $user->avatar_url != $cloudUser['img'] && $cloudUser['img'] != 'Uploads/default/default.jpg') {
+            if (array_get($cloudUser, 'img') && $user->avatar_url != $cloudUser['img'] && $cloudUser['img'] != 'Uploads/default/default.jpg') {
                 $user->avatar_url = $cloudUser['img'];
                 $user->save();
                 $user->updateIndex();
@@ -33,10 +34,10 @@ class UserController extends ApiController
                 $user->phone = $cloudUser['phonenumber'];
                 $user->save();
             }
-            return $user;
-        } else {
-            return 'PhicommNoLogin';
         }
+        $user['isAdmin'] = ($user->role =='管理员' || $user->role =='创始人');
+
+        return $user;
     }
 
     public function show(User $user, UserBll $userBll)

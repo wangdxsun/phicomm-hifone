@@ -144,10 +144,6 @@ class ThreadController extends WebController
         $threadData = request('thread');
         $threadData['node_id'] = SubNode::find($threadData['sub_node_id'])->node->id;
 
-        $threadData['body_original'] = $threadData['body'];
-        $threadData['body'] = (new Markdown())->convertMarkdownToHtml($threadData['body']);
-        $threadData['excerpt'] = Thread::makeExcerpt($threadData['body']);
-
         if (Auth::user()->hasRole(['Admin', 'Founder']) || Auth::id() == $thread->user_id) {
             $this->updateOpLog($thread, '修改帖子');
             $thread = dispatch(new UpdateThreadCommand($thread, $threadData));
