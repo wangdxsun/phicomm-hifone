@@ -34,10 +34,10 @@ class AddThreadCommandHandler
         $data = [
             'user_id'       => $command->user_id,
             'title'         => $command->title,
-            'excerpt'       => Thread::makeExcerpt($command->body),
+            'excerpt'       => Thread::makeExcerpt($body),
             'node_id'       => $command->node_id,
             'sub_node_id'   => $command->sub_node_id,
-            'body'          => $body,
+            'body'          => clean($body),
             'body_original' => $command->body,
             'created_at'    => Carbon::now()->toDateTimeString(),
             'updated_at'    => Carbon::now()->toDateTimeString(),
