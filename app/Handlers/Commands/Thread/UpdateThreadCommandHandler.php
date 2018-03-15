@@ -47,8 +47,10 @@ class UpdateThreadCommandHandler
         if (isset($command->data['body']) && $command->data['body']) {
             $command->data['body_original'] = $command->data['body'];
             $command->data['excerpt'] = Thread::makeExcerpt($command->data['body']);
-            $command->data['body'] = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse($command->data['body']));
-            $command->data['body'] = app('parser.link')->parse($command->data['body'] );
+            $command->data['body'] = app('parser.at')->parse($command->data['body']);
+            $command->data['body'] = app('parser.link')->parse($command->data['body']);
+            $command->data['body'] = app('parser.emotion')->parse($command->data['body']);
+
             //过滤数据中的空字段，并且更新帖子
             $command->data['thumbnails'] = getFirstImageUrl($command->data['body_original']);
         }

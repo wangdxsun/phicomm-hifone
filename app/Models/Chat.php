@@ -69,8 +69,6 @@ class Chat extends BaseModel
                     $query->where('username', 'like',"%$value%");
                 });
             } elseif ($key == 'message') {
-                $value = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse($value));
-                $value = substr($value, 3, sizeof($value)-5);
                 $query->where('message', 'LIKE', "%$value%");
             } elseif ($key == 'date_start') {
                 $query->where('created_at', '>=', $value);
