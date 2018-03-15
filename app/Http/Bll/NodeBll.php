@@ -12,10 +12,12 @@ use Hifone\Models\Node;
 use Hifone\Models\Section;
 use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
+use Hifone\Models\User;
 use Hifone\Repositories\Criteria\Thread\BelongsToNode;
 use Hifone\Repositories\Criteria\Thread\Filter;
 use Hifone\Repositories\Criteria\Thread\Search;
 use Input;
+use Auth;
 
 class NodeBll extends BaseBll
 {
@@ -113,7 +115,7 @@ class NodeBll extends BaseBll
         $node['moderators'] = $moderators;
         $node['praModerators'] = $praModerators;
         $node['subNodes'] = $subNodes;
-        $node['followed'] = \Auth::user()->hasFollowNode($node);
+        $node['followed'] = User::hasFollowNode($node);
 
         return $node;
     }

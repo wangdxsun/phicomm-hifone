@@ -12,6 +12,7 @@ use Hifone\Http\Bll\NodeBll;
 use Hifone\Http\Controllers\App\AppController;
 use Hifone\Models\Node;
 use Hifone\Models\SubNode;
+use Hifone\Models\User;
 
 class NodeController extends AppController
 {
@@ -43,7 +44,7 @@ class NodeController extends AppController
         foreach ($sections as $section) {
             foreach ($nodes = $section['nodes'] as $node) {
                 $node['detail_url'] = route('app.node.show', $node->id);
-                $node['followed'] = \Auth::user()->hasFollowNode($node);
+                $node['followed'] = User::hasFollowNode($node);
             }
         }
 

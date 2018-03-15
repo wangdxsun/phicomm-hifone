@@ -370,7 +370,6 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         } else {
             return "unFollow";
         }
-
     }
 
     public function hasLikeThread(Thread $thread)
