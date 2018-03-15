@@ -287,10 +287,14 @@ class Thread extends BaseModel implements TaggableInterface
 
     public static function makeExcerpt($body)
     {
-        $html = $body;
-        $excerpt = trim(preg_replace('/\s\s+/', ' ', strip_tags($html)));
+        //将图片和表情转成文字
+        $body = app('parser.emotion')->reverseParseEmotionAndImage($body);
+        //去掉所有html标签
+        $body = strip_tags($body);
+        //将[表情]转成表情
+        $body = app('parser.emotion')->parse($body);
 
-        return str_limit($excerpt, 200);
+        return mb_substr($body, 0, 100);
     }
 
     public function replyFloorFromIndex($index)
@@ -457,6 +461,11 @@ class Thread extends BaseModel implements TaggableInterface
             return json_decode($value, true);
         }
         return $value;
+    }
+
+    public function getBodyAttribute($value)
+    {
+        return clean($value);
     }
 
 //    public function getDeviceAttribute($value)
