@@ -236,9 +236,6 @@
                         </el-tooltip>
                         <el-input  v-model="valueShow" placeholder="请输入内容" type="hidden" name="node[is_show]"></el-input>
                     </div>
-                @else
-                    <input type="hidden" name="node[section_id]" value="0">
-                @endif
                 {{--版块描述--}}
                 <div class="form-group">
                     <label>{{ trans('dashboard.nodes.description') }}</label>
