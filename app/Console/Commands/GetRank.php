@@ -31,7 +31,7 @@ class GetRank extends Command
             $query->where('status', 0);
         }])->get();
         foreach ($likes as $like) {
-            if ( null != $like->likeable && $like->user_id !== $like->likeable->user_id && !$like->likeable->user->can('manage_threads')) {
+            if ( null != $like->likeable && $like->user_id != $like->likeable->user_id && !$like->likeable->user->can('manage_threads')) {
                 if (isset($userRankCount[$like->likeable->user_id])) {
                     $userRankCount[$like->likeable->user_id]['like'] += 1;
                 } else {

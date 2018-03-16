@@ -18,11 +18,15 @@
                     <tr class="head">
                         <td>日期</td>
                         <td>每日新增回帖数</td>
+                        <td>每日路由App反馈回复数</td>
+                        <td>每日斐讯社区回帖数</td>
                     </tr>
                     @foreach ($statsArr as $key => $value)
                         <tr>
                             <td>{{ $key }}</td>
                             <td>{{ $value['reply'] }}</td>
+                            <td>{{ $value['feedback']}}</td>
+                            <td>{{ $value['forum']}}</td>
                         </tr>
                     @endforeach
                 </table>
