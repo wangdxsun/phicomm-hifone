@@ -14,7 +14,6 @@
         @include('dashboard.partials.sub_nav')
     @endif
     <div class="row">
-        @include('partials.errors')
         <div class="col-sm-12 striped-list" id="item-list" data-item-name="carousel">
 
             @forelse($carousels as $carousel)

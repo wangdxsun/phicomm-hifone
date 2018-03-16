@@ -13,7 +13,6 @@
     @endif
     <div class="row">
         <div class="col-sm-12">
-            @include('partials.errors')
             <div class="striped-list">
                 @foreach($photos as $photo)
                 <div class="row striped-list-item">

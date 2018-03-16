@@ -5,7 +5,6 @@
     @endif
 <div class="content-wrapper">
     <div class="row">
-        @include('partials.errors')
         <div class="col-sm-12" id="app">
             @if(isset($carousel))
                 {!! Form::model($carousel, ['route' => ['dashboard.carousel.update', $carousel->id], 'method' => 'patch', 'class' => 'create_form']) !!}

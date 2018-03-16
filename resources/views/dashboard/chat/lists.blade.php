@@ -7,7 +7,6 @@
         @endif
         <div class="row">
             <div class="col-sm-12">
-                @include('partials.errors')
                 <form class="form-inline">
                     <el-input v-model="chat_id" type="text" name="chat[id]" resize="both" style="width: 160px; height: 10px;" placeholder="私信ID"></el-input>
                     <el-input v-model="from_user_id" type="text" name="chat[from_user_id]" resize="both" style="width: 160px; height: 10px;" placeholder="发信人"></el-input>

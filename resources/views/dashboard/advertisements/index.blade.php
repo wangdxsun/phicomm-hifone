@@ -16,7 +16,7 @@
     </div>
     <div class="row">
         <div class="col-sm-12">
-            @include('partials.errors')
+
             <div class="striped-list">
                 @foreach($advertisements as $advertisement)
                 <div class="row striped-list-item">

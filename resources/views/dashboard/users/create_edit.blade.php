@@ -13,7 +13,7 @@
     <div class="content-wrapper" id="app">
         <div class="row">
             <div class="col-md-12">
-                    @include('partials.errors')
+
                     @if(isset($user))
                         {!! Form::model($user, ['route' => ['dashboard.user.update', $user->id], 'id' => 'user-edit-form', 'method' => 'patch']) !!}
                     @else

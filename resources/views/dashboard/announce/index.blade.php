@@ -13,7 +13,7 @@
     @endif
     <div class="row">
         <div class="col-sm-12">
-            @include('partials.errors')
+
             <div class="toolbar">
                 <form class="form-inline">
                     <div class="form-group">

@@ -13,7 +13,6 @@
     @endif
     <div class="row">
         <div class="col-md-12">
-            @include('partials.errors')
             @if(isset($reply))
                 {!! Form::model($reply, ['route' => ['dashboard.reply.update', $reply->id], 'id' => 'reply-edit-form', 'method' => 'patch']) !!}
                 <input type="hidden" name="id" value={{$reply->id}}>

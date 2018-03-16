@@ -62,7 +62,6 @@
                         <label>{{ '共计'.$word_count.'条' }}</label>
                     @endif
 
-                    @include('partials.errors')
                     <table class="table table-bordered table-striped table-condensed">
                     <tbody>
                     <tr class="head">

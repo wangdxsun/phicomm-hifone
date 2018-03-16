@@ -14,7 +14,6 @@
             <div class="clearfix"></div>
         </div>
     </div>
-    @include('partials.errors')
     <div class="row">
         <div class="col-sm-12 striped-list" id="item-list" data-item-name="subNode">
             @forelse($subNodes as $subNode)

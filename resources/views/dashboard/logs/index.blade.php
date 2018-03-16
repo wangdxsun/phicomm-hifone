@@ -46,7 +46,6 @@
                     </form>
                 </div>
 
-                @include('partials.errors')
                 <table class="table table-bordered table-striped table-condensed">
                     <tr class="head">
                         <td>编号</td>

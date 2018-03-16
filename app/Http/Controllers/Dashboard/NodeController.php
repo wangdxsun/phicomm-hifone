@@ -123,13 +123,6 @@ class NodeController extends Controller
         $nodeData['order'] = Node::max('order') + 1;
         try {
             $node = Node::create($nodeData);
-//            if ($nodeData['is_feedback'] == 1 && $nodeData['feedback_thread_id'] == "") {
-//                return Redirect::back()->withErrors('支持反馈建议的主板块必须配置反馈建议帖子Id！');
-//            } elseif (Thread::max('id') < $nodeData['feedback_thread_id'] || $nodeData['feedback_thread_id'] < Thread::min('id')) {
-//                return Redirect::back()->withErrors('反馈建议帖子Id不存在！');
-//            } elseif ($node->id != Thread::find($nodeData['feedback_thread_id'])->node->id) {
-//                return Redirect::back()->withErrors('反馈建议帖子Id不属于该主板块！');
-//            }
             if (count($moderatorData) > 4 || count($praModeratorData) > 4 || count($moderatorData) + count($praModeratorData) > 4) {
                 return Redirect::back()->withErrors('版主、实习版主累计不能超过四个人！');
             }
@@ -221,13 +214,6 @@ class NodeController extends Controller
         $nodeData = Request::get('node');
         $moderatorData = explode(',', Request::get('nodeModerators'));
         $praModeratorData = explode(',', Request::get('nodePraModerators'));
-//        if ($nodeData['is_feedback'] == 1 && $nodeData['feedback_thread_id'] == "") {
-//            return Redirect::back()->withErrors('支持反馈建议的主板块必须配置反馈建议帖子Id！');
-//        } elseif (Thread::max('id') < $nodeData['feedback_thread_id'] || $nodeData['feedback_thread_id'] < Thread::min('id')) {
-//            return Redirect::back()->withErrors('反馈建议帖子Id不存在！');
-//        } elseif ($node->id != Thread::find($nodeData['feedback_thread_id'])->node->id) {
-//            return Redirect::back()->withErrors('反馈建议帖子Id不属于该主板块！');
-//        }
         if (count($moderatorData) > 4 || count($praModeratorData) > 4 || count($moderatorData) + count($praModeratorData) > 4) {
             return Redirect::back()->withErrors('版主、实习版主累计不能超过四个人！');
         }

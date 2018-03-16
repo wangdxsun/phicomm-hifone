@@ -11,7 +11,6 @@
             <a class="btn btn-sm btn-success pull-right" href="{{ route('dashboard.group.admin.create') }}">新增管理组</a>
         @endif
     </div>
-    @include('partials.errors')
     <div class="row">
         <div class="col-sm-12">
             <table class="table table-bordered table-striped table-condensed">

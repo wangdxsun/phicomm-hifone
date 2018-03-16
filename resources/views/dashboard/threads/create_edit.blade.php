@@ -13,7 +13,6 @@
     @endif
     <div class="row">
         <div class="col-md-12">
-            @include('partials.errors')
             @if(isset($thread))
                 {!! Form::model($thread, ['route' => ['dashboard.thread.update', $thread->id], 'id' => 'thread-edit-form', 'method' => 'patch']) !!}
                 <input type="hidden" name="id" value={{$thread->id}}>

@@ -24,8 +24,6 @@
                         <button class="btn btn-default">搜索</button>
                     </form>
                 </div>
-
-                @include('partials.errors')
                 <table class="table table-bordered table-striped table-condensed">
                     <tbody>
                     <tr class="head">

@@ -14,7 +14,6 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            @include('partials.errors')
             @if(isset($location))
                 {!! Form::model($location, ['route' => ['dashboard.location.update', $location->id], 'id' => 'location-edit-form', 'method' => 'patch']) !!}
                 <input type="hidden" name="id" value={{$location->id}}>

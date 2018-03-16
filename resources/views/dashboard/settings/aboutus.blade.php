@@ -13,7 +13,7 @@
     <div class="row">
         <div class="col-sm-12">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                @include('partials.errors')
+
                 <div class="row">
                     <div class="col-xs-12">
                         <label>Hifone</label>

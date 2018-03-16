@@ -12,7 +12,7 @@
         </a>
         <div class="clearfix"></div>
     </div>
-    @include('partials.errors')
+
     <div class="row">
         <div class="col-sm-12 striped-list" id="item-list" data-item-name="node">
             @forelse($nodes as $node)

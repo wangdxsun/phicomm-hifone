@@ -17,7 +17,6 @@
                 @else
                     {!! Form::open(['route' => 'dashboard.notice.store','id' => 'notice-create-form', 'method' => 'post']) !!}
                 @endif
-                @include('partials.errors')
                 <fieldset>
                     <div class="form-group">
                         <label>{{ trans('dashboard.notices.title') }}</label>
