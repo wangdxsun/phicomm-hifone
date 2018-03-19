@@ -123,7 +123,9 @@ class UserController extends AppController
         $avatar = dispatch(new UploadImageCommand(request()->file('image')));
         Auth::user()->update(['avatar_url' => $avatar['filename']]);
         Auth::user()->updateIndex();
-        $phicommBll->upload($avatar['localFile']);
+        if (Auth::phicommId()) {
+            $phicommBll->upload($avatar['localFile']);
+        }
         event(new AvatarWasUploadedEvent(Auth::user()));
         unset($avatar['localFile']);
 
