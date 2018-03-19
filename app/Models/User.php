@@ -155,6 +155,7 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         return $this->morphMany(Notification::class, 'object');
     }
 
+    //follows表多态关联
     public function followers()
     {
         return $this->morphMany(Follow::class, 'followable');
