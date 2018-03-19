@@ -79,24 +79,18 @@ class ReplyBll extends BaseBll
     {
         $badWord = '';
         $needManAudit = Config::get('setting.auto_audit', 0) == 0  || ($badWord = $wordsFilter->filterWord($reply->body)) || $this->isContainsImageOrUrl($reply->body);
+        //todo 新版web端上线之后需要替换成 $reply->body = app('parser.link')->parse($reply->body);
+        $reply->body = app('parser.markdown')->convertMarkdownToHtml($reply->body);
         $reply->body = app('parser.at')->parse($reply->body);
         $reply->body = app('parser.emotion')->parse($reply->body);
         if ($needManAudit) {
             $reply->bad_word = $badWord;
-            $msg = $this->getMsg($reply->reply_id, false);
         } else {
             $this->autoAudit($reply);
-            $msg = $this->getMsg($reply->reply_id, true);
         }
         $reply->save();
-        $reply = Reply::find($reply->id);
-        $reply->load(['user', 'reply.user']);
-        $reply['liked'] = Auth::check() ? Auth::user()->hasLikeReply($reply) : false;
-        $reply['reported'] = Auth::check() ? Auth::user()->hasReportReply($reply) : false;
-        return [
-            'msg' => $msg,
-            'reply' => $reply
-        ];
+
+        return $reply;
     }
 
     public function autoAudit($reply)
