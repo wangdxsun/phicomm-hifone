@@ -30,20 +30,12 @@ class ReplyController extends Controller
     {
         try {
             $reply = $replyBll->createReply();
-            $badWord = '';
-            if (Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($reply->body)) || $replyBll->isContainsImageOrUrl($reply->body)) {
-                $reply->bad_word = $badWord;
-                $reply->body = app('parser.at')->parse($reply->body);
-                $reply->body = app('parser.emotion')->parse($reply->body);
-                $reply->save();
+            $reply = $replyBll->auditReply($reply, $wordsFilter);
+            if ($reply->status == Reply::VISIBLE) {
+                return Redirect::back()->withSuccess('审核通过，发表成功！');
+            } else {
                 return Redirect::back()->withSuccess('回复发表成功，请耐心等待审核');
             }
-            $reply->body = app('parser.at')->parse($reply->body);
-            $reply->body = app('parser.emotion')->parse($reply->body);
-            $reply->save();
-            $replyBll->autoAudit($reply);
-
-            return Redirect::back()->withSuccess('审核通过，发表成功！');
         } catch (\Exception $e) {
             return Redirect::back()->withInput(Input::all())->withErrors($e->getMessageBag());
         }
