@@ -48,13 +48,13 @@ class ThreadBll extends BaseBll
         return $threads;
     }
 
-    public function search($keyword)
+    public function search($keyword, $recent = null)
     {
         if (empty($keyword)) {
             $threads = new Paginator([], 15);
         } else {
             $this->searchWords($keyword);
-            $threads = Thread::searchThread($keyword)->load(['user', 'node'])->paginate(15);
+            $threads = Thread::searchThread($keyword, $recent)->load(['user', 'node'])->paginate(15);
         }
 
         return $threads;
