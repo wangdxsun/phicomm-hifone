@@ -55,17 +55,24 @@ class SearchImport extends Command
                 if (!$user) {
                     $this->error("User $id does't exist");
                 }
-                $user->removeFromIndex();
+                try {
+                    $user->removeFromIndex();
+                } catch (\Exception $exception) {
+
+                }
                 $user->addToIndex();
                 $this->info("Import user $id into ElasticSearch Successfully");
                 return;
             }
             User::chunk(1000, function ($users) {
                 foreach ($users as $user) {
-                    $user->removeFromIndex();
+                    try {
+                        $user->removeFromIndex();
+                    } catch (\Exception $exception) {
+
+                    }
                 }
             });
-            User::rebuildMapping();
             User::chunk(1000, function ($users) {
                 $users->addToIndex();
             });
@@ -78,7 +85,11 @@ class SearchImport extends Command
                 if (!$thread) {
                     $this->error("Thread $id does't exist");
                 }
-                $thread->removeFromIndex();
+                try {
+                    $thread->removeFromIndex();
+                } catch (\Exception $exception) {
+
+                }
                 $thread->body = strip_tags($thread->body);
                 $thread->addToIndex();
                 $this->info("Import thread $id into ElasticSearch Successfully");
@@ -86,10 +97,13 @@ class SearchImport extends Command
             }
             Thread::visible()->chunk(1000, function ($threads) {
                 foreach ($threads as $thread) {
-                    $thread->removeFromIndex();
+                    try {
+                        $thread->removeFromIndex();
+                    } catch (\Exception $exception) {
+
+                    }
                 }
             });
-            Thread::rebuildMapping();
             Thread::visible()->chunk(1000, function ($threads) {
                 foreach ($threads as $thread) {
                     $thread->body = strip_tags($thread->body);

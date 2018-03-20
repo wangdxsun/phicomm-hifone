@@ -30,9 +30,6 @@ class AddReplyCommandHandler
      */
     public function handle(AddReplyCommand $command)
     {
-        $command->body= app('parser.at')->parse($command->body);
-        $command->body = app('parser.link')->parse($command->body);
-        $command->body = app('parser.emotion')->parse($command->body);
         //如果有单独上传图片，将图片拼接到正文后面
         $command->body .= $command->images;
 
@@ -51,6 +48,8 @@ class AddReplyCommandHandler
         ];
         // Create the reply
         $reply = Reply::create($data);
+        $reply = Reply::find($reply->id);
+
         return $reply;
     }
 }
