@@ -7,7 +7,7 @@
 <div class="content-wrapper">
     <div class="header sub-header">
         <span class="uppercase">
-            <i class="ion ion-ios-browsers-outline"></i> {{ trans('dashboard.sections.sections') }}
+            <i class="ion ion-ios-browsers-outline"></i> {{ '分类列表' }}
         </span>
         <a class="btn btn-sm btn-success pull-right" href="{{ route('dashboard.section.create') }}">
             {{ trans('dashboard.sections.add.title') }}
