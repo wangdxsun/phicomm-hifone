@@ -38,12 +38,12 @@
                 <div class="col-xs-2 drag-handle">
                     @foreach($node->moderators as $moderator)
                         @if (isset($moderator))
-                            <a data-name="{{ $moderator->username }}" href="{{ $moderator->url }}">{{ $moderator->username . ' ' }}</a>
+                            <td><a href="{{ route('user.show', ['id'=>$moderator->id]) }}" target="_blank">{{ $moderator->username }}</a></td>，
                         @endif
                     @endforeach
                     @foreach($node->praModerators as $praModerator)
                         @if (isset($praModerator))
-                            <a data-name="{{ $praModerator->username }}" href="{{ $praModerator->url }}">{{ $praModerator->username . ' ' }}</a>
+                            <td><a href="{{ route('user.show', ['id'=>$praModerator->id]) }}" target="_blank">{{ $praModerator->username }}</a></td>，
                         @endif
                     @endforeach
                 </div>
