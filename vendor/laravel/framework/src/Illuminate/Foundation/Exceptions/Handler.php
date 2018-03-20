@@ -3,6 +3,7 @@
 namespace Illuminate\Foundation\Exceptions;
 
 use Exception;
+use Hifone\Exceptions\HifoneException;
 use Illuminate\Http\JsonResponse;
 use Psr\Log\LoggerInterface;
 use Illuminate\Http\Response;
@@ -114,8 +115,10 @@ class Handler implements ExceptionHandlerContract
             return new JsonResponse(['msg' => $e->getMessage(), 'code' => $e->getCode() ?: 400], $e->getCode() ?: 400);
         } elseif ($this->isHttpException($e)) {
             return $this->toIlluminateResponse($this->renderHttpException($e), $e);
-        } else {
+        } elseif ($e instanceof HifoneException) {
             return back()->withErrors($e->getMessage());
+        } else {
+            return $this->toIlluminateResponse($this->convertExceptionToResponse($e), $e);
         }
 //        if ($this->isHttpException($e)) {
 //            return $this->toIlluminateResponse($this->renderHttpException($e), $e);
