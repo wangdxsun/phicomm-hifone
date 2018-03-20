@@ -18,6 +18,7 @@ use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
 use Hifone\Services\Filter\WordsFilter;
 use Hifone\Services\Parsers\Markdown;
+use Illuminate\Foundation\Testing\HttpException;
 use Illuminate\Support\Facades\Redis;
 
 class ThreadController extends WebController
@@ -58,7 +59,8 @@ class ThreadController extends WebController
         return $thread;
     }
 
-    public function store(ThreadBll $threadBll, WordsFilter $wordsFilter)
+    //直接发帖 不同于 编辑草稿后发帖
+    public function store(Thread $draft, ThreadBll $threadBll, WordsFilter $wordsFilter)
     {
         //防灌水
         $redisKey = 'thread_user:' . Auth::id();
@@ -72,6 +74,7 @@ class ThreadController extends WebController
             throw new HifoneException('对不起，你所在的用户组无法发言');
         }
         $threadData = request('thread');
+
         if (1 == array_get($threadData, 'is_vote') && !(Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Founder'))) {
             throw new HifoneException('普通用户暂不能发起投票');
         }
@@ -90,7 +93,16 @@ class ThreadController extends WebController
         if (mb_strlen(strip_tags(array_get(request('thread'), 'body'))) > 10000) {
             throw new HifoneException('帖子内容不得多于10000个字符');
         }
-        $thread = $threadBll->createThread($threadData);
+        //发布草稿为帖子
+        if ($draft->exists) {
+            if ($draft->status <> Thread::DRAFT) {
+                throw new HttpException('当前不是草稿贴');
+            }
+            $thread = $threadBll->makeDraftToThread($draft, $threadData);
+        } else {//直接发帖
+            $thread = $threadBll->createThread($threadData);
+        }
+
         $thread = $threadBll->auditThread($thread, $wordsFilter);
         if ($thread->is_vote == 1) {//投票贴
             $thread = $thread->load(['options']);
@@ -109,9 +121,9 @@ class ThreadController extends WebController
             'msg' => $msg,
             'thread' => $thread
         ];
-
     }
 
+    //存为草稿
     public function storeDraft(ThreadBll $threadBll)
     {
         $this->validate(request(), [

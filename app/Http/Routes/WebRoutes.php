@@ -85,7 +85,7 @@ class WebRoutes
             $router->group(['middleware' => 'auth:hifone'], function ($router) {
                 $router->post('upload', 'CommonController@upload');
                 $router->post('upload/base64', 'CommonController@uploadBase64');
-                $router->post('threads', 'ThreadController@store')->middleware('active:web');
+                $router->post('threads/{thread?}', 'ThreadController@store')->where('thread', '[0-9]+')->middleware('active:web');
                 $router->post('drafts', 'ThreadController@storeDraft');
                 $router->post('threads/{thread}', 'ThreadController@update')->where('thread', '[0-9]+');
                 $router->post('drafts/{thread}', 'ThreadController@updateDraft')->where('thread', '[0-9]+');

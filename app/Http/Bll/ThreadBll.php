@@ -94,18 +94,17 @@ class ThreadBll extends BaseBll
             SearchWord::where('word', $word)->where('created_at',Carbon::today()->toDateString())->increment('count', 1);
             SearchWord::where('word', $word)->where('created_at',Carbon::today()->toDateString())->increment('stat_count', 1);
         }
-        return ;
+        return;
     }
 
-    //H5端发帖图文分开 Web发帖富文本图文混排
+    //发帖 H5端:图文分开 Web:富文本图文混排
     public function createThread($threadData)
     {
         $node_id = SubNode::find($threadData['sub_node_id'])->node_id;
-
         $tags = isset($threadData['tags']) ? $threadData['tags'] : '';
-        $images = '';
 
         //base64上传 兼容H5
+        $images = '';
         if (Input::has('images')) {
             foreach ($threadImages = Input::get('images') as $image) {
                 $upload = dispatch(new UploadBase64ImageCommand($image));
@@ -134,7 +133,7 @@ class ThreadBll extends BaseBll
                 'view_vote_finish' => array_get($threadData,'view_vote_finish', Thread::VOTE_ONLY)
             ]);
 
-            //添加投票选项操作
+            //创建投票选项
             $contents = $threadData['options'];
             foreach ($contents as $key => $content) {
                 Option::create([
@@ -152,26 +151,26 @@ class ThreadBll extends BaseBll
     //web创建草稿
     public function createDraft($threadData)
     {
-        $node_id = '';
+        //草稿可以不填版块和标题信息
+        $node_id = null;
         if (isset($threadData['sub_node_id'])) {
             $node_id = SubNode::find($threadData['sub_node_id'])->node_id;
         }
-
         $tags = isset($threadData['tags']) ? $threadData['tags'] : '';
-        $images = '';
 
+        $images = '';
         $threadTemp = dispatch(new AddThreadCommand(
             $threadData['title'],
             $threadData['body'],
             Auth::id(),
             $node_id,
-            $threadData['sub_node_id'],
+            array_get($threadData, 'sub_node_id'),
             $tags,
             $images,
             $threadData['status']
         ));
 
-        //投票贴存为草稿，不必添加选项
+        //投票贴存为草稿
         if (1 == array_get($threadData, 'is_vote')) {
             $threadTemp->update([
                 'is_vote' => 1,
@@ -182,21 +181,96 @@ class ThreadBll extends BaseBll
                 'view_voting' => array_get($threadData,'view_voting', Thread::VOTE_ONLY),
                 'view_vote_finish' => array_get($threadData,'view_vote_finish', Thread::VOTE_ONLY)
             ]);
+
+            //创建投票选项
+            $contents = $threadData['options'];
+            foreach ($contents as $key => $content) {
+                Option::create([
+                    'thread_id' => $threadTemp->id,
+                    'order' => $key + 1,
+                    'content' => $content
+                ]);
+            }
         }
 
         $thread = Thread::find($threadTemp->id);
         return $thread;
     }
 
-    //编辑草稿
+    //编辑草稿继续存为草稿
     public function updateDraft(Thread $thread, $threadData)
     {
-        $node_id = '';
+        //草稿可以不填版块和标题信息
+        $node_id = null;
         if (isset($threadData['sub_node_id'])) {
             $node_id = SubNode::find($threadData['sub_node_id'])->node_id;
         }
-        $threadData['node_id'] = $node_id;
-        $thread->update($threadData);
+        $updateData['node_id'] = $node_id;
+        $updateData['title'] = $threadData['title'];
+        $updateData['body'] = $threadData['body'];
+        $updateData['sub_node_id'] = array_get($threadData, 'sub_node_id');
+        $thread->update($updateData);
+
+        //是投票贴
+        if (1 == $thread->is_vote) {
+            $thread->update([
+                'is_vote' => 1,
+                'option_max' => array_get($threadData, 'option_max', 1),
+                'vote_start' => $threadData['vote_start'],
+                'vote_end' => $threadData['vote_end'],
+                'vote_level' => array_get($threadData, 'vote_level'),
+                'view_voting' => array_get($threadData,'view_voting', Thread::VOTE_ONLY),
+                'view_vote_finish' => array_get($threadData,'view_vote_finish', Thread::VOTE_ONLY)
+            ]);
+
+            //编辑投票选项并固化(新的完全替换旧的)
+            $thread->options()->delete();
+            $contents = $threadData['options'];
+            foreach ($contents as $key => $content) {
+                Option::create([
+                    'thread_id' => $thread->id,
+                    'order' => $key + 1,
+                    'content' => $content
+                ]);
+            }
+        }
+
+        return $thread;
+    }
+
+    //发布草稿为帖子
+    public function makeDraftToThread(Thread $thread, $threadData)
+    {
+        $updateData['node_id'] = SubNode::find($threadData['sub_node_id'])->node_id;
+        $updateData['title'] = $threadData['title'];
+        $updateData['body'] = $threadData['body'];
+        $updateData['sub_node_id'] = $threadData['sub_node_id'];
+        $thread->update($updateData);
+
+        //发布的是投票贴
+        if (1 == $thread->is_vote) {
+            $thread->update([
+                'is_vote' => 1,
+                'option_max' => array_get($threadData, 'option_max', 1),
+                'vote_start' => $threadData['vote_start'],
+                'vote_end' => $threadData['vote_end'],
+                'vote_level' => array_get($threadData, 'vote_level'),
+                'view_voting' => array_get($threadData,'view_voting', Thread::VOTE_ONLY),
+                'view_vote_finish' => array_get($threadData,'view_vote_finish', Thread::VOTE_ONLY)
+            ]);
+
+            //编辑投票选项并固化(新的完全替换旧的)
+            $thread->options()->delete();
+            $contents = $threadData['options'];
+            foreach ($contents as $key => $content) {
+                Option::create([
+                    'thread_id' => $thread->id,
+                    'order' => $key + 1,
+                    'content' => $content
+                ]);
+            }
+        }
+        $thread = Thread::find($thread->id);
 
         return $thread;
     }
