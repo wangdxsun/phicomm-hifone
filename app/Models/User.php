@@ -225,7 +225,13 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
 
     public function getAvatarUrlAttribute($value)
     {
-        return $value ?: env('APP_URL') . '/images/phiwifi.png';
+        if ($value) {
+            if (substr($value, 0, 4) <> 'http') {
+                return request()->getSchemeAndHttpHost() . $value;
+            }
+            return $value;
+        }
+        return request()->getSchemeAndHttpHost() . '/images/phiwifi.png';
     }
 
     /**
