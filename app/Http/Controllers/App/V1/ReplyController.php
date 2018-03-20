@@ -15,7 +15,6 @@ use Hifone\Http\Controllers\App\AppController;
 use Hifone\Models\Reply;
 use Hifone\Services\Filter\WordsFilter;
 use Illuminate\Support\Facades\Redis;
-use Auth;
 
 class ReplyController extends AppController
 {
