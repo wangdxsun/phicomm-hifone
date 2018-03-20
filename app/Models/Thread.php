@@ -98,8 +98,8 @@ class Thread extends BaseModel implements TaggableInterface
     public $rules = [
         'title'   => 'required|max:80',
         'body'    => 'required',
-        'node_id' => 'required|int',
-        'sub_node_id' => 'required|int',
+        'node_id' => 'int',
+        'sub_node_id' => 'int',
         'user_id' => 'required|int',
         'heat_offset' => 'int',
     ];

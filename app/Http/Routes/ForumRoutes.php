@@ -35,6 +35,7 @@ class ForumRoutes
             $router->get('/captcha', 'CaptchaController@index')->name('captcha');
             $router->get('/go/{slug}', 'NodeController@showBySlug')->name('go');
             $router->get('/test', 'TestController@test')->name('test');
+            $router->post('/test', 'TestController@testPost')->name('testPost');
 
             // 兼容老社区
             $router->get('forum.php', 'ThreadController@index');
