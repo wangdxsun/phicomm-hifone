@@ -212,8 +212,8 @@ class NodeController extends Controller
             'node.feedback_thread_id.numeric'  => '帖子id是数字类型',
          ]);
         $nodeData = Request::get('node');
-        $moderatorData = explode(',', Request::get('nodeModerators'));
-        $praModeratorData = explode(',', Request::get('nodePraModerators'));
+        $moderatorData = Request::get('nodeModerators')== "" ? [] : explode(',', Request::get('nodeModerators'));
+        $praModeratorData = Request::get('nodePraModerators')== "" ? [] : explode(',', Request::get('nodePraModerators'));
         if (count($moderatorData) > 4 || count($praModeratorData) > 4 || count($moderatorData) + count($praModeratorData) > 4) {
             return Redirect::back()->withErrors('版主、实习版主累计不能超过四个人！');
         }
