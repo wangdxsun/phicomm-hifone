@@ -22,11 +22,16 @@ class Tag extends Model
     /**
      * Tags can have many threads.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany 
      */
     public function threads()
     {
         return $this->morphedByMany(Thread::class, 'taggable');
+    }
+
+    public function users()
+    {
+        return $this->morphedByMany(User::class,'taggable');
     }
 
     //根据标签类别查询标签
@@ -34,8 +39,6 @@ class Tag extends Model
     {
         return $query->where('type', $tagType->id);
     }
-
-
 
     //查询标签所属类别
     public function tagType()

@@ -44,18 +44,18 @@ class PhicommBll extends BaseBll
                 case 0:
                     return $output['uid'];break;
                 case 1:
-                    throw new HifoneException('验证码错误！');
+                    throw new HifoneException('验证码有误');
                 case 2:
-                    throw new HifoneException('验证码过期，请重新获取！');
+                    throw new HifoneException('验证码过期，请重新获取');
                 case 14:
-                    throw new HifoneException('账户已存在！');
+                    throw new HifoneException('账户已存在');
                 case 23:
-                    throw new HifoneException('验证码已被使用！');
+                    throw new HifoneException('验证码已使用');
                 default:
-                    throw new HifoneException('服务器异常！', 500);
+                    throw new HifoneException('服务器异常', 500);
             }
         } else {
-            throw new HifoneException('服务器异常！', 500);
+            throw new HifoneException('服务器异常', 500);
         }
     }
 
@@ -69,7 +69,7 @@ class PhicommBll extends BaseBll
         $url = env('PHICLOUND_DOMAIN') . 'login';
         $output = json_decode(curlPost($url, $data), true);
         if ($output['error'] > 0) {
-            throw new HifoneException('手机号或密码错误');
+            throw new HifoneException('账号或密码错误，请重新输入');
         }
 
         Session::set('access_token', $output['access_token']);
@@ -110,18 +110,18 @@ class PhicommBll extends BaseBll
             switch($output['error']) {
                 case 0:
                     return true;
-                case 14:
-                    throw new HifoneException('该手机号已注册！');
+                case 14://“直接登录”前端做成链接
+                    throw new HifoneException('该手机号已注册，请直接登录', 410);
                 default:
-                    throw new HifoneException('操作失败，请联系客服！', 500);
+                    throw new HifoneException('操作失败，请联系客服', 500);
             }
         } else {
-            throw new HifoneException('操作失败，请联系客服！', 500);
+            throw new HifoneException('操作失败，请联系客服', 500);
         }
     }
 
     /**
-     * 检测手机号是否未注册，重置密码用
+     * 检测手机号是否未注册，重置密码用，登录用
      * @param $phone
      * @return bool
      * @throws HifoneException
@@ -134,14 +134,14 @@ class PhicommBll extends BaseBll
         if ($output) {
             switch($output['error']) {
                 case 0:
-                    throw new HifoneException('该手机号未注册！');
+                    throw new HifoneException('手机号未注册');
                 case 14:
                     return true;
                 default:
-                    throw new HifoneException('操作失败，请联系客服！', 500);
+                    throw new HifoneException('操作失败，请联系客服', 500);
             }
         } else {
-            throw new HifoneException('操作失败，请联系客服！', 500);
+            throw new HifoneException('操作失败，请联系客服', 500);
         }
     }
 
@@ -160,20 +160,20 @@ class PhicommBll extends BaseBll
                 case 0:
                     return $output;
                 case 1:
-                    throw new HifoneException('验证码错误！');
+                    throw new HifoneException('验证码有误');
                 case 2:
-                    throw new HifoneException('验证码已过期！');
+                    throw new HifoneException('验证码已过期');
                 case 7:
-                    throw new HifoneException('您还未注册，请先注册！');
+                    throw new HifoneException('您还未注册，请先注册');
                 case 32:
                     throw new HifoneException('密码格式错误');
                 case 50:
-                    throw new HifoneException('服务器异常！', 500);
+                    throw new HifoneException('服务器异常', 500);
                 default:
                     throw new HifoneException($output['message']);
             }
         } else {
-            throw new HifoneException('密码重置失败!', 500);
+            throw new HifoneException('密码重置失败', 500);
         }
     }
 
@@ -188,7 +188,7 @@ class PhicommBll extends BaseBll
         $url = env('PHICLOUND_DOMAIN') . 'verificationCode?' . http_build_query($data);
         $res = json_decode(curlGet($url), true);
         if ($res && $res['error'] > 0) {
-            throw new HifoneException('验证码发送失败！');
+            throw new HifoneException('操作频繁，请1分钟后再试');
         }
     }
 
@@ -207,7 +207,7 @@ class PhicommBll extends BaseBll
             throw new HifoneException('请勿重复关联');
         }
         if ($wordsFilter->filterWord(request('username')) || $wordsFilter->filterKeyWord(request('username'))) {
-            throw new HifoneException('昵称包含被系统屏蔽字符');
+            throw new HifoneException('昵称含有被屏蔽字符');
         }
         $user = User::create($userData);//直接通过create返回的用户信息不全
         $user = User::find($user->id);
@@ -242,16 +242,16 @@ class PhicommBll extends BaseBll
                     $this->upload($file);
                     break;
                 case 18:
-                    throw new HifoneException('图片格式错误！');
+                    throw new HifoneException('图片格式错误');
                 case 19:
-                    throw new HifoneException('图片为空！');
+                    throw new HifoneException('图片为空');
                 case 50:
-                    throw new HifoneException('服务器异常！');
+                    throw new HifoneException('服务器异常');
                 default:
                     throw new HifoneException($res['message']);
             }
         } else {
-            throw new HifoneException('服务器异常！');
+            throw new HifoneException('服务器异常');
         }
     }
 
@@ -280,12 +280,12 @@ class PhicommBll extends BaseBll
                     Session::set('access_token', $res['access_token']);
                     break;
                 case 5:
-                    throw new HifoneException('登录失效，请重新登录！');
+                    throw new HifoneException('登录失效，请重新登录');
                 default:
                     throw new HifoneException($res['message']);
             }
         } else {
-            throw new HifoneException('服务器异常！');
+            throw new HifoneException('服务器异常');
         }
     }
 

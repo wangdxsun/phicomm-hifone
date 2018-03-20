@@ -26,16 +26,13 @@ use Hifone\Http\Bll\ThreadBll;
 use Hifone\Models\Section;
 use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
-use Hifone\Models\User;
 use Hifone\Repositories\Criteria\Thread\BelongsToNode;
 use Config;
 use Hifone\Services\Filter\WordsFilter;
 use Illuminate\Support\Facades\DB;
 use Input;
 use Redirect;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Hifone\Events\Thread\ThreadWasPinnedEvent;
-use Symfony\Component\VarDumper\Dumper\DataDumperInterface;
 
 class ThreadController extends Controller
 {
@@ -124,7 +121,6 @@ class ThreadController extends Controller
 
     public function store(ThreadBll $threadBll, WordsFilter $wordsFilter)
     {
-        dd('here');
         if (Auth::user()->hasRole('NoComment')) {
             return Redirect::back()->withErrors('您已被系统管理员禁言');
         } elseif (!Auth::user()->can('manage_threads') && Auth::user()->score < 0) {

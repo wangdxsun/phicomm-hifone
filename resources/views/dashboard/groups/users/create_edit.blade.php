@@ -13,7 +13,6 @@
             @else
             {!! Form::open(['route' => 'dashboard.group.users.store', 'method' => 'post']) !!}
             @endif
-            @include('partials.errors')
             <fieldset>
                 <div class="form-group">
                     <label>用户组名称</label>

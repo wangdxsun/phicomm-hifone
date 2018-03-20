@@ -16,7 +16,7 @@
     </div>
     <div class="row">
     <div class="col-sm-12">
-        @include('partials.errors')
+
         <div class="striped-list" id="item-list" data-item-name="location">
             @forelse($locations as $location)
             <div class="row striped-list-item" data-item-id="{{ $location->id }}">

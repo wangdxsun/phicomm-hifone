@@ -2,6 +2,7 @@
 
 namespace Elasticquent;
 
+use Carbon\Carbon;
 use Exception;
 use Hifone\Models\Thread;
 use ReflectionMethod;
@@ -281,19 +282,32 @@ trait ElasticquentTrait
         return static::hydrateElasticsearchResult($result);
     }
 
-    public static function searchThread($term = '')
+    public static function searchThread($term = '', $recent = null)
     {
         $instance = new static;
 
         $offset = (request('page', 1) -1) * 15;
         $params = $instance->getBasicEsParams(true, true, true, 15, $offset);
+        $recent = $recent ?: 1000;
+        $recent = Carbon::now()->subDay($recent)->format('Y-m-d H:i');
 
         $params['body'] = [
             'query' => [
-                'multi_match' => [
-                    'query' => $term,
-                    'type' => 'cross_fields',
-                    'fields' => ['title^2', 'body']
+                'filtered' => [
+                    'query' => [
+                        'multi_match' => [
+                            'query' => $term,
+                            'type' => 'cross_fields',
+                            'fields' => ['title^2', 'body']
+                        ],
+                    ],
+                    'filter' => [
+                        'range' => [
+                            'created_at' => [
+                                'gte' => $recent
+                            ]
+                        ]
+                    ]
                 ]
             ],
             'highlight' => [

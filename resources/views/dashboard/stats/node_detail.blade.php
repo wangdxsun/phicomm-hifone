@@ -13,7 +13,6 @@
         <div class="row">
             <div class="col-sm-12">
 
-                @include('partials.errors')
                 <form class="form-inline pull-right">
                     <el-input :value="date_end_str" type="hidden" resize=" both"  style="width: 60px; height: 10px;" name="node[date_end]"></el-input>
                     <el-input :value="date_start_str"  type="hidden" resize=" both"  style="width: 60px; height: 10px;" name="node[date_start]"></el-input>

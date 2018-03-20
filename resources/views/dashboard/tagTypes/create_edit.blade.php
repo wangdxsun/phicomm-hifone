@@ -16,7 +16,6 @@
                     {!! Form::open(['route' => 'dashboard.tag.type.store', 'method' => 'post', 'class' => 'create_form']) !!}
                 @endif
 
-                @include('partials.errors')
                 <fieldset>
                     <div>
                         <label>标签类型:</label>

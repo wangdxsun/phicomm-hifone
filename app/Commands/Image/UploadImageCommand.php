@@ -11,11 +11,13 @@
 
 namespace Hifone\Commands\Image;
 
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 final class UploadImageCommand
 {
     public $file;
 
-    public function __construct($file)
+    public function __construct(UploadedFile $file)
     {
         $this->file = $file;
     }

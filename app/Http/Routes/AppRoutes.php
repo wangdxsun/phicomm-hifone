@@ -57,8 +57,8 @@ class AppRoutes
                 $router->post('upload/base64', 'CommonController@uploadBase64');
                 $router->post('threads', 'ThreadController@store')->middleware('active:app');
                 $router->post('threads/{thread}/vote', 'ThreadController@vote')->where('thread', '[0-9]+');
-                $router->post('feedbacks', 'ReplyController@feedback');
-                $router->post('feedback', 'ThreadController@feedback');
+                $router->post('feedbacks/replies', 'ReplyController@feedback');
+                $router->post('feedbacks', 'ThreadController@feedback');
                 $router->post('replies', 'ReplyController@store');
                 $router->post('follow/user/{user}', 'FollowController@user')->where('user', '[0-9]+');
                 $router->post('follow/thread/{thread}', 'FollowController@thread')->where('thread', '[0-9]+');
@@ -69,7 +69,9 @@ class AppRoutes
                 $router->post('report/reply/{reply}', 'ReportController@reply')->where('reply', '[0-9]+');
                 $router->post('favorite/thread/{thread}', 'FavoriteController@createOrDeleteFavorite')->where('thread', '[0-9]+');
                 $router->get('user/reply/feedbacks', 'UserController@replyFeedbacks');
+                $router->get('user/feedbacks', 'UserController@feedbacks');
                 $router->get('user/thread/feedbacks', 'UserController@threadFeedbacks');
+
                 $router->get('user/credit', 'UserController@credit');
                 $router->post('user/avatar', 'UserController@upload');
                 $router->post('rank', 'RankController@rankStatus');

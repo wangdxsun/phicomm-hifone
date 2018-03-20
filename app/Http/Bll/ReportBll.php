@@ -26,7 +26,7 @@ class ReportBll
             throw new HifoneException('自己不能举报自己哦');
         }
         if (Auth::user()->hasReportThread($thread)) {
-            throw new HifoneException('你已经举报过了哦');
+            throw new HifoneException('已举报');
         }
         $reportData = Input::get('report');
         $reportData['user_id'] = Auth::id();
@@ -43,7 +43,7 @@ class ReportBll
             throw new HifoneException('自己不能举报自己哦');
         }
         if (Auth::user()->hasReportReply($reply)) {
-            throw new HifoneException('你已经举报过了哦');
+            throw new HifoneException('已举报');
         }
         $reportData = Input::get('report');
         $reportData['user_id'] = Auth::id();

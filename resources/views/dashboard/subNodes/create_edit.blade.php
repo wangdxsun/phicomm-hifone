@@ -16,7 +16,6 @@
                 @else
                     {!! Form::open(['route' => 'dashboard.subNode.store', 'method' => 'post', 'class' => 'create_form']) !!}
                 @endif
-                @include('partials.errors')
                 <fieldset>
                     <div class="form-group">
                         <label>在APP意见反馈处显示该子版块</label>

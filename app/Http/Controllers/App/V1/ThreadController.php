@@ -44,7 +44,7 @@ class ThreadController extends AppController
 
     public function search($keyword, ThreadBll $threadBll)
     {
-        $threads = $threadBll->search($keyword);
+        $threads = $threadBll->search($keyword, request('recent'));
         return $threads;
     }
 

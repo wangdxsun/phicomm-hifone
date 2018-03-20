@@ -352,10 +352,14 @@ class Thread extends BaseModel implements TaggableInterface
 
     public static function makeExcerpt($body)
     {
-        $html = $body;
-        $excerpt = trim(preg_replace('/\s\s+/', ' ', strip_tags($html)));
+        //将图片和表情转成文字
+        $body = app('parser.emotion')->reverseParseEmotionAndImage($body);
+        //去掉所有html标签
+        $body = strip_tags($body);
+        //将[表情]转成表情
+        $body = app('parser.emotion')->parse($body);
 
-        return str_limit($excerpt, 200);
+        return $body;
     }
 
     public function replyFloorFromIndex($index)
@@ -433,12 +437,8 @@ class Thread extends BaseModel implements TaggableInterface
                     $query->where('username', 'like',"%$value%");
                 });
             } elseif ($key == 'body') {
-                $value = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse($value));
-                $value = substr($value, 3, sizeof($value)-5);
                 $query->where('body', 'LIKE', "%$value%");
             } elseif ($key == 'title') {
-                $value = app('parser.markdown')->convertMarkdownToHtml(app('parser.at')->parse($value));
-                $value = substr($value, 3, sizeof($value)-5);
                 $query->where('title', 'LIKE', "%$value%");
             } elseif ($key == 'date_start') {
                 if ($value == "") {
@@ -527,6 +527,11 @@ class Thread extends BaseModel implements TaggableInterface
             return json_decode($value, true);
         }
         return $value;
+    }
+
+    public function getBodyAttribute($value)
+    {
+        return clean($value);
     }
 
 //    public function tags()

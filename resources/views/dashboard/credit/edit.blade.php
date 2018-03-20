@@ -11,7 +11,6 @@
     <div class="row">
         <div class="col-sm-12">
             {!! Form::model($credit_rule, ['route' => ['dashboard.creditRule.update', $credit_rule->id], 'method' => 'patch']) !!}
-            @include('partials.errors')
             <fieldset>
                 <div class="form-group">
                     <label>经验值规则名称</label>
