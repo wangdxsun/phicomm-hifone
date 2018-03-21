@@ -18,6 +18,17 @@ class TagController extends Controller
         ]);
     }
 
+    public function index()
+    {
+        //所有的用户标签
+        $tags = Tag::whereIn('type', TagType::ofType(TagType::USER)->pluck('id'))->get();
+        return View::make('dashboard.tags.index')
+            ->with('tags', $tags)
+            ->withCurrentMenu('tag')
+            ->withCurrentNav('user');
+
+    }
+
     public function user()
     {
         //所有的用户标签

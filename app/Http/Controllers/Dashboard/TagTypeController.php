@@ -27,8 +27,11 @@ class TagTypeController extends Controller
 
     public function edit(TagType $tagType)
     {
+        $types = TagType::$tagTypeTypes[$tagType->type]['display_name'];
         return View::make('dashboard.tagTypes.create_edit')
             ->with('tagType', $tagType)
+            ->with('types', json_encode($types))
+            ->with('tagTypeTypes', json_encode(TagType::$tagTypeTypes))
             ->withCurrentMenu('index');
 
     }

@@ -30,8 +30,6 @@
                                 @endforeach
                             </select>
                         </div>
-                    @else
-                        <input type="hidden" name="node[section_id]" value="0">
                     @endif
 
                 </fieldset>
