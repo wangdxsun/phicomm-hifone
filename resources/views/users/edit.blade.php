@@ -36,7 +36,7 @@
                         {{ trans('hifone.users.upload_avatar') }}
                     </button>
                     <span class="loading"></span>
-                    <input type="file" id="avatarinput" name="avatar" class="hide">
+                    <input type="file" accept="image/*" id="avatarinput" name="avatar" class="hide">
                     <span class="help-block">
                         {{ trans('hifone.users.upload_avatar_help') }}</span>
                     <button type="submit" class="btn btn-primary hidden" id="avatarinput-submit">更新</button>

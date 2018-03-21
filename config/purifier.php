@@ -34,11 +34,13 @@ return [
     'cacheFileMode' => 0755,
     'settings'      => [
         'default' => [
-            'HTML.Doctype'             => 'XHTML 1.0 Strict',
-            'HTML.Allowed'             => 'div,b,strong,i,em,a[href|title],ul,ol,li,p[style],br,span[style],img[width|height|alt|src|class]',
+            'HTML.Doctype'             => 'XHTML 1.0 Transitional',
+            'HTML.Allowed'             => 'div,b,strong,i,em,a[href|title],ul,ol,li,p[style],br,span[style],img[width|height|alt|src|class],iframe[src|frameborder|height|width]',
             'CSS.AllowedProperties'    => 'font,font-size,font-weight,font-style,font-family,text-decoration,padding-left,color,background-color,text-align',
             'AutoFormat.AutoParagraph' => true,
             'AutoFormat.RemoveEmpty'   => true,
+            'HTML.SafeIframe'          => true,
+            'URI.SafeIframeRegexp'     => '%^(http://|https://|//)((v.qq.com)|(player.youku.com)|(open.iqiyi.com))%',
         ],
         'test'    => [
             'Attr.EnableID' => true,
