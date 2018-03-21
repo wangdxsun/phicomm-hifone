@@ -346,14 +346,15 @@ class ThreadBll extends BaseBll
         $thread->heat = $thread->heat_compute;
         $post = $thread->title.$thread->body;
         $badWord = '';
-        $thread->body = app('parser.at')->parse($thread->body);
-        $thread->body = app('parser.emotion')->parse($thread->body);
         //新增判断逻辑：不具有免审核权限的用户才需要自动审核
         if (!Auth::user()->can('free_audit') && Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($post)) || $this->isContainsImageOrUrl($post)) {
             $thread->bad_word = $badWord;
         } else {
             $this->autoAudit($thread);
         }
+        $thread->body = app('parser.at')->parse($thread->body);
+        $thread->body = app('parser.emotion')->parse($thread->body);
+        $thread->body = app('parser.link')->parse($thread->body);
         $thread->save();
         return $thread;
     }
@@ -468,7 +469,17 @@ class ThreadBll extends BaseBll
         }
     }
 
-    public function replies(Thread $thread, $sort = 'desc', $source = '')
+    public function replies(Thread $thread)
+    {
+        $replies = $thread->replies()->visibleAndDeleted()->with(['user', 'reply.user'])->pinAndRecent()->paginate();
+        foreach ($replies as &$reply) {
+            $reply['liked'] = Auth::check() ? Auth::user()->hasLikeReply($reply) : false;
+            $reply['reported'] = Auth::check() ? Auth::user()->hasReportReply($reply) : false;
+        }
+        return $replies;
+    }
+
+    public function sortReplies(Thread $thread, $sort = 'desc', $source = '')
     {
         //三种排序方式 like：点赞最多  desc：时间逆序  asc:时间正序
         if ($source == 'web') {//web端查看评论列表只显示状态正常的
@@ -552,7 +563,11 @@ class ThreadBll extends BaseBll
                 throw new HttpException('选项数不足');
             }
             foreach ($options as $option) {
-                OptionUser::create(['option_id' => $option->id, 'user_id' => Auth::id()]);
+                OptionUser::create([
+                    'option_id' => $option->id,
+                    'user_id' => Auth::id(),
+                    'thread_id' => $thread->id
+                ]);
                 $option->increment('vote_count', 1);
             }
             $thread->increment('vote_count');
@@ -571,5 +586,37 @@ class ThreadBll extends BaseBll
                 return false;
             }
         }
+    }
+
+    public function viewVoteResult(Thread $thread, Option $option)
+    {
+        if ($option->exists) {
+            $users = $option->users()->paginate();
+        } else {
+            //所有投该帖的用户，按投票时间逆序，并携带他的投票选项信息
+            $users = $thread->voteUsers()->groupBy('user_id')->with(['options' => function ($query) use ($thread) {
+                $query->wherePivot('thread_id', $thread->id);
+            }])->paginate();
+            foreach ($users as $user) {
+                $user['selects'] = $this->selects($user['options']->toArray());
+                unset($user['options']);
+            }
+        }
+
+        return $users;
+    }
+
+    private function selects($options)
+    {
+        $selects = '';
+        for ($key= 0; $key < count($options); $key++) {
+            if (0 == $key) {
+                $selects .= $options[$key]['order'];
+            } else {
+                $selects = $selects . '/' . $options[$key]['order'];
+            }
+        }
+
+        return $selects;
     }
 }

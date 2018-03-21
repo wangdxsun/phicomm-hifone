@@ -29,8 +29,7 @@ class AddThreadCommandHandler
     public function handle(AddThreadCommand $command)
     {
         $thumbnails = getFirstImageUrl($command->body.$command->images);
-        $body = app('parser.link')->parse($command->body);
-        $body .= $command->images;
+        $body = $command->body.$command->images;
         $data = [
             'user_id'       => $command->user_id,
             'title'         => $command->title,

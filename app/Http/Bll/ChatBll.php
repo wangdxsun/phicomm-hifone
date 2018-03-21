@@ -32,6 +32,7 @@ class ChatBll extends BaseBll
         return $chats;
     }
 
+    //App返回某私信之后的新私信列表
     public function chatsApp(Chat $chat)
     {
         $chatIds = Chat::my()->after($chat)->selectRaw('max(id) as id')->groupBy('from_to')->pluck('id');

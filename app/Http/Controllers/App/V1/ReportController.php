@@ -19,14 +19,14 @@ class ReportController extends AppController
     {
         $reportBll->reportThread($thread);
 
-        return success('已发送');
+        return success('已提交');
     }
 
     public function reply(Reply $reply, ReportBll $reportBll)
     {
         $reportBll->reportReply($reply);
 
-        return success('已发送');
+        return success('已提交');
     }
 
     public function reason(ReportBll $reportBll)

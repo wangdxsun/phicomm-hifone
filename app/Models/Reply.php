@@ -135,6 +135,11 @@ class Reply extends BaseModel
         return $query->whereIn('status', [static::VISIBLE, static::DELETED]);
     }
 
+    public function scopePinAndRecent($query)
+    {
+        return $query->orderBy('order', 'desc')->orderBy('created_at', 'desc');
+    }
+
     //评论默认排序：点赞最多优先
     public function scopePinLikeAndRecent($query)
     {

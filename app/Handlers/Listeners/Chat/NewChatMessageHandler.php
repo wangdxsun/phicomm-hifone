@@ -43,6 +43,6 @@ class NewChatMessageHandler
             "userId" => $event->from->id,
         ];
 
-        app('push')->push($event->to->phicomm_id, $data, $message);
+        app('push')->push($event->to->phicomm_id, $data, $message, '0');
     }
 }

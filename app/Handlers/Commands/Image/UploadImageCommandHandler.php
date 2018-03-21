@@ -14,6 +14,7 @@ namespace Hifone\Handlers\Commands\Image;
 use Auth;
 use Hifone\Commands\Image\UploadImageCommand;
 use Hifone\Events\Image\ImageWasUploadedEvent;
+use Hifone\Exceptions\HifoneException;
 use Intervention\Image\ImageManagerStatic as Image;
 
 class UploadImageCommandHandler
@@ -23,8 +24,10 @@ class UploadImageCommandHandler
         $file = $command->file;
 
         $allowed_extensions = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
-        if ($file->getClientOriginalExtension() && !in_array($file->getClientOriginalExtension(), $allowed_extensions)) {
-            return ['error' => 'You may only upload png, jpg or gif.'];
+        if (!in_array($file->getClientOriginalExtension(), $allowed_extensions)) {
+            throw new HifoneException('图片格式错误');
+        } elseif (!in_array($file->guessExtension(),  $allowed_extensions)) {
+            throw new HifoneException('图片格式错误');
         }
 
         $fileName = $file->getClientOriginalName();

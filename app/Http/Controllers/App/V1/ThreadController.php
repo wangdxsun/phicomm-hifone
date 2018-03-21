@@ -92,9 +92,14 @@ class ThreadController extends AppController
         return $thread;
     }
 
-    public function replies(Thread $thread, $sort, ThreadBll $threadBll)
+    public function replies(Thread $thread, ThreadBll $threadBll)
     {
-        return $threadBll->replies($thread, $sort);
+        return $threadBll->replies($thread);
+    }
+
+    public function sortReplies(Thread $thread, $sort, ThreadBll $threadBll)
+    {
+        return $threadBll->sortReplies($thread, $sort);
     }
 
     public function feedback(ThreadBll $threadBll, WordsFilter $wordsFilter)

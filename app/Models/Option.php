@@ -47,17 +47,8 @@ class Option extends BaseModel
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'option_user')->withTimestamps();
-    }
-
-    public function scopeOfThread($query, $thread)
-    {
-        return $query->where('thread_id', $thread->id);
-    }
-
-    public function scopeOfOption($query, $option)
-    {
-        return $query->where('option_id', $option->id);
+        return $this->belongsToMany(User::class, 'option_user')
+            ->withTimestamps()->withPivot('option_id', 'user_id')->orderBy('option_user.created_at', 'desc');
     }
 
 }

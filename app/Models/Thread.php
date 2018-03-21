@@ -197,6 +197,18 @@ class Thread extends BaseModel implements TaggableInterface
         return $this->hasMany(Option::class);
     }
 
+    //投了该帖的
+    public function votes()
+    {
+        return $this->hasMany(OptionUser::class)->orderBy('created_at', 'desc');
+    }
+
+    //参与投票的所有人
+    public function voteUsers()
+    {
+        return $this->belongsToMany(User::class, 'option_user')->withPivot('option_id');
+    }
+
     public function appends()
     {
         return $this->hasMany(Append::class);

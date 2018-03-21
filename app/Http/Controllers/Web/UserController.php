@@ -36,6 +36,7 @@ class UserController extends WebController
             }
         }
         $user['isAdmin'] = ($user->role =='管理员' || $user->role =='创始人');
+        $user['draft_count'] = $user->threads()->draft()->count();
 
         return $user;
     }
@@ -47,6 +48,7 @@ class UserController extends WebController
             $query->has('thread');
         }])->find($user->id);
         $user['followed'] = User::hasFollowUser($user);
+        $user['draft_count'] = $user->threads()->draft()->count();
 
         return $user;
     }
@@ -116,7 +118,9 @@ class UserController extends WebController
         $avatar = dispatch(new UploadBase64ImageCommand(request('image')));
         Auth::user()->update(['avatar_url' => $avatar['filename']]);
         Auth::user()->updateIndex();
-        $phicommBll->upload($avatar['localFile']);
+        if (Auth::phicommId()) {
+            $phicommBll->upload($avatar['localFile']);
+        }
         event(new AvatarWasUploadedEvent(Auth::user()));
         unset($avatar['localFile']);
 
