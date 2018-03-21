@@ -85,20 +85,21 @@ class WebRoutes
             $router->group(['middleware' => 'auth:hifone'], function ($router) {
                 $router->post('upload', 'CommonController@upload');
                 $router->post('upload/base64', 'CommonController@uploadBase64');
-                $router->post('threads/{thread?}', 'ThreadController@store')->where('thread', '[0-9]+')->middleware('active:web');
+                $router->post('threads', 'ThreadController@store')->where('thread', '[0-9]+')->middleware('active:web');
+                $router->post('threads/draft/{thread}', 'ThreadController@store')->where('thread', '[0-9]+')->middleware('active:web');
                 $router->post('drafts', 'ThreadController@storeDraft');
                 $router->post('threads/{thread}', 'ThreadController@update')->where('thread', '[0-9]+');
                 $router->post('drafts/{thread}', 'ThreadController@updateDraft')->where('thread', '[0-9]+');
                 $router->get('levels', 'ThreadController@voteLevels');
                 $router->post('threads/{thread}/vote', 'ThreadController@vote')->where('thread', '[0-9]+');
                 $router->post('replies', 'ReplyController@store');
-                $router->post('follow/users/{user}', 'FollowController@user');
-                $router->post('follow/threads/{thread}', 'FollowController@thread');
-                $router->post('like/threads/{thread}', 'LikeController@thread');
-                $router->post('like/replies/{reply}', 'LikeController@reply');
-                $router->post('favorite/threads/{thread}', 'FavoriteController@threadFavorite');
-                $router->post('report/threads/{thread}', 'ReportController@thread');
-                $router->post('report/replies/{reply}', 'ReportController@reply');
+                $router->post('follow/users/{user}', 'FollowController@user')->where('user', '[0-9]+');
+                $router->post('follow/threads/{thread}', 'FollowController@thread')->where('thread', '[0-9]+');
+                $router->post('like/threads/{thread}', 'LikeController@thread')->where('thread', '[0-9]+');
+                $router->post('like/replies/{reply}', 'LikeController@reply')->where('reply', '[0-9]+');
+                $router->post('favorite/threads/{thread}', 'FavoriteController@threadFavorite')->where('thread', '[0-9]+');
+                $router->post('report/threads/{thread}', 'ReportController@thread')->where('thread', '[0-9]+');
+                $router->post('report/replies/{reply}', 'ReportController@reply')->where('reply', '[0-9]+');
                 $router->get('notification', 'NotificationController@index');
                 $router->get('user/watch', 'NotificationController@watch');
                 $router->get('user/credit', 'UserController@credit');
@@ -107,7 +108,7 @@ class WebRoutes
                 $router->get('rank/count', 'RankController@count');
 
                 $router->get('chats', 'ChatController@chats');
-                $router->get('chat/{user}', 'ChatController@messages');
+                $router->get('chat/{user}', 'ChatController@messages')->where('user', '[0-9]+');
                 $router->post('chat/{user}', 'ChatController@store')->where('user', '[0-9]+');
 
                 $router->get('notification', 'NotificationController@index');
@@ -121,9 +122,10 @@ class WebRoutes
 
             //后台管理员
             $router->group(['middleware' => ['auth', 'role:Admin|Founder|NodeMaster']], function ($router) {
-                $router->post('threads/{thread}/excellent', 'ThreadController@setExcellent');
-                $router->post('threads/{thread}/pin', 'ThreadController@pin');
-                $router->post('threads/{thread}/sink', 'ThreadController@sink');
+                $router->post('threads/{thread}/excellent', 'ThreadController@setExcellent')->where('thread', '[0-9]+');
+                $router->post('threads/{thread}/pin', 'ThreadController@pin')->where('thread', '[0-9]+');
+                $router->post('threads/{thread}/sink', 'ThreadController@sink')->where('thread', '[0-9]+');
+                $router->get('threads/{thread}/vote/{option?}', 'ThreadController@viewVoteResult')->where('thread', '[0-9]+');
             });
         });
     }
