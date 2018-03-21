@@ -48,6 +48,7 @@ class UserController extends WebController
             $query->has('thread');
         }])->find($user->id);
         $user['followed'] = User::hasFollowUser($user);
+        $user['draft_count'] = $user->threads()->draft()->count();
 
         return $user;
     }
