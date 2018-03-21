@@ -180,7 +180,7 @@ class Node extends BaseModel implements HasPresenter
         return $this->belongsToMany(User::class, 'pra_moderators', 'node_id','user_id');
     }
 
-    public function getIconAttribute($value)
+    public function getIconAttribute()
     {
         $userAgent = get_request_agent();
         if ($userAgent == Thread::IOS) {
@@ -194,7 +194,7 @@ class Node extends BaseModel implements HasPresenter
         }
     }
 
-    public function getIconDetailAttribute($value)
+    public function getIconDetailAttribute()
     {
         $userAgent = get_request_agent();
         if ($userAgent == Thread::IOS) {
@@ -208,7 +208,7 @@ class Node extends BaseModel implements HasPresenter
         }
     }
 
-    public function getIconListAttribute($value)
+    public function getIconListAttribute()
     {
         $userAgent = get_request_agent();
         if ($userAgent == Thread::IOS) {
