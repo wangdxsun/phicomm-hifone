@@ -16,6 +16,7 @@ class OptionUser extends BaseModel
     protected $fillable = [
         'option_id',
         'user_id',
+        'thread_id',
         'created_at',
         'updated_at'
     ];
@@ -28,6 +29,21 @@ class OptionUser extends BaseModel
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function thread()
+    {
+        return $this->belongsTo(Thread::class);
+    }
+
+    public function scopeOfThread($query, $thread)
+    {
+        return $query->where('thread_id', $thread->id);
+    }
+
+    public function scopeOfOption($query, $option)
+    {
+        return $query->where('option_id', $option->id);
     }
 
 }

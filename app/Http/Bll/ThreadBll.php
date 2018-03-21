@@ -552,7 +552,11 @@ class ThreadBll extends BaseBll
                 throw new HttpException('选项数不足');
             }
             foreach ($options as $option) {
-                OptionUser::create(['option_id' => $option->id, 'user_id' => Auth::id()]);
+                OptionUser::create([
+                    'option_id' => $option->id,
+                    'user_id' => Auth::id(),
+                    'thread_id' => $thread->id
+                ]);
                 $option->increment('vote_count', 1);
             }
             $thread->increment('vote_count');
@@ -571,5 +575,40 @@ class ThreadBll extends BaseBll
                 return false;
             }
         }
+    }
+
+    public function viewVoteResult(Thread $thread, Option $option)
+    {
+        if ($option->exists) {
+            $users = $option->users()->paginate();
+        } else {
+            //所有投该帖的用户，按投票时间逆序，并携带他的投票选项信息
+            $users = $thread->voteUsers()->groupBy('user_id')->with(['options' => function ($query) use ($thread) {
+                $query->wherePivot('thread_id', $thread->id);
+            }])->paginate();
+            foreach ($users as $user) {
+                $user['selects'] = $this->selects($user['options']->toArray());
+                unset($user['options']);
+            }
+        }
+
+        return $users;
+    }
+
+    private function selects($options)
+    {
+        $selects = '';
+        for ($key= 0; $key < count($options); $key++) {
+            if (0 == $key) {
+                $selects .= $options[$key]['order'];
+            } elseif ($key < 3) {
+                $selects = $selects . ',' . $options[$key]['order'];
+            } else {
+                $selects .= '...';
+                break;
+            }
+        }
+
+        return $selects;
     }
 }

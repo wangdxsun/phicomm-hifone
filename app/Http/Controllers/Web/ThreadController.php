@@ -13,6 +13,7 @@ use Hifone\Events\Thread\ThreadWasPinnedEvent;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\ThreadBll;
+use Hifone\Models\Option;
 use Hifone\Models\Role;
 use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
@@ -274,6 +275,14 @@ class ThreadController extends WebController
             $this->updateOpLog($thread, '取消下沉');
         }
         return ['sink' => $thread->order < 0 ? true : false];
+    }
+
+    //管理员查看投票结果
+    public function viewVoteResult(Thread $thread, Option $option, ThreadBll $threadBll)
+    {
+        $votes = $threadBll->viewVoteResult($thread, $option);
+
+        return $votes;
     }
 
 }

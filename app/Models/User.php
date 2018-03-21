@@ -176,9 +176,15 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         return $this->belongsTo(Location::class);
     }
 
+    //我投了哪些项
+    public function votes()
+    {
+        return $this->hasMany(OptionUser::class);
+    }
+
     public function options()
     {
-        return $this->belongsToMany(Option::class, 'option_user')->withTimestamps();
+        return $this->belongsToMany(Option::class, 'option_user');
     }
 
     /**
@@ -344,7 +350,6 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
 
     public static function hasFollowUser(User $user)
     {
-
         if (Auth::guest()) {
             return 'unFollow';
         }
@@ -401,12 +406,12 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
 
     public function hasVoteThread(Thread $thread)
     {
-        return $this->options()->ofThread($thread)->count() > 0;
+        return $this->votes()->ofThread($thread)->count() > 0;
     }
 
     public function hasVoteOption(Option $option)
     {
-        return $this->options()->ofOption($option)->count() > 0;
+        return $this->votes()->ofOption($option)->count() > 0;
     }
 
     public function hasCommentThread(Thread $thread)
