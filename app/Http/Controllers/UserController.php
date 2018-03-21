@@ -13,6 +13,8 @@ namespace Hifone\Http\Controllers;
 
 use AltThree\Validator\ValidationException;
 use Auth;
+use Hifone\Commands\Image\UploadImageCommand;
+use Hifone\Exceptions\HifoneException;
 use Hifone\Hashing\PasswordHasher;
 use Hifone\Http\Bll\FollowBll;
 use Hifone\Http\Bll\PhicommBll;
@@ -187,27 +189,16 @@ class UserController extends Controller
 
     public function avatarupdate(PhicommBll $phicommBll)
     {
-        $user_id = Auth::id();
-        $originFile = Input::file('avatar');
-
-        $path = ($user_id % 10).'/'.($user_id % 10).'/';
-        $destinationPath = public_path().'/uploads/avatar/'.$path;
-        $saveName = $user_id.'.jpg';
-
-        $originFile->move($destinationPath, $saveName);
-        $img = Image::make($destinationPath.'/'.$saveName);
-
-        $img->resize(192, 192)->encode('jpg')->save();
-        $img->resize(48, 48)->encode('jpg')->save($destinationPath.$user_id.'_small.jpg');
-
-        $user = Auth::user();
-        $user->avatar_url = '/uploads/avatar/'.$path.$user_id.'.jpg';
-        $phicommBll->upload($destinationPath.'/'.$saveName);
-        $user->save();
-        $user->updateIndex();
-
+        if (!request()->hasFile('avatar')) {
+            throw new HifoneException('没有上传图片');
+        }
+        $avatar = dispatch(new UploadImageCommand(request()->file('avatar')));
+        Auth::user()->update(['avatar_url' => $avatar['filename']]);
+        Auth::user()->updateIndex();
+        if (Auth::phicommId()) {
+            $phicommBll->upload($avatar['localFile']);
+        }
         event(new AvatarWasUploadedEvent(Auth::user()));
-
 
         return Redirect::back()
             ->withSuccess(trans('hifone.users.avatar_upload_success'));

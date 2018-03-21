@@ -25,12 +25,22 @@ class ReplyController extends AppController
         if (Redis::exists($redisKey)) {
             throw new HifoneException('回复间隔时间短，请稍后再试');
         }
-
-        $reply = $replyBll->createReplyApp();
-        $result = $replyBll->auditReply($reply, $wordsFilter);
-
         Redis::set($redisKey, $redisKey);
         Redis::expire($redisKey, 10);//设置评论回复防灌水倒计时
+        $reply = $replyBll->createReplyApp();
+        $reply = $replyBll->auditReply($reply, $wordsFilter);
+        $reply->load(['user', 'reply.user']);
+        $reply['liked'] = Auth::check() ? Auth::user()->hasLikeReply($reply) : false;
+        $reply['reported'] = Auth::check() ? Auth::user()->hasReportReply($reply) : false;
+        if ($reply->status == Reply::VISIBLE) {
+            $msg = $reply->reply_id ? '回复成功' : '评论成功';
+        } else {
+            $msg = $reply->reply_id ? '回复已提交，待审核' : '评论已提交，待审核';
+        }
+        $result = [
+            'msg' => $msg,
+            'reply' => $reply,
+        ];
 
         return $result;
     }

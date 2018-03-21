@@ -44,7 +44,7 @@ class PhicommBll extends BaseBll
                 case 0:
                     return $output['uid'];break;
                 case 1:
-                    throw new HifoneException('验证码有误');
+                    throw new HifoneException('短信验证码有误');
                 case 2:
                     throw new HifoneException('验证码过期，请重新获取');
                 case 14:
@@ -134,7 +134,7 @@ class PhicommBll extends BaseBll
         if ($output) {
             switch($output['error']) {
                 case 0:
-                    throw new HifoneException('手机号未注册');
+                    throw new HifoneException('该手机号未注册');
                 case 14:
                     return true;
                 default:
@@ -160,7 +160,7 @@ class PhicommBll extends BaseBll
                 case 0:
                     return $output;
                 case 1:
-                    throw new HifoneException('验证码有误');
+                    throw new HifoneException('短信验证码有误');
                 case 2:
                     throw new HifoneException('验证码已过期');
                 case 7:

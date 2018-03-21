@@ -69,7 +69,7 @@ class PhicommController extends WebController
             throw new HifoneException('图形验证码有误');
         }
         Session::remove('phrase');
-        //验证登录手机号是否注册，否则提示“手机号未注册”
+        //验证登录手机号是否注册，否则提示“该手机号未注册”
         $this->phicommBll->checkPhoneRegistered($phone);
 
         $res = $this->phicommBll->login($phone, $password);

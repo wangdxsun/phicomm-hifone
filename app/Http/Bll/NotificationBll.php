@@ -37,6 +37,7 @@ class NotificationBll extends BaseBll
         return $notifications;
     }
 
+    //web用，App走推送不用，H5待升级支持thread_mention
     public function at()
     {
         $notifications = Notification::forUser(Auth::id())->at()->orWhereHas('thread', function ($query) {
