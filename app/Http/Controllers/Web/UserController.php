@@ -36,6 +36,7 @@ class UserController extends WebController
             }
         }
         $user['isAdmin'] = ($user->role =='管理员' || $user->role =='创始人');
+        $user['draft_count'] = $user->threads()->draft()->count();
 
         return $user;
     }
