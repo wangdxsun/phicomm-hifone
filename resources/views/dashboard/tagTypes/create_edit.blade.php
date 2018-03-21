@@ -27,6 +27,7 @@
                                     :value="tagTypeType.value">
                             </el-option>
                         </el-select>
+
                         <input type="hidden" class="form-control" :value="types" name="tagType[type]">
                     </div>
                     <div class="form-group">
