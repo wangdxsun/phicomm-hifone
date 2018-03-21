@@ -92,10 +92,7 @@ class NodeBll extends BaseBll
     public function nodesInFeedback()
     {
         //意见反馈处显示的子版块
-        $nodes = Node::orderBy('order')->feedback()->show()->with('subNodes')->select('id', 'name','feedback_thread_id')
-            ->get()->filter(function ($node) {
-                return $node->subNodes->count() > 0;
-        })->values();
+        $nodes = Node::orderBy('order')->feedback()->show()->has('subNodes')->get(['id', 'name','feedback_thread_id']);
 
         return $nodes;
     }
