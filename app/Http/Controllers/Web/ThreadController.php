@@ -191,10 +191,24 @@ class ThreadController extends WebController
             $threadData = request('thread');
             $threadBll->updateDraft($thread, $threadData);
         } else {
-            throw new HifoneException('您没有权限编辑该草稿！');
+            throw new HifoneException('您无权编辑该草稿');
         }
 
         return ['msg' => '保存成功'];
+    }
+
+    //删除草稿
+    public function delete(Thread $thread)
+    {
+        if ($thread->status <> Thread::DRAFT) {
+            throw new HifoneException('只能删除草稿');
+        }
+        if (Auth::id() == $thread->user_id) {
+            $thread->delete();
+            return ['msg' => '删除成功'];
+        } else {
+            throw new HifoneException('您无权删除该草稿');
+        }
     }
 
     //投票贴设置用户权限

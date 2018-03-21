@@ -92,6 +92,7 @@ class WebRoutes
                 $router->post('drafts/{thread}', 'ThreadController@updateDraft')->where('thread', '[0-9]+');
                 $router->get('levels', 'ThreadController@voteLevels');
                 $router->post('threads/{thread}/vote', 'ThreadController@vote')->where('thread', '[0-9]+');
+                $router->delete('threads/{thread}', 'ThreadController@delete')->where('thread', '[0-9]+');
                 $router->post('replies', 'ReplyController@store');
                 $router->post('follow/users/{user}', 'FollowController@user')->where('user', '[0-9]+');
                 $router->post('follow/threads/{thread}', 'FollowController@thread')->where('thread', '[0-9]+');
