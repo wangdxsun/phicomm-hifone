@@ -602,11 +602,8 @@ class ThreadBll extends BaseBll
         for ($key= 0; $key < count($options); $key++) {
             if (0 == $key) {
                 $selects .= $options[$key]['order'];
-            } elseif ($key < 3) {
-                $selects = $selects . ',' . $options[$key]['order'];
             } else {
-                $selects .= '...';
-                break;
+                $selects = $selects . '/' . $options[$key]['order'];
             }
         }
 
