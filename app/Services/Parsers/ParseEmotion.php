@@ -23,7 +23,7 @@ class ParseEmotion
     {
         foreach ($this->emotions as $emotion) {
             $search = $emotion->emotion;
-            $replace = '<img class="face" src="'.request()->getSchemeAndHttpHost().$emotion->url.'" />';
+            $replace = '<img class="face" src="'.env('APP_URL').$emotion->url.'" />';
             $this->post = str_replace($search, $replace, $this->post);
         }
     }
