@@ -124,7 +124,9 @@ class NodeController extends Controller
         try {
             $node = Node::create($nodeData);
             if (count($moderatorData) > 4 || count($praModeratorData) > 4 || count($moderatorData) + count($praModeratorData) > 4) {
-                return Redirect::back()->withErrors('版主、实习版主累计不能超过四个人！');
+                return Redirect::back()
+                    ->withInput()
+                    ->withErrors('最多支持添加四个版主！');
             }
             if (count($moderatorData) > 0) {
                 foreach ($moderatorData as $userId) {
@@ -215,7 +217,7 @@ class NodeController extends Controller
         $moderatorData = Request::get('nodeModerators')== "" ? [] : explode(',', Request::get('nodeModerators'));
         $praModeratorData = Request::get('nodePraModerators')== "" ? [] : explode(',', Request::get('nodePraModerators'));
         if (count($moderatorData) > 4 || count($praModeratorData) > 4 || count($moderatorData) + count($praModeratorData) > 4) {
-            return Redirect::back()->withErrors('版主、实习版主累计不能超过四个人！');
+            return Redirect::back()->withErrors('最多支持添加四个版主！');
         }
         try {
             $node->update($nodeData);
