@@ -31,7 +31,7 @@ class Pusher
      * $data['type'] 消息类型 社区定义如下：
      *
      */
-    public function push($uid, $data, $outline = '', $saveRecord = '1', $msg_type = '1')
+    public function push($uid, $data, $outline = '', $msg_type = '1')
     {
         if (empty($uid)) {
             return;
@@ -48,7 +48,7 @@ class Pusher
             'msgkind' => '7',//
             'msgtype' => $msg_type,
             'outline' => $outline,
-            'saveRecord' => $saveRecord,
+            'saveRecord' => '1',
             'source' => '1',
             'ticker' => $ticker,
             'timestamp' => date('Y-m-d H:i', strtotime('now')),
