@@ -159,8 +159,9 @@ class ThreadBll extends BaseBll
         $tags = isset($threadData['tags']) ? $threadData['tags'] : '';
 
         $images = '';
+        //草稿贴标题、版块信息可为空
         $threadTemp = dispatch(new AddThreadCommand(
-            $threadData['title'],
+            array_get($threadData, 'title'),
             $threadData['body'],
             Auth::id(),
             $node_id,
@@ -200,13 +201,13 @@ class ThreadBll extends BaseBll
     //编辑草稿继续存为草稿
     public function updateDraft(Thread $thread, $threadData)
     {
-        //草稿可以不填版块和标题信息
+        //草稿贴标题、版块信息可为空
         $node_id = null;
         if (isset($threadData['sub_node_id'])) {
             $node_id = SubNode::find($threadData['sub_node_id'])->node_id;
         }
         $updateData['node_id'] = $node_id;
-        $updateData['title'] = $threadData['title'];
+        $updateData['title'] = array_get($threadData, 'title');
         $updateData['body'] = $threadData['body'];
         $updateData['sub_node_id'] = array_get($threadData, 'sub_node_id');
         $thread->update($updateData);
