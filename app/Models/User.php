@@ -215,7 +215,7 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
 
     public function getAvatarAttribute()
     {
-        return $this->attributes['avatar_url'] ?: request()->getSchemeAndHttpHost() . '/images/phiwifi.png';
+        return $this->attributes['avatar_url'] ?: env('APP_URL') . '/images/phiwifi.png';
     }
 
     public function getAvatarSmallAttribute()
@@ -225,7 +225,13 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
 
     public function getAvatarUrlAttribute($value)
     {
-        return $value ?: env('APP_URL') . '/images/phiwifi.png';
+        if ($value) {
+            if (substr($value, 0, 4) <> 'http') {
+                return env('APP_URL') . $value;
+            }
+            return $value;
+        }
+        return env('APP_URL') . '/images/phiwifi.png';
     }
 
     /**
