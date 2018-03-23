@@ -241,11 +241,11 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
     {
         if ($value) {
             if (substr($value, 0, 4) <> 'http') {
-                return request()->getSchemeAndHttpHost() . $value;
+                return env('APP_URL') . $value;
             }
             return $value;
         }
-        return request()->getSchemeAndHttpHost() . '/images/phiwifi.png';
+        return env('APP_URL') . '/images/phiwifi.png';
     }
 
     /**

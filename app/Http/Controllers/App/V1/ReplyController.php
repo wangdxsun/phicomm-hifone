@@ -65,7 +65,11 @@ class ReplyController extends AppController
         ]);
         $reply = $replyBll->createFeedbackApp();
         $result = $replyBll->auditReply($reply, $wordsFilter);
-        return $result;
+        $msg = "提交成功";
+        return [
+            'msg' => $msg,
+            'reply' => $result
+        ];
     }
 
 }
