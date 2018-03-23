@@ -104,6 +104,7 @@ class NodeController extends AppController
         return $nodes;
     }
 
+    //版块热门帖子列表
     public function hot(Node $node)
     {
         $threads = $this->nodeBll->hotThreadsOfNode($node);
@@ -111,9 +112,26 @@ class NodeController extends AppController
         return $threads;
     }
 
+    //版块最新帖子列表
     public function recent(Node $node)
     {
         $threads = $this->nodeBll->recentThreadsOfNode($node);
+
+        return $threads;
+    }
+
+    //子版块热门帖子列表
+    public function subNodeHot(SubNode $subNode)
+    {
+        $threads = $this->nodeBll->hotThreadsOfSubNode($subNode);
+
+        return $threads;
+    }
+
+    //子版块最新帖子列表
+    public function subNodeRecent(SubNode $subNode)
+    {
+        $threads = $this->nodeBll->recentThreadsOfSubNode($subNode);
 
         return $threads;
     }
