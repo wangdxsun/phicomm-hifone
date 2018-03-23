@@ -26,7 +26,7 @@ class GeneralController extends WebController
     {
         $emotions = Emotion::all(['emotion','url']);
         foreach ($emotions as $emotion) {
-            $emotion->url = request()->getSchemeAndHttpHost().$emotion->url;
+            $emotion->url = env('APP_URL').$emotion->url;
         }
         return  $emotions;
     }

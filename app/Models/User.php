@@ -215,7 +215,7 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
 
     public function getAvatarAttribute()
     {
-        return $this->attributes['avatar_url'] ?: request()->getSchemeAndHttpHost() . '/images/phiwifi.png';
+        return $this->attributes['avatar_url'] ?: env('APP_URL') . '/images/phiwifi.png';
     }
 
     public function getAvatarSmallAttribute()
