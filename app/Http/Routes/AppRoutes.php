@@ -38,6 +38,8 @@ class AppRoutes
             $router->get('nodes/{node}/excellent', 'NodeController@excellent')->where('node', '[0-9]+');
             $router->get('nodes/{node}/recent', 'NodeController@recent')->where('node', '[0-9]+');
             $router->get('subNodes/{subNode}', 'NodeController@showOfSubNode')->where('subNode', '[0-9]+');
+            $router->get('subNodes/{subNode}/hot', 'NodeController@subNodeHot')->where('subNode', '[0-9]+');
+            $router->get('subNodes/{subNode}/recent', 'NodeController@subNodeRecent')->where('subNode', '[0-9]+');
             $router->get('banners', 'BannerController@index');
             $router->get('banners/{carousel}', 'BannerController@bannerViewCount')->name('banner.show')->where('carousel', '[0-9]+')->middleware('active:app');
             $router->get('threads', 'ThreadController@index');
