@@ -23,7 +23,7 @@ class UploadBase64ImageCommandHandler
         $allowed_extensions = ['png', 'jpg', 'jpeg', 'gif'];
         if(preg_match('/^(data:\s*image\/(\w+);base64,)/', $file, $result)){
             $extension = $result[2];
-            if (!in_array($extension, $allowed_extensions)) {
+            if (!in_array(strtolower($extension), $allowed_extensions)) {
                 throw new HifoneException('只支持 png, jpg, jpeg 和 gif');
             }
 

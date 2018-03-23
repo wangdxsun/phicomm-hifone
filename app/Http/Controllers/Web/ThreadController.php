@@ -55,6 +55,7 @@ class ThreadController extends WebController
         } elseif (!Auth::user()->can('manage_threads') && Auth::user()->score < 0) {
             throw new HifoneException('对不起，你所在的用户组无法发言');
         }
+
         $this->validate(request(), [
             'thread.title' => 'required|min:5|max:40',
             'thread.body' => 'required|min:5|max:10000',
