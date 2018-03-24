@@ -51,7 +51,7 @@ class WebRoutes
             $router->get('nodes/{node}/excellent', 'NodeController@excellent')->where('node', '[0-9]+');
             $router->get('nodes/{node}/recent', 'NodeController@recent')->where('node', '[0-9]+');
             $router->get('nodes/{node}/recommend', 'NodeController@recommendThreadsOfNode')->where('node', '[0-9]+');
-            $router->get('subNodes/{subNode}', 'NodeController@showOfSubNode');
+            $router->get('subNodes/{subNode}/{sort?}', 'NodeController@showOfSubNode')->where('subNode', '[0-9]+')->where('sort', 'hot|recent|excellent');
             $router->get('nodes/{node}/subNodes','SubNodeController@index');
             $router->get('banners', 'BannerController@index');
             $router->get('banners/{carousel}', 'BannerController@show')->name('banner.show')->middleware('active:web');

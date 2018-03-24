@@ -59,10 +59,24 @@ class NodeController extends WebController
      * @param SubNode $subNode
      * @return Node
      */
-    public function showOfSubNode(SubNode $subNode)
+    public function showOfSubNode(SubNode $subNode, $sort = 'all')
     {
-        $node = $this->nodeBll->showOfSubNode($subNode);
-        return $node;
+        switch ($sort) {
+            case 'hot'://子版块热门帖子列表
+                $threads = $this->nodeBll->hotThreadsOfSubNode($subNode);
+                break;
+            case 'recent'://子版块最新帖子列表
+                $threads = $this->nodeBll->recentThreadsOfSubNode($subNode);
+                break;
+            case 'excellent'://子版块精华帖子列表
+                $threads = $this->nodeBll->excellentThreadsOfSubNode($subNode);
+                break;
+            default :
+                $subNode = $this->nodeBll->showOfSubNode($subNode);
+                return $subNode;
+        }
+
+        return $threads;
     }
 
     /**
