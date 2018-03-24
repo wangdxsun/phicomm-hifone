@@ -233,7 +233,7 @@ class ThreadController extends WebController
     public function replies(Thread $thread, $sort, ThreadBll $threadBll)
     {
         //$sort : [like, desc, asc]
-        return $threadBll->replies($thread, $sort, 'web');
+        return $threadBll->sortReplies($thread, $sort, 'web');
     }
 
     public function setExcellent(Thread $thread)

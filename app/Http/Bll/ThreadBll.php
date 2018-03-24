@@ -480,7 +480,7 @@ class ThreadBll extends BaseBll
         return $replies;
     }
 
-    public function sortReplies(Thread $thread, $sort = 'desc', $source = '')
+    public function sortReplies(Thread $thread, $sort = 'like', $source = '')
     {
         //三种排序方式 like：点赞最多  desc：时间逆序  asc:时间正序
         if ($source == 'web') {//web端查看评论列表只显示状态正常的
