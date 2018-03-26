@@ -40,8 +40,12 @@ class UpdateHeat extends Command
     {
         Thread::visible()->heat()->chunk(200, function ($threads) {
             foreach ($threads as $thread) {
-                $thread->heat = $thread->heat_compute;
-                $thread->save();
+                try {
+                    $thread->heat = $thread->heat_compute;
+                    $thread->save();
+                } catch (Exception $e) {
+                    \Log::info('thread', $thread->toArray());
+                }
             }
         });
     }
