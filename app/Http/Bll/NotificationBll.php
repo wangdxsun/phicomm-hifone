@@ -40,9 +40,7 @@ class NotificationBll extends BaseBll
     //web用，App走推送不用，H5待升级支持thread_mention
     public function at()
     {
-        $notifications = Notification::forUser(Auth::id())->at()->orWhereHas('thread', function ($query) {
-            $query->visibleAndDeleted();
-        })->with(['thread.user', 'thread.node'])->whereHas('reply', function ($query) {
+        $notifications = Notification::forUser(Auth::id())->at()->whereHas('reply', function ($query) {
             $query->visibleAndDeleted();
         })->whereHas('reply.thread', function ($query) {
             $query->visibleAndDeleted();

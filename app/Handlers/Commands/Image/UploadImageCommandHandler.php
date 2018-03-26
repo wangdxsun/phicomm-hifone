@@ -24,9 +24,9 @@ class UploadImageCommandHandler
         $file = $command->file;
 
         $allowed_extensions = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
-        if (!in_array($file->getClientOriginalExtension(), $allowed_extensions)) {
+        if (!in_array(strtolower($file->getClientOriginalExtension()), $allowed_extensions)) {
             throw new HifoneException('图片格式错误');
-        } elseif (!in_array($file->guessExtension(),  $allowed_extensions)) {
+        } elseif (!in_array(strtolower($file->guessExtension()),  $allowed_extensions)) {
             throw new HifoneException('图片格式错误');
         }
 
@@ -78,7 +78,7 @@ class UploadImageCommandHandler
             $img->save();
         }
 
-        $data['filename'] = request()->getSchemeAndHttpHost().$folderName.'/'.$safeName;
+        $data['filename'] = env('APP_URL').$folderName.'/'.$safeName;
         $data['localFile'] = $localFile;
 
         event(new ImageWasUploadedEvent($data));
