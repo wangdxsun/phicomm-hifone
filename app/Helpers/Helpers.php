@@ -181,7 +181,7 @@ if (!function_exists('isApp')) {
     function isApp()
     {
         $ua = $_SERVER['HTTP_USER_AGENT'];
-        return strpos(strtolower($ua), 'phiwifi');
+        return strpos($ua, 'PhiWifiNative');
     }
 }
 
@@ -310,10 +310,10 @@ if (!function_exists('get_request_agent')) {
     }
 }
 
-if (!function_exists('parse_agent_version')) {
-    function parse_agent_version($agent)
+if (!function_exists('get_app_version')) {
+    function get_app_version()
     {
-        $preArr = explode("PhiWifi/", $agent, 2);
+        $preArr = explode("PhiWifi/", $_SERVER['HTTP_USER_AGENT'], 2);
         $pre = array_get($preArr, 1);
         if (is_null($pre)) {
             throw new HifoneException('UserAgent格式不正确');

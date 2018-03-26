@@ -543,7 +543,14 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function getBodyAttribute($value)
     {
-        return clean($value);
+        $value = clean($value);
+//        dd($this->is_vote, isApp(), get_app_version() >= '6.0.0', get_app_version() < '6.1.0');
+        if ($this->is_vote && isApp() && get_app_version() >= '6.0.0' && get_app_version() < '6.1.0') {
+//dd('ddd');
+            $value = '<div style="color: rgb(255, 128, 0)">当前版本无法显示投票信息，请升级App</div>' . $value;
+        }
+
+        return $value;
     }
 
 //    public function tags()
