@@ -112,8 +112,7 @@ class ReplyBll extends BaseBll
     {
         $badWord = '';
         $needManAudit = Config::get('setting.auto_audit', 0) == 0  || ($badWord = $wordsFilter->filterWord($reply->body)) || $this->isContainsImageOrUrl($reply->body);
-        //todo 新版web端上线之后需要替换成 $reply->body = app('parser.link')->parse($reply->body);
-        $reply->body = app('parser.markdown')->convertMarkdownToHtml($reply->body);
+        $reply->body = app('parser.link')->parse($reply->body);
         $reply->body = app('parser.at')->parse($reply->body);
         $reply->body = app('parser.emotion')->parse($reply->body);
         if ($needManAudit) {
