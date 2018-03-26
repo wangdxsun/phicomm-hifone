@@ -23,7 +23,7 @@ class ReplyController extends AppController
         //防灌水
         $redisKey = 'reply_user:' . Auth::id();
         if (Redis::exists($redisKey)) {
-            throw new HifoneException('回复间隔时间短，请稍后再试');
+            throw new HifoneException('回复或评论频繁，请稍后再试');
         }
         Redis::set($redisKey, $redisKey);
         Redis::expire($redisKey, 10);//设置评论回复防灌水倒计时

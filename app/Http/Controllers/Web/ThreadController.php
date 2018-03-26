@@ -66,7 +66,7 @@ class ThreadController extends WebController
         //防灌水
         $redisKey = 'thread_user:' . Auth::id();
         if (Redis::exists($redisKey)) {
-            throw new HifoneException('发帖间隔时间短，请稍后再试');
+            throw new HifoneException('发帖频繁，请稍后再试');
         }
 
         if (Auth::user()->hasRole('NoComment')) {
