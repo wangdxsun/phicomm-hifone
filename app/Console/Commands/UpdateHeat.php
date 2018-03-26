@@ -43,7 +43,7 @@ class UpdateHeat extends Command
                 try {
                     $thread->heat = $thread->heat_compute;
                     $thread->save();
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     \Log::info('thread', $thread->toArray());
                 }
             }
