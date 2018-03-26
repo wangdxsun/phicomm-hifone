@@ -72,7 +72,7 @@ class Notification extends BaseModel implements HasPresenter
     //thread_follow 关注帖子尚未考虑
     public function scopeAt($query)
     {
-        return $query->whereIn('type', ['reply_mention', 'reply_reply', 'thread_mention']);
+        return $query->whereIn('type', ['reply_mention', 'reply_reply']);
     }
 
     public function scopeWatch($query)
