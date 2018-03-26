@@ -202,6 +202,7 @@ class ThreadBll extends BaseBll
         }
         $thread->body = app('parser.at')->parse($thread->body);
         $thread->body = app('parser.emotion')->parse($thread->body);
+        //只有H5和app发帖需要自动转义链接，web端不需要
         if (Agent::match('iPhone') || Agent::match('Android')) {
             $thread->body = app('parser.link')->parse($thread->body);
         }
