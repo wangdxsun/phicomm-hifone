@@ -34,7 +34,7 @@ class ParseLink
 
     protected function getLinks()
     {
-        preg_match_all("/(?<!>|\"|\')https?:\/\/[^\r\n\s\"\'<>]*/i", $this->post, $links_tmp);
+        preg_match_all("/(?<!\"|\'|>)https?:\/\/[^\r\n\s\"\'<>]*/i", $this->post, $links_tmp);
         return array_unique($links_tmp[0]);
     }
 

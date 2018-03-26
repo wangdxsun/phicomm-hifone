@@ -28,6 +28,7 @@ use Auth;
 use Config;
 use Illuminate\Support\Facades\Redis;
 use Carbon\Carbon;
+use Jenssegers\Agent\Facades\Agent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ThreadBll extends BaseBll
@@ -201,7 +202,9 @@ class ThreadBll extends BaseBll
         }
         $thread->body = app('parser.at')->parse($thread->body);
         $thread->body = app('parser.emotion')->parse($thread->body);
-        $thread->body = app('parser.link')->parse($thread->body);
+        if (Agent::match('iPhone') || Agent::match('Android')) {
+            $thread->body = app('parser.link')->parse($thread->body);
+        }
         $thread->save();
         return [
             'msg' => $msg,
