@@ -148,7 +148,7 @@ class Notifier
             case 'thread_pin'://置顶帖子
             case 'reply_pin'://置顶评论回复
             case 'thread_mark_excellent'://加精华
-                return request()->getSchemeAndHttpHost().'/images/admin_avatar.png';
+                return env('APP_URL').'/images/admin_avatar.png';
             default :
                 return $operator->avatar_url;
         }
