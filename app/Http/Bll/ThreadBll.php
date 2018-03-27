@@ -32,8 +32,7 @@ use Auth;
 use Config;
 use Illuminate\Support\Facades\Redis;
 use Carbon\Carbon;
-use Jenssegers\Agent\Facades\Agent;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Agent;
 
 class ThreadBll extends BaseBll
 {

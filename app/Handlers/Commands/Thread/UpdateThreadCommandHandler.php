@@ -13,14 +13,13 @@ namespace Hifone\Handlers\Commands\Thread;
 
 use Carbon\Carbon;
 use Hifone\Commands\Thread\UpdateThreadCommand;
-use Hifone\Events\Thread\ThreadWasMarkedExcellentEvent;
 use Hifone\Events\Thread\ThreadWasMovedEvent;
-use Hifone\Exceptions\HifoneException;
 use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
 use Hifone\Services\Dates\DateFactory;
 use Hifone\Services\Tag\AddTag;
 use Auth;
+use Agent;
 
 class UpdateThreadCommandHandler
 {

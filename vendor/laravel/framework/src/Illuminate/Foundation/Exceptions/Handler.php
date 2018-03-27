@@ -111,20 +111,11 @@ class Handler implements ExceptionHandlerContract
             return $e->getResponse();
         }
 
-        if ($request->ajax() || $request->wantsJson() || $request->isApi()) {
-            return new JsonResponse(['msg' => $e->getMessage(), 'code' => $e->getCode() ?: 400], $e->getCode() ?: 400);
-        } elseif ($this->isHttpException($e)) {
+        if ($this->isHttpException($e)) {
             return $this->toIlluminateResponse($this->renderHttpException($e), $e);
-        } elseif ($e instanceof HifoneException) {
-            return back()->withErrors($e->getMessage());
         } else {
             return $this->toIlluminateResponse($this->convertExceptionToResponse($e), $e);
         }
-//        if ($this->isHttpException($e)) {
-//            return $this->toIlluminateResponse($this->renderHttpException($e), $e);
-//        } else {
-//            return $this->toIlluminateResponse($this->convertExceptionToResponse($e), $e);
-//        }
     }
 
     /**
