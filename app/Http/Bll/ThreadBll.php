@@ -387,6 +387,7 @@ class ThreadBll extends BaseBll
         $thread['liked'] = Auth::check() ? Auth::user()->hasLikeThread($thread) : false;
         $thread['reported'] = Auth::check() ? Auth::user()->hasReportThread($thread) : false;
         $thread['favorite'] = Auth::check() ? Auth::user()->hasFavoriteThread($thread) : false;
+        $thread['edited'] = $thread->created_time < $thread->edit_time ? true : false;
 
         return $thread;
     }
