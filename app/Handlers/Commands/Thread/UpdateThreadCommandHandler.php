@@ -18,7 +18,7 @@ use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
 use Hifone\Services\Dates\DateFactory;
 use Hifone\Services\Tag\AddTag;
-use Illuminate\Support\Str;
+use Agent;
 
 class UpdateThreadCommandHandler
 {
