@@ -19,7 +19,7 @@ class NodeController extends WebController
 
     public function index()
     {
-        $nodes = Node::orderBy('order')->has('subNodes')->limit(6)->get();
+        $nodes = Node::orderBy('order')->has('subNodes')->get();
         return $nodes;
     }
 
