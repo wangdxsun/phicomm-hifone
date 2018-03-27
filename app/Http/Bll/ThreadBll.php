@@ -177,21 +177,22 @@ class ThreadBll extends BaseBll
             $threadTemp->update([
                 'is_vote' => 1,
                 'option_max' => array_get($threadData, 'option_max', 1),
-                'vote_start' => $threadData['vote_start'],
-                'vote_end' => $threadData['vote_end'],
+                'vote_start' => array_get($threadData, 'vote_start'),
+                'vote_end' => array_get($threadData, 'vote_end'),
                 'vote_level' => array_get($threadData, 'vote_level'),
                 'view_voting' => array_get($threadData,'view_voting', Thread::VOTE_ONLY),
                 'view_vote_finish' => array_get($threadData,'view_vote_finish', Thread::VOTE_ONLY)
             ]);
 
-            //创建投票选项
-            $contents = $threadData['options'];
-            foreach ($contents as $key => $content) {
-                Option::create([
-                    'thread_id' => $threadTemp->id,
-                    'order' => $key + 1,
-                    'content' => $content
-                ]);
+            //创建投票选项(可以不填)
+            if (null <> $contents = array_get($threadData, 'options')) {
+                foreach ($contents as $key => $content) {
+                    Option::create([
+                        'thread_id' => $threadTemp->id,
+                        'order' => $key + 1,
+                        'content' => $content
+                    ]);
+                }
             }
         }
 
@@ -225,15 +226,16 @@ class ThreadBll extends BaseBll
                 'view_vote_finish' => array_get($threadData,'view_vote_finish', Thread::VOTE_ONLY)
             ]);
 
-            //编辑投票选项并固化(新的完全替换旧的)
+            //编辑投票选项并固化(新的完全替换旧的，可以不填)
             $thread->options()->delete();
-            $contents = $threadData['options'];
-            foreach ($contents as $key => $content) {
-                Option::create([
-                    'thread_id' => $thread->id,
-                    'order' => $key + 1,
-                    'content' => $content
-                ]);
+            if (null <> $contents = array_get($threadData, 'options')) {
+                foreach ($contents as $key => $content) {
+                    Option::create([
+                        'thread_id' => $thread->id,
+                        'order' => $key + 1,
+                        'content' => $content
+                    ]);
+                }
             }
         }
 
@@ -263,7 +265,9 @@ class ThreadBll extends BaseBll
 
             //编辑投票选项并固化(新的完全替换旧的)
             $thread->options()->delete();
-            $contents = $threadData['options'];
+            if (null == $contents = array_get($threadData, 'options')) {
+                throw new HttpException('请填写选项信息');
+            }
             foreach ($contents as $key => $content) {
                 Option::create([
                     'thread_id' => $thread->id,
@@ -596,12 +600,12 @@ class ThreadBll extends BaseBll
     public function viewVoteResult(Thread $thread, Option $option)
     {
         if ($option->exists) {
-            $users = $option->users()->paginate();
+            $users = $option->users()->paginate(14);
         } else {
             //所有投该帖的用户，按投票时间逆序，并携带他的投票选项信息
             $users = $thread->voteUsers()->groupBy('user_id')->with(['options' => function ($query) use ($thread) {
                 $query->wherePivot('thread_id', $thread->id);
-            }])->paginate();
+            }])->paginate(14);
             foreach ($users as $user) {
                 $user['selects'] = $this->selects($user['options']->toArray());
                 unset($user['options']);

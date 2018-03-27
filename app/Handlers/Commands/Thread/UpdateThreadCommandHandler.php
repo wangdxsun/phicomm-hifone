@@ -75,6 +75,10 @@ class UpdateThreadCommandHandler
             unset($command->data['vote_level']);
             unset($command->data['view_voting']);
             unset($command->data['view_vote_finish']);
+        } else {//投票贴不支持修改的字段
+            unset($command->data['body']);
+            unset($command->data['option_max']);
+            unset($command->data['vote_start']);
         }
 
         $thread->update($this->filter($command->data));
