@@ -68,6 +68,7 @@ class AuthController extends WebController
                 Auth::logout();
                 throw new HifoneException('您已被系统管理员禁止登录');
             }
+            //TODO 禁止普通用户通过auth登录
 
             return Auth::user();
         } else {
