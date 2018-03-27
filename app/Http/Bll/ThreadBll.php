@@ -596,12 +596,12 @@ class ThreadBll extends BaseBll
     public function viewVoteResult(Thread $thread, Option $option)
     {
         if ($option->exists) {
-            $users = $option->users()->paginate();
+            $users = $option->users()->paginate(14);
         } else {
             //所有投该帖的用户，按投票时间逆序，并携带他的投票选项信息
             $users = $thread->voteUsers()->groupBy('user_id')->with(['options' => function ($query) use ($thread) {
                 $query->wherePivot('thread_id', $thread->id);
-            }])->paginate();
+            }])->paginate(14);
             foreach ($users as $user) {
                 $user['selects'] = $this->selects($user['options']->toArray());
                 unset($user['options']);
