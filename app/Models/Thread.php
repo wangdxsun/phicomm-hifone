@@ -223,6 +223,7 @@ class Thread extends BaseModel implements TaggableInterface
     //正常和已删除
     public function scopeVisibleAndDeleted($query)
     {
+        dump('thread.scopeVisibleAndDeleted');
         return $query->whereIn('status', [static::VISIBLE, static::DELETED]);
     }
 

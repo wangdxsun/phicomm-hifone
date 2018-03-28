@@ -126,6 +126,7 @@ class Reply extends BaseModel
     //正常和已删除
     public function scopeVisibleAndDeleted($query)
     {
+        dump('reply.scopeVisibleAndDeleted');
         return $query->whereIn('status', [static::VISIBLE, static::DELETED]);
     }
 

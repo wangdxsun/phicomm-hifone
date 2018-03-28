@@ -148,6 +148,11 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         return $this->hasMany(Credit::class);
     }
 
+    public function myNotifications()
+    {
+        return $this->hasMany(Notification::class, 'user_id');
+    }
+
     public function notifications()
     {
         return $this->morphMany(Notification::class, 'object');
