@@ -5,6 +5,7 @@
 <body class="dashboard" data-page="dashboard">
     <div class="wrapper">
         @include('dashboard.partials.sidebar')
+        @include('partials.errors')
         <div class="page-content">
             @yield('content')
         </div>

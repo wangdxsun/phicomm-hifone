@@ -15,9 +15,11 @@ use AltThree\Validator\ValidationException;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Moderator;
 use Hifone\Models\Node;
+use Hifone\Models\PraModerator;
 use Hifone\Models\Role;
 use Hifone\Models\Section;
 use Hifone\Models\SubNode;
+use Hifone\Models\Thread;
 use Hifone\Models\User;
 use Redirect;
 use Request;
@@ -70,8 +72,13 @@ class NodeController extends Controller
      */
     public function create()
     {
+        //添加主板块时，为页面传入所有组别为版主和实习版主的用户
+        $moderators = Role::where('name', 'NodeMaster')->first()->users;
+        $praModerators = Role::where('name', 'NodePraMaster')->first()->users;
         return View::make('dashboard.nodes.create_edit')
             ->withSections(Section::orderBy('order')->get())
+            ->with('moderators', json_encode($moderators->toArray()))
+            ->with('praModerators', json_encode($praModerators->toArray()))
             ->withPageTitle('添加主版块');
     }
 
@@ -82,7 +89,6 @@ class NodeController extends Controller
      */
     public function store()
     {
-        //dd(Request::get('node'));
         $this->validate(request(),[
             'node.icon'                => 'required',
             'node.icon_list'           => 'required',
@@ -95,6 +101,7 @@ class NodeController extends Controller
             'node.ios_icon_detail'     => 'required',
             'node.web_icon_detail'     => 'required',
             'node.web_icon_list'       => 'required',
+            'node.feedback_thread_id'  => 'numeric',
         ], [
             'node.icon.required'               => 'H5首页热门版块图片是必填字段',
             'node.icon_list.required'          => 'H5版块列表图片是必填字段',
@@ -107,28 +114,30 @@ class NodeController extends Controller
             'node.android_icon_detail.required'=> '安卓版块详情页是必填字段',
             'node.web_icon_list.required'      => 'WEB右侧列表图片是必填字段',
             'node.web_icon_detail.required'    => 'WEB版块详情页是必填字段',
+            'node.feedback_thread_id.numeric'  => '帖子id是数字类型',
         ]);
-        $userData = Request::get('user');
         $nodeData = Request::get('node');
-        $moderatorData = Request::get('moderator');
-        if ('' != $userData['name']) {
-            $user = User::where('username',$userData['name'])->get();
-            if ([] == $user->toArray()) {
-                return Redirect::route('dashboard.node.create')
-                    ->withInput(Request::all())
-                    ->withErrors('添加版主失败，用户不存在！');
-            }
-            $user->role_id = $moderatorData['role'];
-            $moderatorData['user_id'] = $user->id;
-        }
-        $nodeData['order'] = Node::max('order') + 1;
 
+        $moderatorData = explode(',', Request::get('nodeModerators'));
+        $praModeratorData = explode(',', Request::get('nodePraModerators'));
+        $nodeData['order'] = Node::max('order') + 1;
         try {
             $node = Node::create($nodeData);
-            $moderatorData['node_id'] = $node->id;
-            if ('' != $userData['name']) {
-                $moderator = Moderator::create($moderatorData);
-                $this->updateOpLog($moderator, '新增版主');
+            if (count($moderatorData) > 4 || count($praModeratorData) > 4 || count($moderatorData) + count($praModeratorData) > 4) {
+                return Redirect::back()
+                    ->withInput()
+                    ->withErrors('最多支持添加四个版主！');
+            }
+            if (count($moderatorData) > 0) {
+                foreach ($moderatorData as $userId) {
+                   Moderator::create(['node_id' => $node->id, 'user_id' => $userId]);
+                }
+            }
+
+            if (count($praModeratorData) > 0) {
+                foreach ($praModeratorData as $userId) {
+                    PraModerator::create(['node_id' => $node->id, 'user_id' => $userId]);
+                }
             }
             $this->updateOpLog($node, '新增主版块');
         } catch (ValidationException $e) {
@@ -151,10 +160,19 @@ class NodeController extends Controller
      */
     public function edit(Node $node)
     {
+        //添加主板块时，为页面传入所有组别为版主和实习版主的用户
+        $moderators = Role::where('name', 'NodeMaster')->first()->users;
+        $praModerators = Role::where('name', 'NodePraMaster')->first()->users;
+        //主板块的版主和实习版主
+        $nodeModerators = $node->moderators;
+        $nodePraModerators = $node->praModerators;
         return View::make('dashboard.nodes.create_edit')
             ->withPageTitle(trans('dashboard.nodes.edit.title').' - '.trans('dashboard.dashboard'))
             ->withSections(Section::orderBy('order')->get())
-            ->withModerators(Moderator::get())
+            ->with('moderators', json_encode($moderators->toArray()))
+            ->with('praModerators', json_encode($praModerators->toArray()))
+            ->with('nodeModerators', json_encode($nodeModerators->pluck('id')->toArray()))
+            ->with('nodePraModerators', json_encode($nodePraModerators->pluck('id')->toArray()))
             ->withRole(Role::get())
             ->withNode($node);
     }
@@ -180,6 +198,7 @@ class NodeController extends Controller
             'node.ios_icon_detail'     => 'required',
             'node.web_icon_detail'     => 'required',
             'node.web_icon_list'       => 'required',
+            'node.feedback_thread_id'  => 'numeric',
         ], [
             'node.icon.required'               => 'H5首页热门版块图片是必填字段',
             'node.icon_list.required'          => 'H5版块列表图片是必填字段',
@@ -192,27 +211,18 @@ class NodeController extends Controller
             'node.android_icon_detail.required'=> '安卓版块详情页是必填字段',
             'node.web_icon_list.required'      => 'WEB右侧列表图片是必填字段',
             'node.web_icon_detail.required'    => 'WEB版块详情页是必填字段',
+            'node.feedback_thread_id.numeric'  => '帖子id是数字类型',
          ]);
         $nodeData = Request::get('node');
-        $moderatorData = Request::get('moderator');
-        $userData = Request::get('user');
-        if ('' != $userData['name']) {
-            $user = User::where('username',$userData['name'])->first();
-            if ([] == $user->toArray()) {
-                return Redirect::route('dashboard.node.edit', ['id' => $node->id])
-                    ->withInput(Request::all())
-                    ->withErrors('添加版主失败，用户不存在！');
-            }
-            $user->role_id = $moderatorData['role'];
-            $moderatorData['user_id'] = $user->id;
+        $moderatorData = Request::get('nodeModerators')== "" ? [] : explode(',', Request::get('nodeModerators'));
+        $praModeratorData = Request::get('nodePraModerators')== "" ? [] : explode(',', Request::get('nodePraModerators'));
+        if (count($moderatorData) > 4 || count($praModeratorData) > 4 || count($moderatorData) + count($praModeratorData) > 4) {
+            return Redirect::back()->withErrors('最多支持添加四个版主！');
         }
-        $moderatorData['node_id'] = $node->id;
         try {
             $node->update($nodeData);
-            if ('' != $userData['name']) {
-                $moderator = Moderator::create($moderatorData);
-                $this->updateOpLog($moderator, '新增版主');
-            }
+            $node->moderators()->sync($moderatorData);
+            $node->praModerators()->sync($praModeratorData);
             $this->updateOpLog($node, '修改版块');
         } catch (ValidationException $e) {
             return Redirect::route('dashboard.node.edit', ['id' => $node->id])

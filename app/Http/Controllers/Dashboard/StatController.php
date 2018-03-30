@@ -218,7 +218,7 @@ class StatController extends Controller
     //数据统计之新增发帖统计
     public function dailyReplyCount()
     {
-        $dailyReplyCount = Reply::selectRaw('substr(created_at, 1, 10) as date,count(*) as reply')
+        $dailyReplyCount = Reply::selectRaw('substr(created_at, 1, 10) as date,count(*) as reply,  sum(abs(channel)) as feedback,sum(if(channel = 0, 1, 0)) as forum')
             ->visible()->groupBy('date')->recent()->take(30)->get();
         $statsArr = array();
         foreach ($dailyReplyCount as $replyCount) {
@@ -251,13 +251,13 @@ class StatController extends Controller
             ->with('statsArr', $statsArr);
     }
 
-   //数据统计之板块统计
+   //数据统计之版块统计
     public function node()
     {
         $nodes = Node::orderBy('order')->get();
         return view('dashboard.stats.node')->withCurrentMenu('node')->withNodes($nodes);
     }
-    //板块统计之详情
+    //版块统计之详情
     public function node_detail(Node $node)
     {
 

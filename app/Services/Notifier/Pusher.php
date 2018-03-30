@@ -8,9 +8,6 @@
 
 namespace Hifone\Services\Notifier;
 
-
-use Hifone\Exceptions\HifoneException;
-
 class Pusher
 {
     /**

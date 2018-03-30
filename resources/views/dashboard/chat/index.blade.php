@@ -5,7 +5,6 @@
         @if(isset($sub_nav))
             @include('dashboard.partials.sub-nav')
         @endif
-        @include('partials.errors')
         <div>
             {!! Form::open(['route' => 'dashboard.chat.store', 'method' => 'post', 'class' => 'create_form form-horizontal']) !!}
             <div class="form-group">

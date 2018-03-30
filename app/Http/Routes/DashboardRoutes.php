@@ -11,6 +11,7 @@
 
 namespace Hifone\Http\Routes;
 
+use Hifone\Http\Controllers\Dashboard\TagController;
 use Hifone\Http\Controllers\Dashboard\ThreadController;
 use Illuminate\Contracts\Routing\Registrar;
 
@@ -28,42 +29,74 @@ class DashboardRoutes
      */
     public function map(Registrar $router)
     {
+        //为版主和实习版主开放后台帖子管理和回帖管理的相关权限
         $router->group([
-            'middleware' => ['web', 'auth', 'role:Admin|Founder|NodeMaster'],
+            'middleware' => ['web', 'auth', 'role:Admin|Founder|NodeMaster|NodePraMaster'],
             'prefix' => 'dashboard',
             'namespace' => 'Dashboard',
             'as' => 'dashboard.'
         ], function (Registrar $router) {
+
             $router->get('/', 'DashboardController@index')->name('index');
-            $router->get('test', 'DashboardController@test')->name('test');
-            $router->get('markdown', 'DashboardController@markdown')->name('markdown');
-            $router->post('user/{user}/avatar', 'UserController@avatar');
-            $router->post('user/{user}/comment', 'UserController@comment');
-            $router->post('user/{user}/login', 'UserController@login');
+
             $router->get('thread/audit', 'ThreadController@audit')->name('thread.audit');
             $router->get('thread/trash', 'ThreadController@trashView')->name('thread.trash');
-            $router->get('reply/audit', 'ReplyController@audit')->name('reply.audit');
-            $router->get('reply/trash', 'ReplyController@trashView')->name('reply.trash');
-            $router->get('report/audit', 'ReportController@audit')->name('report.audit');
             $router->post('thread/{thread}/audit', 'ThreadController@postAudit');
             $router->post('thread/batchMove', 'ThreadController@batchMoveThread')->name('thread.move');
             $router->post('thread/batchAudit', 'ThreadController@postBatchAudit');//batch audit thread
             $router->post('thread/{thread}/index/to/trash', 'ThreadController@indexToTrash');
             $router->post('thread/{thread}/audit/to/trash', 'ThreadController@auditToTrash');
-            $router->post('node/{moderator}/audit/to/trash', 'NodeController@auditToTrash');
+            $router->post('thread/{thread}/pin', 'ThreadController@pin');
+            $router->post('thread/{thread}/node/pin', 'ThreadController@nodePin');
+            $router->post('thread/{thread}/sink', 'ThreadController@sink');
+            $router->post('thread/{thread}/excellent', 'ThreadController@excellent');
+            $router->post('thread/{thread}/recycle', 'ThreadController@recycle');
+            $router->get('thread/{thread}/heat_offset','ThreadController@getHeatOffset');
+            $router->post('thread/{thread}/heat_offset','ThreadController@setHeatOffset');
+
             $router->post('reply/{reply}/audit', 'ReplyController@postAudit');
             $router->post('reply/batchAudit', 'ReplyController@postBatchAudit');//batch audit reply
             $router->post('reply/{reply}/audit/to/trash', 'ReplyController@auditToTrash');
             $router->post('reply/{reply}/index/to/trash', 'ReplyController@indexToTrash');
             $router->post('reply/{reply}/pin', 'ReplyController@pin');
             $router->post('reply/{reply}/recycle', 'ReplyController@recycle');
+
             $router->post('thread/{thread}/pin', 'ThreadController@pin');
             $router->post('thread/{thread}/sink', 'ThreadController@sink');
-            $router->post('thread/{thread}/excellent', 'ThreadController@excellent');
+            $router->post('thread/{thread}/excellent', 'ThreadController@setExcellent');
             $router->post('thread/{thread}/recycle', 'ThreadController@recycle');
+
+            $router->get('reply/audit', 'ReplyController@audit')->name('reply.audit');
+            $router->get('reply/trash', 'ReplyController@trashView')->name('reply.trash');
+        });
+
+        //为版主和实习版主开放后台帖子管理和回帖管理的相关权限--资源路由
+        $router->group([
+            'middleware' => ['web', 'auth', 'role:Admin|Founder|NodeMaster|NodePraMaster'],
+            'prefix' => 'dashboard',
+            'namespace' => 'Dashboard'
+        ], function (Registrar $router) {
+            $router->resource('thread', 'ThreadController');
+            $router->resource('reply', 'ReplyController');
+        });
+
+        //限制管理员的特有后台管理权限
+        $router->group([
+            'middleware' => ['web', 'auth', 'role:Admin|Founder'],
+            'prefix' => 'dashboard',
+            'namespace' => 'Dashboard',
+            'as' => 'dashboard.'
+        ], function (Registrar $router) {
+            $router->get('test', 'DashboardController@test')->name('test');
+            $router->get('markdown', 'DashboardController@markdown')->name('markdown');
+            $router->post('user/{user}/avatar', 'UserController@avatar');
+            $router->post('user/{user}/comment', 'UserController@comment');
+            $router->post('user/{user}/login', 'UserController@login');
+            $router->get('report/audit', 'ReportController@audit')->name('report.audit');
+            $router->post('node/{moderator}/audit/to/trash', 'NodeController@auditToTrash');
             $router->post('report/{report}/trash', 'ReportController@trash');
             $router->post('report/{report}/ignore', 'ReportController@ignore');
-            $router->post('carousel/{carousel}/close', 'CarouselController@close')->name('carousel.close');
+
             $router->get('stat', 'StatController@index')->name('stat.index');
             $router->get('stat/node', 'StatController@node')->name('stat.node');
             $router->get('stat/node/{node}', 'StatController@node_detail')->name('stat.node.show');
@@ -79,13 +112,11 @@ class DashboardRoutes
             $router->get('stat/interaction', 'StatController@userInteraction')->name('stat.interaction');
             $router->get('stat/search', 'StatController@userSearch')->name('stat.search');
             $router->get('stat/search/{date}', 'StatController@userSearchDate')->name('stat.search.date');
-
             $router->get('wordsExcel/export','WordsExcelController@export')->name('wordsExcel.export');
             $router->post('wordsExcel/import','WordsExcelController@import');
             $router->post('wordsExcel/check','WordsExcelController@check');
             $router->post('word/batchDestroy', 'WordController@batchDestroy');
-            $router->get('thread/{thread}/heat_offset','ThreadController@getHeatOffset');
-            $router->post('thread/{thread}/heat_offset','ThreadController@setHeatOffset');
+
             $router->get('chat/send','ChatController@sendChat')->name('chat.send');
             $router->get('chat/lists','ChatController@chatLists')->name('chat.lists');
             $router->post('chat/store','ChatController@chatStore')->name('chat.store');
@@ -97,6 +128,23 @@ class DashboardRoutes
             $router->get('carousel/{carousel}/app/edit', 'CarouselController@editApp')->name('carousel.edit.app');
             $router->patch('carousel/{carousel}/app/update', 'CarouselController@updateApp')->name('carousel.update.app');
             $router->post('carousel/app/store', 'CarouselController@storeApp')->name('carousel.store.app');
+            $router->post('carousel/{carousel}/close', 'CarouselController@close')->name('carousel.close');
+
+            $router->get('tag/type/index','TagTypeController@index')->name('tag.type.index');
+            $router->get('tag/type/create','TagTypeController@create')->name('tag.type.create');
+            $router->get('tag/type/{tagType}/edit','TagTypeController@edit')->name('tag.type.edit');
+            $router->patch('tag/type/{tagType}/update','TagTypeController@update')->name('tag.type.update');
+            $router->post('tag/type/store','TagTypeController@store')->name('tag.type.store');
+            $router->get('tag/type/{tagType}/destroy','TagTypeController@destroy')->name('tag.type.destroy');
+
+            $router->get('tag/user','TagController@user')->name('tag.user');
+            $router->get('tag/index','TagController@index')->name('tag.index');
+            $router->get('tag/thread','TagController@thread')->name('tag.thread');
+            $router->get('tag/create','TagController@create')->name('tag.create');
+            $router->get('tag/{tag}/edit','TagController@edit')->name('tag.edit');
+            $router->patch('tag/{tag}/update','TagController@update')->name('tag.update');
+            $router->post('tag/store','TagController@store')->name('tag.store');
+            $router->get('tag/{tag}/destroy','TagController@destroy')->name('tag.destroy');
 
             // Settings
             $router->group(['as' => 'settings.', 'prefix' => 'settings'], function (Registrar $router) {
@@ -121,9 +169,9 @@ class DashboardRoutes
             });
         });
 
-        //Resources
+        //限制管理员的特有后台管理权限
         $router->group([
-            'middleware' => ['web', 'auth', 'role:Admin|Founder|NodeMaster'],
+            'middleware' => ['web', 'auth', 'role:Admin|Founder'],
             'prefix' => 'dashboard',
             'namespace' => 'Dashboard'
         ], function (Registrar $router) {
@@ -136,8 +184,7 @@ class DashboardRoutes
             $router->resource('section', 'SectionController');
             $router->resource('node', 'NodeController');
             $router->resource('subNode', 'SubNodeController');
-            $router->resource('thread', 'ThreadController');
-            $router->resource('reply', 'ReplyController');
+
             $router->resource('tip', 'TipController');
             $router->resource('location', 'LocationController');
             $router->resource('link', 'LinkController');
@@ -155,5 +202,9 @@ class DashboardRoutes
             $router->resource('log', 'LogController');
         });
 
+
+
     }
+
+
 }

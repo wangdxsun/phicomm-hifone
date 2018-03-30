@@ -22,6 +22,9 @@ class Reply extends BaseModel
     const AUDIT = -2;//待审核 or 审核未通过
     const DELETED = -3;//已删除
 
+    //发帖渠道channel -1:意见反馈；0:社区
+    const FEEDBACK = -1;
+    const REPLY = 0;
     /**
      * The fillable properties.
      *
@@ -35,7 +38,10 @@ class Reply extends BaseModel
         'body_original',
         'last_op_reason',
         'ip',
-        'status'
+        'status',
+        'channel',
+        'dev_info',
+        'contact',
     ];
 
     protected $hidden = ['body_original', 'bad_word', 'is_block', 'ip', 'last_op_user_id', 'last_op_time', 'last_op_reason',
@@ -134,6 +140,24 @@ class Reply extends BaseModel
         return $query->orderBy('order', 'desc')->orderBy('created_at', 'desc');
     }
 
+    //评论默认排序：点赞最多优先
+    public function scopePinLikeAndRecent($query)
+    {
+        return $query->orderBy('order', 'desc')->orderBy('like_count', 'desc')->orderBy('created_at', 'desc');
+    }
+
+    //评论按时间倒序
+    public function scopeRecentDesc($query)
+    {
+        return $query->orderBy('created_at', 'desc');
+    }
+
+    //评论按时间正序
+    public function scopeRecentAsc($query)
+    {
+        return $query->orderBy('created_at');
+    }
+
     //评论可见性
     public function getVisibleAttribute()
     {
@@ -189,6 +213,28 @@ class Reply extends BaseModel
     public function selfLikeCount(Reply $reply)
     {
         return $this->likes()->where('user_id',$reply->user_id)->count();
+    }
+
+    //反馈建议的回复
+    public function scopeFeedback($query)
+    {
+        return $query->where('channel', Reply::FEEDBACK);
+    }
+
+    public function scopeOfThread($query, $thread)
+    {
+        return $query->where('thread_id', $thread->id);
+    }
+
+    public function getDevInfoAttribute($value)
+    {
+        if (!$value) {
+            return [];
+        }
+        if (!is_array($value)) {
+            return json_decode($value, true);
+        }
+        return $value;
     }
 
 }

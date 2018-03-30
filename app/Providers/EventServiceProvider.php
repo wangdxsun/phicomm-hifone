@@ -144,6 +144,10 @@ class EventServiceProvider extends ServiceProvider
         \Hifone\Events\Thread\ThreadWasPinnedEvent::class => [
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
+        //版块置顶帖子发通知
+        \Hifone\Events\Thread\ThreadWasNodePinnedEvent::class => [
+            \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
+        ],
         //置顶评论/回复发通知
         \Hifone\Events\Reply\ReplyWasPinnedEvent::class => [
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,

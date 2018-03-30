@@ -11,6 +11,7 @@ namespace Hifone\Http\Bll;
 use Auth;
 use Config;
 use Hifone\Events\User\UserWasActiveEvent;
+use Hifone\Exceptions\HifoneException;
 use Hifone\Models\User;
 
 class UserBll extends BaseBll
@@ -25,10 +26,11 @@ class UserBll extends BaseBll
     public function getThreads(User $user)
     {
         //自己查看帖子，接口信息包括所有贴子;管理员和其他用户，只包括审核通过和审核通过被删除的贴子
+        //个人中心按照帖子编辑时间排序
         if (Auth::check() && $user->id == Auth::id()) {
-            $threads = $user->threads()->with(['user', 'node'])->recent()->paginate();
+            $threads = $user->threads()->notDraft()->with(['user', 'node'])->recentEdit()->paginate();
         } else {
-            $threads = $user->threads()->visibleAndDeleted()->with(['user', 'node'])->recent()->paginate();
+            $threads = $user->threads()->visibleAndDeleted()->with(['user', 'node'])->recentEdit()->paginate();
         }
         return $threads;
     }
@@ -40,6 +42,17 @@ class UserBll extends BaseBll
         })->with(['user', 'thread', 'reply.user'])->recent()->paginate();
 
         return $replies;
+    }
+
+    public function getDrafts(User $user)
+    {
+        if (Auth::check() && $user->id == Auth::id()) {
+            $drafts = $user->threads()->draft()->with(['user', 'node'])->recentEdit()->paginate();
+        } else {
+            throw new HifoneException('您无权查看他人的草稿箱');
+        }
+
+        return $drafts;
     }
 
     //全局搜索用户
@@ -60,6 +73,17 @@ class UserBll extends BaseBll
     }
 
     //查看自己反馈历史记录（含所有状态）
+    public function getThreadFeedbacks()
+    {
+        if (Auth::check()){
+            $threadFeedbacks = Auth::user()->threads()->feedback()->recent()->paginate();
+        } else {
+            $threadFeedbacks = [];
+        }
+        return $threadFeedbacks;
+    }
+
+    //查看自己反馈历史记录（含所有状态）
     public function getFeedbacks()
     {
         if (Auth::check()){
@@ -68,6 +92,20 @@ class UserBll extends BaseBll
             $feedbacks = [];
         }
         return $feedbacks;
+    }
+
+    //查看自己反馈历史记录（含所有状态）
+    public function getReplyFeedbacks()
+    {
+        if (Auth::check()){
+            $replyFeedbacks = Auth::user()->replies()->feedback()->recent()->paginate();
+            foreach ($replyFeedbacks as $reply) {
+                $reply['body_snapshot'] = strip_tags(app('parser.emotion')->reverseParseEmotionAndImage($reply->body));
+            }
+        } else {
+            $replyFeedbacks = [];
+        }
+        return $replyFeedbacks;
     }
 
 }

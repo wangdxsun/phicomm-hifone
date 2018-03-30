@@ -20,7 +20,6 @@
             <div class="col-sm-12">
                 <form class="form-inline" method="post" action="/dashboard/thread/batchAudit">
                 {!! csrf_field() !!}
-                @include('partials.errors')
                 <table class="table table-bordered table-striped table-condensed">
                     <button class="btn btn-default">
                         {{trans('dashboard.threads.batch.audit')}}</button>

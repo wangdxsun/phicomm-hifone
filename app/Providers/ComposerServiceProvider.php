@@ -21,6 +21,7 @@ use Hifone\Composers\Dashboard\ReplyMenuComposer;
 use Hifone\Composers\Dashboard\RoleMenuComposer;
 use Hifone\Composers\Dashboard\SettingMenuComposer;
 use Hifone\Composers\Dashboard\StatMenuComposer;
+use Hifone\Composers\Dashboard\TagMenuComposer;
 use Hifone\Composers\Dashboard\ThreadMenuComposer;
 use Hifone\Composers\SidebarComposer;
 use Hifone\Composers\TimezoneComposer;
@@ -54,6 +55,7 @@ class ComposerServiceProvider extends ServiceProvider
         $factory->composer(['dashboard.tips.*', 'dashboard.links.*', 'dashboard.locations.*', 'dashboard.settings.*', ], SettingMenuComposer::class);
         $factory->composer(['dashboard.chat.*'], ChatsMenuComposer::class);
         $factory->composer(['dashboard.carousel.*'], BannerMenuComposer::class);
+        $factory->composer(['dashboard.tagTypes.*', 'dashboard.tags.*'],TagMenuComposer::class);
     }
 
     /**

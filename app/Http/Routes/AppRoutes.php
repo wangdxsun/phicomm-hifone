@@ -20,27 +20,36 @@ class AppRoutes
             $router->post('user/bind', 'UserController@bind');
             $router->get('users/{user}', 'UserController@show')->where('user', '[0-9]+')->middleware('active:app');
             $router->get('users/{user}/follows', 'UserController@follows')->where('user', '[0-9]+');
+            $router->get('users/{user}/sections', 'UserController@sections')->where('user', '[0-9]+');
             $router->get('users/{user}/followers', 'UserController@followers')->where('user', '[0-9]+');
             $router->get('users/{user}/threads', 'UserController@threads')->where('user', '[0-9]+');
             $router->get('users/{user}/replies', 'UserController@replies')->where('user', '[0-9]+');
             $router->get('users/{user}/favorites', 'UserController@favorites')->where('user', '[0-9]+');
+            $router->get('ranks', 'RankController@ranks');
 
             //内容相关
             $router->get('nodes', 'NodeController@index');
             $router->get('sections', 'NodeController@sections')->middleware('active:app');
             $router->get('subNodes', 'NodeController@subNodes');
             $router->get('subNodes/feedback', 'NodeController@subNodesInFeedback');
+            $router->get('nodes/feedback', 'NodeController@nodesInFeedback');
             $router->get('nodes/{node}', 'NodeController@show')->name('node.show')->where('node', '[0-9]+')->middleware('active:app');
             $router->get('nodes/{node}/hot', 'NodeController@hot')->where('node', '[0-9]+');
+            $router->get('nodes/{node}/excellent', 'NodeController@excellent')->where('node', '[0-9]+');
             $router->get('nodes/{node}/recent', 'NodeController@recent')->where('node', '[0-9]+');
             $router->get('subNodes/{subNode}', 'NodeController@showOfSubNode')->where('subNode', '[0-9]+');
+            $router->get('subNodes/{subNode}/hot', 'NodeController@subNodeHot')->where('subNode', '[0-9]+');
+            $router->get('subNodes/{subNode}/recent', 'NodeController@subNodeRecent')->where('subNode', '[0-9]+');
             $router->get('banners', 'BannerController@index');
             $router->get('banners/{carousel}', 'BannerController@bannerViewCount')->name('banner.show')->where('carousel', '[0-9]+')->middleware('active:app');
             $router->get('threads', 'ThreadController@index');
+            $router->get('threads/recent', 'ThreadController@recent')->middleware('active:app');
+            $router->get('threads/excellent', 'ThreadController@excellent')->middleware('active:app');
             $router->get('threads/search/{keyword}', 'ThreadController@search');
             $router->get('users/search/{keyword}', 'UserController@search');
             $router->get('threads/{thread}', 'ThreadController@show')->where('thread', '[0-9]+')->middleware('active:app');
             $router->get('threads/{thread}/replies', 'ThreadController@replies')->where('thread', '[0-9]+');
+            $router->get('threads/{thread}/replies/{sort}', 'ThreadController@sortReplies')->where('sort', 'like|desc|asc')->where('thread', '[0-9]+');
             $router->get('replies/{reply}', 'ReplyController@show');
 
             // Authorization Required
@@ -48,20 +57,28 @@ class AppRoutes
                 $router->post('upload', 'CommonController@upload');
                 $router->post('upload/base64', 'CommonController@uploadBase64');
                 $router->post('threads', 'ThreadController@store')->middleware('active:app');
+                $router->post('threads/{thread}/vote', 'ThreadController@vote')->where('thread', '[0-9]+');
+                $router->post('feedbacks/replies', 'ReplyController@feedback');
                 $router->post('feedbacks', 'ThreadController@feedback');
                 $router->post('replies', 'ReplyController@store');
                 $router->post('follow/user/{user}', 'FollowController@user')->where('user', '[0-9]+');
                 $router->post('follow/thread/{thread}', 'FollowController@thread')->where('thread', '[0-9]+');
+                $router->post('follow/node/{node}', 'FollowController@node')->where('node', '[0-9]+');
                 $router->post('like/thread/{thread}', 'LikeController@thread')->where('thread', '[0-9]+');
                 $router->post('like/reply/{reply}', 'LikeController@reply')->where('reply', '[0-9]+');
                 $router->post('report/thread/{thread}', 'ReportController@thread')->where('thread', '[0-9]+');
                 $router->post('report/reply/{reply}', 'ReportController@reply')->where('reply', '[0-9]+');
                 $router->post('favorite/thread/{thread}', 'FavoriteController@createOrDeleteFavorite')->where('thread', '[0-9]+');
+                $router->get('user/reply/feedbacks', 'UserController@replyFeedbacks');
                 $router->get('user/feedbacks', 'UserController@feedbacks');
+                $router->get('user/thread/feedbacks', 'UserController@threadFeedbacks');
+
                 $router->get('user/credit', 'UserController@credit');
                 $router->post('user/avatar', 'UserController@upload');
+                $router->post('rank', 'RankController@rankStatus');
+                $router->get('rank/count', 'RankController@count');
 
-                $router->get('chats', 'ChatController@chats');
+                $router->get('chats/{chat?}', 'ChatController@chats')->where('chat', '[0-9]+');
                 $router->get('chat/{user}/{scope}/{chat?}', 'ChatController@messages')->where('user', '[0-9]+')
                     ->where('scope', 'after|before')->where('chat', '[0-9]+')->name('chat.message');
                 $router->post('chat/{user}', 'ChatController@store')->where('user', '[0-9]+');

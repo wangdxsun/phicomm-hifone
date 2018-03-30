@@ -17,6 +17,8 @@ use Hifone\Http\Bll\FollowBll;
 use Hifone\Http\Bll\PhicommBll;
 use Hifone\Http\Bll\UserBll;
 use Hifone\Http\Controllers\App\AppController;
+use Hifone\Models\Node;
+use Hifone\Models\Section;
 use Hifone\Models\User;
 use Hifone\Services\Filter\WordsFilter;
 use Auth;
@@ -144,8 +146,31 @@ class UserController extends AppController
         return $threads;
     }
 
+    public function threadFeedbacks(UserBll $userBll)
+    {
+        return $userBll->getThreadFeedbacks();
+    }
+
     public function feedbacks(UserBll $userBll)
     {
         return $userBll->getFeedbacks();
+    }
+
+    public function replyFeedbacks(UserBll $userBll)
+    {
+        return $userBll->getReplyFeedbacks();
+    }
+
+    //用户关注版块列表
+    public function sections(User $user)
+    {
+        $sections = Section::orderBy('order')->whereHas('nodes', function ($query) use ($user) {
+            $query->has('subNodes')->whereIn('id', $user->followedNodes->pluck('id'));
+        })->with(['nodes' => function ($query) use ($user) {
+            $query->whereIn('id', $user->followedNodes->pluck('id'));
+        }])->get();
+
+        return $sections;
+
     }
 }

@@ -8,18 +8,16 @@
 
 namespace Hifone\Http\Controllers\App\V1;
 
-use Hifone\Events\Thread\ThreadWasViewedEvent;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\ThreadBll;
 use Hifone\Http\Controllers\App\AppController;
+use Hifone\Models\Role;
 use Hifone\Models\Thread;
-use Hifone\Models\User;
 use Auth;
 use Hifone\Services\Filter\WordsFilter;
-use Config;
-use Input;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Illuminate\Support\Facades\Redis;
+
 
 class ThreadController extends AppController
 {
@@ -30,14 +28,34 @@ class ThreadController extends AppController
         return $threads;
     }
 
+    //新帖榜：48小时内的新帖按照热度值高低取前50个
+    public function recent()
+    {
+        $threads = Thread::visible()->with(['user', 'node'])->newRank()->get();
+        return $threads;
+    }
+
+    //首页精华帖子
+    public function excellent()
+    {
+        $threads = Thread::visible()->with(['user', 'node'])->excellent()->paginate();
+        return $threads;
+    }
+
     public function search($keyword, ThreadBll $threadBll)
     {
-        $threads = $threadBll->search($keyword);
+        $threads = $threadBll->search($keyword, request('recent'));
         return $threads;
     }
 
     public function store(ThreadBll $threadBll, WordsFilter $wordsFilter)
     {
+        //防灌水
+        $redisKey = 'thread_user:' . Auth::id();
+        if (Redis::exists($redisKey)) {
+            throw new HifoneException('发帖频繁，请稍后再试');
+        }
+
         if (Auth::user()->hasRole('NoComment')) {
             throw new HifoneException('对不起，你已被管理员禁止发言');
         } elseif (!Auth::user()->can('manage_threads') && Auth::user()->score < 0) {
@@ -55,8 +73,15 @@ class ThreadController extends AppController
             'thread.body.min' => '帖子内容不得少于5个字符',
         ]);
         $thread = $threadBll->createThreadImageMixed();
-        $result = $threadBll->auditThread($thread, $wordsFilter);
-        return $result;
+        $thread = $threadBll->auditThread($thread, $wordsFilter);
+        $msg = $thread->status == Thread::VISIBLE ? '发布成功' : '帖子已提交，待审核';
+        Redis::set($redisKey, $redisKey);
+        Redis::expire($redisKey, 60);//设置发帖防灌水倒计时
+
+        return [
+            'msg' => $msg,
+            'thread' => $thread
+        ];
     }
 
     public function show(Thread $thread, ThreadBll $threadBll, CommonBll $commonBll)
@@ -67,9 +92,14 @@ class ThreadController extends AppController
         return $thread;
     }
 
-    public function replies(Thread $thread)
+    public function replies(Thread $thread, ThreadBll $threadBll)
     {
-        return (new ThreadBll())->replies($thread);
+        return $threadBll->replies($thread);
+    }
+
+    public function sortReplies(Thread $thread, $sort, ThreadBll $threadBll)
+    {
+        return $threadBll->sortReplies($thread, $sort);
     }
 
     public function feedback(ThreadBll $threadBll, WordsFilter $wordsFilter)
@@ -94,7 +124,23 @@ class ThreadController extends AppController
             throw new HifoneException('帖子内容不得多于10000个字符');
         }
         $thread = $threadBll->createFeedback();
-        $result = $threadBll->auditThread($thread, $wordsFilter);
-        return $result;
+        $thread = $threadBll->auditThread($thread, $wordsFilter);
+        $msg = $thread->status == Thread::VISIBLE ? '发布成功' : '帖子已提交，待审核';
+        return [
+            'msg' => $msg,
+            'thread' => $thread
+        ];
     }
+
+    //用户投票
+    public function vote(Thread $thread, ThreadBll $threadBll)
+    {
+        if ($thread->is_vote <> 1) {
+            throw new HifoneException('该帖子不具有投票功能');
+        }
+        $threadBll->vote($thread);
+
+        return success('投票成功');
+    }
+
 }

@@ -17,6 +17,7 @@ use Hifone\Events\Follow\FollowWasAddedEvent;
 use Hifone\Events\Follow\FollowedWasAddedEvent;
 use Hifone\Events\Follow\FollowedWasRemovedEvent;
 use Hifone\Events\Follow\FollowWasRemovedEvent;
+use Hifone\Models\Node;
 use Hifone\Models\User;
 use DB;
 
@@ -30,26 +31,32 @@ class AddFollowCommandHandler
     protected function followAction($target)
     {
         DB::transaction(function () use ($target) {
+            //取消关注
             if ($target->followers()->forUser(Auth::id())->sharedLock()->count()) {
                 $target->followers()->forUser(Auth::id())->delete();
                 $target->decrement('follower_count', 1);
-                $target->updateIndex();
-                if ($target instanceOf User) {
-                    Auth::user()->decrement('follow_count', 1);
-                    Auth::user()->updateIndex();
+                if (!($target instanceof Node)) {
+                    $target->updateIndex();
+                    if ($target instanceOf User) {
+                        Auth::user()->decrement('follow_count', 1);
+                        Auth::user()->updateIndex();
+                    }
+                    event(new FollowWasRemovedEvent($target));
+                    event(new FollowedWasRemovedEvent($target));
                 }
-                event(new FollowWasRemovedEvent($target));
-                event(new FollowedWasRemovedEvent($target));
             } else {
                 $target->followers()->create(['user_id' => Auth::id()]);
                 $target->increment('follower_count', 1);
-                $target->updateIndex();
-                if ($target instanceOf User) {
-                    Auth::user()->increment('follow_count', 1);
-                    Auth::user()->updateIndex();
+                if (!($target instanceof Node)) {
+
+                    $target->updateIndex();
+                    if ($target instanceOf User) {
+                        Auth::user()->increment('follow_count', 1);
+                        Auth::user()->updateIndex();
+                    }
+                    event(new FollowWasAddedEvent($target));
+                    event(new FollowedWasAddedEvent($target));
                 }
-                event(new FollowWasAddedEvent($target));
-                event(new FollowedWasAddedEvent($target));
             }
         });
     }

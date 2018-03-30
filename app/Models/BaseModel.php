@@ -9,7 +9,6 @@
 namespace Hifone\Models;
 
 use AltThree\Validator\ValidatingTrait;
-use Carbon\Carbon;
 use Hifone\Models\Scopes\ForUser;
 use Hifone\Models\Scopes\Recent;
 use Hifone\Models\Traits\SearchTrait;

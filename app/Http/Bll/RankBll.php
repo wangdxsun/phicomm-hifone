@@ -36,7 +36,6 @@ class RankBll extends BaseBll
         ];
     }
 
-
     public function count()
     {
         return [

@@ -2,16 +2,24 @@
 
 namespace Hifone\Http\Controllers\Web;
 
+use Auth;
 use Config;
+use Hifone\Exceptions\HifoneException;
 use Hifone\Http\Bll\ReplyBll;
 use Hifone\Models\Reply;
 use Hifone\Services\Filter\WordsFilter;
-use Auth;
+use Illuminate\Support\Facades\Redis;
 
 class ReplyController extends WebController
 {
     public function store(ReplyBll $replyBll, WordsFilter $wordsFilter)
     {
+        //防灌水
+        $redisKey = 'reply_user:' . Auth::id();
+        if (Redis::exists($redisKey)) {
+            throw new HifoneException('回复或评论频繁，请稍后再试');
+        }
+
         $reply = $replyBll->createReply();
         $reply = $replyBll->auditReply($reply, $wordsFilter);
         $reply->load(['user', 'reply.user']);
@@ -26,6 +34,9 @@ class ReplyController extends WebController
             'msg' => $msg,
             'reply' => $reply,
         ];
+
+        Redis::set($redisKey, $redisKey);
+        Redis::expire($redisKey, 10);//设置评论回复防灌水倒计时
 
         return $result;
     }

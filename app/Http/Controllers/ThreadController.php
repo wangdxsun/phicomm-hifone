@@ -26,14 +26,12 @@ use Hifone\Http\Bll\ThreadBll;
 use Hifone\Models\Section;
 use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
-use Hifone\Models\User;
 use Hifone\Repositories\Criteria\Thread\BelongsToNode;
 use Config;
 use Hifone\Services\Filter\WordsFilter;
 use Illuminate\Support\Facades\DB;
 use Input;
 use Redirect;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Hifone\Events\Thread\ThreadWasPinnedEvent;
 
 class ThreadController extends Controller
@@ -66,13 +64,13 @@ class ThreadController extends Controller
     /**
      * Shows a thread in more detail.
      *
-     * @param \Hifone\Models\Thread $thread
-     *
-     * @return \Illuminate\View\View
+     * @param Thread $thread
+     * @return mixed
+     * @throws HifoneException
      */
     public function show(Thread $thread)
     {
-        if ($thread->inVisible()) {
+        if (!$thread->isVisible()) {
             throw new HifoneException('该帖子已被删除', 410);
         }
         $this->breadcrumb->push([
@@ -119,6 +117,7 @@ class ThreadController extends Controller
             ->withSections($sections)
             ->with('subNodes',$subNodes);
     }
+
 
     public function store(ThreadBll $threadBll, WordsFilter $wordsFilter)
     {

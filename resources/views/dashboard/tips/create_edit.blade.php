@@ -14,7 +14,6 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        @include('partials.errors')
         @if(isset($tip))
             {!! Form::model($tip, ['route' => ['dashboard.tip.update', $tip->id], 'id' => 'tip-edit-form', 'method' => 'patch']) !!}
             <input type="hidden" name="id" value={{$tip->id}}>

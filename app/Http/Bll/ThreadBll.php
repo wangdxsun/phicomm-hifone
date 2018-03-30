@@ -14,6 +14,9 @@ use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasAuditedEvent;
 use Hifone\Events\Thread\ThreadWasViewedEvent;
 use Hifone\Exceptions\HifoneException;
+use Hifone\Models\Option;
+use Hifone\Models\OptionUser;
+use Hifone\Models\Role;
 use Hifone\Models\SearchWord;
 use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
@@ -22,6 +25,7 @@ use Hifone\Repositories\Criteria\Thread\Filter;
 use Hifone\Repositories\Criteria\Thread\Search;
 use DB;
 use Hifone\Services\Filter\WordsFilter;
+use Illuminate\Foundation\Testing\HttpException;
 use Illuminate\Pagination\Paginator;
 use Input;
 use Auth;
@@ -44,13 +48,13 @@ class ThreadBll extends BaseBll
         return $threads;
     }
 
-    public function search($keyword)
+    public function search($keyword, $recent = null)
     {
         if (empty($keyword)) {
             $threads = new Paginator([], 15);
         } else {
             $this->searchWords($keyword);
-            $threads = Thread::searchThread($keyword)->load(['user', 'node'])->paginate(15);
+            $threads = Thread::searchThread($keyword, $recent)->load(['user', 'node'])->paginate(15);
         }
 
         return $threads;
@@ -73,7 +77,6 @@ class ThreadBll extends BaseBll
         return $threads;
     }
 
-
     //记录搜索词
     public function searchWords($word)
     {
@@ -91,18 +94,17 @@ class ThreadBll extends BaseBll
             SearchWord::where('word', $word)->where('created_at',Carbon::today()->toDateString())->increment('count', 1);
             SearchWord::where('word', $word)->where('created_at',Carbon::today()->toDateString())->increment('stat_count', 1);
         }
-        return ;
+        return;
     }
 
-    //H5端发帖图文分开 Web发帖富文本图文混排
+    //发帖 H5端:图文分开 Web:富文本图文混排
     public function createThread($threadData)
     {
         $node_id = SubNode::find($threadData['sub_node_id'])->node_id;
-
         $tags = isset($threadData['tags']) ? $threadData['tags'] : '';
-        $images = '';
 
-        //base64上传
+        //base64上传 兼容H5
+        $images = '';
         if (Input::has('images')) {
             foreach ($threadImages = Input::get('images') as $image) {
                 $upload = dispatch(new UploadBase64ImageCommand($image));
@@ -119,7 +121,162 @@ class ThreadBll extends BaseBll
             $images
         ));
 
+        //发布投票贴
+        if (1 == array_get($threadData, 'is_vote')) {
+            $threadTemp->update([
+                'is_vote' => 1,
+                'option_max' => array_get($threadData, 'option_max', 1),
+                'vote_start' => $threadData['vote_start'],
+                'vote_end' => $threadData['vote_end'],
+                'vote_level' => array_get($threadData, 'vote_level'),
+                'view_voting' => array_get($threadData,'view_voting', Thread::VOTE_ONLY),
+                'view_vote_finish' => array_get($threadData,'view_vote_finish', Thread::VOTE_ONLY)
+            ]);
+
+            //创建投票选项
+            $contents = $threadData['options'];
+            foreach ($contents as $key => $content) {
+                Option::create([
+                    'thread_id' => $threadTemp->id,
+                    'order' => $key + 1,
+                    'content' => $content
+                ]);
+            }
+        }
         $thread = Thread::find($threadTemp->id);
+
+        return $thread;
+    }
+
+    //web创建草稿
+    public function createDraft($threadData)
+    {
+        //草稿可以不填版块和标题信息
+        $node_id = null;
+        if (isset($threadData['sub_node_id'])) {
+            $node_id = SubNode::find($threadData['sub_node_id'])->node_id;
+        }
+        $tags = isset($threadData['tags']) ? $threadData['tags'] : '';
+
+        $images = '';
+        //草稿贴标题、版块信息可为空
+        $threadTemp = dispatch(new AddThreadCommand(
+            array_get($threadData, 'title'),
+            $threadData['body'],
+            Auth::id(),
+            $node_id,
+            array_get($threadData, 'sub_node_id'),
+            $tags,
+            $images,
+            $threadData['status']
+        ));
+
+        //投票贴存为草稿
+        if (1 == array_get($threadData, 'is_vote')) {
+            $threadTemp->update([
+                'is_vote' => 1,
+                'option_max' => array_get($threadData, 'option_max', 1),
+                'vote_start' => array_get($threadData, 'vote_start'),
+                'vote_end' => array_get($threadData, 'vote_end'),
+                'vote_level' => array_get($threadData, 'vote_level'),
+                'view_voting' => array_get($threadData,'view_voting', Thread::VOTE_ONLY),
+                'view_vote_finish' => array_get($threadData,'view_vote_finish', Thread::VOTE_ONLY)
+            ]);
+
+            //创建投票选项(可以不填)
+            if (null <> $contents = array_get($threadData, 'options')) {
+                foreach ($contents as $key => $content) {
+                    Option::create([
+                        'thread_id' => $threadTemp->id,
+                        'order' => $key + 1,
+                        'content' => $content
+                    ]);
+                }
+            }
+        }
+
+        $thread = Thread::find($threadTemp->id);
+        return $thread;
+    }
+
+    //编辑草稿继续存为草稿
+    public function updateDraft(Thread $thread, $threadData)
+    {
+        //草稿贴标题、版块信息可为空
+        $node_id = null;
+        if (isset($threadData['sub_node_id'])) {
+            $node_id = SubNode::find($threadData['sub_node_id'])->node_id;
+        }
+        $updateData['node_id'] = $node_id;
+        $updateData['title'] = array_get($threadData, 'title');
+        $updateData['body'] = $threadData['body'];
+        $updateData['sub_node_id'] = array_get($threadData, 'sub_node_id');
+        $thread->update($updateData);
+
+        //是投票贴
+        if (1 == $thread->is_vote) {
+            $thread->update([
+                'is_vote' => 1,
+                'option_max' => array_get($threadData, 'option_max', 1),
+                'vote_start' => $threadData['vote_start'],
+                'vote_end' => $threadData['vote_end'],
+                'vote_level' => array_get($threadData, 'vote_level'),
+                'view_voting' => array_get($threadData,'view_voting', Thread::VOTE_ONLY),
+                'view_vote_finish' => array_get($threadData,'view_vote_finish', Thread::VOTE_ONLY)
+            ]);
+
+            //编辑投票选项并固化(新的完全替换旧的，可以不填)
+            $thread->options()->delete();
+            if (null <> $contents = array_get($threadData, 'options')) {
+                foreach ($contents as $key => $content) {
+                    Option::create([
+                        'thread_id' => $thread->id,
+                        'order' => $key + 1,
+                        'content' => $content
+                    ]);
+                }
+            }
+        }
+
+        return $thread;
+    }
+
+    //发布草稿为帖子
+    public function makeDraftToThread(Thread $thread, $threadData)
+    {
+        $updateData['node_id'] = SubNode::find($threadData['sub_node_id'])->node_id;
+        $updateData['title'] = $threadData['title'];
+        $updateData['body'] = $threadData['body'];
+        $updateData['sub_node_id'] = $threadData['sub_node_id'];
+        $thread->update($updateData);
+
+        //发布的是投票贴
+        if (1 == $thread->is_vote) {
+            $thread->update([
+                'is_vote' => 1,
+                'option_max' => array_get($threadData, 'option_max', 1),
+                'vote_start' => $threadData['vote_start'],
+                'vote_end' => $threadData['vote_end'],
+                'vote_level' => array_get($threadData, 'vote_level'),
+                'view_voting' => array_get($threadData,'view_voting', Thread::VOTE_ONLY),
+                'view_vote_finish' => array_get($threadData,'view_vote_finish', Thread::VOTE_ONLY)
+            ]);
+
+            //编辑投票选项并固化(新的完全替换旧的)
+            $thread->options()->delete();
+            if (null == $contents = array_get($threadData, 'options')) {
+                throw new HttpException('请填写选项信息');
+            }
+            foreach ($contents as $key => $content) {
+                Option::create([
+                    'thread_id' => $thread->id,
+                    'order' => $key + 1,
+                    'content' => $content
+                ]);
+            }
+        }
+        $thread = Thread::find($thread->id);
+
         return $thread;
     }
 
@@ -151,6 +308,7 @@ class ThreadBll extends BaseBll
             $tags
         ));
         $thread = Thread::find($threadTemp->id);
+        
         return $thread;
     }
 
@@ -179,6 +337,7 @@ class ThreadBll extends BaseBll
             $sub_node_id,
             $tags,
             $images,
+            Thread::AUDIT,
             $channel,
             $dev_info,
             $contact
@@ -192,12 +351,11 @@ class ThreadBll extends BaseBll
         $thread->heat = $thread->heat_compute;
         $post = $thread->title.$thread->body;
         $badWord = '';
-        if (Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($post)) || $this->isContainsImageOrUrl($post)) {
+        //新增判断逻辑：不具有免审核权限的用户才需要自动审核
+        if (!Auth::user()->can('free_audit') && Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($post)) || $this->isContainsImageOrUrl($post)) {
             $thread->bad_word = $badWord;
-            $msg = '帖子已提交，待审核';
         } else {
             $this->autoAudit($thread);
-            $msg = '发布成功';
         }
         $thread->body = app('parser.at')->parse($thread->body);
         $thread->body = app('parser.emotion')->parse($thread->body);
@@ -206,34 +364,161 @@ class ThreadBll extends BaseBll
             $thread->body = app('parser.link')->parse($thread->body);
         }
         $thread->save();
-        return [
-            'msg' => $msg,
-            'thread' => $thread
-        ];
+        return $thread;
     }
 
+    //帖子详情
     public function showThread(Thread $thread)
     {
-        if ($thread->inVisible()) {
+        if (!$thread->isVisible()) {
             throw new HifoneException('该帖子已被删除', 410);
         }
         event(new ThreadWasViewedEvent(clone $thread));
 
-        $thread = $thread->load(['user', 'node']);
+        if ($thread->is_vote == 1) {//投票贴
+            $thread = $thread->load(['user', 'node', 'options']);
+            foreach ($thread['options'] as $option) {
+                $option['voted'] = Auth::check() ? Auth::user()->hasVoteOption($option) : false;
+            }
+            $thread['view_vote'] = $this->canViewVote($thread);
+            $thread['voted'] = $this->isVoted($thread);
+            $thread['now'] = Carbon::now()->toDateTimeString();
+        } else {
+            $thread = $thread->load(['user', 'node']);
+        }
         $thread['followed'] = User::hasFollowUser($thread->user);
         $thread['liked'] = Auth::check() ? Auth::user()->hasLikeThread($thread) : false;
         $thread['reported'] = Auth::check() ? Auth::user()->hasReportThread($thread) : false;
         $thread['favorite'] = Auth::check() ? Auth::user()->hasFavoriteThread($thread) : false;
+        $thread['edited'] = $thread->created_time < $thread->edit_time ? true : false;
 
         return $thread;
     }
 
-    public function replies(Thread $thread, $source = '')
+    //是否已投票
+    public function isVoted(Thread $thread)
     {
-        if ($source == 'web') {
-            $replies = $thread->replies()->visible()->with(['user', 'reply.user'])->pinAndRecent()->paginate();
+        if (Auth::check() && Auth::user()->hasVoteThread($thread)) {//已投票
+            return true;
         } else {
-            $replies = $thread->replies()->visibleAndDeleted()->with(['user', 'reply.user'])->pinAndRecent()->paginate();
+            return false;//投票按钮可点击
+        }
+    }
+
+    /**
+     * 是否可以查看投票结果
+     * 判断逻辑
+     *
+     * 管理员则可见，否则
+     * 投票中/投票结束
+     * 分别讨论各结果可见性（1仅投票可见，2仅回复可见，3投票和回复可见，4所有人可见，5只有管理员可见）
+     * （是否投票过，是否回复过（不需要审核通过））
+     */
+    public function canViewVote(Thread $thread)
+    {
+        if (Carbon::now()->toDateTimeString() < $thread->vote_start) {
+            return false;
+        } elseif ($thread->vote_start <= Carbon::now()->toDateTimeString()
+            && Carbon::now()->toDateTimeString() <= $thread->vote_end) {//投票中
+            if ($thread->view_voting == Thread::VOTE_ONLY) {//1仅投票可见
+                if (Auth::check() && Auth::user()->hasVoteThread($thread)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } elseif ($thread->view_voting == Thread::REPLY_ONLY) {//2仅回复可见
+                if (Auth::check() && Auth::user()->hasCommentThread($thread)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } elseif ($thread->view_voting == Thread::VOTE_ONLY + Thread::REPLY_ONLY) {//3投票和回复可见
+                if (Auth::check() && (Auth::user()->hasCommentThread($thread) || Auth::user()->hasVoteThread($thread))) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } elseif ($thread->view_voting == Thread::ALL) {//4所有人可见
+                return true;
+            } else {//5只有管理员可见
+                if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Founder')) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } else {//投票结束后
+            if ($thread->view_vote_finish == Thread::VOTE_ONLY) {//1仅投票可见
+                if (Auth::check() && Auth::user()->hasVoteThread($thread)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } elseif ($thread->view_vote_finish == Thread::REPLY_ONLY) {//2仅回复可见
+                if (Auth::check() && Auth::user()->hasCommentThread($thread)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } elseif ($thread->view_vote_finish == Thread::VOTE_ONLY + Thread::REPLY_ONLY) {//3投票和回复可见
+                if (Auth::check() && (Auth::user()->hasCommentThread($thread) || Auth::user()->hasVoteThread($thread))) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } elseif ($thread->view_vote_finish == Thread::ALL) {//4所有人可见
+                return true;
+            } else {//5只有管理员可见
+                if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Founder')) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+    }
+
+    public function replies(Thread $thread)
+    {
+        $replies = $thread->replies()->visibleAndDeleted()->with(['user', 'reply.user'])->pinAndRecent()->paginate();
+        foreach ($replies as &$reply) {
+            $reply['liked'] = Auth::check() ? Auth::user()->hasLikeReply($reply) : false;
+            $reply['reported'] = Auth::check() ? Auth::user()->hasReportReply($reply) : false;
+        }
+        return $replies;
+    }
+
+    public function sortReplies(Thread $thread, $sort = 'like', $source = '')
+    {
+        //三种排序方式 like：点赞最多  desc：时间逆序  asc:时间正序
+        if ($source == 'web') {//web端查看评论列表只显示状态正常的
+            switch ($sort) {
+                case 'like':
+                    $replies = $thread->replies()->visible()->with(['user', 'reply.user'])->pinLikeAndRecent()->paginate();
+                    break;
+                case 'desc':
+                    $replies = $thread->replies()->visible()->with(['user', 'reply.user'])->recentDesc()->paginate();
+                    break;
+                case 'asc':
+                    $replies = $thread->replies()->visible()->with(['user', 'reply.user'])->recentAsc()->paginate();
+                    break;
+                default :
+                    $replies = $thread->replies()->visible()->with(['user', 'reply.user'])->pinLikeAndRecent()->paginate();
+            }
+        } else {
+            switch ($sort) {
+                case 'like':
+                    $replies = $thread->replies()->visibleAndDeleted()->with(['user', 'reply.user'])->pinLikeAndRecent()->paginate();
+                    break;
+                case 'desc':
+                    $replies = $thread->replies()->visibleAndDeleted()->with(['user', 'reply.user'])->recentDesc()->paginate();
+                    break;
+                case 'asc':
+                    $replies = $thread->replies()->visibleAndDeleted()->with(['user', 'reply.user'])->recentAsc()->paginate();
+                    break;
+                default :
+                    $replies = $thread->replies()->visibleAndDeleted()->with(['user', 'reply.user'])->pinLikeAndRecent()->paginate();
+            }
         }
         foreach ($replies as $reply) {
             $reply['liked'] = Auth::check() ? Auth::user()->hasLikeReply($reply) : false;
@@ -264,5 +549,83 @@ class ThreadBll extends BaseBll
         }
     }
 
+    public function vote(Thread $thread)
+    {
+        if ($this->isVoted($thread)) {
+            throw new HifoneException('您已投票，请勿重复投票');
+        }
+        if (!$this->canVote($thread)) {
+            throw new HifoneException('对不起，你的级别不可参与此次投票');
+        }
+        if (Carbon::now()->toDateTimeString() < $thread->vote_start) {
+            throw new HifoneException('投票还未开始');
+        } elseif (Carbon::now()->toDateTimeString() > $thread->vote_end) {
+            throw new HifoneException('投票已结束');
+        } else {
+            //用户投票选择了
+            $select = request('votes');
+            $optionIds = explode(',', $select);
+            $options = Option::whereIn('id',$optionIds)->where('thread_id',$thread->id)->get();
+            if ($thread->option_max < count($options)) {
+                throw new HttpException('选项数超过上限');
+            } elseif (0 == count($optionIds)) {
+                throw new HttpException('选项数不足');
+            }
+            foreach ($options as $option) {
+                OptionUser::create([
+                    'option_id' => $option->id,
+                    'user_id' => Auth::id(),
+                    'thread_id' => $thread->id
+                ]);
+                $option->increment('vote_count', 1);
+            }
+            $thread->increment('vote_count');
+        }
+    }
 
+    private function canVote(Thread $thread)
+    {
+        if (empty($thread->vote_level)) {//All
+            return true;
+        } else {
+            $role = Role::find($thread->vote_level);
+            if (Auth::user()->score >= $role->credit_low) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    public function viewVoteResult(Thread $thread, Option $option)
+    {
+        if ($option->exists) {
+            $users = $option->users()->paginate(14);
+        } else {
+            //所有投该帖的用户，按投票时间逆序，并携带他的投票选项信息
+            $users = $thread->voteUsers()->groupBy('user_id')->with(['options' => function ($query) use ($thread) {
+                $query->wherePivot('thread_id', $thread->id);
+            }])->paginate(14);
+            foreach ($users as $user) {
+                $user['selects'] = $this->selects($user['options']->toArray());
+                unset($user['options']);
+            }
+        }
+
+        return $users;
+    }
+
+    private function selects($options)
+    {
+        $selects = '';
+        for ($key= 0; $key < count($options); $key++) {
+            if (0 == $key) {
+                $selects .= $options[$key]['order'];
+            } else {
+                $selects = $selects . '/' . $options[$key]['order'];
+            }
+        }
+
+        return $selects;
+    }
 }

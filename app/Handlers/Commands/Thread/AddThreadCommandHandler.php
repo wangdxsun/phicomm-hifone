@@ -39,6 +39,7 @@ class AddThreadCommandHandler
             'body'          => clean($body),
             'body_original' => $command->body,
             'created_at'    => Carbon::now()->toDateTimeString(),
+            'edit_time'     => Carbon::now()->toDateTimeString(),
             'updated_at'    => Carbon::now()->toDateTimeString(),
             'thumbnails'    => $thumbnails,
             'ip'            => getClientIp().':'.$_SERVER['REMOTE_PORT'],
@@ -46,7 +47,8 @@ class AddThreadCommandHandler
             'dev_info'      => $command->dev_info,
             'contact'       => $command->contact,
             //发帖设备iOS Android Web H5
-            'device'        => get_request_agent()
+            'device'        => get_request_agent(),
+            'status'        => $command->status,
         ];
         // Create the thread
         $thread = Thread::create($data);

@@ -21,11 +21,13 @@ class Permission extends EntrustPermission
     const USER = 0;//用户组
     const ADMIN = 1;//管理组
 
+    //用户组的权限列表
     public function scopeUserGroup($query)
     {
         return $query->where('type', static::USER);
     }
 
+    //管理组的权限列表
     public function scopeAdminGroup($query)
     {
         return $query->where('type', static::ADMIN);

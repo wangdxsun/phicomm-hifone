@@ -28,10 +28,12 @@ class Thread extends BaseModel implements TaggableInterface
 {
     use ValidatingTrait, Taggable, Recent, RevisionableTrait, SoftDeletes, ElasticquentTrait;
 
+    //帖子状态
     const VISIBLE = 0;//正常帖子
     const TRASH = -1;//审核未通过
     const AUDIT = -2;//待审核 or 审核中
     const DELETED = -3;//已删除
+    const DRAFT = -4;//草稿
 
     //发帖渠道channel -1:意见反馈；0:社区
     const FEEDBACK = -1;
@@ -42,6 +44,12 @@ class Thread extends BaseModel implements TaggableInterface
     const ANDROID = 1;
     const IOS = 2;
     const WEB = 3;
+
+    //投票结果可见性
+    const VOTE_ONLY = 1;
+    const REPLY_ONLY = 2;
+    const ALL = 4;
+    const ADMIN = 5;
 
     // manually maintain
     public $timestamps = false;
@@ -67,6 +75,16 @@ class Thread extends BaseModel implements TaggableInterface
         'reply_count',
         'ip',
         'device',
+        'edit_time',
+        'status',
+        'is_vote',
+        'option_max',
+        'vote_start',
+        'vote_end',
+        'vote_level',
+        'view_voting',
+        'view_vote_finish',
+        'vote_count',
     ];
 
     protected $hidden = ['body_original', 'bad_word', 'is_blocked', 'heat_offset', 'follower_count', 'ip',
@@ -78,10 +96,10 @@ class Thread extends BaseModel implements TaggableInterface
      * @var string[]
      */
     public $rules = [
-        'title'   => 'required|max:80',
+        'title'   => 'max:80',
         'body'    => 'required',
-        'node_id' => 'required|int',
-        'sub_node_id' => 'required|int',
+        'node_id' => 'int',
+        'sub_node_id' => 'int',
         'user_id' => 'required|int',
         'heat_offset' => 'int',
     ];
@@ -141,6 +159,7 @@ class Thread extends BaseModel implements TaggableInterface
         return $this->belongsTo(SubNode::class);
     }
 
+    //查询主板块下的帖子
     public function scopeOfNode($query, Node $node)
     {
         return $query->where('node_id', $node->id);
@@ -172,6 +191,24 @@ class Thread extends BaseModel implements TaggableInterface
         return $this->hasMany(Reply::class);
     }
 
+    //投票选项
+    public function options()
+    {
+        return $this->hasMany(Option::class);
+    }
+
+    //投了该帖的
+    public function votes()
+    {
+        return $this->hasMany(OptionUser::class)->orderBy('created_at', 'desc');
+    }
+
+    //参与投票的所有人
+    public function voteUsers()
+    {
+        return $this->belongsToMany(User::class, 'option_user')->withPivot('option_id');
+    }
+
     public function appends()
     {
         return $this->hasMany(Append::class);
@@ -191,15 +228,29 @@ class Thread extends BaseModel implements TaggableInterface
         $this->save();
     }
 
-    //帖子详情处判定是否可见
-    public function inVisible()
+    //帖子详情是否可见
+    public function isVisible()
     {
-        //未登录，帖子可见性取决于帖子本身
-        if (Auth::guest() && !$this->getVisibleAttribute()) {
+        //按照帖子状态、用户登录态、用户是否帖子作者编排
+        if ($this->status == Thread::VISIBLE) {
             return true;
+        } elseif ($this->status == Thread::TRASH || $this->status == Thread::DRAFT) {
+            if (Auth::guest()) {
+                return false;
+            } elseif (Auth::id() == $this->user->id) {
+                return true;
+            } else {
+                return false;
+            }
+        } elseif ($this->status == Thread::AUDIT || $this->status == Thread::DELETED) {
+            if (Auth::guest()) {
+                return false;
+            } elseif (Auth::id() == $this->user->id || Auth::user()->can('view_thread')) {
+                return true;
+            } else {
+                return false;
+            }
         }
-        //已登录，帖子可见取决于帖子状态和是否当前用户或管理员
-        return !$this->getVisibleAttribute() && !(Auth::id() == $this->user->id || Auth::user()->can('view_thread'));
     }
 
     //正常
@@ -224,6 +275,18 @@ class Thread extends BaseModel implements TaggableInterface
     public function scopeVisibleAndDeleted($query)
     {
         return $query->whereIn('status', [static::VISIBLE, static::DELETED]);
+    }
+
+    //草稿箱
+    public function scopeDraft($query)
+    {
+        return $query->where('status', static::DRAFT);
+    }
+
+    //非草稿
+    public function scopeNotDraft($query)
+    {
+        return $query->where('status', '<>', static::DRAFT);
     }
 
     public function scopeTitle($query, $search)
@@ -275,9 +338,23 @@ class Thread extends BaseModel implements TaggableInterface
         return $query->orderBy('created_at', 'desc');
     }
 
+    //原生化新帖榜
+    public function scopeNewRank($query)
+    {
+        return $query->where('created_at', '>', Carbon::now()->subDays(2))
+            ->limit(50)->orderBy('heat', 'desc')->orderBy('created_at', 'desc');
+    }
+
+    //最新列表和个人中心列表按照edit_time倒序排列
+    public function scopeRecentEdit($query)
+    {
+        return $query->orderBy('edit_time', 'desc');
+    }
+
+    //精华帖子
     public function scopeExcellent($query)
     {
-        return $query->where('is_excellent', '=', true);
+        return $query->where('is_excellent', 1)->orderBy('excellent_time', 'desc')->orderBy('created_at', 'desc');
     }
 
     public function scopeFeedback($query)
@@ -333,7 +410,12 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function getPinAttribute()
     {
-        return $this->order > 0 ? 'fa fa-thumb-tack text-danger' : 'fa fa-thumb-tack';
+        return $this->order == 1 ? 'fa fa-thumb-tack text-danger' : 'fa fa-thumb-tack';
+    }
+
+    public function getNodePinAttribute()
+    {
+        return $this->order == 2  ? 'fa fa-hand-pointer-o text-danger' : 'fa fa-hand-pointer-o';
     }
 
     public function getExcellentAttribute()
@@ -461,22 +543,19 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function getBodyAttribute($value)
     {
-        return clean($value);
+        $value = clean($value);
+//        dd($this->is_vote, isApp(), get_app_version() >= '6.0.0', get_app_version() < '6.1.0');
+        if ($this->is_vote && isApp() && get_app_version() >= '6.0.0' && get_app_version() < '6.1.0') {
+//dd('ddd');
+            $value = '<div style="color: rgb(255, 128, 0)">当前版本无法显示投票信息，请升级App</div>' . $value;
+        }
+
+        return $value;
     }
 
-//    public function getDeviceAttribute($value)
+//    public function tags()
 //    {
-//        switch ($value) {
-//            case Thread::H5:
-//                return 'H5';
-//            case Thread::ANDROID:
-//                return 'Android';
-//            case Thread::IOS:
-//                return 'iOS';
-//            case Thread::WEB:
-//                return 'Web';
-//            default:
-//                return '未知';
-//        }
+//        return $this->morphMany(Taggable::class, 'taggable');
 //    }
+
 }

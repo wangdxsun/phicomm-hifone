@@ -18,7 +18,7 @@
         @endif
         <div class="row">
             <div class="col-sm-12">
-                @include('partials.errors')
+
                 <div class="toolbar">
                     <form class="form-inline">
                         <div class="form-group">
@@ -64,6 +64,7 @@
                         <td style="width: 60px;">#</td>
                         <td style="width: 250px;">回帖内容</td>
                         <td style="width: 250px">帖子标题</td>
+                        <td style="width: 250px">设备信息</td>
                         <td style="width: 70px;">版块</td>
                         <td style="width: 100px">回帖人</td>
                         <td style="width: 90px">回帖时间</td>
@@ -85,6 +86,18 @@
                                 @endif
                             </td>
                             <td><a href="{{ $reply->thread->url }}" target="_blank" >{{ $reply->thread->title }}</a></td>
+                            <td>
+                                @if(sizeof($reply->dev_info) > 0)
+                                    <a data-toggle="collapse" href="#dev_info{{ $reply->id }}" aria-expanded="false">查看更多</a>
+                                    <div class="collapse well" id="dev_info{{ $reply->id }}" style="min-width: 230px">
+                                        @foreach($reply->dev_info as $info)
+                                            @foreach($info as $key => $item)
+                                                {{$key." : ".$item}}<br>
+                                            @endforeach
+                                        @endforeach
+                                    </div>
+                                @endif
+                            </td>
                             <td><a href="{{ $reply->thread->node->url }}" target="_blank" >{{ $reply->thread->node->name }}</a></td>
                             <td>
                                 @if(!isset($reply->user))

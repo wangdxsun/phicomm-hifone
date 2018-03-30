@@ -14,7 +14,6 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            @include('partials.errors')
             @if(isset($link))
                 {!! Form::model($link, ['route' => ['dashboard.link.update', $link->id], 'id' => 'link-edit-form', 'method' => 'patch']) !!}
                 <input type="hidden" name="id" value={{$link->id}}>

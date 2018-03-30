@@ -12,7 +12,6 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-                @include('partials.errors')
                 <div class="row">
                     <div class="pull-right">
                     <span class="uppercase">

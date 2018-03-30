@@ -13,7 +13,6 @@
             @else
             {!! Form::open(['route' => 'dashboard.group.users.store', 'method' => 'post']) !!}
             @endif
-            @include('partials.errors')
             <fieldset>
                 <div class="form-group">
                     <label>用户组名称</label>
@@ -34,14 +33,27 @@
                     </div>
                 </div>
                 <div class="form-group">
+
+                    {{--@foreach($permissions as $permission)--}}
+                    {{--<div class="checkbox">--}}
+                        {{--<label>--}}
+                            {{--{!! Form::checkbox('permissions[]', $permission->id, isset($role) ? ($role->hasPermission($permission) ? true : false) : false) !!}--}}
+                            {{--{{ $permission->display_name }}--}}
+                        {{--</label>--}}
+                    {{--</div>--}}
+                    {{--@endforeach--}}
                     <label>权限列表</label>
-                    @foreach($permissions as $permission)
-                    <div class="checkbox">
-                        <label>
-                            {!! Form::checkbox('permissions[]', $permission->id, isset($role) ? ($role->hasPermission($permission) ? true : false) : false) !!}
-                            {{ $permission->display_name }}
-                        </label>
+                    <div>
+                        <input id="selectAll" type="checkbox">
+                        <label>{{ "全选" }}</label>
                     </div>
+                    @foreach($permissions as $permission)
+                        <div>
+                            <input class="checkAll" type="checkbox"  name="batch[]" value="{{ $permission->id }}">
+                            <label>
+                                {{ $permission->display_name }}
+                            </label>
+                        </div>
                     @endforeach
                 </div>
                 <div class="form-group">

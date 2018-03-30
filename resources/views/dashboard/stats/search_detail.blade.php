@@ -8,7 +8,6 @@
 
         <div class="row">
             <div class="col-sm-12">
-                @include('partials.errors')
                 <table class="table table-bordered table-striped table-condensed">
                     <tr class="head">
                         <td>热搜名词</td>

@@ -31,7 +31,7 @@ class CommonController extends WebController
     //上传图片Base64编码
     public function uploadBase64()
     {
-        if (!request()->hasFile('image')) {
+        if (!request()->has('image')) {
             throw new HifoneException('没有上传图片');
         }
         $upload = dispatch(new UploadBase64ImageCommand(request()->file('image')));

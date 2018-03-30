@@ -11,13 +11,14 @@
 
 namespace Hifone\Handlers\Commands\Thread;
 
+use Carbon\Carbon;
 use Hifone\Commands\Thread\UpdateThreadCommand;
-use Hifone\Events\Thread\ThreadWasMarkedExcellentEvent;
 use Hifone\Events\Thread\ThreadWasMovedEvent;
 use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
 use Hifone\Services\Dates\DateFactory;
 use Hifone\Services\Tag\AddTag;
+use Auth;
 use Agent;
 
 class UpdateThreadCommandHandler
@@ -57,21 +58,35 @@ class UpdateThreadCommandHandler
             //过滤数据中的空字段，并且更新帖子
             $command->data['thumbnails'] = getFirstImageUrl($command->data['body_original']);
         }
-        $thread->update($this->filter($command->data));
+        //更新编辑时间 if (created_at != edit_time) 帖子被修改过
+        $command->data['edit_time'] = Carbon::now()->toDateTimeString();
+        //普通用户编辑状态回退、精华失效
+        if (!Auth::user()->hasRole(['Admin', 'Founder'])) {
+            $command->data['status'] = Thread::AUDIT;
+            $command->data['is_excellent'] = 0;
+        }
+        //投票贴相关参数（除选项外）
+        unset($command->data['options']);
+        if ($thread->is_vote == 0) {//非投票贴
+            unset($command->data['option_max']);
+            unset($command->data['vote_start']);
+            unset($command->data['vote_end']);
+            unset($command->data['vote_level']);
+            unset($command->data['view_voting']);
+            unset($command->data['view_vote_finish']);
+        } else {//投票贴不支持修改的字段
+            unset($command->data['body']);
+            unset($command->data['option_max']);
+            unset($command->data['vote_start']);
+        }
 
-        // The thread was added successfully, so now let's deal with the tags.
+        $thread->update($this->filter($command->data));
         $tags = isset($command->data['tags']) ? $command->data['tags'] : [];
         app(AddTag::class)->attach($thread, $tags);
-
-        if (isset($command->data['is_excellent'])) {
-            event(new ThreadWasMarkedExcellentEvent($thread));
-        }
-
         if (isset($command->data['sub_node_id']) && $original_subNode_id != intval($command->data['sub_node_id']) ) {
             $originalSubNode = SubNode::find($original_subNode_id);
-            event(new ThreadWasMovedEvent($command->thread, $originalSubNode));
+            event(new ThreadWasMovedEvent($thread, $originalSubNode));
         }
-
         $thread->updateIndex();
 
         return $thread;

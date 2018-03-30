@@ -14,6 +14,7 @@ use Hifone\Events\Reply\RepliedWasAddedEvent;
 use Hifone\Events\Reply\ReplyWasAddedEvent;
 use Hifone\Events\Reply\ReplyWasAuditedEvent;
 use Hifone\Exceptions\HifoneException;
+use Hifone\Models\Node;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
 use Hifone\Services\Filter\WordsFilter;
@@ -21,7 +22,6 @@ use DB;
 use Input;
 use Auth;
 use Config;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ReplyBll extends BaseBll
 {
@@ -70,6 +70,39 @@ class ReplyBll extends BaseBll
             $replyData['thread_id'],
             array_get($replyData, 'reply_id'),
             $images
+        ));
+        $reply = Reply::find($replyTemp->id);
+        return $reply->load('user', 'reply.user');
+    }
+
+    //用户反馈回帖逻辑
+    public function createFeedbackApp()
+    {
+        $this->checkPermission();
+        $feedback_thread_id = Node::find(request('reply.node_id'))->feedback_thread_id;
+        $this->checkThread($feedback_thread_id);
+        $replyData = request('reply');
+        $replyData['body'] = e($replyData['body']);
+        $replyData['thread_id'] = $feedback_thread_id;
+        $images = '';
+        if (Input::has('images')) {
+            foreach ($replyImages = json_decode(Input::get('images'), true) as $image) {
+                $images.= "<img src='".$image['image']."'/>";
+            }
+        }
+        $channel = Reply::FEEDBACK;
+        $dev_info = $replyData['dev_info'];
+        $contact  = isset($replyData['contact']) ? $replyData['contact'] : null;
+
+        $replyTemp = dispatch(new AddReplyCommand(
+            $replyData['body'],
+            Auth::id(),
+            $replyData['thread_id'],
+            array_get($replyData, 'reply_id'),
+            $images,
+            $channel,
+            $dev_info,
+            $contact
         ));
         $reply = Reply::find($replyTemp->id);
         return $reply->load('user', 'reply.user');
@@ -125,8 +158,11 @@ class ReplyBll extends BaseBll
         }
     }
 
-    public function getMsg($reply_id, $isAutoAudit)
+    public function getMsg($reply_id, $isAutoAudit, $channel = Reply::REPLY)
     {
+        if ($channel == Reply::FEEDBACK) {
+            return $msg = '提交成功';
+        }
         if (!$isAutoAudit) {
             if ($reply_id) {
                 return $msg = '回复已提交，待审核';

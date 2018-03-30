@@ -12,6 +12,7 @@ use Hifone\Http\Bll\NodeBll;
 use Hifone\Http\Controllers\App\AppController;
 use Hifone\Models\Node;
 use Hifone\Models\SubNode;
+use Hifone\Models\User;
 
 class NodeController extends AppController
 {
@@ -29,70 +30,81 @@ class NodeController extends AppController
         foreach ($nodes as $node) {
             $node['detail_url'] = route('app.node.show', $node->id);
         }
+
         return $nodes;
     }
 
     /**
      * 版块列表(含分类）
-     * @param NodeBll $nodeBll
      * @return mixed
      */
-    public function sections(NodeBll $nodeBll)
+    public function sections()
     {
-        $sections = $nodeBll->sections();
+        $sections = $this->nodeBll->sections();
         foreach ($sections as $section) {
             foreach ($nodes = $section['nodes'] as $node) {
                 $node['detail_url'] = route('app.node.show', $node->id);
+                $node['followed'] = User::hasFollowNode($node);
             }
         }
+
         return $sections;
     }
 
     /**
      * 发帖选择子版块
-     * @param NodeBll $nodeBll
      * @return mixed
      */
-    public function subNodes(NodeBll $nodeBll)
+    public function subNodes()
     {
-        $sections = $nodeBll->subNodes();
+        $sections = $this->nodeBll->subNodes();
+
         return $sections;
     }
 
     /**
      * 版块详情
      * @param Node $node
-     * @param NodeBll $nodeBll
      * @return Node
      */
-    public function show(Node $node, NodeBll $nodeBll)
+    public function show(Node $node)
     {
-        $node = $nodeBll->show($node, $nodeBll);
+        $node = $this->nodeBll->show($node);
+
         return $node;
     }
 
     /**
      * 版块内按子版块筛选
      * @param SubNode $subNode
-     * @param NodeBll $nodeBll
      * @return Node
      */
-    public function showOfSubNode(SubNode $subNode, NodeBll $nodeBll)
+    public function showOfSubNode(SubNode $subNode)
     {
-        $node = $nodeBll->showOfSubNode($subNode, $nodeBll);
+        $node = $this->nodeBll->showOfSubNode($subNode);
+
         return $node;
     }
 
     /**
      * 意见反馈发帖选择子版块
-     * @param NodeBll $nodeBll
      */
-    public function subNodesInFeedback(NodeBll $nodeBll)
+    public function subNodesInFeedback()
     {
-        $nodes = $nodeBll->subNodesInFeedback();
+        $nodes = $this->nodeBll->subNodesInFeedback();
         return $nodes;
     }
 
+    /**
+     * 意见反馈发帖选择主版块
+     */
+    public function nodesInFeedback()
+    {
+        $nodes = $this->nodeBll->nodesInFeedback();
+        return $nodes;
+    }
+
+    //版块热门帖子列表
     public function hot(Node $node)
     {
         $threads = $this->nodeBll->hotThreadsOfNode($node);
@@ -100,9 +112,34 @@ class NodeController extends AppController
         return $threads;
     }
 
+    //版块最新帖子列表
     public function recent(Node $node)
     {
         $threads = $this->nodeBll->recentThreadsOfNode($node);
+
+        return $threads;
+    }
+
+    //子版块热门帖子列表
+    public function subNodeHot(SubNode $subNode)
+    {
+        $threads = $this->nodeBll->hotThreadsOfSubNode($subNode);
+
+        return $threads;
+    }
+
+    //子版块最新帖子列表
+    public function subNodeRecent(SubNode $subNode)
+    {
+        $threads = $this->nodeBll->recentThreadsOfSubNode($subNode);
+
+        return $threads;
+    }
+
+    //精华帖子，按照加精时间和发表时间排序
+    public function excellent(Node $node)
+    {
+        $threads = $this->nodeBll->excellentThreadsOfNode($node);
 
         return $threads;
     }

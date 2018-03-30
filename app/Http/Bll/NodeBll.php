@@ -12,10 +12,12 @@ use Hifone\Models\Node;
 use Hifone\Models\Section;
 use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
+use Hifone\Models\User;
 use Hifone\Repositories\Criteria\Thread\BelongsToNode;
 use Hifone\Repositories\Criteria\Thread\Filter;
 use Hifone\Repositories\Criteria\Thread\Search;
 use Input;
+use Auth;
 
 class NodeBll extends BaseBll
 {
@@ -45,11 +47,21 @@ class NodeBll extends BaseBll
         return $threads;
     }
 
+    //主版块中的精华帖子
+    public function excellentThreadsOfNode(Node $node)
+    {
+        $threads = Thread::visible()->ofNode($node)->excellent()->with(['user', 'subNode'])->paginate();
+
+        return $threads;
+    }
+
     public function sections()
     {
         $sections = Section::orderBy('order')->with(['nodes.subNodes', 'nodes' => function ($query) {
             $query->has('subNodes');
-        }])->has('nodes')->get();
+        }])->whereHas('nodes', function ($query) {
+            $query->has('subNodes');
+        })->get();
 
         return $sections;
     }
@@ -76,46 +88,70 @@ class NodeBll extends BaseBll
         return $nodes;
     }
 
-    public function show(Node $node, NodeBll $nodeBll)
+    //支持用户反馈的主版块
+    public function nodesInFeedback()
     {
-        $hot = $nodeBll->hotThreadsOfNode($node);
-        $recent = $nodeBll->recentThreadsOfNode($node);
-        $moderators = $node->moderators()->with(['user'])->get();
+        //意见反馈处显示的子版块
+        $nodes = Node::orderBy('order')->feedback()->show()->has('subNodes')->get(['id', 'name','feedback_thread_id']);
+
+        return $nodes;
+    }
+
+    public function show(Node $node)
+    {
+        $hot = $this->hotThreadsOfNode($node);
+        $recent = $this->recentThreadsOfNode($node);
+        $excellent = $this->excellentThreadsOfNode($node);
+        $moderators = $node->moderators()->get();
+        $praModerators = $node->praModerators()->get();
         $subNodes = $node->subNodes()->select(['name', 'id'])->get();
 
         $node['hot'] = $hot;
         $node['recent'] = $recent;
+        $node['excellent'] = $excellent;
         $node['moderators'] = $moderators;
+        $node['praModerators'] = $praModerators;
         $node['subNodes'] = $subNodes;
+        $node['followed'] = User::hasFollowNode($node);
 
         return $node;
     }
 
-    private function recentThreadsOfSubNode(SubNode $subNode)
+    public function recentThreadsOfSubNode(SubNode $subNode)
     {
         $threads = Thread::visible()->ofSubNode($subNode)->recent()->with(['user', 'subNode'])->paginate();
 
         return $threads;
     }
 
-    private function hotThreadsOfSubNode(SubNode $subNode)
+    public function hotThreadsOfSubNode(SubNode $subNode)
     {
         $threads = Thread::visible()->ofSubNode($subNode)->hot()->with(['user', 'subNode'])->paginate();
 
         return $threads;
     }
 
-    public function showOfSubNode(SubNode $subNode, NodeBll $nodeBll)
+    //子版块中的精华帖子
+    public function excellentThreadsOfSubNode(SubNode $subNode)
     {
-        $hot = $nodeBll->hotThreadsOfSubNode($subNode);
-        $recent = $nodeBll->recentThreadsOfSubNode($subNode);
-        $moderators = $subNode->node->moderators()->with(['user'])->get();
+        $threads = Thread::visible()->ofSubNode($subNode)->excellent()->with(['user', 'subNode'])->paginate();
 
-        $node['hot'] = $hot;
-        $node['recent'] = $recent;
-        $node['moderators'] = $moderators;
+        return $threads;
+    }
 
-        return $node;
+    public function showOfSubNode(SubNode $subNode)
+    {
+        $hot = $this->hotThreadsOfSubNode($subNode);
+        $recent = $this->recentThreadsOfSubNode($subNode);
+        $excellent = $this->excellentThreadsOfSubNode($subNode);
+        $moderators = $subNode->node->moderators()->get();
+
+        $subNode['hot'] = $hot;
+        $subNode['recent'] = $recent;
+        $subNode['excellent'] = $excellent;
+        $subNode['moderators'] = $moderators;
+
+        return $subNode;
     }
 
 }

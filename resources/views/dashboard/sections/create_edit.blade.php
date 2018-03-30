@@ -17,7 +17,6 @@
             @else
             {!! Form::open(['route' => 'dashboard.section.store','id' => 'section-create-form', 'method' => 'post']) !!}
             @endif
-            @include('partials.errors')
             <fieldset>
             <div class="form-group">
                 <label>{{ trans('dashboard.sections.name') }}</label>

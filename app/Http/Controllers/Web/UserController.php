@@ -36,6 +36,7 @@ class UserController extends WebController
             }
         }
         $user['isAdmin'] = ($user->role =='管理员' || $user->role =='创始人');
+        $user['draft_count'] = $user->threads()->draft()->count();
 
         return $user;
     }
@@ -47,6 +48,7 @@ class UserController extends WebController
             $query->has('thread');
         }])->find($user->id);
         $user['followed'] = User::hasFollowUser($user);
+        $user['draft_count'] = $user->threads()->draft()->count();
 
         return $user;
     }
@@ -90,6 +92,13 @@ class UserController extends WebController
         $replies = $userBll->getReplies($user);
 
         return $replies;
+    }
+
+    public function drafts(User $user, UserBll $userBll)
+    {
+        $drafts = $userBll->getDrafts($user);
+
+        return $drafts;
     }
 
     public function credit(UserBll $userBll, CommonBll $commonBll)
@@ -136,4 +145,5 @@ class UserController extends WebController
         $users = $userBll->getExcellentUsers();
         return $users;
     }
+
 }

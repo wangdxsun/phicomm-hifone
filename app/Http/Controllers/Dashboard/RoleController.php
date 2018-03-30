@@ -97,6 +97,7 @@ class RoleController extends Controller
     public function edit(Role $role)
     {
         $permissions = Permission::all();
+        dd($permissions->toArray());
         return View::make('dashboard.roles.create_edit')
             ->withPageTitle('修改角色'.' - '.trans('dashboard.dashboard'))
             ->withRole($role)

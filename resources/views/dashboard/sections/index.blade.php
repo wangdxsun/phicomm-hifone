@@ -7,14 +7,13 @@
 <div class="content-wrapper">
     <div class="header sub-header">
         <span class="uppercase">
-            <i class="ion ion-ios-browsers-outline"></i> {{ trans('dashboard.sections.sections') }}
+            <i class="ion ion-ios-browsers-outline"></i> {{ '分类列表' }}
         </span>
         <a class="btn btn-sm btn-success pull-right" href="{{ route('dashboard.section.create') }}">
             {{ trans('dashboard.sections.add.title') }}
         </a>
         <div class="clearfix"></div>
     </div>
-    @include('partials.errors')
     <div class="row">
         <div class="col-sm-12 striped-list" id="item-list" data-item-name="section">
             @forelse($sections as $section)

@@ -17,7 +17,7 @@
             @else
             {!! Form::open(['route' => 'dashboard.page.store','id' => 'page-create-form', 'method' => 'post']) !!}
             @endif
-            @include('partials.errors')
+
             <fieldset>
             <div class="form-group">
                 <label>{{ trans('dashboard.pages.slug') }}</label>

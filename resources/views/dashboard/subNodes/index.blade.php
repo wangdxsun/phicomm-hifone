@@ -14,7 +14,6 @@
             <div class="clearfix"></div>
         </div>
     </div>
-    @include('partials.errors')
     <div class="row">
         <div class="col-sm-12 striped-list" id="item-list" data-item-name="subNode">
             @forelse($subNodes as $subNode)
@@ -30,7 +29,7 @@
                         {{ $subNode->name }}
                     </div>
                     <div class="col-xs-2 drag-handle">
-                        {{'主板块：'}}<br>{{ $subNode->node->name }}
+                        {{'主版块：'}}<br>{{ $subNode->node->name }}
                     </div>
                     <div class="col-xs-3 drag-handle">
                         {{ $subNode->description }}

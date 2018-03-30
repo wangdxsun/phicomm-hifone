@@ -11,14 +11,13 @@
             <a class="btn btn-sm btn-success pull-right" href="{{ route('dashboard.group.admin.create') }}">新增管理组</a>
         @endif
     </div>
-    @include('partials.errors')
     <div class="row">
         <div class="col-sm-12">
             <table class="table table-bordered table-striped table-condensed">
                 <tbody>
                 <tr class="head">
-                    <td >#</td>
-                    <td style="width: 100px">用户组名称</td>
+                    <td>编号</td>
+                    <td style="width: 100px">管理组名称</td>
                     <td>权限列表</td>
                     <td>创建人</td>
                     <td style="width: 150px">创建时间</td>
@@ -33,8 +32,10 @@
                         <td>{{ $role->created_at }}</td>
                         <td>
                             @if (Auth::user()->can('user_group'))
-                            <a href="/dashboard/group/admin/{{ $role->id }}/edit"><i class="fa fa-pencil" title="编辑"></i></a>
-                            <a data-url="/dashboard/group/admin/{{ $role->id }}" data-method="delete" class="confirm-action" title="删除"><i class="fa fa-trash"></i></a>
+                                <a href="/dashboard/group/admin/{{ $role->id }}/edit"><i class="fa fa-pencil" title="编辑"></i></a>
+                                @if ($role->display_name != '管理员' && $role->display_name != '版主' && $role->display_name != '实习版主')
+                                    <a data-url="/dashboard/group/admin/{{ $role->id }}" data-method="delete" class="confirm-action" title="删除"><i class="fa fa-trash"></i></a>
+                                @endif
                             @endif
                         </td>
                     </tr>

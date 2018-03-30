@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('content')
-    <div class="content-wrapper" id="app">
+    <div class="content-wrapper">
         <div class="header sub-header">
             <span class="uppercase">
                 <i class="fa fa-file-text-o"></i> {{ $sub_header }}
@@ -16,9 +16,8 @@
     @if(isset($sub_nav))
         @include('dashboard.partials.sub-nav')
     @endif
-        <div class="row">
+        <div class="row" id="app">
             <div class="col-sm-12">
-                @include('partials.errors')
                 <div class="toolbar">
                     <form class="form-inline">
                         <div class="form-group">
@@ -79,7 +78,7 @@
                 </div>
                 <form action="{{ URL('dashboard/thread/batchMove')}}"  id="batchMoveThread" method="POST">
                     {!! csrf_field() !!}
-                    <div class="btn btn-default" class="move_thread" onclick="moveThread()">批量移动</div>
+                    <div class="btn btn-default move_thread" onclick="moveThread()">批量移动</div>
                     <table class="table table-bordered table-striped table-condensed">
                         <tbody>
                         <tr class="head">
@@ -132,11 +131,10 @@
                                 <td>{{ $thread->reply_count }}</td>
                                 <td>{{ $thread->view_count }}</td>
                                 <td>{{ $thread->created_time }}</td>
-                                <td>
-                                    {{ $thread->lastOpUser->username }}
-                                </td>
+                                <td>{{ $thread->lastOpUser->username }}</td>
                                 <td>{{ $thread->last_op_time }}</td>
                                 <td>
+                                    <a data-url="/dashboard/thread/{{$thread->id}}/node/pin" data-method="post" title="版块置顶"><i class="{{ $thread->nodePin }}"></i></a>
                                     <a data-url="/dashboard/thread/{{$thread->id}}/excellent" data-method="post" title="精华"><i class="{{ $thread->excellent }}"></i></a>
                                     <a data-url="/dashboard/thread/{{$thread->id}}/pin" data-method="post" title="置顶"><i class="{{ $thread->pin }}"></i></a>
                                     <a data-url="/dashboard/thread/{{ $thread->id }}/heat_offset" get-url="/dashboard/thread/{{ $thread->id }}/heat_offset" data-title="修改热度值偏移" data-method="post" class="getAndSet" title="提升"><i class="fa fa-level-up"></i></a>
@@ -181,30 +179,29 @@
                     </div>
                 </form>
             </div>
-                <div class="text-right">
-                <!-- Pager -->
+            <div class="text-right">
                 {!! $threads->appends(Request::except('page', '_pjax'))->render() !!}
-                </div>
+            </div>
         </div>
     </div>
-    <script>
-        new Vue({
-            el: '#app',
-            data: function () {
-                return {
-                    date_start:"",
-                    date_end:"",
-                };
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                date_start:"",
+                date_end:"",
+            };
+        },
+        computed: {
+            date_start_str: function () {
+                return this.date_start === '' ? '' : this.date_start.format('yyyy-MM-dd hh:mm:ss');
             },
-            computed: {
-                date_start_str: function () {
-                    return this.date_start === '' ? '' : this.date_start.format('yyyy-MM-dd hh:mm:ss');
-                },
-                date_end_str: function () {
-                    return this.date_end === '' ? '' : this.date_end.format('yyyy-MM-dd hh:mm:ss');
-                }
+            date_end_str: function () {
+                return this.date_end === '' ? '' : this.date_end.format('yyyy-MM-dd hh:mm:ss');
             }
-        });
-    </script>
-    <script type="text/javascript" src="{{ URL::asset('/js/moveThread.js') }}"></script>
+        }
+    });
+</script>
+<script type="text/javascript" src="{{ URL::asset('/js/moveThread.js') }}"></script>
 @stop

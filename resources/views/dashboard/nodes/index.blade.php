@@ -12,7 +12,7 @@
         </a>
         <div class="clearfix"></div>
     </div>
-    @include('partials.errors')
+
     <div class="row">
         <div class="col-sm-12 striped-list" id="item-list" data-item-name="node">
             @forelse($nodes as $node)
@@ -21,20 +21,33 @@
                     <span class="drag-handle"><i class="fa fa-navicon"></i></span>
                 </div>
                 <div class="col-xs-1">
-                    <span>{{'主板块ID： '. $node->id }}</span>
+                    <span>{{'主版块ID： '. $node->id }}</span>
                 </div>
                 <div class="col-xs-2 drag-handle">
                     <img src="{{ $node->icon }}" alt="" style="max-width: 200px; max-height: 50px;">
                 </div>
-                <div class="col-xs-2 drag-handle">
+                <div class="col-xs-1 drag-handle">
                     <a href="/dashboard/node/{{ $node->id }}">{{ $node->name }}</a>
                 </div>
-                <div class="col-xs-2 drag-handle">
+                <div class="col-xs-1 drag-handle">
                     <a href="/dashboard/section/{{ $node->section->id }}">{{ $node->section->name }}</a>
                 </div>
                 <div class="col-xs-2 drag-handle">
                     {{ $node->description }}
                 </div>
+                <div class="col-xs-2 drag-handle">
+                    @foreach($node->moderators as $moderator)
+                        @if (isset($moderator))
+                            <td><a href="{{ route('user.show', ['id'=>$moderator->id]) }}" target="_blank">{{ $moderator->username }}</a></td>，
+                        @endif
+                    @endforeach
+                    @foreach($node->praModerators as $praModerator)
+                        @if (isset($praModerator))
+                            <td><a href="{{ route('user.show', ['id'=>$praModerator->id]) }}" target="_blank">{{ $praModerator->username }}</a></td>，
+                        @endif
+                    @endforeach
+                </div>
+
                 <div class="col-xs-2 text-right">
                     <a href="{{ route('dashboard.node.edit',['id'=>$node->id]) }}" class="btn btn-default btn-sm">{{ trans('forms.edit') }}</a>
                     <a data-url="{{ route('dashboard.node.destroy',['id'=>$node->id]) }}" class="btn btn-danger btn-sm confirm-action" data-method="delete">{{ trans('forms.delete') }}</a>

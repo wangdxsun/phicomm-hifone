@@ -13,7 +13,6 @@ class Moderator extends BaseModel
     public $table = 'moderators';
 
     protected $fillable = [
-        'role',
         'node_id',
         'user_id',
         'created_at',
@@ -22,11 +21,12 @@ class Moderator extends BaseModel
 
     public function node()
     {
-        return $this->belongsTo(Node::class);
+        return $this->belongsTo(Node::class, 'node_id','id');
     }
 
-    public function user()
+        public function user()
     {
         return $this->belongsTo(User::class);
     }
+
 }

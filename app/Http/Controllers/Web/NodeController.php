@@ -19,54 +19,64 @@ class NodeController extends WebController
 
     public function index()
     {
-        $nodes = Node::orderBy('order')->has('subNodes')->limit(6)->get();
+        $nodes = Node::orderBy('order')->has('subNodes')->get();
         return $nodes;
     }
 
     /**
      * 版块列表(含分类）
-     * @param NodeBll $nodeBll
      * @return mixed
      */
-    public function sections(NodeBll $nodeBll)
+    public function sections()
     {
-        $sections = $nodeBll->sections();
+        $sections = $this->nodeBll->sections();
         return $sections;
     }
 
     /**
      * 发帖选择子版块
-     * @param NodeBll $nodeBll
      * @return mixed
      */
-    public function subNodes(NodeBll $nodeBll)
+    public function subNodes()
     {
-        $sections = $nodeBll->subNodes();
+        $sections = $this->nodeBll->subNodes();
         return $sections;
     }
 
     /**
      * 版块详情
      * @param Node $node
-     * @param NodeBll $nodeBll
      * @return Node
      */
-    public function show(Node $node, NodeBll $nodeBll)
+    public function show(Node $node)
     {
-        $node = $nodeBll->show($node, $nodeBll);
+        $node = $this->nodeBll->show($node);
         return $node;
     }
 
     /**
      * 版块内按子版块筛选
      * @param SubNode $subNode
-     * @param NodeBll $nodeBll
      * @return Node
      */
-    public function showOfSubNode(SubNode $subNode, NodeBll $nodeBll)
+    public function showOfSubNode(SubNode $subNode, $sort = 'all')
     {
-        $node = $nodeBll->showOfSubNode($subNode, $nodeBll);
-        return $node;
+        switch ($sort) {
+            case 'hot'://子版块热门帖子列表
+                $threads = $this->nodeBll->hotThreadsOfSubNode($subNode);
+                break;
+            case 'recent'://子版块最新帖子列表
+                $threads = $this->nodeBll->recentThreadsOfSubNode($subNode);
+                break;
+            case 'excellent'://子版块精华帖子列表
+                $threads = $this->nodeBll->excellentThreadsOfSubNode($subNode);
+                break;
+            default :
+                $subNode = $this->nodeBll->showOfSubNode($subNode);
+                return $subNode;
+        }
+
+        return $threads;
     }
 
     /**
@@ -90,6 +100,14 @@ class NodeController extends WebController
     public function recent(Node $node)
     {
         $threads = $this->nodeBll->recentThreadsOfNode($node);
+
+        return $threads;
+    }
+
+    //精华帖子，按照加精时间和发表时间排序
+    public function excellent(Node $node)
+    {
+        $threads = $this->nodeBll->excellentThreadsOfNode($node);
 
         return $threads;
     }

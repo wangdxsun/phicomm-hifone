@@ -18,7 +18,7 @@ class BannerController extends AppController
 {
     public function index()
     {
-        $version = parse_agent_version($_SERVER['HTTP_USER_AGENT']);
+        $version = get_app_version();
         //过滤当前APP版本和Banner设定区间匹配者
         if (Agent::match('PhiWifiNative') && Agent::match('iPhone')) {
             $carousels = Carousel::orderBy('order')

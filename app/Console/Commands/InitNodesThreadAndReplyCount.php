@@ -19,7 +19,7 @@ class InitNodesThreadAndReplyCount extends Command
         parent::__construct();
     }
 
-    //初始化主板块和子版块中的帖子和回复计数
+    //初始化主版块和子版块中的帖子和回复计数
     public function handle()
     {
         $nodes = Node::orderBy('order')->with('subNodes')->get();

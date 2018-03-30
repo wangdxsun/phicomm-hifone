@@ -17,6 +17,7 @@ use Cmgmyr\Messenger\Traits\Messagable;
 use Elasticquent\ElasticquentTrait;
 use Hifone\Models\Traits\SearchTrait;
 use Hifone\Presenters\UserPresenter;
+use Hifone\Services\Tag\TaggableInterface;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -24,10 +25,11 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use McCool\LaravelAutoPresenter\HasPresenter;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
+use Hifone\Models\Traits\Taggable;
 
-class User extends BaseModel implements AuthenticatableContract, CanResetPasswordContract, HasPresenter
+class User extends BaseModel implements AuthenticatableContract, CanResetPasswordContract, HasPresenter, TaggableInterface
 {
-    use Authenticatable, CanResetPassword, EntrustUserTrait, ValidatingTrait, Messagable, SearchTrait, ElasticquentTrait;
+    use Authenticatable, CanResetPassword, EntrustUserTrait, ValidatingTrait, Messagable, SearchTrait, ElasticquentTrait, Taggable;
 
     // Enable hasRole( $name ), can( $permission ),
     //   and ability($roles, $permissions, $options)
@@ -153,6 +155,7 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         return $this->morphMany(Notification::class, 'object');
     }
 
+    //follows表多态关联
     public function followers()
     {
         return $this->morphMany(Follow::class, 'followable');
@@ -171,6 +174,17 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
     public function location()
     {
         return $this->belongsTo(Location::class);
+    }
+
+    //我投了哪些项
+    public function votes()
+    {
+        return $this->hasMany(OptionUser::class);
+    }
+
+    public function options()
+    {
+        return $this->belongsToMany(Option::class, 'option_user');
     }
 
     /**
@@ -342,7 +356,6 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
 
     public static function hasFollowUser(User $user)
     {
-
         if (Auth::guest()) {
             return 'unFollow';
         }
@@ -356,6 +369,19 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
             return 'followed';
         } else {
             return 'unFollow';
+        }
+    }
+
+    //判断用户是否关注版块
+    public static function hasFollowNode(Node $node)
+    {
+        if (Auth::guest()) {
+            return 'unFollow';
+        }
+        if (Auth::user()->follows()->ofType(Node::class)->ofId($node->id)->count() > 0){
+            return "followed";
+        } else {
+            return "unFollow";
         }
     }
 
@@ -384,6 +410,21 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         return $this->favorites()->ofThread($thread->id)->count() > 0;
     }
 
+    public function hasVoteThread(Thread $thread)
+    {
+        return $this->votes()->ofThread($thread)->count() > 0;
+    }
+
+    public function hasVoteOption(Option $option)
+    {
+        return $this->votes()->ofOption($option)->count() > 0;
+    }
+
+    public function hasCommentThread(Thread $thread)
+    {
+        return $this->replies()->ofThread($thread)->count() > 0;
+    }
+
     public function likes()
     {
         return $this->hasMany(Like::class);
@@ -394,11 +435,27 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         return $this->hasMany(Report::class);
     }
 
-
     public function getNotificationCountAttribute()
     {
         return $this->attributes['notification_reply_count'] + $this->attributes['notification_at_count'] +
             $this->attributes['notification_system_count'] + $this->attributes['notification_chat_count'] +
             $this->attributes['notification_follow_count'];
+    }
+
+    //根据用户版主信息查询版块信息
+    public function nodes()
+    {
+        return $this->belongsToMany(Node::class, 'moderators', 'user_id','node_id');
+    }
+
+    //根据用户实习版主信息查询版块信息
+    public function praModerators()
+    {
+        return $this->belongsToMany(Node::class,'pra_moderators', 'user_id','node_id');
+    }
+
+    public function followedNodes()
+    {
+        return $this->morphedByMany(Node::class, 'followable', 'follows');
     }
 }

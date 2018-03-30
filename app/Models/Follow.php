@@ -68,4 +68,9 @@ class Follow extends BaseModel
     {
         return $this->belongsTo(Thread::class, 'followable_id');
     }
+
+    public function node()
+    {
+        return $this->belongsTo(Node::class, 'followable_id');
+    }
 }

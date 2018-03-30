@@ -13,7 +13,6 @@
         @endif
         <div class="row">
             <div class="col-sm-12">
-                @include('partials.errors')
                 <table class="table table-bordered table-striped table-condensed">
                     <tbody>
                     <tr class="head">

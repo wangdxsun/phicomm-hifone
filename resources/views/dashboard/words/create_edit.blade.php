@@ -18,7 +18,7 @@
                 @else
                     {!! Form::open(['route' => 'dashboard.word.store','id' => 'word-create-form', 'method' => 'post']) !!}
                 @endif
-                @include('partials.errors')
+
                 <fieldset>
                     <div class="form-group">
                         <label>{{ trans('dashboard.words.type.title') }}</label>
