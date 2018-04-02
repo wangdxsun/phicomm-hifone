@@ -105,7 +105,7 @@ class UpdateThreadCommandHandler
             return $val !== null;
         });
         //帖子图片null时不过滤
-        $filterData['thumbnails'] = $data['thumbnails'];
+        $filterData['thumbnails'] = array_get($data, 'thumbnails');
 
         return $filterData;
     }
