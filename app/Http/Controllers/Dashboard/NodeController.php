@@ -118,8 +118,8 @@ class NodeController extends Controller
         ]);
         $nodeData = Request::get('node');
 
-        $moderatorData = explode(',', Request::get('nodeModerators'));
-        $praModeratorData = explode(',', Request::get('nodePraModerators'));
+        $moderatorData = Request::get('nodeModerators')== "" ? [] : explode(',', Request::get('nodeModerators'));
+        $praModeratorData = Request::get('nodePraModerators')== "" ? [] : explode(',', Request::get('nodePraModerators'));
         $nodeData['order'] = Node::max('order') + 1;
         try {
             $node = Node::create($nodeData);
