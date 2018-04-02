@@ -5,15 +5,15 @@
         @include('dashboard.partials.sub-sidebar')
     @endif
     <div class="content-wrapper">
+        @if(isset($sub_nav))
+            @include('dashboard.partials.sub-nav')
+        @endif
         <div class="header sub-header">
             <i class="fa fa-tag"></i> 标签
             @if(Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Founder'))
                 <a class="btn btn-sm btn-success pull-right" href="{{ route('dashboard.tag.create') }}">新增标签</a>
             @endif
         </div>
-        @if(isset($sub_nav))
-            @include('dashboard.partials.sub-nav')
-        @endif
         <div class="row">
             <div class="col-sm-12">
                 <table class="table table-bordered table-striped table-condensed">
