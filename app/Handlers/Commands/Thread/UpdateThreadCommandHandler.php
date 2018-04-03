@@ -101,12 +101,8 @@ class UpdateThreadCommandHandler
      */
     protected function filter($data)
     {
-        $filterData = array_filter($data, function ($val) {
+        return array_filter($data, function ($val) {
             return $val !== null;
         });
-        //帖子图片null时不过滤
-        $filterData['thumbnails'] = array_get($data, 'thumbnails');
-
-        return $filterData;
     }
 }
