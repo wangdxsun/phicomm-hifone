@@ -603,9 +603,9 @@ class ThreadBll extends BaseBll
             $users = $option->users()->paginate(14);
         } else {
             //所有投该帖的用户，按投票时间逆序，并携带他的投票选项信息
-            $users = $thread->voteUsers()->groupBy('user_id')->with(['options' => function ($query) use ($thread) {
+            $users = $thread->voteUsers()->with(['options' => function ($query) use ($thread) {
                 $query->wherePivot('thread_id', $thread->id);
-            }])->paginate(14);
+            }])->orderBy('created_at', 'desc')->paginate(14);
             foreach ($users as $user) {
                 $user['selects'] = $this->selects($user['options']->toArray());
                 unset($user['options']);

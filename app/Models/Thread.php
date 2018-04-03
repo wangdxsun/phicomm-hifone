@@ -21,6 +21,7 @@ use Hifone\Models\Traits\Taggable;
 use Hifone\Services\Dates\DateFactory;
 use Hifone\Services\Tag\TaggableInterface;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 use Input;
 use Venturecraft\Revisionable\RevisionableTrait;
 
@@ -206,8 +207,8 @@ class Thread extends BaseModel implements TaggableInterface
     //参与投票的所有人
     public function voteUsers()
     {
-        return $this->belongsToMany(User::class, 'option_user')->orderBy('created_at', 'desc')
-            ->withPivot('option_id', 'created_at');
+        return $this->belongsToMany(User::class, 'option_user')
+            ->distinct('user_id')->orderBy('option_user.created_at', 'desc');
     }
 
     public function appends()
