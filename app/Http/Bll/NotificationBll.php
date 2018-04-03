@@ -10,6 +10,8 @@ namespace Hifone\Http\Bll;
 
 use Auth;
 use Hifone\Models\Notification;
+use Hifone\Models\Reply;
+use Hifone\Models\Thread;
 
 class NotificationBll extends BaseBll
 {

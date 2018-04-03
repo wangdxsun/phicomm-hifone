@@ -11,7 +11,7 @@ class TagTypeController extends Controller
 {
     public function index()
     {
-        $tagTypes = TagType::all();
+        $tagTypes = TagType::ofType(TagType::USER)->get();
         return View::make('dashboard.tagTypes.index')
             ->with('tagTypes', $tagTypes)
             ->withCurrentMenu('index');
@@ -21,7 +21,6 @@ class TagTypeController extends Controller
     public function create()
     {
         return View::make('dashboard.tagTypes.create_edit')
-            ->with('tagTypeTypes', json_encode(TagType::$tagTypeTypes))
             ->withCurrentMenu('index');
     }
 
@@ -31,7 +30,6 @@ class TagTypeController extends Controller
         return View::make('dashboard.tagTypes.create_edit')
             ->with('tagType', $tagType)
             ->with('types', json_encode($types))
-            ->with('tagTypeTypes', json_encode(TagType::$tagTypeTypes))
             ->withCurrentMenu('index');
 
     }

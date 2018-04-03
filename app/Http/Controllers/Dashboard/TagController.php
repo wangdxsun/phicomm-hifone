@@ -40,19 +40,9 @@ class TagController extends Controller
 
     }
 
-    public function thread()
-    {
-        $tags = Tag::whereIn('type', TagType::ofType(TagType::THREAD)->pluck('id'))->get();
-        return View::make('dashboard.tags.index')
-            ->with('tags', $tags)
-            ->withCurrentMenu('tag')
-            ->withCurrentNav('thread');
-
-    }
-
     public function create()
     {
-        $tagTypes = TagType::all();
+        $tagTypes = TagType::ofType(TagType::USER)->get();
         return View::make('dashboard.tags.create_edit')
             ->with('tagTypes', $tagTypes)
             ->withCurrentMenu('tag');

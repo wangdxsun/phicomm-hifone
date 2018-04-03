@@ -17,19 +17,6 @@
                 @endif
 
                 <fieldset>
-                    <div>
-                        <label>标签类型:</label>
-                        <el-select v-model="types" placeholder="选择标签类型">
-                            <el-option
-                                    v-for="tagTypeType in tagTypeTypes"
-                                    :key="tagTypeType.name"
-                                    :label="tagTypeType.display_name"
-                                    :value="tagTypeType.value">
-                            </el-option>
-                        </el-select>
-
-                        <input type="hidden" class="form-control" :value="types" name="tagType[type]">
-                    </div>
                     <div class="form-group">
                         <label>{{ '标签分类名' }}</label>
                         {!! Form::text('tagType[display_name]', isset($tagType) ? $tagType->display_name : null, ['class' => 'form-control', 'required']) !!}
@@ -53,7 +40,6 @@
             el: '#app',
             data: function () {
                 return {
-                    tagTypeTypes: {!! $tagTypeTypes !!},
                     types: {!! $types or json_encode([])  !!}
                 };
             },

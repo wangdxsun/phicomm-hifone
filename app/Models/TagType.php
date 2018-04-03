@@ -17,7 +17,6 @@ class TagType extends BaseModel
         'display_name',
         'created_at',
         'updated_at',
-        'type'
     ];
 
     public static $tagTypeTypes = [

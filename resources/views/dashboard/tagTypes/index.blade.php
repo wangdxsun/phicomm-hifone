@@ -19,7 +19,6 @@
                         <td class="first">标签分类id</td>
                         <td>分类名</td>
                         <td>已有标签</td>
-                        <td>标签类型</td>
                         <td>操作</td>
                     </tr>
                     @foreach($tagTypes as $tagType)
@@ -30,9 +29,6 @@
                                 @foreach($tagType->tags as $tag)
                                     {{ $tag->name . ' ' }}
                                 @endforeach
-                            </td>
-                            <td>
-                                {{ $tagType->type == 0 ? '帖子标签' : '用户标签' }}
                             </td>
                             <td>
                                 <a href="/dashboard/tag/type/{{ $tagType->id }}/edit" title="编辑"><i class="fa fa-pencil"></i></a>

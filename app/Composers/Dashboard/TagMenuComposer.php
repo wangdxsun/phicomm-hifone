@@ -28,12 +28,6 @@ class TagMenuComposer
                 'active' => false,
                 'icon'   => 'fa fa-user',
             ],
-            'thread' => [
-                'title'  => '帖子标签',
-                'url'    => route('dashboard.tag.thread'),
-                'active' => false,
-                'icon'   => 'fa fa-file',
-            ],
         ];
 
         $view->withSubMenu($subMenu);

@@ -160,10 +160,10 @@ class ThreadController extends WebController
             $this->updateOpLog($thread, '修改帖子');
             $thread = dispatch(new UpdateThreadCommand($thread, $threadData));
             if (Auth::user()->hasRole(['Admin', 'Founder'])) {
-                $msg = '恭喜，操作成功！';
+                $msg = '发帖成功';
             } else {
                 $thread = $threadBll->auditThread($thread, $wordsFilter);
-                $msg = $thread->status == Thread::VISIBLE ? '编辑成功' : '帖子已提交，待审核';
+                $msg = $thread->status == Thread::VISIBLE ? '发帖成功' : '已提交，待审核';
             }
             return [
                 'msg' => $msg,
