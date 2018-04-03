@@ -206,7 +206,8 @@ class Thread extends BaseModel implements TaggableInterface
     //参与投票的所有人
     public function voteUsers()
     {
-        return $this->belongsToMany(User::class, 'option_user')->withPivot('option_id');
+        return $this->belongsToMany(User::class, 'option_user')->orderBy('created_at', 'desc')
+            ->withPivot('option_id', 'created_at');
     }
 
     public function appends()
