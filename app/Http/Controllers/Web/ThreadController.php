@@ -112,7 +112,7 @@ class ThreadController extends WebController
             $thread['view_vote'] = $threadBll->canViewVote($thread);
             $thread['voted'] = $threadBll->isVoted($thread);
         }
-        $msg = $thread->status == Thread::VISIBLE ? '发布成功' : '帖子已提交，待审核';
+        $msg = $thread->status == Thread::VISIBLE ? '发帖成功' : '帖子已提交，待审核';
 
         Redis::set($redisKey, $redisKey);
         Redis::expire($redisKey, 60);//设置发帖防灌水倒计时
