@@ -246,6 +246,8 @@ class ThreadBll extends BaseBll
     //发布草稿为帖子
     public function makeDraftToThread(Thread $thread, $threadData)
     {
+        //草稿状态变为待审核
+        $updateData['status'] = Thread::AUDIT;
         $updateData['node_id'] = SubNode::find($threadData['sub_node_id'])->node_id;
         $updateData['title'] = $threadData['title'];
         $updateData['body'] = $threadData['body'];
