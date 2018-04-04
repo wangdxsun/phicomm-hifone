@@ -177,6 +177,9 @@ class ThreadController extends WebController
     //编辑草稿
     public function updateDraft(Thread $thread, ThreadBll $threadBll)
     {
+        if ($thread->status <> Thread::DRAFT) {
+            throw new HifoneException('不能将帖子存为草稿');
+        }
         $this->validate(request(), [
             'thread.body' => 'required|min:5',
         ], [
