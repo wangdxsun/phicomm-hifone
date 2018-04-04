@@ -35,7 +35,7 @@ class NodeBll extends BaseBll
 
     public function recentThreadsOfNode(Node $node)
     {
-        $threads = Thread::visible()->ofNode($node)->recent()->with(['user', 'subNode'])->paginate();
+        $threads = Thread::visible()->ofNode($node)->recentEdit()->with(['user', 'subNode'])->paginate();
 
         return $threads;
     }
@@ -119,7 +119,7 @@ class NodeBll extends BaseBll
 
     public function recentThreadsOfSubNode(SubNode $subNode)
     {
-        $threads = Thread::visible()->ofSubNode($subNode)->recent()->with(['user', 'subNode'])->paginate();
+        $threads = Thread::visible()->ofSubNode($subNode)->recentEdit()->with(['user', 'subNode'])->paginate();
 
         return $threads;
     }
