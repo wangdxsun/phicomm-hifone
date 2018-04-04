@@ -128,7 +128,7 @@ class ThreadBll extends BaseBll
                 'option_max' => array_get($threadData, 'option_max', 1),
                 'vote_start' => $threadData['vote_start'],
                 'vote_end' => $threadData['vote_end'],
-                'vote_level' => array_get($threadData, 'vote_level'),
+                'vote_level' => array_get($threadData, 'vote_level', 0),
                 'view_voting' => array_get($threadData,'view_voting', Thread::VOTE_ONLY),
                 'view_vote_finish' => array_get($threadData,'view_vote_finish', Thread::VOTE_ONLY)
             ]);
@@ -178,7 +178,7 @@ class ThreadBll extends BaseBll
                 'option_max' => array_get($threadData, 'option_max', 1),
                 'vote_start' => array_get($threadData, 'vote_start'),
                 'vote_end' => array_get($threadData, 'vote_end'),
-                'vote_level' => array_get($threadData, 'vote_level'),
+                'vote_level' => array_get($threadData, 'vote_level', 0),
                 'view_voting' => array_get($threadData,'view_voting', Thread::VOTE_ONLY),
                 'view_vote_finish' => array_get($threadData,'view_vote_finish', Thread::VOTE_ONLY)
             ]);
@@ -222,7 +222,7 @@ class ThreadBll extends BaseBll
                 'option_max' => array_get($threadData, 'option_max', 1),
                 'vote_start' => array_get($threadData, 'vote_start'),
                 'vote_end' => array_get($threadData, 'vote_end'),
-                'vote_level' => array_get($threadData, 'vote_level'),
+                'vote_level' => array_get($threadData, 'vote_level', 0),
                 'view_voting' => array_get($threadData,'view_voting', Thread::VOTE_ONLY),
                 'view_vote_finish' => array_get($threadData,'view_vote_finish', Thread::VOTE_ONLY)
             ]);
@@ -259,7 +259,7 @@ class ThreadBll extends BaseBll
                 'option_max' => array_get($threadData, 'option_max', 1),
                 'vote_start' => $threadData['vote_start'],
                 'vote_end' => $threadData['vote_end'],
-                'vote_level' => array_get($threadData, 'vote_level'),
+                'vote_level' => array_get($threadData, 'vote_level', 0),
                 'view_voting' => array_get($threadData,'view_voting', Thread::VOTE_ONLY),
                 'view_vote_finish' => array_get($threadData,'view_vote_finish', Thread::VOTE_ONLY)
             ]);
