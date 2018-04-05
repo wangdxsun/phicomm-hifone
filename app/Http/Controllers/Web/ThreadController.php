@@ -157,8 +157,13 @@ class ThreadController extends WebController
         $threadData['node_id'] = SubNode::find($threadData['sub_node_id'])->node->id;
 
         if (!Auth::user()->hasRole(['Admin', 'Founder']) && Auth::id() <> $thread->user_id) {
-            throw new HifoneException('您没有权限编辑这个帖子！');
+            throw new HifoneException('您没有权限编辑这个帖子');
         }
+        //web前端：管理员不能编辑用户审核中的帖子
+        if (Auth::user()->hasRole(['Admin', 'Founder']) && Auth::id() <> $thread->user_id && $thread->status <> Thread::VISIBLE) {
+            throw new HifoneException('您不能编辑用户审核中的帖子');
+        }
+
         $this->updateOpLog($thread, '修改帖子');
         $thread = dispatch(new UpdateThreadCommand($thread, $threadData));
         //管理员编辑用户帖子，免审核；管理员编辑自己或用户编辑自己重新进入审核系统
