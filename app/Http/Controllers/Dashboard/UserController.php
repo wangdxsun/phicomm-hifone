@@ -56,9 +56,13 @@ class UserController extends Controller
         if (array_key_exists('tags', $search)){
             $search['tags'] = explode(',', $search['tags']);
         }
-        if ($tagCount['tagCount'] != "" ) {
 
-            $users = User::has('tags', '=', array_get($tagCount, 'tagCount'))->search($search)->with('roles', 'lastOpUser')->paginate(20);
+        if ( array_get($tagCount, 'tagCount') != "" ) {
+            if( count(array_get($search, 'tags')) >  array_get($tagCount, 'tagCount') ) {
+                return Redirect::route('dashboard.user.index')->withErrors('具体的标签不能大于选择的标签个数');
+            } else {
+                $users = User::has('tags', '=', array_get($tagCount, 'tagCount'))->search($search)->with('roles', 'lastOpUser')->paginate(20);
+            }
         } else {
             $users = User::search($search)->with('roles', 'lastOpUser')->paginate(20);
         }
