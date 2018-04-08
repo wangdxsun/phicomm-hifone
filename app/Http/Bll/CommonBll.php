@@ -45,7 +45,6 @@ class CommonBll extends BaseBll
         }
     }
 
-
     public function loginApp()
     {
         if (Auth::check()) {

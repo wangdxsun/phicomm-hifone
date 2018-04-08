@@ -112,7 +112,7 @@ class ThreadController extends WebController
             $thread['view_vote'] = $threadBll->canViewVote($thread);
             $thread['voted'] = $threadBll->isVoted($thread);
         }
-        $msg = $thread->status == Thread::VISIBLE ? '发布成功' : '帖子已提交，待审核';
+        $msg = $thread->status == Thread::VISIBLE ? '发帖成功' : '帖子已提交，待审核';
 
         Redis::set($redisKey, $redisKey);
         Redis::expire($redisKey, 60);//设置发帖防灌水倒计时
@@ -156,27 +156,35 @@ class ThreadController extends WebController
         $threadData = request('thread');
         $threadData['node_id'] = SubNode::find($threadData['sub_node_id'])->node->id;
 
-        if (Auth::user()->hasRole(['Admin', 'Founder']) || Auth::id() == $thread->user_id) {
-            $this->updateOpLog($thread, '修改帖子');
-            $thread = dispatch(new UpdateThreadCommand($thread, $threadData));
-            if (Auth::user()->hasRole(['Admin', 'Founder'])) {
-                $msg = '发帖成功';
-            } else {
-                $thread = $threadBll->auditThread($thread, $wordsFilter);
-                $msg = $thread->status == Thread::VISIBLE ? '发帖成功' : '已提交，待审核';
-            }
-            return [
-                'msg' => $msg,
-                'thread' => $thread
-            ];
-        } else {
-            throw new HifoneException('您没有权限编辑这个帖子！');
+        if (!Auth::user()->hasRole(['Admin', 'Founder']) && Auth::id() <> $thread->user_id) {
+            throw new HifoneException('您没有权限编辑这个帖子');
         }
+        //web前端：管理员不能编辑用户审核中的帖子
+        if (Auth::user()->hasRole(['Admin', 'Founder']) && Auth::id() <> $thread->user_id && $thread->status <> Thread::VISIBLE) {
+            throw new HifoneException('您不能编辑用户审核中的帖子');
+        }
+
+        $this->updateOpLog($thread, '修改帖子');
+        $thread = dispatch(new UpdateThreadCommand($thread, $threadData));
+        //管理员编辑用户帖子，免审核；管理员编辑自己或用户编辑自己重新进入审核系统
+        if (Auth::user()->hasRole(['Admin', 'Founder']) && Auth::id() <> $thread->user_id) {
+            $msg = '发帖成功';
+        } else {
+            $thread = $threadBll->auditThread($thread, $wordsFilter);
+            $msg = $thread->status == Thread::VISIBLE ? '发帖成功' : '已提交，待审核';
+        }
+        return [
+            'msg' => $msg,
+            'thread' => $thread
+        ];
     }
 
     //编辑草稿
     public function updateDraft(Thread $thread, ThreadBll $threadBll)
     {
+        if ($thread->status <> Thread::DRAFT) {
+            throw new HifoneException('不能将帖子存为草稿');
+        }
         $this->validate(request(), [
             'thread.body' => 'required|min:5',
         ], [

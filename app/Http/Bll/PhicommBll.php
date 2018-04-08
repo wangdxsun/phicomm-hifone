@@ -14,6 +14,7 @@ use Hifone\Exceptions\HifoneException;
 use Hifone\Models\User;
 use Auth;
 use Hifone\Services\Filter\WordsFilter;
+use Illuminate\Support\Facades\Redis;
 use Session;
 
 class PhicommBll extends BaseBll
@@ -147,6 +148,7 @@ class PhicommBll extends BaseBll
 
     public function reset($phone, $password, $verify)
     {
+        //TODO 设置每日5次验证码验证错误次数上限
         $url = env('PHICLOUND_DOMAIN') . 'forgetpassword';
         $data = [
             'authorizationcode' => $this->getAccessCode(),

@@ -128,7 +128,7 @@ class ThreadBll extends BaseBll
                 'option_max' => array_get($threadData, 'option_max', 1),
                 'vote_start' => $threadData['vote_start'],
                 'vote_end' => $threadData['vote_end'],
-                'vote_level' => array_get($threadData, 'vote_level'),
+                'vote_level' => array_get($threadData, 'vote_level', 0),
                 'view_voting' => array_get($threadData,'view_voting', Thread::VOTE_ONLY),
                 'view_vote_finish' => array_get($threadData,'view_vote_finish', Thread::VOTE_ONLY)
             ]);
@@ -178,7 +178,7 @@ class ThreadBll extends BaseBll
                 'option_max' => array_get($threadData, 'option_max', 1),
                 'vote_start' => array_get($threadData, 'vote_start'),
                 'vote_end' => array_get($threadData, 'vote_end'),
-                'vote_level' => array_get($threadData, 'vote_level'),
+                'vote_level' => array_get($threadData, 'vote_level', 0),
                 'view_voting' => array_get($threadData,'view_voting', Thread::VOTE_ONLY),
                 'view_vote_finish' => array_get($threadData,'view_vote_finish', Thread::VOTE_ONLY)
             ]);
@@ -211,6 +211,8 @@ class ThreadBll extends BaseBll
         $updateData['title'] = array_get($threadData, 'title');
         $updateData['body'] = $threadData['body'];
         $updateData['sub_node_id'] = array_get($threadData, 'sub_node_id');
+        //更新草稿贴编辑时间
+        $updateData['edit_time'] = Carbon::now()->toDateTimeString();
         $thread->update($updateData);
 
         //是投票贴
@@ -218,9 +220,9 @@ class ThreadBll extends BaseBll
             $thread->update([
                 'is_vote' => 1,
                 'option_max' => array_get($threadData, 'option_max', 1),
-                'vote_start' => $threadData['vote_start'],
-                'vote_end' => $threadData['vote_end'],
-                'vote_level' => array_get($threadData, 'vote_level'),
+                'vote_start' => array_get($threadData, 'vote_start'),
+                'vote_end' => array_get($threadData, 'vote_end'),
+                'vote_level' => array_get($threadData, 'vote_level', 0),
                 'view_voting' => array_get($threadData,'view_voting', Thread::VOTE_ONLY),
                 'view_vote_finish' => array_get($threadData,'view_vote_finish', Thread::VOTE_ONLY)
             ]);
@@ -244,6 +246,8 @@ class ThreadBll extends BaseBll
     //发布草稿为帖子
     public function makeDraftToThread(Thread $thread, $threadData)
     {
+        //草稿状态变为待审核
+        $updateData['status'] = Thread::AUDIT;
         $updateData['node_id'] = SubNode::find($threadData['sub_node_id'])->node_id;
         $updateData['title'] = $threadData['title'];
         $updateData['body'] = $threadData['body'];
@@ -257,7 +261,7 @@ class ThreadBll extends BaseBll
                 'option_max' => array_get($threadData, 'option_max', 1),
                 'vote_start' => $threadData['vote_start'],
                 'vote_end' => $threadData['vote_end'],
-                'vote_level' => array_get($threadData, 'vote_level'),
+                'vote_level' => array_get($threadData, 'vote_level', 0),
                 'view_voting' => array_get($threadData,'view_voting', Thread::VOTE_ONLY),
                 'view_vote_finish' => array_get($threadData,'view_vote_finish', Thread::VOTE_ONLY)
             ]);
@@ -603,9 +607,9 @@ class ThreadBll extends BaseBll
             $users = $option->users()->paginate(14);
         } else {
             //所有投该帖的用户，按投票时间逆序，并携带他的投票选项信息
-            $users = $thread->voteUsers()->groupBy('user_id')->with(['options' => function ($query) use ($thread) {
+            $users = $thread->voteUsers()->with(['options' => function ($query) use ($thread) {
                 $query->wherePivot('thread_id', $thread->id);
-            }])->paginate(14);
+            }])->orderBy('created_at', 'desc')->paginate(14);
             foreach ($users as $user) {
                 $user['selects'] = $this->selects($user['options']->toArray());
                 unset($user['options']);

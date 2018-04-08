@@ -65,12 +65,12 @@ if (!function_exists('getFirstImageUrl')) {
                 $imgUrls[] = $v;
             }
         }
-        $imgUrl = array_first($imgUrls,function($key,$value) {
+        $imgUrl = array_first($imgUrls, function($key,$value) {
             if (!(Str::contains($value, 'icon_apk')) && !(Str::contains($value, 'icon_bin')) && !(Str::contains($value, 'icon_word'))) {
                 return $value;
             }
-            return null;
-        });
+            return '';
+        }, '');
         return $imgUrl;
     }
 }
