@@ -26,7 +26,8 @@
                                 <option value="{{ $key }}">{{ $orderType }}</option>
                             @endforeach
                         </select>
-                        <el-select v-model="userTags" multiple placeholder="选择标签">
+                        {{--按标签筛选，提供所有的用户标签供选择--}}
+                        <el-select v-model="allUserTags" multiple placeholder="选择标签">
                             <el-option-group
                                     v-for="userTagType in userTagTypes"
                                     :key="userTagType.id"
@@ -39,7 +40,7 @@
                                 </el-option>
                             </el-option-group>
                         </el-select>
-                        <input type="hidden" class="form-control" :value="userTags" name="user[tags]">
+                        <input type="hidden" class="form-control" :value="allUserTags" name="user[tags]">
 
                         <select class="form-control " name="tag[tagCount]">
                             <option value="" selected>标签个数</option>
@@ -100,7 +101,7 @@
                                     <a href="/dashboard/user/{{ $user->id }}/edit" title="编辑"><i class="fa fa-pencil"></i></a>
                                     <a data-url="/dashboard/user/{{ $user->id }}/comment" data-method="post" title="禁止发言"><i class="{{ $user->comment }}"></i></a>
                                     <a data-url="/dashboard/user/{{ $user->id }}/login" data-method="post" title="禁止登录"><i class="{{ $user->login }}"></i></a>
-                                    <a href="/dashboard/user/{{ $user->id }}/edit"  title="添加标签"><i class="fa fa-tags"></i></a>
+                                    <span class="tag_info" @click="editTag({{ $user->id }}, {{ json_encode($user->tags()->whereNull('channel')->get()->pluck('id')->toArray()) }})" data-id="{{$user->id}}" data-tags="{{ $user->tags()->whereNull('channel')->get()->implode('id', ',') }}"><i class="fa fa-tag"></i></span>
                                 @endif
                             @endif
                         </td>
@@ -108,6 +109,51 @@
                 @endforeach
                 </tbody>
             </table>
+            {{--编辑用户标签弹窗--}}
+            @if(count($users) > 0)
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="content-wrapper">
+                                <div class="header sub-header">
+                                <span class="uppercase">
+                                     {{'编辑标签'}}
+                                </span>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div>
+                                            <label>{{ '用户标签' }}</label>
+                                            <el-select v-model="userTags" id="user-tags" multiple placeholder="选择标签">
+                                                <el-option-group
+                                                        v-for="userTagType in userTagTypes"
+                                                        :key="userTagType.id"
+                                                        :label="userTagType.display_name">
+                                                    <el-option
+                                                            v-for="tag in userTagType.tags"
+                                                            :key="tag.id"
+                                                            :label="tag.name"
+                                                            :value="tag.id">
+                                                    </el-option>
+                                                </el-option-group>
+                                            </el-select>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="form-group">
+                                                    <div class="btn btn-success" @click="saveTag">保存</div>
+                                                    <div class="btn btn-default" @click="hideModel">取消</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+            <!-- Modal -->
                 <div class="text-right">
                     <!-- Pager -->
                     {!! $users->appends(Request::except('page', '_pjax'))->render() !!}
@@ -122,11 +168,35 @@
             el: '#app',
             data: function () {
                 return {
-                    userTags: {!! $userTags or json_encode([]) !!},
+                    allUserTags:[],
+                    editUserTags: {!! $userTags or json_encode([]) !!},
                     userTagTypes: {!! $userTagTypes !!},
+                    userTags: '',
+                    userId: null,
                 };
             },
-
+            methods: {
+                editTag: function (user_id, tags) {
+                    this.userTags = tags
+                    this.userId = user_id
+                    $("#myModal").modal('show');
+                },
+                hideModel: function () {
+                    $("#myModal").modal('hide');
+                },
+                saveTag: function () {
+                    $.ajax({
+                        url: 'user/'+this.userId+'/tag/update',
+                        type: 'PUT',
+                        data: {
+                            userTags: this.userTags
+                        },
+                        success: function () {
+                            window.location.reload()
+                        }
+                    })
+                }
+            }
         })
     </script>
 @stop

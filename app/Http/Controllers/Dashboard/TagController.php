@@ -21,7 +21,7 @@ class TagController extends Controller
     public function index()
     {
         //所有的用户标签
-        $tags = Tag::whereIn('type', TagType::ofType(TagType::USER)->pluck('id'))->get();
+        $tags = Tag::whereIn('type', TagType::ofType([TagType::USER, TagType::AUTO])->pluck('id'))->get();
         return View::make('dashboard.tags.index')
             ->with('tags', $tags)
             ->withCurrentMenu('tag')
@@ -32,7 +32,7 @@ class TagController extends Controller
     public function user()
     {
         //所有的用户标签
-        $tags = Tag::whereIn('type', TagType::ofType(TagType::USER)->pluck('id'))->get();
+        $tags = Tag::whereIn('type', TagType::ofType([TagType::USER, TagType::AUTO])->pluck('id'))->get();
         return View::make('dashboard.tags.index')
             ->with('tags', $tags)
             ->withCurrentMenu('tag')
@@ -42,7 +42,7 @@ class TagController extends Controller
 
     public function create()
     {
-        $tagTypes = TagType::ofType(TagType::USER)->get();
+        $tagTypes = TagType::ofType([TagType::USER])->get();
         return View::make('dashboard.tags.create_edit')
             ->with('tagTypes', $tagTypes)
             ->withCurrentMenu('tag');
@@ -53,7 +53,7 @@ class TagController extends Controller
     {
         return View::make('dashboard.tags.create_edit')
             ->with('tag', $tag)
-            ->with('tagTypes', TagType::all())
+            ->with('tagTypes', TagType::ofType([TagType::USER])->get())
             ->withCurrentMenu('tag');
 
     }
@@ -61,6 +61,10 @@ class TagController extends Controller
     public function update(Tag $tag)
     {
         $tagData = Input::get('tag');
+        if ($tag->name != array_get($tagData, 'name') && null != Tag::where('name', array_get($tagData, 'name'))->first()) {
+            return Redirect::back()
+                ->withErrors('标签名已存在');
+        }
         $tag->update($tagData);
         return Redirect::route('dashboard.tag.index')
             ->withSuccess('标签已更新');
@@ -69,6 +73,10 @@ class TagController extends Controller
     public function store()
     {
         $tagData = Input::get('tag');
+        if (null != Tag::where('name', array_get($tagData, 'name'))->first()) {
+            return Redirect::back()
+                ->withErrors('标签名已存在');
+        }
         Tag::create($tagData);
         return Redirect::route('dashboard.tag.index')
             ->withSuccess('标签已新增');

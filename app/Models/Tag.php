@@ -18,6 +18,8 @@ class Tag extends Model
     protected $fillable = [
         'name', 'type', 'count',
     ];
+    const AUTO = 0;
+    const HUMAN = 1;
 
     /**
      * Tags can have many threads.
@@ -44,6 +46,12 @@ class Tag extends Model
     public function tagType()
     {
         return $this->belongsTo(TagType::class,'type','id');
+    }
+
+    //查询是自动标签还是手动标签
+    public function scopeOfChannel($query,$channel)
+    {
+        return $query->where('channel', $channel);
     }
 
 

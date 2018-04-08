@@ -130,7 +130,7 @@ class Node extends BaseModel implements HasPresenter
      */
     public function getUrlAttribute()
     {
-        return ($this->slug) ? route('go', $this->slug) : route('node.show', $this->id);
+        return route('node.show', $this->id);
     }
 
     /**

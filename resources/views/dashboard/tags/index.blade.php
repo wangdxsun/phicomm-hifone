@@ -29,10 +29,12 @@
                             <td>{{ $tag->id }}</td>
                             <td>{{ $tag->name }}</td>
                             <td>{{ $tag->tagType->display_name}}</td>
-                            <td>
-                                <a href="/dashboard/tag/{{ $tag->id }}/edit" title="编辑"><i class="fa fa-pencil"></i></a>
-                                <a href="/dashboard/tag/{{ $tag->id }}/destroy" title="删除"><i class="fa fa-trash"></i></a>
-                            </td>
+                            @if ($tag->tagType->display_name != '自动标签')
+                                <td>
+                                    <a href="/dashboard/tag/{{ $tag->id }}/edit" title="编辑"><i class="fa fa-pencil"></i></a>
+                                    <a href="/dashboard/tag/{{ $tag->id }}/destroy" title="删除"><i class="fa fa-trash"></i></a>
+                                </td>
+                            @endif
                         </tr>
                     @endforeach
 

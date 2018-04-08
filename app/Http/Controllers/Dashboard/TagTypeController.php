@@ -11,7 +11,7 @@ class TagTypeController extends Controller
 {
     public function index()
     {
-        $tagTypes = TagType::ofType(TagType::USER)->get();
+        $tagTypes = TagType::ofType([TagType::USER, TagType::AUTO])->get();
         return View::make('dashboard.tagTypes.index')
             ->with('tagTypes', $tagTypes)
             ->withCurrentMenu('index');
@@ -26,7 +26,7 @@ class TagTypeController extends Controller
 
     public function edit(TagType $tagType)
     {
-        $types = TagType::$tagTypeTypes[$tagType->type]['display_name'];
+        $types = array_get(TagType::$tagTypeTypes[$tagType->type], 'display_name');
         return View::make('dashboard.tagTypes.create_edit')
             ->with('tagType', $tagType)
             ->with('types', json_encode($types))
@@ -37,6 +37,11 @@ class TagTypeController extends Controller
     public function update(TagType $tagType)
     {
         $tagTypeData = Input::get('tagType');
+        if ($tagType->display_name != array_get($tagTypeData, 'display_name') && null != TagType::where('display_name', array_get($tagTypeData, 'display_name'))->first()) {
+            return Redirect::back()
+                ->withErrors('标签分类名已存在');
+        }
+        $tagTypeData['type'] = 1;
         $tagType->update($tagTypeData);
         return Redirect::route('dashboard.tag.type.index')
             ->withSuccess('标签分类已更新');
@@ -45,7 +50,12 @@ class TagTypeController extends Controller
     public function store()
     {
         $tagTypeData = Input::get('tagType');
-       TagType::create($tagTypeData);
+        if (null != TagType::where('display_name', array_get($tagTypeData, 'display_name'))->first()) {
+            return Redirect::back()
+                ->withErrors('标签分类名已存在');
+        }
+        $tagTypeData['type'] = 1;
+        TagType::create($tagTypeData);
         return Redirect::route('dashboard.tag.type.index')
             ->withSuccess('标签分类已新增');
     }

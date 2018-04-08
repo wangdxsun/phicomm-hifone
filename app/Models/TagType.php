@@ -13,10 +13,12 @@ class TagType extends BaseModel
     public $table = 'tag_types';
     const THREAD = 0;
     const USER = 1;
+    const AUTO = 2;
     protected $fillable = [
         'display_name',
         'created_at',
         'updated_at',
+        'type'
     ];
 
     public static $tagTypeTypes = [
@@ -37,7 +39,7 @@ class TagType extends BaseModel
 
     public function scopeOfType($query, $id)
     {
-        return $query->where('type', $id);
+        return $query->whereIn('type', $id);
     }
 
 }
