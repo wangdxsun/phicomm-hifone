@@ -22,8 +22,8 @@ class GetRank extends Command
     //根据被点赞数，被评论数和被收藏数筛选优质用户
     public function handle()
     {
-        $lastMonday = Carbon::today()->previousWeekendDay()->subDay(6)->toDateTimeString();
-        $lastSunday = Carbon::today()->previousWeekendDay()->addDay()->subSecond()->toDateTimeString();
+        $lastMonday = Carbon::today()->previous(Carbon::SUNDAY)->subDay(6)->toDateTimeString();
+        $lastSunday = Carbon::today()->previous(Carbon::SUNDAY)->addDay()->subSecond()->toDateTimeString();
         $userRankCount = [];
         $week_rank = 0;
         //处理点赞逻辑，首先拿到上个星期被点赞了的帖子和回复，以及对应的用户信息

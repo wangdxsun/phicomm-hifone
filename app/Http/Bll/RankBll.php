@@ -11,7 +11,7 @@ class RankBll extends BaseBll
 {
     public function ranks()
     {
-        $lastMonday = Carbon::today()->previousWeekendDay()->subDay(6)->toDateTimeString();
+        $lastMonday = Carbon::today()->previous(Carbon::SUNDAY)->subDay(6)->toDateTimeString();
         $ranks = Rank::where('start_date',$lastMonday)->orderBy('id')->get()->load('user');
         foreach ($ranks as $rank) {
             $rank['followed'] = User::hasFollowUser(User::find($rank->user_id));
