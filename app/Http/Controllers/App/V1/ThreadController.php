@@ -92,13 +92,9 @@ class ThreadController extends AppController
         return $thread;
     }
 
-    public function replies(Thread $thread, ThreadBll $threadBll)
+    public function replies(Thread $thread, ThreadBll $threadBll, $sort = 'pinAndRecent')
     {
-        return $threadBll->replies($thread);
-    }
-
-    public function sortReplies(Thread $thread, $sort, ThreadBll $threadBll)
-    {
+        //$sort : [pinAndRecent, like, desc, asc]
         return $threadBll->sortReplies($thread, $sort);
     }
 

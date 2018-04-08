@@ -42,7 +42,7 @@ class WebRoutes
             $router->get('thread/search/{keyword}', 'ThreadController@search')->middleware('active:web');
             $router->get('user/search/{keyword}', 'UserController@search')->middleware('active:web');
             $router->get('threads/{thread}', 'ThreadController@show')->where('thread', '[0-9]+')->middleware('active:web');
-            $router->get('threads/{thread}/replies/{sort}', 'ThreadController@replies')->where('thread', '[0-9]+');
+            $router->get('threads/{thread}/replies/{sort?}', 'ThreadController@replies')->where('thread', '[0-9]+')->where('sort', 'like|desc|asc');
             $router->get('nodes', 'NodeController@index');
             $router->get('sections', 'NodeController@sections')->middleware('active:web');
             $router->get('subNodes', 'NodeController@subNodes');
