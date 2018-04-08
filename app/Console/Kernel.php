@@ -11,6 +11,7 @@
 
 namespace Hifone\Console;
 
+use Hifone\Console\Commands\AutoCreateTag;
 use Hifone\Console\Commands\GetRank;
 use Hifone\Console\Commands\InitNodesThreadAndReplyCount;
 use Hifone\Console\Commands\GetThumbnails;
@@ -29,6 +30,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
+        AutoCreateTag::class,
         GetRank::class,
         SendMessage::class,
         UpdateHeat::class,

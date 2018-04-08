@@ -13,7 +13,7 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <table class="table table-bordered table-striped table-condensed">
+                <table class="table table-bordered table-striped table-condensed" id="batchForm">
                     <tbody>
                     <tr class="head">
                         <td class="first">标签分类id</td>
@@ -27,13 +27,15 @@
                             <td>{{ $tagType->display_name }}</td>
                             <td>
                                 @foreach($tagType->tags as $tag)
-                                    {{ $tag->name . ' ' }}
+                                    {{ $tag->name . '， ' }}
                                 @endforeach
                             </td>
+                            @if ($tagType->display_name != '自动标签')
                             <td>
                                 <a href="/dashboard/tag/type/{{ $tagType->id }}/edit" title="编辑"><i class="fa fa-pencil"></i></a>
-                                <a href="/dashboard/tag/type/{{ $tagType->id }}/destroy" title="删除"><i class="fa fa-trash"></i></a>
+                                <a data-url="{{ route('dashboard.tag.type.destroy',['id'=>$tagType->id]) }}" data-method="delete" class="confirm-action" data-title="是否删除该分类？"><i class="fa fa-trash"></i></a>
                             </td>
+                            @endif
                         </tr>
                     @endforeach
 

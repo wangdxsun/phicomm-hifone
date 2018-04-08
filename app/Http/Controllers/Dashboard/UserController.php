@@ -26,6 +26,7 @@ class UserController extends Controller
 {
     const THREAD = 0;
     const USER = 1;
+    const AUTO = 2;
     protected $hasher;
 
     /**
@@ -50,21 +51,23 @@ class UserController extends Controller
     public function index()
     {
         $search = $this->filterEmptyValue(Input::get('user'));
+        //标签个数，用于筛选
         $tagCount = Input::get('tag');
         if (array_key_exists('tags', $search)){
             $search['tags'] = explode(',', $search['tags']);
         }
-
         if ($tagCount['tagCount'] != "" ) {
-            $users = User::has('tags', '=', $tagCount['tagCount'])->search($search)->with('roles', 'lastOpUser')->paginate(20);
+
+            $users = User::has('tags', '=', array_get($tagCount, 'tagCount'))->search($search)->with('roles', 'lastOpUser')->paginate(20);
         } else {
             $users = User::search($search)->with('roles', 'lastOpUser')->paginate(20);
         }
         $roles = Role::all();
         $orderTypes = User::$orderTypes;
         //传入所有用户标签类
-        $userTagTypes = TagType::ofType(UserController::USER)->with('tags')->get();
-        $tagCounts = range(1, count(Tag::whereIn('type', TagType::ofType(TagType::USER)->pluck('id')->toArray())->get()));
+        $userTagTypes = TagType::ofType([UserController::USER])->with('tags')->get();
+        //传入标签个数的数组
+        $tagCounts = range(1, count(Tag::whereIn('type', TagType::ofType([TagType::USER])->pluck('id')->toArray())->get()));
 
         return View::make('dashboard.users.index')
             ->withPageTitle(trans('dashboard.users.users').' - '.trans('dashboard.dashboard'))
@@ -85,11 +88,8 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::adminGroup()->get();
-        //传入所有用户标签类
-        $userTagTypes = TagType::ofType(UserController::USER)->with('tags')->get();
         return View::make('dashboard.users.create_edit')
             ->withRoles($roles)
-            ->with('userTagTypes', $userTagTypes)
             ->withPageTitle(trans('dashboard.users.add.title').' - '.trans('dashboard.dashboard'));
     }
 
@@ -102,12 +102,11 @@ class UserController extends Controller
     {
         $userData = Input::get('user');
         $roleId = Input::get('roleId');
-        $tagData = explode(',',Input::get('userTags'));
         if (User::where('username', $userData['username'])->count() > 0) {
             return back()->withErrors('昵称已存在');
         }
         try {
-            \DB::transaction(function () use ($userData, $roleId, $tagData) {
+            \DB::transaction(function () use ($userData, $roleId) {
                 //创建用户密码
                 if (array_get($userData, 'password')) {
                     $userData['salt'] = str_random(8);
@@ -115,7 +114,6 @@ class UserController extends Controller
                 }
 
                 $user = User::create($userData);
-                $user->tags()->sync($tagData);
                 $this->updateOpLog($user, '创建用户');
                 $user->addToIndex();
             });
@@ -132,15 +130,9 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $roles = Role::adminGroup()->get();
-        //查询出用户的标签
-        $userTags = $user->tags->pluck('id');
-        //传入所有用户标签类
-        $userTagTypes = TagType::ofType(UserController::USER)->with('tags')->get();
 
         return View::make('dashboard.users.create_edit')
             ->withPageTitle(trans('dashboard.users.add.title').' - '.trans('dashboard.dashboard'))
-            ->with('userTags', json_encode($userTags->toArray()))
-            ->with('userTagTypes', $userTagTypes)
             ->withUser($user)
             ->withRoles($roles);
     }
@@ -148,11 +140,9 @@ class UserController extends Controller
     public function update(User $user)
     {
         $userData = Input::get('user');
-        $tagData = explode(',', Input::get('userTags'));
         $roleId = Input::get('roleId');
-
         try {
-            \DB::transaction(function () use ($user, $userData, $roleId, $tagData) {
+            \DB::transaction(function () use ($user, $userData, $roleId) {
                 //修改用户密码，如果未设置则跳过
                 if (array_get($userData, 'password')) {
                     $userData['salt'] = $user->salt;
@@ -161,7 +151,6 @@ class UserController extends Controller
                     unset($userData['password']);
                 }
                 $user->update($userData);
-                $user->tags()->sync($tagData);
                 $user->role_id = $roleId;
                 $this->updateOpLog($user, '修改用户信息');
                 $user->updateIndex();
@@ -215,6 +204,13 @@ class UserController extends Controller
     private function hashPassword($password, $salt)
     {
         return $this->hasher->make($password, ['salt' => $salt]);
+    }
+
+    //编辑标签
+    public function tagUpdate(User $user)
+    {
+        $tagData = Input::get('userTags');
+        $user->tags()->sync($tagData);
     }
 
 }
