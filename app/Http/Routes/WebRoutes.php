@@ -79,6 +79,7 @@ class WebRoutes
             $router->get('users/{user}/replies', 'UserController@replies')->where('user', '[0-9]+');
             $router->get('users/{user}/favorites', 'UserController@favorites')->where('user', '[0-9]+');
             $router->get('users/{user}/drafts', 'UserController@drafts')->where('user', '[0-9]+');
+            $router->get('rank', 'RankController@ranks');
             $router->get('ranks', 'RankController@ranks');
 
             // Authorization Required
