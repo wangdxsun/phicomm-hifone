@@ -48,7 +48,7 @@ class UploadImageCommandHandler
         $file->move($destinationPath, $safeName);
 
         if (!in_array($file->getClientOriginalExtension(), ['gif', 'webp'])) {
-            ini_set("memory_limit","256M");
+            ini_set("memory_limit", "256M");
             // open an image file
             $img = Image::make($destinationPath.'/'.$safeName);
             // prevent possible upsizing
