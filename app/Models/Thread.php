@@ -555,19 +555,6 @@ class Thread extends BaseModel implements TaggableInterface
         return $value;
     }
 
-    public function getEditTimeAttribute()
-    {
-        $value = max($this->attributes['created_at'], $this->attributes['edit_time'], $this->attributes['updated_at']);
-        switch ($value) {
-            case $this->attributes['created_at']:
-                return '创建于'.$this->created_at;
-            case $this->attributes['edit_time']:
-                return '编辑于'.substr($this->attributes['edit_time'], 0, 16);
-            default:
-                return '最新回复'.$this->updated_at;
-        }
-    }
-
 //    public function tags()
 //    {
 //        return $this->morphMany(Taggable::class, 'taggable');
