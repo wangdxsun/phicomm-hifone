@@ -378,18 +378,18 @@ class ThreadBll extends BaseBll
             throw new HifoneException('该帖子已被删除', 410);
         }
         event(new ThreadWasViewedEvent(clone $thread));
+        $thread = $thread->load(['user', 'node']);
 
         if ($thread->is_vote == 1) {//投票贴
-            $thread = $thread->load(['user', 'node', 'options']);
+            $thread = $thread->load(['options']);
             foreach ($thread['options'] as $option) {
                 $option['voted'] = Auth::check() ? Auth::user()->hasVoteOption($option) : false;
             }
             $thread['view_vote'] = $this->canViewVote($thread);
             $thread['voted'] = $this->isVoted($thread);
             $thread['now'] = Carbon::now()->toDateTimeString();
-        } else {
-            $thread = $thread->load(['user', 'node']);
         }
+
         $thread['followed'] = User::hasFollowUser($thread->user);
         $thread['liked'] = Auth::check() ? Auth::user()->hasLikeThread($thread) : false;
         $thread['reported'] = Auth::check() ? Auth::user()->hasReportThread($thread) : false;
@@ -445,7 +445,7 @@ class ThreadBll extends BaseBll
             } elseif ($thread->view_voting == Thread::ALL) {//4所有人可见
                 return true;
             } else {//5只有管理员可见
-                if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Founder')) {
+                if (Auth::check() && (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Founder'))) {
                     return true;
                 } else {
                     return false;
@@ -473,7 +473,7 @@ class ThreadBll extends BaseBll
             } elseif ($thread->view_vote_finish == Thread::ALL) {//4所有人可见
                 return true;
             } else {//5只有管理员可见
-                if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Founder')) {
+                if (Auth::check() && (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Founder'))) {
                     return true;
                 } else {
                     return false;
