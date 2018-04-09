@@ -378,18 +378,20 @@ class ThreadBll extends BaseBll
             throw new HifoneException('该帖子已被删除', 410);
         }
         event(new ThreadWasViewedEvent(clone $thread));
+        $thread = $thread->load(['user', 'node']);
 
         if ($thread->is_vote == 1) {//投票贴
-            $thread = $thread->load(['user', 'node', 'options']);
-            foreach ($thread['options'] as $option) {
-                $option['voted'] = Auth::check() ? Auth::user()->hasVoteOption($option) : false;
-            }
             $thread['view_vote'] = $this->canViewVote($thread);
+            if ($thread['view_vote']) {//投票结果可见
+                $thread = $thread->load(['options']);
+                foreach ($thread['options'] as $option) {
+                    $option['voted'] = Auth::check() ? Auth::user()->hasVoteOption($option) : false;
+                }
+            }
             $thread['voted'] = $this->isVoted($thread);
             $thread['now'] = Carbon::now()->toDateTimeString();
-        } else {
-            $thread = $thread->load(['user', 'node']);
         }
+
         $thread['followed'] = User::hasFollowUser($thread->user);
         $thread['liked'] = Auth::check() ? Auth::user()->hasLikeThread($thread) : false;
         $thread['reported'] = Auth::check() ? Auth::user()->hasReportThread($thread) : false;
