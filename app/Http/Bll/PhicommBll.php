@@ -194,16 +194,16 @@ class PhicommBll extends BaseBll
                 case 0:
                     return $res;
                 case 13:
-                    return new HifoneException('获取验证码失败');
+                    throw new HifoneException('获取验证码失败');
                 case 38:
-                    return new HifoneException('操作频繁，请1分钟后再试');
+                    throw new HifoneException('操作频繁，请1分钟后再试');
                 case 39:
-                    return new HifoneException('验证码请求超出限制');
+                    throw new HifoneException('验证码请求超出限制');
                 default:
-                    return new HifoneException('服务器异常');
+                    throw new HifoneException('服务器异常');
             }
         } else {
-            return new HifoneException('获取验证码失败');
+            throw new HifoneException('获取验证码失败');
         }
     }
 
