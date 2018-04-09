@@ -105,7 +105,6 @@ class UserGroupController extends Controller
         }
         $roleData = Input::get('role');
         $permissions = Input::get('batch', []);
-//        $permissions = Input::get('permissions', []);
         try {
             \DB::transaction(function () use ($role, $roleData, $permissions) {
                 $role->update($roleData);

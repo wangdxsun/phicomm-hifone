@@ -24,9 +24,14 @@ class Moderator extends BaseModel
         return $this->belongsTo(Node::class, 'node_id','id');
     }
 
-        public function user()
+    public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function scopeOfUser($query,User $user)
+    {
+        return $query->where('user_id', $user->id);
     }
 
 }
