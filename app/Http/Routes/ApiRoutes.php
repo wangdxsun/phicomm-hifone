@@ -38,7 +38,7 @@ class ApiRoutes
             $router->get('thread/search/{keyword}', 'ThreadController@search')->middleware('active:api');
             $router->get('user/search/{keyword}', 'UserController@search')->middleware('active:api');
             $router->get('threads/{thread}', 'ThreadController@show')->where('thread', '[0-9]+')->middleware('active:api');
-            $router->get('threads/{thread}/replies', 'ThreadController@replies')->where('thread', '[0-9]+');
+            $router->get('threads/{thread}/replies/{sort?}', 'ThreadController@replies')->where('thread', '[0-9]+');
             $router->get('nodes', 'NodeController@index');
             $router->get('sections', 'NodeController@sections')->middleware('active:api');
             $router->get('subNodes', 'NodeController@subNodes');

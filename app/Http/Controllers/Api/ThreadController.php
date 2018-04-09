@@ -89,8 +89,8 @@ class ThreadController extends ApiController
         ];
     }
 
-    public function replies(Thread $thread, ThreadBll $threadBll)
+    public function replies(Thread $thread, ThreadBll $threadBll, $sort = 'pinAndRecent')
     {
-        return $threadBll->replies($thread);
+        return $threadBll->sortReplies($thread, $sort, 'h5');
     }
 }
