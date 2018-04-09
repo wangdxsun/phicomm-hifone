@@ -14,6 +14,8 @@ namespace Hifone\Http\Controllers\Dashboard;
 use AltThree\Validator\ValidationException;
 use Hifone\Hashing\PasswordHasher;
 use Hifone\Http\Controllers\Controller;
+use Hifone\Models\Moderator;
+use Hifone\Models\PraModerator;
 use Hifone\Models\Role;
 use Hifone\Models\Tag;
 use Hifone\Models\TagType;
@@ -143,10 +145,11 @@ class UserController extends Controller
 
     public function update(User $user)
     {
+        $previous_role= $user->roles()->first();
         $userData = Input::get('user');
         $roleId = Input::get('roleId');
         try {
-            \DB::transaction(function () use ($user, $userData, $roleId) {
+            \DB::transaction(function () use ($user, $userData, $roleId, $previous_role) {
                 //修改用户密码，如果未设置则跳过
                 if (array_get($userData, 'password')) {
                     $userData['salt'] = $user->salt;
@@ -155,6 +158,29 @@ class UserController extends Controller
                     unset($userData['password']);
                 }
                 $user->update($userData);
+                if ( null != $previous_role ) {
+                    //从版主改成实习版主
+                    if ($previous_role->name == 'NodeMaster' && Role::find($roleId)->name == 'NodePraMaster' ) {
+                        $user->praModerators()->attach(Moderator::ofUser($user)->get()->pluck('node_id')->toArray());
+                        $user->nodes()->detach(Moderator::ofUser($user)->get()->pluck('node_id')->toArray());
+
+                    }
+                    //从实习版主改成版主
+                    if ($previous_role->name == 'NodePraMaster' && Role::find($roleId)->name == 'NodeMaster' ) {
+                        $user->nodes()->attach(PraModerator::ofUser($user)->get()->pluck('node_id')->toArray());
+                        $user->praModerators()->detach(PraModerator::ofUser($user)->get()->pluck('node_id')->toArray());
+                    }
+
+                    //从版主、实习版主改成非版主
+                    if (($previous_role->name == 'NodePraMaster' || $previous_role->name == 'NodeMaster') && Role::find($roleId)->name != 'NodeMaster' && Role::find($roleId)->name != 'NodePraMaster') {
+                        if ($previous_role->name == 'NodeMaster') {
+                            $user->nodes()->detach(Moderator::ofUser($user)->get()->pluck('node_id')->toArray());
+                        } else {
+                            $user->praModerators()->detach(PraModerator::ofUser($user)->get()->pluck('node_id')->toArray());
+                        }
+                    }
+                }
+
                 $user->role_id = $roleId;
                 $this->updateOpLog($user, '修改用户信息');
                 $user->updateIndex();
