@@ -445,7 +445,7 @@ class ThreadBll extends BaseBll
             } elseif ($thread->view_voting == Thread::ALL) {//4所有人可见
                 return true;
             } else {//5只有管理员可见
-                if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Founder')) {
+                if (Auth::check() && (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Founder'))) {
                     return true;
                 } else {
                     return false;
@@ -473,7 +473,7 @@ class ThreadBll extends BaseBll
             } elseif ($thread->view_vote_finish == Thread::ALL) {//4所有人可见
                 return true;
             } else {//5只有管理员可见
-                if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Founder')) {
+                if (Auth::check() && (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Founder'))) {
                     return true;
                 } else {
                     return false;
