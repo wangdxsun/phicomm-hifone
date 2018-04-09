@@ -59,6 +59,7 @@ class NotificationBll extends BaseBll
         foreach ($notifications as $notification) {
             if ($notification->type == 'reply_like' || $notification->type == 'reply_pin') {
                 $notification->object->thread;
+                $notification->object->user;
                 if ($notification->object->reply) {
                     $notification->object->reply->user;
                 }

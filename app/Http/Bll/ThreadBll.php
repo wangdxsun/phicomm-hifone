@@ -482,21 +482,14 @@ class ThreadBll extends BaseBll
         }
     }
 
-    public function replies(Thread $thread)
+    public function sortReplies(Thread $thread, $sort, $source = 'app')
     {
-        $replies = $thread->replies()->visibleAndDeleted()->with(['user', 'reply.user'])->pinAndRecent()->paginate();
-        foreach ($replies as &$reply) {
-            $reply['liked'] = Auth::check() ? Auth::user()->hasLikeReply($reply) : false;
-            $reply['reported'] = Auth::check() ? Auth::user()->hasReportReply($reply) : false;
-        }
-        return $replies;
-    }
-
-    public function sortReplies(Thread $thread, $sort = 'like', $source = '')
-    {
-        //三种排序方式 like：点赞最多  desc：时间逆序  asc:时间正序
+        //四种排序方式 pinAndRecent：兼容旧版本 like：点赞最多  desc：时间逆序  asc:时间正序
         if ($source == 'web') {//web端查看评论列表只显示状态正常的
             switch ($sort) {
+                case 'pinAndRecent':
+                    $replies = $thread->replies()->visible()->with(['user', 'reply.user'])->pinAndRecent()->paginate();
+                    break;
                 case 'like':
                     $replies = $thread->replies()->visible()->with(['user', 'reply.user'])->pinLikeAndRecent()->paginate();
                     break;
@@ -511,6 +504,9 @@ class ThreadBll extends BaseBll
             }
         } else {
             switch ($sort) {
+                case 'pinAndRecent':
+                    $replies = $thread->replies()->visibleAndDeleted()->with(['user', 'reply.user'])->pinAndRecent()->paginate();
+                    break;
                 case 'like':
                     $replies = $thread->replies()->visibleAndDeleted()->with(['user', 'reply.user'])->pinLikeAndRecent()->paginate();
                     break;

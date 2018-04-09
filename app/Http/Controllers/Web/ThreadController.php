@@ -237,9 +237,9 @@ class ThreadController extends WebController
         return success('投票成功');
     }
 
-    public function replies(Thread $thread, $sort, ThreadBll $threadBll)
+    public function replies(Thread $thread, ThreadBll $threadBll, $sort = 'pinAndRecent')
     {
-        //$sort : [like, desc, asc]
+        //$sort : [pinAndRecent, like, desc, asc]
         return $threadBll->sortReplies($thread, $sort, 'web');
     }
 

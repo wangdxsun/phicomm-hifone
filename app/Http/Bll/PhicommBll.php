@@ -158,7 +158,7 @@ class PhicommBll extends BaseBll
         ];
         $output = json_decode(curlPost($url, $data), true);
         if ($output){
-            switch($output['error']){
+            switch($output['error']) {
                 case 0:
                     return $output;
                 case 1:
@@ -189,8 +189,21 @@ class PhicommBll extends BaseBll
         ];
         $url = env('PHICLOUND_DOMAIN') . 'verificationCode?' . http_build_query($data);
         $res = json_decode(curlGet($url), true);
-        if ($res && $res['error'] > 0) {
-            throw new HifoneException('操作频繁，请1分钟后再试');
+        if ($res) {
+            switch($res['error']) {
+                case 0:
+                    return $res;
+                case 13:
+                    throw new HifoneException('获取验证码失败');
+                case 38:
+                    throw new HifoneException('操作频繁，请1分钟后再试');
+                case 39:
+                    throw new HifoneException('验证码请求超出限制');
+                default:
+                    throw new HifoneException('服务器异常');
+            }
+        } else {
+            throw new HifoneException('获取验证码失败');
         }
     }
 
