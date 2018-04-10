@@ -58,7 +58,8 @@ if (!function_exists('set_active')) {
 
 if (!function_exists('getFirstImageUrl')) {
     function getFirstImageUrl($body) {
-        preg_match_all('/<img[^>]*src=["\']{1}([^"\'>]*)["\'][^>]*>/i', $body, $images);
+        //去掉表情，但是又要允许alt等其他属性
+        preg_match_all('/<img[^>|class="face"]*src=["\']{1}([^"\'>]*)["\'][^>]*>/i', $body, $images);
         $imgUrls = [];
         if (count($images) > 0) {
             foreach ($images[1] as $k => $v) {
