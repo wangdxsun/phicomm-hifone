@@ -145,11 +145,10 @@ class UserController extends Controller
 
     public function update(User $user)
     {
-        $previous_role= $user->roles()->first();
         $userData = Input::get('user');
         $roleId = Input::get('roleId');
         try {
-            \DB::transaction(function () use ($user, $userData, $roleId, $previous_role) {
+            \DB::transaction(function () use ($user, $userData, $roleId) {
                 //修改用户密码，如果未设置则跳过
                 if (array_get($userData, 'password')) {
                     $userData['salt'] = $user->salt;
@@ -158,29 +157,24 @@ class UserController extends Controller
                     unset($userData['password']);
                 }
                 $user->update($userData);
-                if ( null != $previous_role ) {
-                    //从版主改成实习版主
-                    if ($previous_role->name == 'NodeMaster' && Role::find($roleId)->name == 'NodePraMaster' ) {
-                        $user->praModerators()->attach(Moderator::ofUser($user)->get()->pluck('node_id')->toArray());
-                        $user->nodes()->detach(Moderator::ofUser($user)->get()->pluck('node_id')->toArray());
 
-                    }
-                    //从实习版主改成版主
-                    if ($previous_role->name == 'NodePraMaster' && Role::find($roleId)->name == 'NodeMaster' ) {
-                        $user->nodes()->attach(PraModerator::ofUser($user)->get()->pluck('node_id')->toArray());
-                        $user->praModerators()->detach(PraModerator::ofUser($user)->get()->pluck('node_id')->toArray());
-                    }
-
+                $oldRole = $user->roles()->first();
+                $newRole = Role::find($roleId);
+                if ($oldRole && ($oldRole->name == 'NodePraMaster' || $oldRole->name == 'NodeMaster')) {
                     //从版主、实习版主改成非版主
-                    if (($previous_role->name == 'NodePraMaster' || $previous_role->name == 'NodeMaster') && Role::find($roleId)->name != 'NodeMaster' && Role::find($roleId)->name != 'NodePraMaster') {
-                        if ($previous_role->name == 'NodeMaster') {
-                            $user->nodes()->detach(Moderator::ofUser($user)->get()->pluck('node_id')->toArray());
-                        } else {
-                            $user->praModerators()->detach(PraModerator::ofUser($user)->get()->pluck('node_id')->toArray());
-                        }
+                    if (empty($newRole) || $newRole->name <> 'NodeMaster' || $newRole <> 'NodePraMaster') {
+                        $user->moderators()->detach();
+                        $user->praModerators()->detach();
+                    } elseif ($oldRole->name == 'NodeMaster' && $newRole->name == 'NodePraMaster' ) {
+                        //从版主改成实习版主
+                        $user->praModerators()->attach($user->moderators->pluck('id'));
+                        $user->moderators()->detach();
+                    } elseif ($oldRole->name == 'NodePraMaster' && $newRole->name == 'NodeMaster' ) {
+                        //从实习版主改成版主
+                        $user->moderators()->attach($user->praModerators->pluck('id'));
+                        $user->praModerators()->detach();
                     }
                 }
-
                 $user->role_id = $roleId;
                 $this->updateOpLog($user, '修改用户信息');
                 $user->updateIndex();
