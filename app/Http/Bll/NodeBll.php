@@ -109,7 +109,7 @@ class NodeBll extends BaseBll
         $node['hot'] = $hot;
         $node['recent'] = $recent;
         $node['excellent'] = $excellent;
-        $node['moderators'] = [];
+        $node['moderators'] = $moderators;
         $node['praModerators'] = $praModerators;
         $node['subNodes'] = $subNodes;
         $node['followed'] = User::hasFollowNode($node);
