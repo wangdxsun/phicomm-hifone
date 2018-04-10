@@ -152,6 +152,11 @@ class ThreadController extends WebController
      */
     public function update(Thread $thread, ThreadBll $threadBll, WordsFilter $wordsFilter)
     {
+        if (Auth::user()->hasRole('NoComment')) {
+            throw new HifoneException('对不起，你已被管理员禁止发言');
+        } elseif (!Auth::user()->can('manage_threads') && Auth::user()->score < 0) {
+            throw new HifoneException('对不起，你所在的用户组无法发言');
+        }
         //修改帖子标题，版块和正文
         $threadData = request('thread');
         $threadData['node_id'] = SubNode::find($threadData['sub_node_id'])->node->id;
