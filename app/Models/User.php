@@ -443,7 +443,7 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
     }
 
     //根据用户版主信息查询版块信息
-    public function nodes()
+    public function moderators()
     {
         return $this->belongsToMany(Node::class, 'moderators', 'user_id','node_id');
     }

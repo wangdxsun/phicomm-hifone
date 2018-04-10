@@ -41,36 +41,18 @@ class UploadImageCommandHandler
         $localFile = $destinationPath.'/'.$safeName;
         //Path to Original Size
         $safeNameOrig = $random_string.'_orig.'.$extension;
-        //Path to LightBox Size
-        $safeNameLightbox = $random_string.'_lightbox.'.$extension;
         //If dir don't exists, then create
         is_dir($destinationPath) || mkdir($destinationPath, 0777, true);
         // Copy the File for Preserving the Original Image
         copy($file, $destinationPath.'/'.$safeNameOrig);
-        copy($file, $destinationPath.'/'.$safeNameLightbox);
         $file->move($destinationPath, $safeName);
 
-        // If is not gif file, we will try to reduse the file size
-        // This is for the Lightbox Version.
         if (!in_array($file->getClientOriginalExtension(), ['gif', 'webp'])) {
-            // open an image file
-            $imgLb = Image::make($destinationPath.'/'.$safeNameLightbox);
-            // prevent possible upsizing
-            $imgLb->resize(1440, null, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            });
-            // finally we save the image as a new file
-            $imgLb->save();
-        }
-
-        // If is not gif file, we will try to reduse the file size
-        // This is for the Thread Version
-        if (!in_array($file->getClientOriginalExtension(), ['gif', 'webp'])) {
+            ini_set("memory_limit", "256M");
             // open an image file
             $img = Image::make($destinationPath.'/'.$safeName);
             // prevent possible upsizing
-            $img->resize(783, null, function ($constraint) {
+            $img->resize(1440, null, function ($constraint) {
                 $constraint->aspectRatio();
                 $constraint->upsize();
             });

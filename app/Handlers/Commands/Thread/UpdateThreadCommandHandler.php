@@ -87,7 +87,8 @@ class UpdateThreadCommandHandler
             $originalSubNode = SubNode::find($original_subNode_id);
             event(new ThreadWasMovedEvent($thread, $originalSubNode));
         }
-        $thread->updateIndex();
+        $threadForIndex = clone $thread;
+        $threadForIndex->updateIndex();
 
         return $thread;
     }
