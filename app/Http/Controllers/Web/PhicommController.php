@@ -86,6 +86,7 @@ class PhicommController extends WebController
             $commonBll->loginWeb();
             //refreshToken存入用户表
             $user->update(['refresh_token' => $res['refresh_token']]);
+            $user['isAdmin'] = ($user->role =='管理员' || $user->role =='创始人');
 
             return $user;
         } else {
