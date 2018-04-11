@@ -368,6 +368,9 @@ trait ElasticquentTrait
      */
     public function addToIndex()
     {
+        if ($this instanceof Thread) {
+            $this->body = strip_tags($this->body);
+        }
         if (!$this->exists) {
             throw new Exception('Document does not exist.');
         }
