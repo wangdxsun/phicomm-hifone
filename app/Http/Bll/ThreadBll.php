@@ -254,6 +254,10 @@ class ThreadBll extends BaseBll
         $updateData['body'] = $threadData['body'];
         $updateData['excerpt'] = Thread::makeExcerpt($threadData['body']);
         $updateData['sub_node_id'] = $threadData['sub_node_id'];
+        $updateData['created_at'] = Carbon::now()->toDateTimeString();
+        $updateData['edit_time'] = Carbon::now()->toDateTimeString();
+        $updateData['updated_at'] = Carbon::now()->toDateTimeString();
+
         $thread->update($updateData);
 
         //发布的是投票贴
