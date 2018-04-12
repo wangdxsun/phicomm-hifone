@@ -49,7 +49,12 @@ class AppServiceProvider extends ServiceProvider
 
         \DB::listen(function($event) {
             if (env('APP_ENV', 'production') == 'local') {
-                $sql = str_replace("?", "'%s'", $event->sql);
+                foreach ($event->bindings as $key => $binding) {
+                    if ($binding instanceof \DateTime) {
+                        $event->bindings[$key] = $binding->format('Y/m/d H:i:s');
+                    }
+                }
+                $sql = str_replace(['?'], ["'%s'"], $event->sql);
                 $log = vsprintf($sql, $event->bindings);
                 \Log::info($log);
             }
