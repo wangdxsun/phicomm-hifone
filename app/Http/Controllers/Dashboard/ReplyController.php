@@ -125,7 +125,6 @@ class ReplyController extends Controller
         $replyData = Input::get('reply');
 
         $replyData['body_original'] = $replyData['body'];
-        $replyData['body'] = (new Markdown())->convertMarkdownToHtml($replyData['body']);
 
         try {
             dispatch(new UpdateReplyCommand($reply, $replyData));

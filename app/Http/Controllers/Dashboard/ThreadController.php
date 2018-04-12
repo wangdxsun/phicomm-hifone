@@ -143,7 +143,6 @@ class ThreadController extends Controller
         $threadData['node_id'] = SubNode::find($threadData['sub_node_id'])->node->id;
 
         $threadData['body_original'] = $threadData['body'];
-        $threadData['body'] = (new Markdown())->convertMarkdownToHtml($threadData['body']);
         $threadData['excerpt'] = Thread::makeExcerpt($threadData['body']);
 
         try {
