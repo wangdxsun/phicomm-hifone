@@ -210,6 +210,7 @@ class ThreadBll extends BaseBll
         $updateData['node_id'] = $node_id;
         $updateData['title'] = array_get($threadData, 'title');
         $updateData['body'] = $threadData['body'];
+        $updateData['excerpt'] = Thread::makeExcerpt($threadData['body']);
         $updateData['sub_node_id'] = array_get($threadData, 'sub_node_id');
         //更新草稿贴编辑时间
         $updateData['edit_time'] = Carbon::now()->toDateTimeString();
@@ -251,6 +252,7 @@ class ThreadBll extends BaseBll
         $updateData['node_id'] = SubNode::find($threadData['sub_node_id'])->node_id;
         $updateData['title'] = $threadData['title'];
         $updateData['body'] = $threadData['body'];
+        $updateData['excerpt'] = Thread::makeExcerpt($threadData['body']);
         $updateData['sub_node_id'] = $threadData['sub_node_id'];
         $thread->update($updateData);
 
@@ -356,7 +358,10 @@ class ThreadBll extends BaseBll
         $post = $thread->title.$thread->body;
         $badWord = '';
         //新增判断逻辑：不具有免审核权限的用户才需要自动审核
-        if (!Auth::user()->can('free_audit') && Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($post)) || $this->isContainsImageOrUrl($post)) {
+        if (!Auth::user()->can('free_audit')
+            && Config::get('setting.auto_audit', 0) == 0
+            || ($badWord = $wordsFilter->filterWord($post))
+            || $this->isContainsImageOrUrl($post)) {
             $thread->bad_word = $badWord;
         } else {
             $this->autoAudit($thread);

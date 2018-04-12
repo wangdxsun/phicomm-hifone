@@ -171,13 +171,12 @@ class ThreadController extends WebController
 
         $this->updateOpLog($thread, '修改帖子');
         $thread = dispatch(new UpdateThreadCommand($thread, $threadData));
-        //管理员编辑用户帖子，免审核；管理员编辑自己或用户编辑自己重新进入审核系统
-        if (Auth::user()->hasRole(['Admin', 'Founder']) && Auth::id() <> $thread->user_id) {
-            $msg = '发帖成功';
-        } else {
+
+        //管理员编辑帖子免审核(含编辑自己待审核)，用户编辑后重新审核
+        if (!Auth::user()->hasRole(['Admin', 'Founder'])) {
             $thread = $threadBll->auditThread($thread, $wordsFilter);
-            $msg = $thread->status == Thread::VISIBLE ? '发帖成功' : '已提交，待审核';
         }
+        $msg = $thread->status == Thread::VISIBLE ? '发帖成功' : '帖子已提交，待审核';
         return [
             'msg' => $msg,
             'thread' => $thread

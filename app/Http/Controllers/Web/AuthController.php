@@ -41,7 +41,6 @@ class AuthController extends WebController
             throw new HifoneException('该账号已被锁定，请'. intval($second / 60) . '分'. $second % 60 .'秒后再试');
         }
 
-
         $this->validate(request(), [
             'username' => 'required',
             'password' => 'required',
@@ -70,7 +69,7 @@ class AuthController extends WebController
                 Auth::logout();
                 throw new HifoneException('您已被系统管理员禁止登录');
             }
-            //TODO 禁止普通用户通过auth登录
+            //禁止普通用户通过auth登录
             if (!(Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Founder'))) {
                 Auth::logout();
                 throw new HifoneException('您现在已经不是管理员了~');
