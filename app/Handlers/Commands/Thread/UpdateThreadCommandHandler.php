@@ -90,7 +90,11 @@ class UpdateThreadCommandHandler
             event(new ThreadWasMovedEvent($thread, $originalSubNode));
         }
         $threadForIndex = clone $thread;
-        $threadForIndex->updateIndex();
+        if ($thread->status == Thread::VISIBLE) {
+            $threadForIndex->updateIndex();
+        } else {
+            $threadForIndex->removeFromIndex();
+        }
 
         return $thread;
     }
