@@ -60,11 +60,13 @@ class UpdateThreadCommandHandler
         }
         //更新编辑时间 if (created_at != edit_time) 帖子被修改过
         $command->data['edit_time'] = Carbon::now()->toDateTimeString();
-        //普通用户编辑状态回退、精华失效
+
+        //用户编辑状态回退、精华失效
         if (!Auth::user()->hasRole(['Admin', 'Founder'])) {
             $command->data['status'] = Thread::AUDIT;
             $command->data['is_excellent'] = 0;
         }
+
         //投票贴相关参数（除选项外）
         unset($command->data['options']);
         if ($thread->is_vote == 0) {//非投票贴
