@@ -538,7 +538,8 @@ class ThreadBll extends BaseBll
         try {
             $thread->status = Thread::VISIBLE;
             $this->updateOpLog($thread, '自动审核通过');
-            $thread->addToIndex();
+            $threadForIndex = clone $thread;
+            $threadForIndex->addToIndex();
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
             if ($thread->subNode) {
                 $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);

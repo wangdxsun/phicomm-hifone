@@ -48,7 +48,7 @@ class AppServiceProvider extends ServiceProvider
         Carbon::setLocale('zh');
 
         \DB::listen(function($event) {
-            if (env('APP_DEBUG')) {
+            if (env('APP_ENV', 'production') == 'local') {
                 $sql = str_replace("?", "'%s'", $event->sql);
                 $log = vsprintf($sql, $event->bindings);
                 \Log::info($log);
