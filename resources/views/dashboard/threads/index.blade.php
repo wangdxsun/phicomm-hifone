@@ -110,7 +110,7 @@
                                     @if(!isset($thread->user))
                                         {{ '' }}
                                     @else
-                                        <a href="{{ $thread->user->url }}" target="_blank">{{ $thread->user->username }}</a>
+                                        <a href="{{ route('user.show', ['id'=>$thread->user->id]) }}" target="_blank">{{ $thread->user->username }}</a>
                                     @endif
                                 </td>
                                 <td>{{ $thread->channel == 0 ? "社区" : "意见反馈" }}</td>
