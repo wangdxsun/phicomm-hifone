@@ -43,6 +43,7 @@ class UpdateThreadCommandHandler
     public function handle(UpdateThreadCommand $command)
     {
         $thread = $command->thread;
+        $oldStatus = $thread->status;
         $original_subNode_id = $thread->sub_node_id;//帖子更新前的子版块id
 
         if (isset($command->data['body']) && $command->data['body']) {
@@ -59,6 +60,7 @@ class UpdateThreadCommandHandler
             $command->data['thumbnails'] = getFirstImageUrl($command->data['body_original']);
         }
         //更新编辑时间 if (created_at != edit_time) 帖子被修改过
+
         $command->data['edit_time'] = Carbon::now()->toDateTimeString();
 
         //用户编辑状态回退、精华失效
@@ -85,15 +87,24 @@ class UpdateThreadCommandHandler
         $thread->update($this->filter($command->data));
         $tags = isset($command->data['tags']) ? $command->data['tags'] : [];
         app(AddTag::class)->attach($thread, $tags);
+
         if (isset($command->data['sub_node_id']) && $original_subNode_id != intval($command->data['sub_node_id']) ) {
             $originalSubNode = SubNode::find($original_subNode_id);
             event(new ThreadWasMovedEvent($thread, $originalSubNode));
         }
         $threadForIndex = clone $thread;
-        if ($thread->status == Thread::VISIBLE) {
-            $threadForIndex->updateIndex();
+        if ($oldStatus == Thread::VISIBLE) {
+            //从审核通过到审核通过和审核中
+            if ($thread->status == Thread::VISIBLE) {
+                $threadForIndex->updateIndex();
+            } else {
+                $threadForIndex->removeFromIndex();
+            }
         } else {
-            $threadForIndex->removeFromIndex();
+            //从审核中到审核通过和审核中
+            if ($thread->status == Thread::VISIBLE) {
+                $threadForIndex->addToIndex();
+            }
         }
 
         return $thread;

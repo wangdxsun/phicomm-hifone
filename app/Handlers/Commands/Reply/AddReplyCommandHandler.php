@@ -12,11 +12,8 @@
 namespace Hifone\Handlers\Commands\Reply;
 
 use Carbon\Carbon;
-use Hifone\Commands\Image\UploadBase64ImageCommand;
 use Hifone\Commands\Reply\AddReplyCommand;
 use Hifone\Models\Reply;
-use Hifone\Services\Dates\DateFactory;
-use Input;
 
 class AddReplyCommandHandler
 {

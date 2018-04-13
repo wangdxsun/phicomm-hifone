@@ -8,7 +8,6 @@
 
 namespace Hifone\Http\Bll;
 
-use Carbon\Carbon;
 use Hifone\Commands\Image\UploadBase64ImageCommand;
 use Hifone\Events\Chat\NewChatMessageEvent;
 use Hifone\Exceptions\HifoneException;

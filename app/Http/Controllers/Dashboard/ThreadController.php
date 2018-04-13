@@ -138,21 +138,24 @@ class ThreadController extends Controller
      */
     public function update(Thread $thread)
     {
+
         //修改帖子标题，版块和正文
         $threadData = Input::get('thread');
         $threadData['node_id'] = SubNode::find($threadData['sub_node_id'])->node->id;
 
         $threadData['body_original'] = $threadData['body'];
-        $threadData['excerpt'] = Thread::makeExcerpt($threadData['body']);
 
+        $threadData['excerpt'] = Thread::makeExcerpt($threadData['body']);
         try {
             $this->updateOpLog($thread, '修改帖子');
+
             dispatch(new UpdateThreadCommand($thread, $threadData));
         } catch (\Exception $e) {
             return Redirect::route('dashboard.thread.edit', $thread->id)
                 ->withInput($threadData)
                 ->withErrors($e->getMessage());
         }
+
         if ($thread->status == Thread::VISIBLE) {
             return Redirect::route('dashboard.thread.index')->withSuccess('恭喜，操作成功！');
         }
