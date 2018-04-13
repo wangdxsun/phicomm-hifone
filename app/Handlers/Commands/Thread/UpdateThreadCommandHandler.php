@@ -55,12 +55,9 @@ class UpdateThreadCommandHandler
             if (Agent::match('iPhone') || Agent::match('Android')) {
                 $command->data['body'] = app('parser.link')->parse($command->data['body']);
             }
-
-            //过滤数据中的空字段，并且更新帖子
             $command->data['thumbnails'] = getFirstImageUrl($command->data['body_original']);
         }
         //更新编辑时间 if (created_at != edit_time) 帖子被修改过
-
         $command->data['edit_time'] = Carbon::now()->toDateTimeString();
 
         //用户编辑状态回退、精华失效
@@ -83,8 +80,9 @@ class UpdateThreadCommandHandler
             unset($command->data['option_max']);
             unset($command->data['vote_start']);
         }
-
+        //过滤数据中的空字段，并且更新帖子
         $thread->update($this->filter($command->data));
+
         $tags = isset($command->data['tags']) ? $command->data['tags'] : [];
         app(AddTag::class)->attach($thread, $tags);
 
