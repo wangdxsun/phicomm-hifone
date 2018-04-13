@@ -18,7 +18,6 @@ use Hifone\Models\Role;
 use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
 use Hifone\Services\Filter\WordsFilter;
-use Hifone\Services\Parsers\Markdown;
 use Illuminate\Foundation\Testing\HttpException;
 use Illuminate\Support\Facades\Redis;
 
@@ -267,21 +266,26 @@ class ThreadController extends WebController
 
     public function pin(Thread $thread)
     {
-        if ($thread->order > 0) {
-            $thread->decrement('order', 1);
+        if ($thread->order == 1) {
+            //已经是全局置顶，取消全局置顶
+            $thread->update(['order' => 0]);
             $this->updateOpLog($thread, '取消置顶');
-        } elseif ($thread->order == 0) {
-            $thread->increment('order', 1);
+        } elseif ($thread->order == 0 ) {
+            //不是全局置顶,判断是否是版块置顶
+            if($thread->node_order == 1) {
+                $thread->update(['node_order' => 0]);
+            }
+            $thread->update(['order' => 1]);
             $this->updateOpLog($thread, '置顶');
             event(new ThreadWasPinnedEvent($thread));
             event(new PinWasAddedEvent($thread->user, 'Thread'));
         } elseif ($thread->order < 0) {
-            $thread->increment('order', 2);
+            //全局下沉
+            $thread->update(['order' => 1]);
             $this->updateOpLog($thread, '置顶');
             event(new ThreadWasPinnedEvent($thread));
             event(new PinWasAddedEvent($thread->user, 'Thread'));
         }
-
         return ['pin' => $thread->order > 0 ? true : false];
     }
 

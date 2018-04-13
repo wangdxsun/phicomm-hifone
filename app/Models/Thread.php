@@ -86,6 +86,8 @@ class Thread extends BaseModel implements TaggableInterface
         'view_voting',
         'view_vote_finish',
         'vote_count',
+        'order',
+        'node_order'
     ];
 
     protected $hidden = ['body_original', 'bad_word', 'is_blocked', 'heat_offset', 'follower_count', 'ip',
@@ -417,7 +419,7 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function getNodePinAttribute()
     {
-        return $this->order == 2  ? 'fa fa-hand-pointer-o text-danger' : 'fa fa-hand-pointer-o';
+        return $this->node_order == 1  ? 'fa fa-hand-pointer-o text-danger' : 'fa fa-hand-pointer-o';
     }
 
     public function getExcellentAttribute()
