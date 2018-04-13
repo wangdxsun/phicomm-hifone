@@ -580,9 +580,9 @@ class ThreadBll extends BaseBll
             $optionIds = explode(',', $select);
             $options = Option::whereIn('id',$optionIds)->where('thread_id',$thread->id)->get();
             if ($thread->option_max < count($options)) {
-                throw new HttpException('选项数超过上限');
-            } elseif (0 == count($optionIds)) {
-                throw new HttpException('选项数不足');
+                throw new HttpException('最多选择' . $thread->option_max . '项');
+            } elseif (0 == count($options)) {
+                throw new HttpException('请选择选项');
             }
             foreach ($options as $option) {
                 OptionUser::create([
