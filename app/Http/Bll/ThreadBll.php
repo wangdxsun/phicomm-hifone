@@ -175,7 +175,7 @@ class ThreadBll extends BaseBll
         if (1 == array_get($threadData, 'is_vote')) {
             $threadTemp->update([
                 'is_vote' => 1,
-                'option_max' => array_get($threadData, 'option_max', 1),
+                'option_max' => array_get($threadData, 'option_max'),
                 'vote_start' => array_get($threadData, 'vote_start'),
                 'vote_end' => array_get($threadData, 'vote_end'),
                 'vote_level' => array_get($threadData, 'vote_level', 0),
@@ -221,7 +221,7 @@ class ThreadBll extends BaseBll
         if (1 == $thread->is_vote) {
             $thread->update([
                 'is_vote' => 1,
-                'option_max' => array_get($threadData, 'option_max', 1),
+                'option_max' => array_get($threadData, 'option_max'),
                 'vote_start' => array_get($threadData, 'vote_start'),
                 'vote_end' => array_get($threadData, 'vote_end'),
                 'vote_level' => array_get($threadData, 'vote_level', 0),
@@ -568,7 +568,7 @@ class ThreadBll extends BaseBll
             throw new HifoneException('您已投票，请勿重复投票');
         }
         if (!$this->canVote($thread)) {
-            throw new HifoneException('对不起，你的级别不可参与此次投票');
+            throw new HifoneException('你的级别不可参与此次投票');
         }
         if (Carbon::now()->toDateTimeString() < $thread->vote_start) {
             throw new HifoneException('投票还未开始');

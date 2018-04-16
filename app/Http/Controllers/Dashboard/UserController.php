@@ -202,7 +202,7 @@ class UserController extends Controller
     //禁言或取消禁言
     public function comment(User $user)
     {
-        $user->role_id = ($user->role_id == Role::NO_COMMENT) ? Role::REGISTER_USER : Role::NO_COMMENT;
+        $user->role_id = ($user->role_id == Role::NO_COMMENT) ? Role::USER : Role::NO_COMMENT;
         $this->updateOpLog($user, $user->role_id ? '取消禁言' : '禁言');
         $user->updateIndex();
         return Redirect::back()->withSuccess('修改成功');
@@ -211,7 +211,7 @@ class UserController extends Controller
     //禁止登录或者取消登录
     public function login(User $user)
     {
-        $user->role_id = ($user->role_id == Role::NO_LOGIN) ? Role::REGISTER_USER : Role::NO_LOGIN;
+        $user->role_id = ($user->role_id == Role::NO_LOGIN) ? Role::USER : Role::NO_LOGIN;
         $this->updateOpLog($user, $user->role_id ? '取消禁止登录' : '禁止登录');
         $user->updateIndex();
         return Redirect::back()->withSuccess('修改成功');
