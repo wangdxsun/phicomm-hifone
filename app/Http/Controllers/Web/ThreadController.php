@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Redis;
 
 class ThreadController extends WebController
 {
+    //帖子列表（首页最热）
     public function index(CommonBll $commonBll)
     {
         $commonBll->loginWeb();
@@ -31,6 +32,7 @@ class ThreadController extends WebController
         return $threads;
     }
 
+    //帖子列表（首页最新）
     public function recent()
     {
         $threads = Thread::visible()->with(['user', 'node'])->recentEdit()->paginate();
