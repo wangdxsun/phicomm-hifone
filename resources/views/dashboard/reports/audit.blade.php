@@ -37,7 +37,7 @@
                                     <div class="collapse well" id="report{{ $report->id }}">{{ $report->reportable->report }}</div>
                                 @endif
                             </td>
-                            <td><a href="{{ $report->user->url }}">{{ $report->user->username }}</a></td>
+                            <td><a href="{{ route('user.show', ['id'=>$report->user->id]) }}" target="_blank">{{  $report->user->username  }}</a></td>
                             <td>{{ $report->reason }}</td>
                             <td>{{ $report->created_at }}</td>
                             <td>

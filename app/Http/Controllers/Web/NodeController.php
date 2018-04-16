@@ -83,13 +83,15 @@ class NodeController extends WebController
      * 版块热帖推荐
      * @param Node $node
      */
+    //版块推荐（全局置顶、版块置顶、热度值、创建时间、前五个）
     public function recommendThreadsOfNode(Node $node)
     {
-        $threads = Thread::visible()->ofNode($node)->hot()->limit(5)->get();
+        $threads = Thread::visible()->ofNode($node)->nodeHot()->limit(5)->get();
 
         return $threads;
     }
 
+    //版块最热（全局置顶、版块置顶、热度值、创建时间）
     public function hot(Node $node)
     {
         $threads = $this->nodeBll->hotThreadsOfNode($node);
@@ -97,6 +99,7 @@ class NodeController extends WebController
         return $threads;
     }
 
+    //版块最新（创建时间）
     public function recent(Node $node)
     {
         $threads = $this->nodeBll->recentThreadsOfNode($node);

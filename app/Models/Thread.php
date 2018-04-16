@@ -86,6 +86,8 @@ class Thread extends BaseModel implements TaggableInterface
         'view_voting',
         'view_vote_finish',
         'vote_count',
+        'order',
+        'node_order'
     ];
 
     protected $hidden = ['body_original', 'bad_word', 'is_blocked', 'heat_offset', 'follower_count', 'ip',
@@ -320,9 +322,16 @@ class Thread extends BaseModel implements TaggableInterface
             ->get();
     }
 
+    //首页最热（全局置顶、热度值降序、时间倒序）
     public function scopeHot($query)
     {
         return $query->orderBy('order', 'desc')->orderBy('heat', 'desc')->orderBy('created_at', 'desc');
+    }
+
+    //版块最热（全局置顶、版块置顶、热度值降序、时间倒序）
+    public function scopeNodeHot($query)
+    {
+        return $query->orderBy('order', 'desc')->orderBy('node_order', 'desc')->orderBy('heat', 'desc')->orderBy('created_at', 'desc');
     }
 
     public function scopePinAndRecent($query)
@@ -340,20 +349,20 @@ class Thread extends BaseModel implements TaggableInterface
         return $query->orderBy('created_at', 'desc');
     }
 
-    //原生化新帖榜
+    //原生化新帖榜（48小时、热度值倒序、创建时间倒序）
     public function scopeNewRank($query)
     {
         return $query->where('created_at', '>', Carbon::now()->subDays(2))
             ->limit(50)->orderBy('heat', 'desc')->orderBy('created_at', 'desc');
     }
 
-    //最新列表和个人中心列表按照edit_time倒序排列
+    //最新列表和个人中心列表按照edit_time倒序排列（首页、版块最新--创建时间倒序）
     public function scopeRecentEdit($query)
     {
         return $query->orderBy('edit_time', 'desc');
     }
 
-    //精华帖子
+    //精华帖子（首页、主板块--加精时间倒序、创建时间倒序）
     public function scopeExcellent($query)
     {
         return $query->where('is_excellent', 1)->orderBy('excellent_time', 'desc')->orderBy('created_at', 'desc');
@@ -417,7 +426,7 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function getNodePinAttribute()
     {
-        return $this->order == 2  ? 'fa fa-hand-pointer-o text-danger' : 'fa fa-hand-pointer-o';
+        return $this->node_order == 1  ? 'fa fa-hand-pointer-o text-danger' : 'fa fa-hand-pointer-o';
     }
 
     public function getExcellentAttribute()

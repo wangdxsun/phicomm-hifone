@@ -88,7 +88,7 @@
                                     </div>
                                 @endif
                             </td>
-                            <td><a href="{{ $reply->user->url }}">{{ $reply->user->username }}</a></td>
+                            <td><a href="{{ route('user.show', ['id'=>$reply->user->id]) }}" target="_blank">{{  $reply->user->username  }}</a></td>
                             <td>{{ $reply->ip }}</td>
                             <td>{{ $reply->created_at }}</td>
                             <td>{{ $reply->lastOpUser->username }}</td>

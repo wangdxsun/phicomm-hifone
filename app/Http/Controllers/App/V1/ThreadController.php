@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Redis;
 
 class ThreadController extends AppController
 {
+    //帖子列表（首页最热）
     public function index(CommonBll $commonBll)
     {
         $commonBll->loginApp();

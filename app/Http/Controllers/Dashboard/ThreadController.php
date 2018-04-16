@@ -164,38 +164,45 @@ class ThreadController extends Controller
 
     public function pin(Thread $thread)
     {
-        if ($thread->order >= 1) {
-            $thread->decrement('order', 1);
+        if ($thread->order == 1) {
+            //已经是全局置顶，取消全局置顶
+            $thread->update(['order' => 0]);
             $this->updateOpLog($thread, '取消置顶');
-        } elseif ($thread->order == 0) {
-            $thread->increment('order', 1);
+        } elseif ($thread->order == 0 ) {
+            //不是全局置顶,判断是否是版块置顶
+            if($thread->node_order == 1) {
+                $thread->update(['node_order' => 0]);
+            }
+            $thread->update(['order' => 1]);
             $this->updateOpLog($thread, '置顶');
             event(new ThreadWasPinnedEvent($thread));
             event(new PinWasAddedEvent($thread->user, 'Thread'));
         } elseif ($thread->order < 0) {
-            $thread->increment('order', 2);
+            //全局下沉
+            $thread->update(['order' => 1]);
             $this->updateOpLog($thread, '置顶');
             event(new ThreadWasPinnedEvent($thread));
             event(new PinWasAddedEvent($thread->user, 'Thread'));
         }
-
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
     //板块置顶帖子
     public function nodePin(Thread $thread)
     {
-        if ($thread->order == 1) {
-            $thread->increment('order', 1);
-        } elseif ($thread->order == 0) {
-            $thread->increment('order', 2);
-            //event(new NodePinWasAddedEvent($thread->user, 'thread_node_pin'));
-        } elseif ($thread->order == 2) {
-            $thread->decrement('order', 2);
-            //event(new NodePinWasAddedEvent($thread->user, 'thread_node_pin'));
-        } elseif ($thread->order < 0 ) {
-            $thread->update(['order' => 2]);
-            //event(new NodePinWasAddedEvent($thread->user, 'thread_node_pin'));
+        if ($thread->node_order == 1) {
+            //已经是版块置顶需要取消板块置顶
+            $thread->update(['order' => 0]);
+            $thread->update(['node_order' => 0]);
+        } else {
+            //不是版块置顶，是全局置顶
+            if ($thread->order == 1) {
+                $thread->update(['order' => 0]);
+                $thread->update(['node_order' => 1]);
+            } else {
+              //不是版块置顶也不是全局置顶
+                $thread->update(['node_order' => 1]);
+            }
         }
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }

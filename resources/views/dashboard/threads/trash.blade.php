@@ -82,7 +82,7 @@
                             <td>{{ $thread->id }}</td>
                             <td><a href="{{ $thread->url }}" target="_blank" ><i class="{{ $thread->icon }}"></i> {{ $thread->title }}</a></td>
                             <td><a href="{{ $thread->node->url }}" target="_blank">{{ $thread->node->name }}</a></td>
-                            <td><a href="{{ $thread->user->url }}" target="_blank">{{ $thread->user->username }}</a></td>
+                            <td><a href="{{ route('user.show', ['id'=>$thread->user->id]) }}" target="_blank">{{  $thread->user->username  }}</a></td>
                             <td>{{ $thread->channel == 0 ? "社区" : "意见反馈" }}</td>
                             <td>
                                 @if(sizeof($thread->dev_info) > 0)

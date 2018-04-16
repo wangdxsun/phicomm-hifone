@@ -33,6 +33,7 @@ class NodeBll extends BaseBll
         return $threads;
     }
 
+    //主板块最新
     public function recentThreadsOfNode(Node $node)
     {
         $threads = Thread::visible()->ofNode($node)->recentEdit()->with(['user', 'subNode'])->paginate();
@@ -40,9 +41,10 @@ class NodeBll extends BaseBll
         return $threads;
     }
 
+    //主板块最热
     public function hotThreadsOfNode(Node $node)
     {
-        $threads = Thread::visible()->ofNode($node)->hot()->with(['user', 'subNode'])->paginate();
+        $threads = Thread::visible()->ofNode($node)->nodeHot()->with(['user', 'subNode'])->paginate();
 
         return $threads;
     }
@@ -126,7 +128,7 @@ class NodeBll extends BaseBll
 
     public function hotThreadsOfSubNode(SubNode $subNode)
     {
-        $threads = Thread::visible()->ofSubNode($subNode)->hot()->with(['user', 'subNode'])->paginate();
+        $threads = Thread::visible()->ofSubNode($subNode)->nodeHot()->with(['user', 'subNode'])->paginate();
 
         return $threads;
     }
