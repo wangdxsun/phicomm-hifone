@@ -305,6 +305,7 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         } else {
             $this->roles()->sync([$roleId]);
         }
+        unset($this->roles); //修改roleId之后强制重新读取数据库中的roles
     }
 
     public function getRoleAttribute()
