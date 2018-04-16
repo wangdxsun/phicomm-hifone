@@ -568,7 +568,7 @@ class ThreadBll extends BaseBll
             throw new HifoneException('您已投票，请勿重复投票');
         }
         if (!$this->canVote($thread)) {
-            throw new HifoneException('对不起，你的级别不可参与此次投票');
+            throw new HifoneException('你的级别不可参与此次投票');
         }
         if (Carbon::now()->toDateTimeString() < $thread->vote_start) {
             throw new HifoneException('投票还未开始');
