@@ -41,7 +41,7 @@ class AdminGroupController extends Controller
      */
     public function index()
     {
-        $roles = Role::adminGroup()->get();
+        $roles = Role::adminGroup()->with(['permissions', 'user'])->get();
 
         return View::make('dashboard.groups.admins.index')
             ->withRoles($roles);

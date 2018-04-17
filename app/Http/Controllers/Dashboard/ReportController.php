@@ -52,7 +52,7 @@ class ReportController extends Controller
 
     public function audit()
     {
-        $reports = Report::audit()->orderBy('created_at', 'desc')->paginate(20);
+        $reports = Report::audit()->with(['reportable', 'user'])->orderBy('created_at', 'desc')->paginate(20);
 
         return View::make('dashboard.reports.audit')
             ->withReports($reports)

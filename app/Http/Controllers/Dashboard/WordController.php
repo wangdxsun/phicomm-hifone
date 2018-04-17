@@ -51,7 +51,7 @@ class WordController extends Controller
         });
         $types = Word::$types;
         $statuses = Word::$statuses;
-        $words = Word::orderBy('created_at', 'desc')->search($search)->paginate(20);
+        $words = Word::with('lastOpUser')->orderBy('created_at', 'desc')->search($search)->paginate(20);
         $wordCount = Word::search($search)->count();
         return View::make('dashboard.words.index')
             ->withPageTitle(trans('dashboard.words.word'))

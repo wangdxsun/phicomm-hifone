@@ -101,7 +101,7 @@
                                     <a href="/dashboard/user/{{ $user->id }}/edit" title="编辑"><i class="fa fa-pencil"></i></a>
                                     <a data-url="/dashboard/user/{{ $user->id }}/comment" data-method="post" title="禁止发言"><i class="{{ $user->comment }}"></i></a>
                                     <a data-url="/dashboard/user/{{ $user->id }}/login" data-method="post" title="禁止登录"><i class="{{ $user->login }}"></i></a>
-                                    <span class="tag_info" @click="editTag({{ $user->id }}, {{ json_encode($user->tags()->whereNull('channel')->get()->pluck('id')->toArray()) }})" data-id="{{$user->id}}" data-tags="{{ $user->tags()->whereNull('channel')->get()->implode('id', ',') }}"><i class="fa fa-tag"></i></span>
+                                    <span class="tag_info" @click="editTag({{ $user->id }}, {{ json_encode($user->tags->pluck('id')->toArray()) }})"><i class="fa fa-tag"></i></span>
                                 @endif
                             @endif
                         </td>

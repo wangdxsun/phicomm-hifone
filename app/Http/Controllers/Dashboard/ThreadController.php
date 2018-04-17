@@ -61,8 +61,8 @@ class ThreadController extends Controller
             $threads = Thread::visible()->search($search)->with('node', 'user', 'lastOpUser', 'subNode')->orderBy('last_op_time', 'desc')->paginate(20);
         }
 
-        $sections = Section::orderBy('order')->get();
-        $nodes = Node::orderBy('order')->get();
+        $sections = Section::orderBy('order')->with('nodes')->get();
+        $nodes = Node::orderBy('order')->with('subNodes')->get();
         $orderTypes = Thread::$orderTypes;
         $threadCount = Thread::visible()->count();
         return View::make('dashboard.threads.index')
@@ -103,7 +103,7 @@ class ThreadController extends Controller
         $threadAll = Thread::trash()->get();
         $userIds = array_unique(array_column($threadAll->toArray(), 'user_id'));
         $operators = array_unique(array_column($threadAll->toArray(), 'last_op_user_id'));
-        $sections = Section::orderBy('order')->get();
+        $sections = Section::orderBy('order')->with('nodes')->get();
         $orderTypes = Thread::$orderTypes;
 
         return view('dashboard.threads.trash')
