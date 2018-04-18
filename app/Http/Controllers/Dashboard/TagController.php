@@ -21,7 +21,7 @@ class TagController extends Controller
     public function index()
     {
         //所有的用户标签
-        $tags = Tag::whereIn('type', TagType::ofType([TagType::USER, TagType::AUTO])->pluck('id'))->get();
+        $tags = Tag::whereIn('type', TagType::ofType([TagType::USER, TagType::AUTO])->pluck('id'))->with('tagType')->get();
         return View::make('dashboard.tags.index')
             ->with('tags', $tags)
             ->withCurrentMenu('tag')
@@ -32,7 +32,7 @@ class TagController extends Controller
     public function user()
     {
         //所有的用户标签
-        $tags = Tag::whereIn('type', TagType::ofType([TagType::USER, TagType::AUTO])->pluck('id'))->get();
+        $tags = Tag::whereIn('type', TagType::ofType([TagType::USER, TagType::AUTO])->pluck('id'))->with('tagType')->get();
         return View::make('dashboard.tags.index')
             ->with('tags', $tags)
             ->withCurrentMenu('tag')

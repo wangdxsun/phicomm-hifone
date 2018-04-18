@@ -44,12 +44,6 @@ class UserController extends Controller
             'current_menu'  => 'users',
         ]);
     }
-
-    /**
-     * Shows the users view.
-     *
-     * @return \Illuminate\View\View
-     */
     public function index()
     {
         $search = $this->filterEmptyValue(Input::get('user'));
@@ -59,27 +53,25 @@ class UserController extends Controller
             $search['tags'] = explode(',', $search['tags']);
         }
 
-        if ( array_get($tagCount, 'tagCount') != "" ) {
-            if( count(array_get($search, 'tags')) >  array_get($tagCount, 'tagCount') ) {
+        if (array_get($tagCount, 'tagCount')) {
+            if( count(array_get($search, 'tags')) > $tagCount['tagCount'] ) {
                 return Redirect::route('dashboard.user.index')->withErrors('具体的标签不能大于选择的标签个数');
             } else {
-                $users = User::has('tags', '=', array_get($tagCount, 'tagCount'))->search($search)->with('roles', 'lastOpUser')->paginate(20);
+                $users = User::has('tags', '=', $tagCount['tagCount'])->search($search)->with(['roles', 'lastOpUser', 'tags'])->paginate(20);
             }
         } else {
-            $users = User::search($search)->with('roles', 'lastOpUser')->paginate(20);
+            $users = User::search($search)->with(['roles', 'lastOpUser', 'tags'])->paginate(20);
         }
-        $roles = Role::all();
         $orderTypes = User::$orderTypes;
         //传入所有用户标签类
-        $userTagTypes = TagType::ofType([UserController::USER])->with('tags')->get();
+        $userTagTypes = TagType::ofType([self::USER])->with('tags')->get();
         //传入标签个数的数组
-        $tagCounts = range(1, count(Tag::whereIn('type', TagType::ofType([TagType::USER])->pluck('id')->toArray())->get()));
+        $tagCounts = range(1, Tag::whereIn('type', TagType::ofType([TagType::USER])->pluck('id')->toArray())->count());
 
         return View::make('dashboard.users.index')
             ->withPageTitle(trans('dashboard.users.users').' - '.trans('dashboard.dashboard'))
             ->withUsers($users)
             ->with('orderTypes',$orderTypes)
-            ->withRoles($roles)
             ->with('userTagTypes', $userTagTypes)
             ->withSearch($search)
             ->with('tagCounts', $tagCounts)

@@ -26,7 +26,7 @@ class SubNodeController extends Controller
 
     public function index()
     {
-        $subNodes = SubNode::orderBy('order')->get();
+        $subNodes = SubNode::orderBy('order')->with(['node'])->get();
 
         return View::make('dashboard.subNodes.index')
             ->withPageTitle('子版块管理')

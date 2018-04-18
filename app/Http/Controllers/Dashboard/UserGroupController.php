@@ -41,7 +41,7 @@ class UserGroupController extends Controller
      */
     public function index()
     {
-        $roles = Role::userGroup()->get();
+        $roles = Role::userGroup()->with(['permissions', 'user'])->get();
 
         return View::make('dashboard.groups.users.index')
             ->withRoles($roles);

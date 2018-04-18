@@ -47,7 +47,7 @@ class NodeController extends Controller
      */
     public function index()
     {
-        $nodes = Node::orderBy('order')->get();
+        $nodes = Node::orderBy('order')->with(['section', 'moderators', 'praModerators'])->get();
 
         return View::make('dashboard.nodes.index')
         ->withPageTitle('主版块管理')
