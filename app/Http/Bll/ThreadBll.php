@@ -210,6 +210,7 @@ class ThreadBll extends BaseBll
         $updateData['node_id'] = $node_id;
         $updateData['title'] = array_get($threadData, 'title');
         $updateData['body'] = $threadData['body'];
+        $updateData['body_original'] = $threadData['body'];//更新原始内容
         $updateData['excerpt'] = Thread::makeExcerpt($threadData['body']);//更新摘要
         $updateData['thumbnails'] = getFirstImageUrl($threadData['body']);//更新图片预览
         $updateData['sub_node_id'] = array_get($threadData, 'sub_node_id');
@@ -253,6 +254,7 @@ class ThreadBll extends BaseBll
         $updateData['node_id'] = SubNode::find($threadData['sub_node_id'])->node_id;
         $updateData['title'] = $threadData['title'];
         $updateData['body'] = $threadData['body'];
+        $updateData['body_original'] = $threadData['body'];//更新原始内容
         $updateData['excerpt'] = Thread::makeExcerpt($threadData['body']);//更新摘要
         $updateData['thumbnails'] = getFirstImageUrl($threadData['body']);//更新图片预览
         $updateData['sub_node_id'] = $threadData['sub_node_id'];
