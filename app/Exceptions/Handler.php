@@ -75,7 +75,7 @@ class Handler extends ExceptionHandler
         } elseif ($this->isHttpException($e)) {
             return $this->toIlluminateResponse($this->renderHttpException($e), $e);
         } else {
-            return back()->withErrors($e->getMessage());
+            return $this->toIlluminateResponse($this->convertExceptionToResponse($e), $e);
         }
     }
 }
