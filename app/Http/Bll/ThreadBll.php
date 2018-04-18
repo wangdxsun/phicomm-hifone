@@ -26,6 +26,7 @@ use Hifone\Repositories\Criteria\Thread\Search;
 use DB;
 use Hifone\Services\Filter\WordsFilter;
 use Illuminate\Foundation\Testing\HttpException;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Input;
 use Auth;
@@ -618,9 +619,15 @@ class ThreadBll extends BaseBll
             $users = $option->users()->paginate(14);
         } else {
             //所有投该帖的用户，按投票时间逆序，并携带他的投票选项信息
+            $perPage = 14;
+            $currentPage = Paginator::resolveCurrentPage() ?: 1;
+            $skip = ($currentPage - 1) * $perPage;
+            $total = $thread->voteUsers()->get()->count();
             $users = $thread->voteUsers()->with(['options' => function ($query) use ($thread) {
                 $query->wherePivot('thread_id', $thread->id);
-            }])->orderBy('created_at', 'desc')->paginate(14);
+            }])->orderBy('option_user.created_at', 'desc')->skip($skip)->take($perPage)->get();
+
+            $users = new LengthAwarePaginator($users, $total, $perPage, $currentPage, ['path' => Paginator::resolveCurrentPath()]);
             foreach ($users as $user) {
                 $user['selects'] = $this->selects($user['options']->toArray());
                 unset($user['options']);

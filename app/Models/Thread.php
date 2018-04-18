@@ -210,7 +210,7 @@ class Thread extends BaseModel implements TaggableInterface
     public function voteUsers()
     {
         return $this->belongsToMany(User::class, 'option_user')
-            ->distinct('user_id')->orderBy('option_user.created_at', 'desc');
+            ->distinct('user_id');
     }
 
     public function appends()
