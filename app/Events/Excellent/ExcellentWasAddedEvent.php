@@ -11,7 +11,6 @@
 
 namespace Hifone\Events\Excellent;
 
-use Hifone\Models\User;
 
 final class ExcellentWasAddedEvent implements ExcellentEventInterface
 {

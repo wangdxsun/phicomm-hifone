@@ -20,6 +20,7 @@ use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Pin\SinkWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasMarkedExcellentEvent;
+use Hifone\Events\Thread\ThreadWasUppedEvent;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Node;
 use Hifone\Models\Section;
@@ -371,6 +372,9 @@ class ThreadController extends Controller
             $thread->heat = $thread->heat_compute;
             $this->updateOpLog($thread, '提升帖子', $heatOffset);
             $thread->save();
+            if ($heatOffset > 0) {
+                event(new ThreadWasUppedEvent($thread));
+            }
         } catch (\Exception $e) {
             return Redirect::back()->withErrors($e->getMessage());
         }

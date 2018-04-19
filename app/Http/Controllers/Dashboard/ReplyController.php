@@ -21,7 +21,6 @@ use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
-use Hifone\Services\Parsers\Markdown;
 use Illuminate\Support\Facades\DB;
 use View;
 use Input;

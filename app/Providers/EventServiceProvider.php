@@ -36,8 +36,9 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
 
-        // Favorite帖子被收藏
+        // Favorite帖子被收藏,增加智慧果
         \Hifone\Events\Favorite\FavoriteWasAddedEvent::class => [
+            \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
@@ -61,8 +62,9 @@ class EventServiceProvider extends ServiceProvider
         \Hifone\Events\Follow\FollowWasRemovedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
-        //被关注，添加积分并发送通知
+        //被关注，添加积分并发送通知，增加智慧果
         \Hifone\Events\Follow\FollowedWasAddedEvent::class => [
+            \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
@@ -70,8 +72,9 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
 
-        //精华
+        //帖子被加精华，增加经验值和智慧果
         \Hifone\Events\Excellent\ExcellentWasAddedEvent::class => [
+            \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
         // Image
@@ -82,20 +85,18 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
 
-        // 按赞
+        // 按赞发通知
         \Hifone\Events\Thread\ThreadWasLikedEvent::class => [
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
-        \Hifone\Events\Like\LikeWasAddedEvent::class => [
-            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
-        ],
+
         \Hifone\Events\Like\LikeWasRemovedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+            \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
         ],
+        //帖子、回复被点赞，增加经验值和智慧果
         \Hifone\Events\Like\LikedWasAddedEvent::class => [
-            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
-        ],
-        \Hifone\Events\Like\LikedWasRemovedEvent::class => [
+            \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
 
@@ -115,12 +116,15 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Stats\UpdateStatsHandler::class,
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
+        //帖子被回复（经验值、智慧果）
         \Hifone\Events\Reply\RepliedWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+            \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
         ],
-        //置顶加积分
+        //帖子、回复置顶加积分、智慧果
         \Hifone\Events\Pin\PinWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+            \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
         ],
         //下沉
         \Hifone\Events\Pin\SinkWasAddedEvent::class => [
@@ -132,9 +136,10 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Stats\UpdateStatsHandler::class,
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
-        //上传头像
+        //上传头像(经验值、智慧果)
         \Hifone\Events\Image\AvatarWasUploadedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+            \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
         ],
         //
         \Hifone\Events\Thread\ThreadWasMarkedExcellentEvent::class => [
@@ -219,6 +224,15 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
 
+        //修改积分时，判断有没有升级
+        \Hifone\Events\Credit\LevelUpEvent::class => [
+            \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
+        ],
+
+        //帖子被提升时，需要增加智慧果
+        \Hifone\Events\Thread\ThreadWasUppedEvent::class => [
+            \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
+        ],
     ];
 
     /**
