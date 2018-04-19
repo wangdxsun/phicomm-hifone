@@ -20,7 +20,7 @@ class UploadBase64ImageCommandHandler
     public function handle(UploadBase64ImageCommand $command)
     {
         $file = $command->file;
-        $allowed_extensions = ['png', 'jpg', 'jpeg', 'gif'];
+        $allowed_extensions = ['png', 'jpg', 'jpeg', 'gif', 'bmp'];
         if(preg_match('/^(data:\s*image\/(\w+);base64,)/', $file, $result)){
             $extension = $result[2];
             if (!in_array(strtolower($extension), $allowed_extensions)) {
