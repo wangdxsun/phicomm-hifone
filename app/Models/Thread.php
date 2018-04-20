@@ -132,6 +132,10 @@ class Thread extends BaseModel implements TaggableInterface
         'reply_count'=> '回复数量',
     ];
 
+    private $doKeep = [
+        'title', 'body', 'sub_node_id'
+    ];
+
     public function likes()
     {
         return $this->morphMany(Like::class, 'likeable');

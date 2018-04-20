@@ -11,8 +11,6 @@
 
 namespace Hifone\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
 class CreditRule extends BaseModel
 {
     const NO_LIMIT = 0;

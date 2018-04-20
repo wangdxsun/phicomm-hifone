@@ -13,11 +13,10 @@ namespace Hifone\Models;
 
 use AltThree\Validator\ValidatingTrait;
 use Illuminate\Database\Eloquent\Model;
-use Venturecraft\Revisionable\RevisionableTrait;
 
 class Page extends Model
 {
-    use ValidatingTrait, RevisionableTrait;
+    use ValidatingTrait;
 
     /**
      * The fillable properties.
