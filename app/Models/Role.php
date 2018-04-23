@@ -26,7 +26,6 @@ class Role extends EntrustRole implements HasPresenter
     const ADMIN = 1;//管理组
     const NO_LOGIN = 4;//禁止登录
     const NO_COMMENT = 5;//禁止发言
-    const REGISTER_USER = null;
 
     protected $fillable = ['name', 'display_name', 'description', 'type', 'credit_low', 'credit_high', 'user_id'];
 

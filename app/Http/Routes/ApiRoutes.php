@@ -35,8 +35,8 @@ class ApiRoutes
             $router->get('threads', 'ThreadController@index')->middleware('active:api');
             $router->get('threads/recent', 'ThreadController@recent')->middleware('active:api');
             $router->get('threads/excellent', 'ThreadController@excellentThreads')->middleware('active:api');
-            $router->get('thread/search/{keyword}', 'ThreadController@search')->middleware('active:api');
-            $router->get('user/search/{keyword}', 'UserController@search')->middleware('active:api');
+            $router->get('thread/search/{keyword}/{a?}/{b?}/{c?}', 'ThreadController@search')->middleware('active:api');
+            $router->get('user/search/{keyword}/{a?}/{b?}/{c?}', 'UserController@search')->middleware('active:api');
             $router->get('threads/{thread}', 'ThreadController@show')->where('thread', '[0-9]+')->middleware('active:api');
             $router->get('threads/{thread}/replies/{sort?}', 'ThreadController@replies')->where('thread', '[0-9]+');
             $router->get('nodes', 'NodeController@index');
@@ -75,6 +75,7 @@ class ApiRoutes
                 $router->post('upload/base64', 'CommonController@uploadBase64');
                 $router->post('upload', 'CommonController@upload');
                 $router->post('threads', 'ThreadController@store')->middleware('active:api');
+                $router->post('threads/{thread}/vote', 'ThreadController@vote')->where('thread', '[0-9]+');
                 $router->post('replies', 'ReplyController@store');
                 $router->post('follow/users/{user}', 'FollowController@user')->where('user', '[0-9]+');
                 $router->post('follow/threads/{thread}', 'FollowController@thread')->where('thread', '[0-9]+');

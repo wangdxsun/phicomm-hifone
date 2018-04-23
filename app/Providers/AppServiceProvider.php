@@ -48,8 +48,13 @@ class AppServiceProvider extends ServiceProvider
         Carbon::setLocale('zh');
 
         \DB::listen(function($event) {
-            if (env('APP_ENV', 'production') == 'local') {
-                $sql = str_replace("?", "'%s'", $event->sql);
+            if (env('APP_ENV', 'local') == 'debug') {
+                foreach ($event->bindings as $key => $binding) {
+                    if ($binding instanceof \DateTime) {
+                        $event->bindings[$key] = $binding->format('Y/m/d H:i:s');
+                    }
+                }
+                $sql = str_replace(['?'], ["'%s'"], $event->sql);
                 $log = vsprintf($sql, $event->bindings);
                 \Log::info($log);
             }

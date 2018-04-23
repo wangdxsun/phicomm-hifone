@@ -11,7 +11,7 @@ class TagTypeController extends Controller
 {
     public function index()
     {
-        $tagTypes = TagType::ofType([TagType::USER, TagType::AUTO])->get();
+        $tagTypes = TagType::ofType([TagType::USER, TagType::AUTO])->with('tags')->get();
         return View::make('dashboard.tagTypes.index')
             ->with('tagTypes', $tagTypes)
             ->withCurrentMenu('index');

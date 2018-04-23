@@ -29,7 +29,7 @@
                             <td>{{ $report->id }}</td>
                             <td>{{ $report->type }}</td>
                             <td><a href="{{ $report->reportable->url }}" target="_blank">{{ $report->reportable->report }}</a></td>
-                            <td><a href="{{ $report->user->url }}">{{ $report->user->username }}</a></td>
+                            <td><a href="{{ route('user.show', ['id'=>$report->user->id]) }}" target="_blank">{{  $report->user->username  }}</a></td>
                             <td>{{ $report->reason }}</td>
                             <td>{{ $report->created_at }}</td>
                             <td><a href="{{ $report->lastOpUser->url }}"></a>{{ $report->lastOpUser->username }}</td>

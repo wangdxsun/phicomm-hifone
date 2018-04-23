@@ -61,8 +61,8 @@ class ThreadController extends Controller
             $threads = Thread::visible()->search($search)->with('node', 'user', 'lastOpUser', 'subNode')->orderBy('last_op_time', 'desc')->paginate(20);
         }
 
-        $sections = Section::orderBy('order')->get();
-        $nodes = Node::orderBy('order')->get();
+        $sections = Section::orderBy('order')->with('nodes')->get();
+        $nodes = Node::orderBy('order')->with('subNodes')->get();
         $orderTypes = Thread::$orderTypes;
         $threadCount = Thread::visible()->count();
         return View::make('dashboard.threads.index')
@@ -103,7 +103,7 @@ class ThreadController extends Controller
         $threadAll = Thread::trash()->get();
         $userIds = array_unique(array_column($threadAll->toArray(), 'user_id'));
         $operators = array_unique(array_column($threadAll->toArray(), 'last_op_user_id'));
-        $sections = Section::orderBy('order')->get();
+        $sections = Section::orderBy('order')->with('nodes')->get();
         $orderTypes = Thread::$orderTypes;
 
         return view('dashboard.threads.trash')
@@ -138,22 +138,24 @@ class ThreadController extends Controller
      */
     public function update(Thread $thread)
     {
+
         //修改帖子标题，版块和正文
         $threadData = Input::get('thread');
         $threadData['node_id'] = SubNode::find($threadData['sub_node_id'])->node->id;
 
         $threadData['body_original'] = $threadData['body'];
-        $threadData['body'] = (new Markdown())->convertMarkdownToHtml($threadData['body']);
-        $threadData['excerpt'] = Thread::makeExcerpt($threadData['body']);
 
+        $threadData['excerpt'] = Thread::makeExcerpt($threadData['body']);
         try {
             $this->updateOpLog($thread, '修改帖子');
+
             dispatch(new UpdateThreadCommand($thread, $threadData));
         } catch (\Exception $e) {
             return Redirect::route('dashboard.thread.edit', $thread->id)
                 ->withInput($threadData)
                 ->withErrors($e->getMessage());
         }
+
         if ($thread->status == Thread::VISIBLE) {
             return Redirect::route('dashboard.thread.index')->withSuccess('恭喜，操作成功！');
         }
@@ -162,38 +164,45 @@ class ThreadController extends Controller
 
     public function pin(Thread $thread)
     {
-        if ($thread->order >= 1) {
-            $thread->decrement('order', 1);
+        if ($thread->order == 1) {
+            //已经是全局置顶，取消全局置顶
+            $thread->update(['order' => 0]);
             $this->updateOpLog($thread, '取消置顶');
-        } elseif ($thread->order == 0) {
-            $thread->increment('order', 1);
+        } elseif ($thread->order == 0 ) {
+            //不是全局置顶,判断是否是版块置顶
+            if($thread->node_order == 1) {
+                $thread->update(['node_order' => 0]);
+            }
+            $thread->update(['order' => 1]);
             $this->updateOpLog($thread, '置顶');
             event(new ThreadWasPinnedEvent($thread));
             event(new PinWasAddedEvent($thread->user, 'Thread'));
         } elseif ($thread->order < 0) {
-            $thread->increment('order', 2);
+            //全局下沉
+            $thread->update(['order' => 1]);
             $this->updateOpLog($thread, '置顶');
             event(new ThreadWasPinnedEvent($thread));
             event(new PinWasAddedEvent($thread->user, 'Thread'));
         }
-
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
     //板块置顶帖子
     public function nodePin(Thread $thread)
     {
-        if ($thread->order == 1) {
-            $thread->increment('order', 1);
-        } elseif ($thread->order == 0) {
-            $thread->increment('order', 2);
-            //event(new NodePinWasAddedEvent($thread->user, 'thread_node_pin'));
-        } elseif ($thread->order == 2) {
-            $thread->decrement('order', 2);
-            //event(new NodePinWasAddedEvent($thread->user, 'thread_node_pin'));
-        } elseif ($thread->order < 0 ) {
-            $thread->update(['order' => 2]);
-            //event(new NodePinWasAddedEvent($thread->user, 'thread_node_pin'));
+        if ($thread->node_order == 1) {
+            //已经是版块置顶需要取消板块置顶
+            $thread->update(['order' => 0]);
+            $thread->update(['node_order' => 0]);
+        } else {
+            //不是版块置顶，是全局置顶
+            if ($thread->order == 1) {
+                $thread->update(['order' => 0]);
+                $thread->update(['node_order' => 1]);
+            } else {
+              //不是版块置顶也不是全局置顶
+                $thread->update(['node_order' => 1]);
+            }
         }
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }

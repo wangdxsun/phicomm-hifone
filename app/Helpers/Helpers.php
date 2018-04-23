@@ -181,7 +181,7 @@ if (!function_exists('isH5')) {
 if (!function_exists('isApp')) {
     function isApp()
     {
-        $ua = $_SERVER['HTTP_USER_AGENT'];
+        $ua = array_get($_SERVER, 'HTTP_USER_AGENT');
         return strpos($ua, 'PhiWifiNative');
     }
 }

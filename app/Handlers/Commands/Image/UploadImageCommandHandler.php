@@ -23,7 +23,7 @@ class UploadImageCommandHandler
     {
         $file = $command->file;
 
-        $allowed_extensions = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
+        $allowed_extensions = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp'];
         if (!in_array(strtolower($file->getClientOriginalExtension()), $allowed_extensions)) {
             throw new HifoneException('图片格式错误');
         } elseif (!in_array(strtolower($file->guessExtension()),  $allowed_extensions)) {
@@ -47,7 +47,7 @@ class UploadImageCommandHandler
         copy($file, $destinationPath.'/'.$safeNameOrig);
         $file->move($destinationPath, $safeName);
 
-        if (!in_array($file->getClientOriginalExtension(), ['gif', 'webp'])) {
+        if (!in_array($file->getClientOriginalExtension(), ['gif', 'webp', 'bmp'])) {
             ini_set("memory_limit", "256M");
             // open an image file
             $img = Image::make($destinationPath.'/'.$safeName);

@@ -8,11 +8,8 @@
 
 namespace Hifone\Http\Controllers\App\V1;
 
-use Hifone\Commands\Image\UploadBase64ImageCommand;
-use Hifone\Commands\Image\UploadImageCommand;
 use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Controllers\App\AppController;
-use Input;
 
 class CommonController extends AppController
 {

@@ -26,6 +26,7 @@ use Hifone\Repositories\Criteria\Thread\Search;
 use DB;
 use Hifone\Services\Filter\WordsFilter;
 use Illuminate\Foundation\Testing\HttpException;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Input;
 use Auth;
@@ -175,7 +176,7 @@ class ThreadBll extends BaseBll
         if (1 == array_get($threadData, 'is_vote')) {
             $threadTemp->update([
                 'is_vote' => 1,
-                'option_max' => array_get($threadData, 'option_max', 1),
+                'option_max' => array_get($threadData, 'option_max'),
                 'vote_start' => array_get($threadData, 'vote_start'),
                 'vote_end' => array_get($threadData, 'vote_end'),
                 'vote_level' => array_get($threadData, 'vote_level', 0),
@@ -210,6 +211,9 @@ class ThreadBll extends BaseBll
         $updateData['node_id'] = $node_id;
         $updateData['title'] = array_get($threadData, 'title');
         $updateData['body'] = $threadData['body'];
+        $updateData['body_original'] = $threadData['body'];//更新原始内容
+        $updateData['excerpt'] = Thread::makeExcerpt($threadData['body']);//更新摘要
+        $updateData['thumbnails'] = getFirstImageUrl($threadData['body']);//更新图片预览
         $updateData['sub_node_id'] = array_get($threadData, 'sub_node_id');
         //更新草稿贴编辑时间
         $updateData['edit_time'] = Carbon::now()->toDateTimeString();
@@ -219,7 +223,7 @@ class ThreadBll extends BaseBll
         if (1 == $thread->is_vote) {
             $thread->update([
                 'is_vote' => 1,
-                'option_max' => array_get($threadData, 'option_max', 1),
+                'option_max' => array_get($threadData, 'option_max'),
                 'vote_start' => array_get($threadData, 'vote_start'),
                 'vote_end' => array_get($threadData, 'vote_end'),
                 'vote_level' => array_get($threadData, 'vote_level', 0),
@@ -251,7 +255,15 @@ class ThreadBll extends BaseBll
         $updateData['node_id'] = SubNode::find($threadData['sub_node_id'])->node_id;
         $updateData['title'] = $threadData['title'];
         $updateData['body'] = $threadData['body'];
+        $updateData['body_original'] = $threadData['body'];//更新原始内容
+        $updateData['excerpt'] = Thread::makeExcerpt($threadData['body']);//更新摘要
+        $updateData['thumbnails'] = getFirstImageUrl($threadData['body']);//更新图片预览
         $updateData['sub_node_id'] = $threadData['sub_node_id'];
+        //草稿发帖后创建、回复、编辑时间记录为发帖时间
+        $updateData['created_at'] = Carbon::now()->toDateTimeString();
+        $updateData['edit_time'] = Carbon::now()->toDateTimeString();
+        $updateData['updated_at'] = Carbon::now()->toDateTimeString();
+
         $thread->update($updateData);
 
         //发布的是投票贴
@@ -356,7 +368,10 @@ class ThreadBll extends BaseBll
         $post = $thread->title.$thread->body;
         $badWord = '';
         //新增判断逻辑：不具有免审核权限的用户才需要自动审核
-        if (!Auth::user()->can('free_audit') && Config::get('setting.auto_audit', 0) == 0 || ($badWord = $wordsFilter->filterWord($post)) || $this->isContainsImageOrUrl($post)) {
+        if (!Auth::user()->can('free_audit')
+            && Config::get('setting.auto_audit', 0) == 0
+            || ($badWord = $wordsFilter->filterWord($post))
+            || $this->isContainsImageOrUrl($post)) {
             $thread->bad_word = $badWord;
         } else {
             $this->autoAudit($thread);
@@ -556,7 +571,7 @@ class ThreadBll extends BaseBll
             throw new HifoneException('您已投票，请勿重复投票');
         }
         if (!$this->canVote($thread)) {
-            throw new HifoneException('对不起，你的级别不可参与此次投票');
+            throw new HifoneException('你的级别不可参与此次投票');
         }
         if (Carbon::now()->toDateTimeString() < $thread->vote_start) {
             throw new HifoneException('投票还未开始');
@@ -568,9 +583,9 @@ class ThreadBll extends BaseBll
             $optionIds = explode(',', $select);
             $options = Option::whereIn('id',$optionIds)->where('thread_id',$thread->id)->get();
             if ($thread->option_max < count($options)) {
-                throw new HttpException('选项数超过上限');
-            } elseif (0 == count($optionIds)) {
-                throw new HttpException('选项数不足');
+                throw new HttpException('最多选择' . $thread->option_max . '项');
+            } elseif (0 == count($options)) {
+                throw new HttpException('请选择选项');
             }
             foreach ($options as $option) {
                 OptionUser::create([
@@ -604,9 +619,15 @@ class ThreadBll extends BaseBll
             $users = $option->users()->paginate(14);
         } else {
             //所有投该帖的用户，按投票时间逆序，并携带他的投票选项信息
+            $perPage = 14;
+            $currentPage = Paginator::resolveCurrentPage() ?: 1;
+            $skip = ($currentPage - 1) * $perPage;
+            $total = $thread->voteUsers()->get()->count();
             $users = $thread->voteUsers()->with(['options' => function ($query) use ($thread) {
                 $query->wherePivot('thread_id', $thread->id);
-            }])->orderBy('created_at', 'desc')->paginate(14);
+            }])->orderBy('option_user.created_at', 'desc')->skip($skip)->take($perPage)->get();
+
+            $users = new LengthAwarePaginator($users, $total, $perPage, $currentPage, ['path' => Paginator::resolveCurrentPath()]);
             foreach ($users as $user) {
                 $user['selects'] = $this->selects($user['options']->toArray());
                 unset($user['options']);

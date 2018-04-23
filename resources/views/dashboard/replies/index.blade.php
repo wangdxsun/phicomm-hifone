@@ -103,7 +103,7 @@
                                 @if(!isset($reply->user))
                                     {{ $reply->user }}
                                 @else
-                                <a href="{{ $reply->user->url }}" target="_blank">{{ $reply->user->username }}</a>
+                                    <a href="{{ route('user.show', ['id'=>$reply->user->id]) }}" target="_blank">{{  $reply->user->username  }}</a>
                                 @endif
                             </td>
                             <td>{{ $reply->created_at }}</td>

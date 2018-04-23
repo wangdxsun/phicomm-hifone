@@ -13,7 +13,6 @@ namespace Hifone\Handlers\Listeners\Credit;
 
 use Auth;
 use Hifone\Commands\Credit\AddCreditCommand;
-use Hifone\Events\Credit\CreditWasAddedEvent;
 use Hifone\Events\EventInterface;
 use Hifone\Events\Favorite\FavoriteThreadWasAddedEvent;
 use Hifone\Events\Favorite\FavoriteThreadWasRemovedEvent;
@@ -43,9 +42,7 @@ use Hifone\Events\Like\LikedWasAddedEvent;
 use Hifone\Events\Like\LikedWasRemovedEvent;
 use Hifone\Events\Image\AvatarWasUploadedEvent;
 use Hifone\Events\User\UserWasLoggedinWebEvent;
-use Hifone\Models\Report;
 use Hifone\Models\Thread;
-use Hifone\Models\User;
 
 class AddCreditHandler
 {
@@ -76,6 +73,7 @@ class AddCreditHandler
         } elseif ($event instanceof UserWasAddedEvent) {
             $action = 'register';
             $user = $event->user;
+            //创建账号，积分
         } elseif ($event instanceof UserWasLoggedinEvent || $event instanceof UserWasLoggedinWebEvent || $event instanceof UserWasLoggedinAppEvent) {
             $action = 'login';
             $user = $event->user;
@@ -109,7 +107,6 @@ class AddCreditHandler
             }
             $user = $event->user;
         } elseif($event instanceof  NodePinWasAddedEvent){
-            dd('here');
             $user = $event->user;
             $action = 'thread_node_pin';
         }  elseif ($event instanceof SinkWasAddedEvent) {

@@ -68,7 +68,7 @@
                     @if(!isset($reply->user))
                         {{ $reply->user }}
                     @else
-                        <a data-name="{{ $reply->user->username }}" href="{{ $reply->user->url }}">{{ $reply->user->username }}</a>
+                        <a href="{{ route('user.show', ['id'=>$reply->user->id]) }}" target="_blank">{{  $reply->user->username  }}</a>
                     @endif
                 </td>
                 <td>{{ $reply->ip }}</td>

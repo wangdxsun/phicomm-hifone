@@ -18,12 +18,12 @@ use Hifone\Models\Role;
 use Hifone\Models\SubNode;
 use Hifone\Models\Thread;
 use Hifone\Services\Filter\WordsFilter;
-use Hifone\Services\Parsers\Markdown;
 use Illuminate\Foundation\Testing\HttpException;
 use Illuminate\Support\Facades\Redis;
 
 class ThreadController extends WebController
 {
+    //帖子列表（首页最热）
     public function index(CommonBll $commonBll)
     {
         $commonBll->loginWeb();
@@ -32,6 +32,7 @@ class ThreadController extends WebController
         return $threads;
     }
 
+    //帖子列表（首页最新）
     public function recent()
     {
         $threads = Thread::visible()->with(['user', 'node'])->recentEdit()->paginate();
@@ -171,13 +172,12 @@ class ThreadController extends WebController
 
         $this->updateOpLog($thread, '修改帖子');
         $thread = dispatch(new UpdateThreadCommand($thread, $threadData));
-        //管理员编辑用户帖子，免审核；管理员编辑自己或用户编辑自己重新进入审核系统
-        if (Auth::user()->hasRole(['Admin', 'Founder']) && Auth::id() <> $thread->user_id) {
-            $msg = '发帖成功';
-        } else {
+
+        //管理员编辑帖子免审核(含编辑自己待审核)，用户编辑后重新审核
+        if (!Auth::user()->hasRole(['Admin', 'Founder'])) {
             $thread = $threadBll->auditThread($thread, $wordsFilter);
-            $msg = $thread->status == Thread::VISIBLE ? '发帖成功' : '已提交，待审核';
         }
+        $msg = $thread->status == Thread::VISIBLE ? '发帖成功' : '帖子已提交，待审核';
         return [
             'msg' => $msg,
             'thread' => $thread
@@ -268,21 +268,26 @@ class ThreadController extends WebController
 
     public function pin(Thread $thread)
     {
-        if ($thread->order > 0) {
-            $thread->decrement('order', 1);
+        if ($thread->order == 1) {
+            //已经是全局置顶，取消全局置顶
+            $thread->update(['order' => 0]);
             $this->updateOpLog($thread, '取消置顶');
-        } elseif ($thread->order == 0) {
-            $thread->increment('order', 1);
+        } elseif ($thread->order == 0 ) {
+            //不是全局置顶,判断是否是版块置顶
+            if($thread->node_order == 1) {
+                $thread->update(['node_order' => 0]);
+            }
+            $thread->update(['order' => 1]);
             $this->updateOpLog($thread, '置顶');
             event(new ThreadWasPinnedEvent($thread));
             event(new PinWasAddedEvent($thread->user, 'Thread'));
         } elseif ($thread->order < 0) {
-            $thread->increment('order', 2);
+            //全局下沉
+            $thread->update(['order' => 1]);
             $this->updateOpLog($thread, '置顶');
             event(new ThreadWasPinnedEvent($thread));
             event(new PinWasAddedEvent($thread->user, 'Thread'));
         }
-
         return ['pin' => $thread->order > 0 ? true : false];
     }
 
