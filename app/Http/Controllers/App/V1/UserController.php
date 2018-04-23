@@ -173,4 +173,5 @@ class UserController extends AppController
         return $sections;
 
     }
+
 }

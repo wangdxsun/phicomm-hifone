@@ -14,6 +14,7 @@ use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Events\Image\AvatarWasUploadedEvent;
 use Config;
 use Auth;
+use Hifone\Events\Thread\ThreadWasSharedEvent;
 use Hifone\Events\Thread\ThreadWasUppedEvent;
 use Hifone\Models\Role;
 use Hifone\Models\Thread;
@@ -94,6 +95,13 @@ class AddScoreHandler
                 return false;
             }
             $action = Config::get('setting.thread_upped', null);
+            $user = $event->thread->user;
+        } elseif ($event instanceof  ThreadWasSharedEvent) {
+            if (Auth::id() == $event->thread->user_id) {
+                //帖子被分享，需要加智慧果，自己分享自己的帖子不加
+                return false;
+            }
+            $action = Config::get('setting.thread_shared', null);
             $user = $event->thread->user;
         }
 

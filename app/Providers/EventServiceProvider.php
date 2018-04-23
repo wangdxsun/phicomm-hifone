@@ -233,6 +233,11 @@ class EventServiceProvider extends ServiceProvider
         \Hifone\Events\Thread\ThreadWasUppedEvent::class => [
             \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
         ],
+
+        //帖子被分享时，需要增加智慧果
+        \Hifone\Events\Thread\ThreadWasSharedEvent::class => [
+            \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
+        ],
     ];
 
     /**
