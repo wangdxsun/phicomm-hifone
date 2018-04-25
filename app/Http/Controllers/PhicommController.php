@@ -101,7 +101,6 @@ class PhicommController extends Controller
             if (array_get($cloudUser, 'img') && $user->avatar_url != $cloudUser['img'] && $cloudUser['img'] != 'Uploads/default/default.jpg') {
                 $user->avatar_url = $cloudUser['img'];
                 $user->save();
-                $user->updateIndex();
             }
             if (array_get($cloudUser, 'phonenumber') && $cloudUser['phonenumber'] !== $user->phone) {
                 $user->phone = $cloudUser['phonenumber'];

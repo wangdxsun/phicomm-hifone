@@ -299,8 +299,6 @@ class ThreadController extends Controller
             }
             $thread->user->update(['thread_count' => $thread->user->threads()->visibleAndDeleted()->count()]);
             event(new ThreadWasAuditedEvent($thread));
-            $threadForIndex = clone $thread;
-            $threadForIndex->addToIndex();
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();

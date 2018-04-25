@@ -113,7 +113,6 @@ class UserController extends Controller
 
                 $user = User::create($userData);
                 $this->updateOpLog($user, '创建用户');
-                $user->addToIndex();
             });
         } catch (ValidationException $e) {
             return Redirect::back()
@@ -169,7 +168,6 @@ class UserController extends Controller
                 }
                 $user->role_id = $roleId;
                 $this->updateOpLog($user, '修改用户信息');
-                $user->updateIndex();
             });
         } catch (ValidationException $e) {
             return Redirect::back()
@@ -186,7 +184,6 @@ class UserController extends Controller
     {
         $user->avatar_url = '';
         $this->updateOpLog($user, '恢复默认头像');
-        $user->updateIndex();
 
         return Redirect::back()->withSuccess('头像删除成功');
     }
@@ -196,7 +193,6 @@ class UserController extends Controller
     {
         $user->role_id = ($user->role_id == Role::NO_COMMENT) ? Role::USER : Role::NO_COMMENT;
         $this->updateOpLog($user, $user->role_id ? '取消禁言' : '禁言');
-        $user->updateIndex();
         return Redirect::back()->withSuccess('修改成功');
     }
 
@@ -204,8 +200,7 @@ class UserController extends Controller
     public function login(User $user)
     {
         $user->role_id = ($user->role_id == Role::NO_LOGIN) ? Role::USER : Role::NO_LOGIN;
-        $this->updateOpLog($user, $user->role_id ? '取消禁止登录' : '禁止登录');
-        $user->updateIndex();
+        $this->updateOpLog($user, $user->role_id ? '取消禁止登录' : '禁止登录');;
         return Redirect::back()->withSuccess('修改成功');
     }
 

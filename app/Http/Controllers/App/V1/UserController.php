@@ -40,7 +40,6 @@ class UserController extends AppController
             if (array_get($cloudUser, 'img') && $user->avatar_url != $cloudUser['img'] && $cloudUser['img'] != 'Uploads/default/default.jpg') {
                 $user->avatar_url = $cloudUser['img'];
                 $user->save();
-                $user->updateIndex();
             }
             if (array_get($cloudUser, 'phonenumber') && $cloudUser['phonenumber'] !== $user->phone) {
                 $user->phone = $cloudUser['phonenumber'];
@@ -124,7 +123,6 @@ class UserController extends AppController
         }
         $avatar = dispatch(new UploadImageCommand(request()->file('image')));
         Auth::user()->update(['avatar_url' => $avatar['filename']]);
-        Auth::user()->updateIndex();
         if (Auth::phicommId()) {
             $phicommBll->upload($avatar['localFile']);
         }
