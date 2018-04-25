@@ -176,6 +176,7 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Stats\UpdateStatsHandler::class,
             \Hifone\Handlers\Listeners\Identity\ChangeUsernameHandler::class,
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+            \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
         ],
 
         \Hifone\Events\User\UserWasLoggedinEvent::class => [

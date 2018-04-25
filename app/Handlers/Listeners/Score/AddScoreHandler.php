@@ -16,6 +16,7 @@ use Config;
 use Auth;
 use Hifone\Events\Thread\ThreadWasSharedEvent;
 use Hifone\Events\Thread\ThreadWasUppedEvent;
+use Hifone\Events\User\UserWasAddedEvent;
 use Hifone\Jobs\AddScore;
 use Hifone\Models\Role;
 use Hifone\Models\Thread;
@@ -106,6 +107,9 @@ class AddScoreHandler
             }
             $action = Config::get('setting.thread_shared', null);
             $user = $event->thread->user;
+        } elseif ($event instanceof UserWasAddedEvent) {
+            $user = $event->user;
+            $action = Config::get('setting.user_added', null);
         }
 
         $this->apply($action, $user);
