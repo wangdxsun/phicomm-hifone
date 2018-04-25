@@ -15,12 +15,7 @@ use Hifone\Models\Tag;
 
 class AddTag
 {
-    /**
-     * @param \Hifone\Models\Tag\TaggableInterface $taggable
-     * @param $tags
-     *
-     * @return void
-     */
+
     public function attach(TaggableInterface $taggable, $tags)
     {
         if (empty($tags)) {

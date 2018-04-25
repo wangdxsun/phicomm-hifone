@@ -16,13 +16,16 @@ use Config;
 use Auth;
 use Hifone\Events\Thread\ThreadWasSharedEvent;
 use Hifone\Events\Thread\ThreadWasUppedEvent;
+use Hifone\Jobs\AddScore;
 use Hifone\Models\Role;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 
 //用来增加智慧果
 class AddScoreHandler
 {
+    use DispatchesJobs;
     public function handle(EventInterface $event)
     {
         $action = '';
@@ -113,10 +116,7 @@ class AddScoreHandler
         if (!$action || !$user || !$user->phicomm_id) {
             return;
         }
-        $score = dispatch(new AddScoreCommand($action, $user));
-
-        if (!$score) {
-            return;
-        }
+        $job = (new AddScore($user, $action));
+        $this->dispatch($job);
     }
 }
