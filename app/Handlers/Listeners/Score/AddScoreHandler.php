@@ -37,6 +37,7 @@ class AddScoreHandler
             $action =  Config::get('setting.upload_avatar', null);
             $user = $event->target;
             $from = '';
+            $object = date('ymd').substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
         } elseif ($event instanceof RepliedWasAddedEvent) {
             //帖子被回复
             if (Auth::id() == $event->threadUser->id) {
@@ -121,6 +122,7 @@ class AddScoreHandler
             }
             $user = $event->user;
             $from = '';
+            $object = date('ymd').substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
         } elseif ($event instanceof ThreadWasUppedEvent) {
             if (Auth::id() == $event->thread->user_id) {
                 //帖子被提升，需要加智慧果，自己提升自己的帖子不加
@@ -138,6 +140,7 @@ class AddScoreHandler
             $user = $event->user;
             $action = Config::get('setting.user_added', null);
             $from = '';
+            $object = date('ymd').substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
         } elseif ($event instanceof NodePinWasAddedEvent) {
             $action = Config::get('setting.thread_pin', null);
             //帖子的id
