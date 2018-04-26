@@ -10,13 +10,11 @@ final class ThreadWasSharedEvent implements ThreadEventInterface
      *
      * @var \Hifone\Models\Thread
      */
-    public $thread;
 
     /**
      * Create a new thread has reported event instance.
      */
-    public function __construct(Thread $thread)
+    public function __construct()
     {
-        $this->thread = $thread;
     }
 }

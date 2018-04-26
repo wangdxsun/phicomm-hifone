@@ -142,9 +142,9 @@ class ThreadController extends AppController
     }
 
     //帖子被分享，需要增加智慧果
-    public function addScoreThreadShared(Thread $thread)
+    public function addScoreThreadShared()
     {
-        event(new ThreadWasSharedEvent($thread));
+        event(new ThreadWasSharedEvent());
         return success('分享帖子');
     }
 

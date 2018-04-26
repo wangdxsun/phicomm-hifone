@@ -74,7 +74,6 @@ class UserGroupController extends Controller
         $roleData = Input::get('role');
         $roleData['user_id'] = \Auth::user()->id;
         $permissions = Input::get('permissions', []);
-        dd($permissions);
         try {
             \DB::transaction(function () use ($roleData, $permissions) {
                 $role = Role::create($roleData);

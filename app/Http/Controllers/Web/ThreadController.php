@@ -257,7 +257,7 @@ class ThreadController extends WebController
             $thread->increment('is_excellent', 1);
             $thread->excellent_time = Carbon::now()->toDateTimeString();
             $this->updateOpLog($thread, '精华');
-            event(new ExcellentWasAddedEvent($thread->user));
+            event(new ExcellentWasAddedEvent($thread->user, $thread));
             event(new ThreadWasMarkedExcellentEvent($thread));
         }
         //更新热度值
@@ -280,13 +280,13 @@ class ThreadController extends WebController
             $thread->update(['order' => 1]);
             $this->updateOpLog($thread, '置顶');
             event(new ThreadWasPinnedEvent($thread));
-            event(new PinWasAddedEvent($thread->user, 'Thread'));
+            event(new PinWasAddedEvent($thread->user,  $thread));
         } elseif ($thread->order < 0) {
             //全局下沉
             $thread->update(['order' => 1]);
             $this->updateOpLog($thread, '置顶');
             event(new ThreadWasPinnedEvent($thread));
-            event(new PinWasAddedEvent($thread->user, 'Thread'));
+            event(new PinWasAddedEvent($thread->user,  $thread));
         }
         return ['pin' => $thread->order > 0 ? true : false];
     }

@@ -149,10 +149,7 @@ class EventServiceProvider extends ServiceProvider
         \Hifone\Events\Thread\ThreadWasPinnedEvent::class => [
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
-        //版块置顶帖子发通知
-        \Hifone\Events\Thread\ThreadWasNodePinnedEvent::class => [
-            \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
-        ],
+
         //置顶评论/回复发通知
         \Hifone\Events\Reply\ReplyWasPinnedEvent::class => [
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
@@ -173,10 +170,10 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         \Hifone\Events\User\UserWasAddedEvent::class => [
+            \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
             \Hifone\Handlers\Listeners\Stats\UpdateStatsHandler::class,
             \Hifone\Handlers\Listeners\Identity\ChangeUsernameHandler::class,
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
-            \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
         ],
 
         \Hifone\Events\User\UserWasLoggedinEvent::class => [
@@ -237,6 +234,11 @@ class EventServiceProvider extends ServiceProvider
 
         //帖子被分享时，需要增加智慧果
         \Hifone\Events\Thread\ThreadWasSharedEvent::class => [
+            \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
+        ],
+
+        //版块置顶，增加智慧果（兼容全局置顶）
+        \Hifone\Events\Pin\NodePinWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
         ],
     ];

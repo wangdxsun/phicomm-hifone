@@ -161,7 +161,7 @@ class ReplyController extends Controller
         }else{
             $reply->increment('order', 1);
             $this->updateOpLog($reply, '置顶');
-            event(new PinWasAddedEvent($reply->user, 'Reply'));
+            event(new PinWasAddedEvent($reply->user,  $reply));
             event(new ReplyWasPinnedEvent($reply));
         }
 
@@ -200,7 +200,7 @@ class ReplyController extends Controller
         //审核通过时不再更新帖子的修改时间，取最近一次审核通过回复的创建时间
         $thread->save();
         event(new ReplyWasAddedEvent($reply));
-        event(new RepliedWasAddedEvent($reply->user, $thread->user));
+        event(new RepliedWasAddedEvent($reply->user, $thread->user, $reply));
 
         return $this->passAudit($reply);
     }

@@ -11,14 +11,14 @@ final class NodePinWasAddedEvent implements PinEventInterface
      * @var \Hifone\Models\Thread
      */
     public $user;
-    public $action;
+    public $object;
 
     /**
      * Create a new thread has reported event instance.
      */
-    public function __construct(User $user, $action)
+    public function __construct(User $user, $object)
     {
         $this->user = $user;
-        $this->action = $action;
+        $this->object = $object;
     }
 }
