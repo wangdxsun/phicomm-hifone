@@ -89,6 +89,9 @@ class EventServiceProvider extends ServiceProvider
         \Hifone\Events\Thread\ThreadWasLikedEvent::class => [
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
+        \Hifone\Events\Like\LikeWasAddedEvent::class => [
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+        ],
 
         \Hifone\Events\Like\LikeWasRemovedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,

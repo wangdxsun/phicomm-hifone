@@ -1,7 +1,6 @@
 <?php
 namespace Hifone\Handlers\Listeners\Score;
 
-use Hifone\Commands\Score\AddScoreCommand;
 use Hifone\Events\Credit\LevelUpEvent;
 use Hifone\Events\EventInterface;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
@@ -11,7 +10,6 @@ use Hifone\Events\Like\LikedWasAddedEvent;
 use Hifone\Events\Pin\NodePinWasAddedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Reply\RepliedWasAddedEvent;
-use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Events\Image\AvatarWasUploadedEvent;
 use Config;
 use Auth;
@@ -22,7 +20,6 @@ use Hifone\Jobs\AddScore;
 use Hifone\Models\Reply;
 use Hifone\Models\Role;
 use Hifone\Models\Thread;
-use Hifone\Models\User;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 
 //用来增加智慧果
