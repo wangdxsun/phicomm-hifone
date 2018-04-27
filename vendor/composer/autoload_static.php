@@ -662,6 +662,7 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
         'CreateFavoritesTable' => __DIR__ . '/../..' . '/database/old_migrations/2016_05_29_013551_create_favorites_table.php',
         'CreateFollowsTable' => __DIR__ . '/../..' . '/database/old_migrations/2016_05_29_013638_create_follows_table.php',
         'CreateIdentitiesTable' => __DIR__ . '/../..' . '/database/old_migrations/2016_05_31_093935_create_identities_table.php',
+        'CreateInvitesTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_27_172122_create_invites_table.php',
         'CreateLikesTable' => __DIR__ . '/../..' . '/database/old_migrations/2016_05_29_013704_create_likes_table.php',
         'CreateLinksTable' => __DIR__ . '/../..' . '/database/old_migrations/2016_05_29_013521_create_links_table.php',
         'CreateLocationsTable' => __DIR__ . '/../..' . '/database/old_migrations/2016_06_01_233353_create_locations_table.php',

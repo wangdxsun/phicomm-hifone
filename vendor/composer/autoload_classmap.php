@@ -27,6 +27,7 @@ return array(
     'CreateFavoritesTable' => $baseDir . '/database/old_migrations/2016_05_29_013551_create_favorites_table.php',
     'CreateFollowsTable' => $baseDir . '/database/old_migrations/2016_05_29_013638_create_follows_table.php',
     'CreateIdentitiesTable' => $baseDir . '/database/old_migrations/2016_05_31_093935_create_identities_table.php',
+    'CreateInvitesTable' => $baseDir . '/database/migrations/2018_04_27_172122_create_invites_table.php',
     'CreateLikesTable' => $baseDir . '/database/old_migrations/2016_05_29_013704_create_likes_table.php',
     'CreateLinksTable' => $baseDir . '/database/old_migrations/2016_05_29_013521_create_links_table.php',
     'CreateLocationsTable' => $baseDir . '/database/old_migrations/2016_06_01_233353_create_locations_table.php',
