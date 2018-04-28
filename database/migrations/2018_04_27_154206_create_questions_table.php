@@ -41,6 +41,7 @@ class CreateQuestionsTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
+            //索引
             $table->index('user_id');
             $table->index('title');
         });
@@ -53,6 +54,6 @@ class CreateQuestionsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('questions');
+        Schema::dropIfExists('questions');
     }
 }

@@ -32,6 +32,7 @@ class CreateCommentsTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
+            //索引
             $table->index('user_id');
             $table->index('answer_id');
         });
@@ -44,6 +45,6 @@ class CreateCommentsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('comments');
+        Schema::dropIfExists('comments');
     }
 }

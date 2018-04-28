@@ -19,6 +19,7 @@ class CreateInvitesTable extends Migration
             $table->unsignedInteger('question_id')->comment('问题id');
             $table->timestamps();
 
+            //唯一索引
             $table->unique('question_id', 'to_user_id', 'from_user_id');
         });
     }
@@ -30,6 +31,6 @@ class CreateInvitesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('invites');
+        Schema::dropIfExists('invites');
     }
 }
