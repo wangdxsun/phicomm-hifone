@@ -23,14 +23,14 @@ class UpdateQaModulesTable extends Migration
         });
         //follows表追加answer_count 新回答
         Schema::table('follows', function ($table) {
-            $table->unsignInteger('answer_count')->comment('关注问题的新回答数')->after('followable_type');
+            $table->unsignedInteger('answer_count')->comment('关注问题的新回答数')->after('followable_type');
         });
         //users表追加is_expert 追加question_count 追加answer_count 追加comment_count
         Schema::table('users', function ($table) {
             $table->tinyInteger('is_expert')->comment('是否专家')->after('score');
-            $table->unsignInteger('question_count')->comment('提问数')->after('is_expert');
-            $table->unsignInteger('answer_count')->comment('回答数')->after('question_count');
-            $table->unsignInteger('comment_count')->comment('回答的评论数')->after('answer_count');
+            $table->unsignedInteger('question_count')->comment('提问数')->after('is_expert');
+            $table->unsignedInteger('answer_count')->comment('回答数')->after('question_count');
+            $table->unsignedInteger('comment_count')->comment('回答的评论数')->after('answer_count');
         });
     }
 

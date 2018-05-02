@@ -29,10 +29,10 @@ class CreateAnswersTable extends Migration
             $table->unsignedInteger('comment_count')->comment('评论数')->default(0);
             $table->string('ip')->comment('用户ip')->nullable();
             $table->unsignedInteger('last_op_user_id')->comment('后台最后操作人id')->nullable();
-            $this->timestamp('last_op_time')->comment('后台最后操作时间')->nullable();
+            $table->timestamp('last_op_time')->comment('后台最后操作时间')->nullable();
             $table->string('last_op_reason')->comment('操作原因')->nullable();
-            $this->timestamp('edit_time')->comment('最新编辑时间')->nullable();
-            $this->timestamp('last_comment_time')->comment('最新评论时间')->nullable();
+            $table->timestamp('edit_time')->comment('最新编辑时间')->nullable();
+            $table->timestamp('last_comment_time')->comment('最新评论时间')->nullable();
 
             $table->timestamps();
             $table->softDeletes();
