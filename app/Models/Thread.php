@@ -132,6 +132,10 @@ class Thread extends BaseModel implements TaggableInterface
         'reply_count'=> '回复数量',
     ];
 
+    private $doKeep = [
+        'title', 'body', 'sub_node_id'
+    ];
+
     public function likes()
     {
         return $this->morphMany(Like::class, 'likeable');
@@ -554,7 +558,6 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function getBodyAttribute($value)
     {
-        $value = str_replace(PHP_EOL, '<br/>', $value);
         if ($this->is_vote && isApp() && get_app_version() >= '6.0.0' && get_app_version() < '6.1.0') {
             $value = '<div style="color: rgb(255, 128, 0)">当前版本无法显示投票信息，请升级App</div>' . $value;
         }

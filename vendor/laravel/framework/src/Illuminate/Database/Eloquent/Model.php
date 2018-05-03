@@ -1395,6 +1395,8 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
         }
 
         $this->incrementOrDecrementAttributeValue($column, $amount, $method);
+        $this->fireModelEvent('saving');
+        $this->fireModelEvent('saved', false);
 
         return $query->where($this->getKeyName(), $this->getKey())->{$method}($column, $amount, $extra);
     }
@@ -1410,8 +1412,8 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
     protected function incrementOrDecrementAttributeValue($column, $amount, $method)
     {
         $this->{$column} = $this->{$column} + ($method == 'increment' ? $amount : $amount * -1);
-
-        $this->syncOriginalAttribute($column);
+        //同步之后将无法触发修改监听事件
+        //$this->syncOriginalAttribute($column);
     }
 
     /**
@@ -1673,6 +1675,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      */
     protected function fireModelEvent($event, $halt = true)
     {
+//        dump($event);
         if (! isset(static::$dispatcher)) {
             return true;
         }

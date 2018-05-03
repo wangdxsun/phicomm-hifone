@@ -13,6 +13,8 @@
  */
 trait RevisionableTrait
 {
+    private $historyLimit = 10;
+    private $revisionCleanup = true;
     /**
      * @var array
      */
@@ -32,11 +34,6 @@ trait RevisionableTrait
      * @var array
      */
     private $dontKeep = array();
-
-    /**
-     * @var array
-     */
-    private $doKeep = array();
 
     /**
      * Keeps the list of values that have been updated
@@ -113,38 +110,21 @@ trait RevisionableTrait
     */
     public function preSave()
     {
-        if (!isset($this->revisionEnabled) || $this->revisionEnabled) {
-            // if there's no revisionEnabled. Or if there is, if it's true
+        $this->originalData = $this->original;
+        $this->updatedData = $this->attributes;
 
-            $this->originalData = $this->original;
-            $this->updatedData = $this->attributes;
-
-            // we can only safely compare basic items,
-            // so for now we drop any object based items, like DateTime
-            foreach ($this->updatedData as $key => $val) {
-                if (gettype($val) == 'object' && !method_exists($val, '__toString')) {
-                    unset($this->originalData[$key]);
-                    unset($this->updatedData[$key]);
-                    array_push($this->dontKeep, $key);
-                }
+        // we can only safely compare basic items,
+        // so for now we drop any object based items, like DateTime
+        foreach ($this->updatedData as $key => $val) {
+            if (gettype($val) == 'object' && !method_exists($val, '__toString')) {
+                unset($this->originalData[$key]);
+                unset($this->updatedData[$key]);
+                array_push($this->dontKeep, $key);
             }
-
-            // the below is ugly, for sure, but it's required so we can save the standard model
-            // then use the keep / dontkeep values for later, in the isRevisionable method
-            $this->dontKeep = isset($this->dontKeepRevisionOf) ?
-                array_merge($this->dontKeepRevisionOf, $this->dontKeep)
-                : $this->dontKeep;
-
-            $this->doKeep = isset($this->keepRevisionOf) ?
-                array_merge($this->keepRevisionOf, $this->doKeep)
-                : $this->doKeep;
-
-            unset($this->attributes['dontKeepRevisionOf']);
-            unset($this->attributes['keepRevisionOf']);
-
-            $this->dirtyData = $this->getDirty();
-            $this->updating = $this->exists;
         }
+
+        $this->dirtyData = $this->getDirty();
+        $this->updating = $this->exists;
     }
 
 
@@ -167,7 +147,7 @@ trait RevisionableTrait
         }
 
         // check if the model already exists
-        if (((!isset($this->revisionEnabled) || $this->revisionEnabled) && $this->updating) && (!$LimitReached || $RevisionCleanup)) {
+        if ($this->updating && (!$LimitReached || $RevisionCleanup)) {
             // if it does, it means we're updating
 
             $changes_to_record = $this->changedRevisionableFields();
@@ -215,24 +195,20 @@ trait RevisionableTrait
             return false;
         }
 
-        if ((!isset($this->revisionEnabled) || $this->revisionEnabled))
-        {
-            $revisions[] = array(
-                'revisionable_type' => $this->getMorphClass(),
-                'revisionable_id' => $this->getKey(),
-                'key' => self::CREATED_AT,
-                'old_value' => null,
-                'new_value' => $this->{self::CREATED_AT},
-                'user_id' => $this->getSystemUserId(),
-                'created_at' => new \DateTime(),
-                'updated_at' => new \DateTime(),
-            );
+        $revisions[] = array(
+            'revisionable_type' => $this->getMorphClass(),
+            'revisionable_id' => $this->getKey(),
+            'key' => self::CREATED_AT,
+            'old_value' => null,
+            'new_value' => $this->{self::CREATED_AT},
+            'user_id' => $this->getSystemUserId(),
+            'created_at' => new \DateTime(),
+            'updated_at' => new \DateTime(),
+        );
 
-            $revision = new Revision;
-            \DB::table($revision->getTable())->insert($revisions);
-            \Event::fire('revisionable.created', array('model' => $this, 'revisions' => $revisions));
-        }
-
+        $revision = new Revision;
+        \DB::table($revision->getTable())->insert($revisions);
+        \Event::fire('revisionable.created', array('model' => $this, 'revisions' => $revisions));
     }
 
     /**
@@ -240,10 +216,7 @@ trait RevisionableTrait
      */
     public function postDelete()
     {
-        if ((!isset($this->revisionEnabled) || $this->revisionEnabled)
-            && $this->isSoftDelete()
-            && $this->isRevisionable($this->getDeletedAtColumn())
-        ) {
+        if ($this->isSoftDelete() && $this->isRevisionable($this->getDeletedAtColumn())) {
             $revisions[] = array(
                 'revisionable_type' => $this->getMorphClass(),
                 'revisionable_id' => $this->getKey(),
@@ -408,31 +381,5 @@ trait RevisionableTrait
     public function getRevisionUnknownString()
     {
         return isset($this->revisionUnknownString) ? $this->revisionUnknownString : 'unknown';
-    }
-
-    /**
-     * Disable a revisionable field temporarily
-     * Need to do the adding to array longhanded, as there's a
-     * PHP bug https://bugs.php.net/bug.php?id=42030
-     *
-     * @param mixed $field
-     *
-     * @return void
-     */
-    public function disableRevisionField($field)
-    {
-        if (!isset($this->dontKeepRevisionOf)) {
-            $this->dontKeepRevisionOf = array();
-        }
-        if (is_array($field)) {
-            foreach ($field as $one_field) {
-                $this->disableRevisionField($one_field);
-            }
-        } else {
-            $donts = $this->dontKeepRevisionOf;
-            $donts[] = $field;
-            $this->dontKeepRevisionOf = $donts;
-            unset($donts);
-        }
     }
 }

@@ -39,8 +39,8 @@ class WebRoutes
             $router->get('threads/hot', 'ThreadController@index');
             $router->get('threads/recent', 'ThreadController@recent')->middleware('active:web');
             $router->get('threads/excellent', 'ThreadController@excellent')->middleware('active:web');
-            $router->get('thread/search/{keyword}', 'ThreadController@search')->middleware('active:web');
-            $router->get('user/search/{keyword}', 'UserController@search')->middleware('active:web');
+            $router->get('thread/search/{keyword}/{a?}/{b?}/{c?}', 'ThreadController@search')->middleware('active:web');
+            $router->get('user/search/{keyword}/{a?}/{b?}/{c?}', 'UserController@search')->middleware('active:web');
             $router->get('threads/{thread}', 'ThreadController@show')->where('thread', '[0-9]+')->middleware('active:web');
             $router->get('threads/{thread}/replies/{sort?}', 'ThreadController@replies')->where('thread', '[0-9]+')->where('sort', 'like|desc|asc');
             $router->get('nodes', 'NodeController@index');

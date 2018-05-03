@@ -1,4 +1,5 @@
 <?php
+
 namespace Hifone\Models;
 
 class DailyStat extends BaseModel

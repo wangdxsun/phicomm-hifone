@@ -2,8 +2,6 @@
 
 namespace Hifone\Models;
 
-use AltThree\Validator\ValidatingTrait;
-
 class Keyword extends BaseModel
 {
     public $timestamps = true;
