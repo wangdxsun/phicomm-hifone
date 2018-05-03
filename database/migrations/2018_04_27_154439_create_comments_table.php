@@ -26,7 +26,7 @@ class CreateCommentsTable extends Migration
             $table->unsignedInteger('like_count')->comment('点赞数')->default(0);
             $table->string('ip')->comment('用户ip')->nullable();
             $table->unsignedInteger('last_op_user_id')->comment('后台最后操作人id')->nullable();
-            $this->timestamp('last_op_time')->comment('后台最后操作时间')->nullable();
+            $table->timestamp('last_op_time')->comment('后台最后操作时间')->nullable();
             $table->string('last_op_reason')->comment('操作原因')->nullable();
 
             $table->timestamps();

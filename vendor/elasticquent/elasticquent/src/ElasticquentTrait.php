@@ -302,10 +302,20 @@ trait ElasticquentTrait
                         ],
                     ],
                     'filter' => [
-                        'range' => [
-                            'created_at' => [
-                                'gte' => $recent
-                            ]
+                        'bool' => [
+                            'must' => [
+                                [
+                                    'range' => [
+                                        'created_at' => [
+                                            'gte' => $recent
+                                        ]
+                                    ],
+                                ],[
+                                    'term' => [
+                                        'status' => 0
+                                    ]
+                                ]
+                            ],
                         ]
                     ]
                 ]

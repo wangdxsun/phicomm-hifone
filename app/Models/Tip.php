@@ -15,11 +15,10 @@ use AltThree\Validator\ValidatingTrait;
 use Hifone\Presenters\TipPresenter;
 use Illuminate\Database\Eloquent\Model;
 use McCool\LaravelAutoPresenter\HasPresenter;
-use Venturecraft\Revisionable\RevisionableTrait;
 
 class Tip extends Model implements HasPresenter
 {
-    use ValidatingTrait, RevisionableTrait;
+    use ValidatingTrait;
     /**
      * The fillable properties.
      *

@@ -13,11 +13,10 @@ namespace Hifone\Models\Ad;
 
 use AltThree\Validator\ValidatingTrait;
 use Illuminate\Database\Eloquent\Model;
-use Venturecraft\Revisionable\RevisionableTrait;
 
 class Adblock extends Model
 {
-    use ValidatingTrait, RevisionableTrait;
+    use ValidatingTrait;
 
     /**
      * The fillable properties.

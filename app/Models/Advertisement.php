@@ -13,7 +13,6 @@ namespace Hifone\Models;
 
 use Hifone\Models\Ad\Adspace;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 
 class Advertisement extends BaseModel
 {

@@ -45,8 +45,8 @@ class AppRoutes
             $router->get('threads', 'ThreadController@index');
             $router->get('threads/recent', 'ThreadController@recent')->middleware('active:app');
             $router->get('threads/excellent', 'ThreadController@excellent')->middleware('active:app');
-            $router->get('threads/search/{keyword}', 'ThreadController@search');
-            $router->get('users/search/{keyword}', 'UserController@search');
+            $router->get('threads/search/{keyword}/{a?}/{b?}/{c?}', 'ThreadController@search');
+            $router->get('users/search/{keyword}/{a?}/{b?}/{c?}', 'UserController@search');
             $router->get('threads/{thread}', 'ThreadController@show')->where('thread', '[0-9]+')->middleware('active:app');
             $router->get('threads/{thread}/replies/{sort?}', 'ThreadController@replies')->where('sort', 'like|desc|asc')->where('thread', '[0-9]+');
             $router->get('replies/{reply}', 'ReplyController@show');
