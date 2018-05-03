@@ -43,7 +43,6 @@ class Kernel extends HttpKernel
             \Illuminate\Cookie\Middleware\EncryptCookies::class,
             \Illuminate\Session\Middleware\StartSession::class,
             \Hifone\Http\Middleware\Acceptable::class,
-            \Hifone\Http\Middleware\Timezone::class,
             \Barryvdh\Cors\HandleCors::class,
         ],
     ];
