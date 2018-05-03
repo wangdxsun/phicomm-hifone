@@ -15,9 +15,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tag extends Model
 {
-    protected $fillable = [
-        'name', 'type', 'count',
-    ];
+    protected $fillable = ['name', 'type', 'count'];
+
+    protected $hidden = ['created_at', 'updated_at', 'tag_type_id', 'channel', 'count'];
+
     const AUTO = 0;
     const HUMAN = 1;
 
@@ -33,23 +34,23 @@ class Tag extends Model
 
     public function users()
     {
-        return $this->morphedByMany(User::class,'taggable');
+        return $this->morphedByMany(User::class, 'taggable');
     }
 
     //根据标签类别查询标签
-    public function scopeOfType($query, TagType $tagType)
+    public function scopeOfTagType($query, TagType $tagType)
     {
-        return $query->where('type', $tagType->id);
+        return $query->where('tag_type_id', $tagType->id);
     }
 
     //查询标签所属类别
     public function tagType()
     {
-        return $this->belongsTo(TagType::class,'type','id');
+        return $this->belongsTo(TagType::class, 'type', 'id');
     }
 
     //查询是自动标签还是手动标签
-    public function scopeOfChannel($query,$channel)
+    public function scopeOfChannel($query, $channel)
     {
         return $query->where('channel', $channel);
     }
