@@ -1,9 +1,24 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: qiuling.jiang
+ * Date: 2018/5/3
+ * Time: 10:01
+ */
+
 namespace Hifone\Models;
+
+use Hifone\Models\Scopes\CommonTrait;
 
 class Answer extends BaseModel
 {
-    protected $table = 'answers';
+    use CommonTrait;
+
+    //问题状态
+    const VISIBLE = 0;//正常问题
+    const TRASH = -1;//审核未通过
+    const AUDIT = -2;//审核中
+    const DELETED = -3;//已删除
 
     public $fillable = [
         'body',
@@ -15,16 +30,17 @@ class Answer extends BaseModel
         'thumbnails'
     ];
 
-    public $rules = [
-        'body'         => 'required|min:5|max:800',
-        'user_id'      => 'required|int',
-        'question_id'  => 'required|int',
-    ];
+    protected $hidden = [];
+
+    public function User()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     //审核通过
     public function scopeVisible($query)
     {
-        return $query->where('status', Question::VISIBLE);
+        return $query->where('status', static::VISIBLE);
     }
 
     //待审核
@@ -44,5 +60,4 @@ class Answer extends BaseModel
     {
         return $query->whereIn('status', [static::VISIBLE, static::DELETED]);
     }
-
 }

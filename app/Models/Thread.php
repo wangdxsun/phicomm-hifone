@@ -564,10 +564,4 @@ class Thread extends BaseModel implements TaggableInterface
 
         return $value;
     }
-
-//    public function tags()
-//    {
-//        return $this->morphMany(Taggable::class, 'taggable');
-//    }
-
 }

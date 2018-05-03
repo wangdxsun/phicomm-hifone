@@ -1,16 +1,25 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: qiuling.jiang
+ * Date: 2018/5/3
+ * Time: 9:45
+ */
 
 namespace Hifone\Models;
 
+use Hifone\Models\Scopes\CommonTrait;
+use Hifone\Models\Traits\Taggable;
+
 class Question extends BaseModel
 {
+    use CommonTrait, Taggable;
+
     //问题状态
     const VISIBLE = 0;//正常问题
     const TRASH = -1;//审核未通过
     const AUDIT = -2;//审核中
     const DELETED = -3;//已删除
-
-    protected $table = 'questions';
 
     public $fillable = [
         'title',
@@ -26,12 +35,12 @@ class Question extends BaseModel
         'thumbnails'
     ];
 
-    public $rules = [
-        'title'   => 'required|min:5|max:40',
-        'body'    => 'max:800',
-        'user_id' => 'required|int',
-        'status'  => 'required'
-    ];
+    protected $hidden = [];
+
+    public function User()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function answers()
     {
@@ -67,11 +76,6 @@ class Question extends BaseModel
         return ;
     }
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
     public function lastOpUser()
     {
         return $this->belongsTo(User::class, 'last_op_user_id');
@@ -94,6 +98,4 @@ class Question extends BaseModel
     {
         return $this->is_excellent ? 'fa fa-diamond text-danger' : 'fa fa-diamond';
     }
-
-
 }
