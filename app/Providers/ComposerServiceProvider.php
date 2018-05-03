@@ -11,8 +11,6 @@
 
 namespace Hifone\Providers;
 
-use Hifone\Composers\AppComposer;
-use Hifone\Composers\CurrentUserComposer;
 use Hifone\Composers\Dashboard\AnswerMenuComposer;
 use Hifone\Composers\Dashboard\BannerMenuComposer;
 use Hifone\Composers\Dashboard\NodeMenuComposer;
@@ -39,8 +37,6 @@ class ComposerServiceProvider extends ServiceProvider
      */
     public function boot(Factory $factory)
     {
-        $factory->composer('*', AppComposer::class);
-        $factory->composer('*', CurrentUserComposer::class);
         $factory->composer(['dashboard.threads.*',], ThreadMenuComposer::class);
         $factory->composer(['dashboard.replies.*',], ReplyMenuComposer::class);
         $factory->composer(['dashboard.nodes.*', 'dashboard.sections.*', 'dashboard.subNodes.*'], NodeMenuComposer::class);
