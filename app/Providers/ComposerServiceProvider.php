@@ -13,10 +13,8 @@ namespace Hifone\Providers;
 
 use Hifone\Composers\AppComposer;
 use Hifone\Composers\CurrentUserComposer;
-use Hifone\Composers\Dashboard\AdvertisementMenuComposer;
 use Hifone\Composers\Dashboard\AnswerMenuComposer;
 use Hifone\Composers\Dashboard\BannerMenuComposer;
-use Hifone\Composers\Dashboard\ContentMenuComposer;
 use Hifone\Composers\Dashboard\NodeMenuComposer;
 use Hifone\Composers\Dashboard\QuestionMenuComposer;
 use Hifone\Composers\Dashboard\ReplyMenuComposer;
@@ -25,8 +23,6 @@ use Hifone\Composers\Dashboard\SettingMenuComposer;
 use Hifone\Composers\Dashboard\StatMenuComposer;
 use Hifone\Composers\Dashboard\TagMenuComposer;
 use Hifone\Composers\Dashboard\ThreadMenuComposer;
-use Hifone\Composers\SidebarComposer;
-use Hifone\Composers\TimezoneComposer;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\ServiceProvider;
 use Hifone\Composers\Dashboard\ChatsMenuComposer;
@@ -45,16 +41,12 @@ class ComposerServiceProvider extends ServiceProvider
     {
         $factory->composer('*', AppComposer::class);
         $factory->composer('*', CurrentUserComposer::class);
-        $factory->composer('partials.sidebar', SidebarComposer::class);
-        $factory->composer(['install.*', ], TimezoneComposer::class);
-        $factory->composer(['dashboard.adblocks.*', 'dashboard.advertisements.*', 'dashboard.adspaces.*', ], AdvertisementMenuComposer::class);
         $factory->composer(['dashboard.threads.*',], ThreadMenuComposer::class);
         $factory->composer(['dashboard.replies.*',], ReplyMenuComposer::class);
-        $factory->composer(['dashboard.photos.*', 'dashboard.pages.*', ], ContentMenuComposer::class);
         $factory->composer(['dashboard.nodes.*', 'dashboard.sections.*', 'dashboard.subNodes.*'], NodeMenuComposer::class);
         $factory->composer(['dashboard.groups.*'], RoleMenuComposer::class);
         $factory->composer(['dashboard.stats.*'], StatMenuComposer::class);
-        $factory->composer(['dashboard.tips.*', 'dashboard.links.*', 'dashboard.locations.*', 'dashboard.settings.*', ], SettingMenuComposer::class);
+        $factory->composer(['dashboard.settings.*', ], SettingMenuComposer::class);
         $factory->composer(['dashboard.chat.*'], ChatsMenuComposer::class);
         $factory->composer(['dashboard.carousel.*'], BannerMenuComposer::class);
         $factory->composer(['dashboard.tagTypes.*', 'dashboard.tags.*'],TagMenuComposer::class);

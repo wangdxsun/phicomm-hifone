@@ -61,7 +61,7 @@
             </div>
             <div class="panel-body">
                 <div class="reply-box form">
-                    @if($current_user)
+                    @if(auth()->user)
                         @if(!Auth::user()->hasRole('NoComment'))
                             {!! Form::open(['route' => 'reply.store', 'id' => 'reply_create_form', 'class' => 'create_form', 'method' => 'post']) !!}
                             <input type="hidden" name="reply[thread_id]" value="{{ $thread->id }}" />

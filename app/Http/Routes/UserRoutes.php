@@ -27,7 +27,7 @@ class UserRoutes
      */
     public function map(Registrar $router)
     {
-        $router->group(['middleware' => ['web', 'localize']], function (Registrar $router) {
+        $router->group(['middleware' => ['web']], function (Registrar $router) {
             $router->get('/user/{user}/replies', 'UserController@replies')->name('user.replies');
             $router->get('/user/{user}/threads', 'UserController@threads')->name('user.threads');
             $router->get('/user/{user}/follows', 'UserController@follows')->name('user.follows');
