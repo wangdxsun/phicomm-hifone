@@ -26,9 +26,6 @@ use Input;
 
 class UserController extends Controller
 {
-    const THREAD = 0;
-    const USER = 1;
-    const AUTO = 2;
     protected $hasher;
 
     /**
@@ -64,9 +61,9 @@ class UserController extends Controller
         }
         $orderTypes = User::$orderTypes;
         //传入所有用户标签类
-        $userTagTypes = TagType::ofType([self::USER])->with('tags')->get();
+        $userTagTypes = TagType::ofType([TagType::USER])->with('tags')->get();
         //传入标签个数的数组
-        $tagCounts = range(1, Tag::whereIn('type', TagType::ofType([TagType::USER])->pluck('id')->toArray())->count());
+        $tagCounts = range(1, Tag::whereIn('tag_type_id', $userTagTypes->pluck('id')->toArray())->count());
 
         return View::make('dashboard.users.index')
             ->withPageTitle(trans('dashboard.users.users').' - '.trans('dashboard.dashboard'))

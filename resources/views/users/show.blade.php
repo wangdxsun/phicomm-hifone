@@ -25,7 +25,7 @@
             <div class="user-card">
                 <div class="header">
                   <a class="avatar" href="{{ $user->url }}" target="_blank"><img src="{{ $user->avatar }}"><strong><span>{{ '@'.$user->username }}</span></strong></a>
-                  @if(auth()->user && auth()->user->id != $user->id)
+                  @if(auth()->user() && auth()->user()->id != $user->id)
                    @if (Auth::check() && $user->follows()->forUser(Auth::user()->id)->count())
                       <a class="button followable" data-type="User" data-id="{{ $user->id }}" data-url="{{ route('follow.user',$user->id) }}">
                           <i class="fa fa-minus"></i> {!! trans('hifone.unfollow') !!}

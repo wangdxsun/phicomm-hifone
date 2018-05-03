@@ -2,10 +2,10 @@
     <div class="sidebar-inner">
         <div class="profile">
             <a href="{{ url('dashboard/user') }}">
-                <span class="avatar"><img src="{{ auth()->user->avatar }}"></span>
+                <span class="avatar"><img src="{{ auth()->user()->avatar }}"></span>
             </a>
             <a href="{{ url('dashboard/user') }}">
-                <h4 class="username">{{ auth()->user->username }}</h4>
+                <h4 class="username">{{ auth()->user()->username }}</h4>
             </a>
         </div>
         <div class="clearfix"></div>

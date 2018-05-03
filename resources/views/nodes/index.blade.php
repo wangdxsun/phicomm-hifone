@@ -5,7 +5,7 @@
 <div class="col-md-9 main-col">
     <div class="panel">
         <div class="panel-heading">
-            <h3 class="panel-title">{{ $site_name }}</h3>
+            <h3 class="panel-title">{{ config('site_name') }}</h3>
         </div>
         <div class="panel-body">
             {!! $site_about !!}

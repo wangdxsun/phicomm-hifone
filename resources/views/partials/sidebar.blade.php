@@ -3,7 +3,7 @@
         @if(!Auth::user()->hasRole('NoComment'))
             <div class="panel panel-default corner-radius">
                 <div class="panel-heading">
-                    <h3 class="panel-title">{!! isset($node) ? $node->name : $site_name.' - '.$site_about !!}</h3>
+                    <h3 class="panel-title">{!! isset($node) ? $node->name : config('site_name') !!}</h3>
                 </div>
                 <div class="panel-body text-center">
                     <div class="btn-group">
@@ -45,7 +45,7 @@
     @else
         <div class="panel panel-default corner-radius">
             <div class="panel-heading">
-                <h3 class="panel-title">{{ $site_name }} - {{ $site_about }}</h3>
+                <h3 class="panel-title">{{ config('site_name') }}</h3>
             </div>
             <div class="panel-body text-center">
                 <a href="{{ route('auth.register') }}" class="btn btn-primary">
