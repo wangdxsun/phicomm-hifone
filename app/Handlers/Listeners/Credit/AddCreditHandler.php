@@ -42,6 +42,7 @@ use Hifone\Events\Like\LikedWasAddedEvent;
 use Hifone\Events\Like\LikedWasRemovedEvent;
 use Hifone\Events\Image\AvatarWasUploadedEvent;
 use Hifone\Events\User\UserWasLoggedinWebEvent;
+use Hifone\Models\Reply;
 use Hifone\Models\Thread;
 
 class AddCreditHandler
@@ -100,9 +101,9 @@ class AddCreditHandler
             $user = $event->user;
             $action = 'thread_favorite_removed';
         } elseif ($event instanceof PinWasAddedEvent) {
-            if($event->action == 'Thread'){
+            if ($event->object instanceof Thread){
                 $action = 'thread_pin';
-            }elseif($event->action == 'Reply'){
+            } elseif($event->object instanceof Reply){
                 $action = 'replied_pin';
             }
             $user = $event->user;

@@ -57,6 +57,7 @@ class AppRoutes
                 $router->post('upload/base64', 'CommonController@uploadBase64');
                 $router->post('threads', 'ThreadController@store')->middleware('active:app');
                 $router->post('threads/{thread}/vote', 'ThreadController@vote')->where('thread', '[0-9]+');
+                $router->post('threads/{thread}/shared', 'ThreadController@addScoreThreadShared')->where('thread', '[0-9]+');
                 $router->post('feedbacks/replies', 'ReplyController@feedback');
                 $router->post('feedbacks', 'ThreadController@feedback');
                 $router->post('replies', 'ReplyController@store');

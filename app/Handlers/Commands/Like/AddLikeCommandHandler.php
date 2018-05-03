@@ -37,6 +37,7 @@ class AddLikeCommandHandler
     {
         $user = User::find($target->user_id);
         if ($target->likes()->forUser(Auth::id())->WithUp()->sharedLock()->count()) {
+            //取消点赞
             \DB::transaction(function () use ($target, $user) {
                 $target->likes()->forUser(Auth::id())->WithUp()->delete();
                 $target->decrement('like_count', 1);
@@ -45,22 +46,23 @@ class AddLikeCommandHandler
                 event(new LikedWasRemovedEvent($user));
             });
         } elseif ($target->likes()->forUser(Auth::id())->WithDown()->sharedLock()->count()) {
-            // user already clicked unlike once
+            //从踩到赞
             $target->likes()->forUser(Auth::id())->WithDown()->delete();
             $target->likes()->create(['user_id' => Auth::id(), 'rating' => Like::LIKE]);
             $target->increment('like_count', 2);
 
             event(new ThreadWasLikedEvent($target));//点赞帖子或回复
-            event(new LikeWasAddedEvent(Auth::user()));
-            event(new LikedWasAddedEvent($user));
+            event(new LikeWasAddedEvent(Auth::user()));//用户主动点赞
+            event(new LikedWasAddedEvent($user, $target));//帖子或回复被赞
         } else {
+            //点赞
             \DB::transaction(function () use ($target, $user) {
                 $target->likes()->create(['user_id' => Auth::id(), 'rating' => Like::LIKE]);
                 $target->increment('like_count', 1);
 
                 event(new ThreadWasLikedEvent($target));
                 event(new LikeWasAddedEvent(Auth::user()));
-                event(new LikedWasAddedEvent($user));
+                event(new LikedWasAddedEvent($user, $target));
             });
         }
     }

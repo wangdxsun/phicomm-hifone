@@ -20,7 +20,7 @@ final class ThreadWasPinnedEvent implements ThreadEventInterface
      *
      * @var \Hifone\Models\Thread
      */
-    public $user;
+    public $target;
 
     /**
      * Create a new thread has reported event instance.

@@ -226,7 +226,11 @@ class UserController extends Controller
     public function tagUpdate(User $user)
     {
         $tagData = Input::get('userTags');
-        $user->tags()->sync($tagData);
+        if (null == $tagData) {
+            $user->tags()->detach();
+        } else {
+            $user->tags()->sync($tagData);
+        }
     }
 
 }
