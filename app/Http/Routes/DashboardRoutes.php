@@ -152,6 +152,7 @@ class DashboardRoutes
             $router->delete('tag/type/{tagType}','TagTypeController@destroy')->name('tag.type.destroy');
 
             $router->get('tag/user','TagController@user')->name('tag.user');
+            $router->get('tag/question','TagController@question')->name('tag.question');
             $router->get('tag/index','TagController@index')->name('tag.index');
             $router->get('tag/thread','TagController@thread')->name('tag.thread');
             $router->get('tag/create','TagController@create')->name('tag.create');

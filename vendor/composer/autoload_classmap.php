@@ -617,6 +617,7 @@ return array(
     'TestCase' => $vendorDir . '/barryvdh/laravel-cors/tests/TestCase.php',
     'Text_Template' => $vendorDir . '/phpunit/php-text-template/src/Template.php',
     'UpdateQaModulesTable' => $baseDir . '/database/migrations/2018_04_28_144428_update_qa_modules_table.php',
+    'UpdateTagTable' => $baseDir . '/database/migrations/2018_05_03_142032_update_tag_table.php',
     'Whoops\\Module' => $vendorDir . '/filp/whoops/src/deprecated/Zend/Module.php',
     'Whoops\\Provider\\Zend\\ExceptionStrategy' => $vendorDir . '/filp/whoops/src/deprecated/Zend/ExceptionStrategy.php',
     'Whoops\\Provider\\Zend\\RouteNotFoundStrategy' => $vendorDir . '/filp/whoops/src/deprecated/Zend/RouteNotFoundStrategy.php',

@@ -21,12 +21,14 @@ final class SinkWasAddedEvent implements PinEventInterface
      * @var \Hifone\Models\Thread
      */
     public $user;
+    public $object;
 
     /**
      * Create a new thread has reported event instance.
      */
-    public function __construct(User $user)
+    public function __construct(User $user, $object)
     {
         $this->user = $user;
+        $this->object = $object;
     }
 }

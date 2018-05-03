@@ -296,11 +296,11 @@ class ThreadController extends WebController
         if ($thread->order > 0) {
             $thread->decrement('order', 2);
             $this->updateOpLog($thread, '下沉');
-            event(new SinkWasAddedEvent($thread->user));
+            event(new SinkWasAddedEvent($thread->user, $thread));
         } elseif ($thread->order == 0) {
             $thread->decrement('order', 1);
             $this->updateOpLog($thread, '下沉');
-            event(new SinkWasAddedEvent($thread->user));
+            event(new SinkWasAddedEvent($thread->user, $thread));
         } elseif ($thread->order < 0) {
             $thread->increment('order', 1);
             $this->updateOpLog($thread, '取消下沉');

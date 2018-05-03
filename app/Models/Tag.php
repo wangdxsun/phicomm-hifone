@@ -45,7 +45,7 @@ class Tag extends Model
     //查询标签所属类别
     public function tagType()
     {
-        return $this->belongsTo(TagType::class,'type','id');
+        return $this->belongsTo(TagType::class,'tag_type_id','id');
     }
 
     //查询是自动标签还是手动标签

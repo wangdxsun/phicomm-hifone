@@ -42,6 +42,8 @@ use Hifone\Events\Like\LikedWasAddedEvent;
 use Hifone\Events\Like\LikedWasRemovedEvent;
 use Hifone\Events\Image\AvatarWasUploadedEvent;
 use Hifone\Events\User\UserWasLoggedinWebEvent;
+use Hifone\Models\Answer;
+use Hifone\Models\Question;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
 
@@ -105,13 +107,21 @@ class AddCreditHandler
                 $action = 'thread_pin';
             } elseif($event->object instanceof Reply){
                 $action = 'replied_pin';
+            } elseif ($event->object instanceof Question) {
+                $action = 'question_pin';
+            } elseif ($event->object instanceof Answer) {
+                $action = 'answer_pin';
             }
             $user = $event->user;
         } elseif($event instanceof  NodePinWasAddedEvent){
             $user = $event->user;
             $action = 'thread_node_pin';
         }  elseif ($event instanceof SinkWasAddedEvent) {
-            $action = 'thread_down';
+            if ($event->object instanceof Thread) {
+                $action = 'thread_down';
+            } elseif ($event->object instanceof Question) {
+                $action = 'question_down';
+            }
             $user = $event->user;
         } elseif ($event instanceof FollowWasAddedEvent) {
             if ($event->target instanceof Thread) {
@@ -144,7 +154,11 @@ class AddCreditHandler
                 $user = $event->target;
             }
         } elseif ($event instanceof ExcellentWasAddedEvent) {
-            $action = 'thread_excellent';
+            if ($event->object instanceof Thread) {
+                $action = 'thread_excellent';
+            } elseif ($event->object instanceof Question) {
+                $action = 'question_excellent';
+            }
             $user = $event->target;
         } elseif ($event instanceof LikeWasAddedEvent) {
             $action = 'like';

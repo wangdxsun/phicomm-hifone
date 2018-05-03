@@ -284,7 +284,7 @@ class ThreadController extends Controller
         }else{
             $thread->decrement('order', 1);
             $this->updateOpLog($thread, '下沉');
-            event(new SinkWasAddedEvent($thread->user));
+            event(new SinkWasAddedEvent($thread->user, $thread));
         }
 
         return Redirect::route('thread.show', $thread->id);
