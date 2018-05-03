@@ -12,9 +12,11 @@ class TagType extends BaseModel
 {
     public $table = 'tag_types';
 
+
     const THREAD = 0;//type:帖子标签
     const USER = 1;  //type:用户标签
     const QUESTION = 2;  //type:问题标签
+
 
     protected $fillable = [
         'display_name',
@@ -23,7 +25,13 @@ class TagType extends BaseModel
         'type'
     ];
 
-    public static $types = [
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'type'
+    ];
+
+     public static $types  = [
         [
             'value' => 0,
             'name' => 'thread',
@@ -36,6 +44,7 @@ class TagType extends BaseModel
             'value' => 2,
             'name'  => 'question',
             'display_name'  => '问题标签'],
+
     ];
 
     //type字段表征标签类型
@@ -46,7 +55,7 @@ class TagType extends BaseModel
 
     public function scopeOfType($query, $id)
     {
-        return $query->whereIn('type', $id);
+        return $query->where('type', $id);
     }
 
 }

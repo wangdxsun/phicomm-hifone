@@ -15,7 +15,8 @@ class QuestionController extends WebController
 {
     public function index(QuestionBll $questionBll)
     {
-        $questions = $questionBll->questions();
+        $tagId = request('tag_id');
+        $questions = $questionBll->questions($tagId);
 
         return $questions;
     }
@@ -34,6 +35,6 @@ class QuestionController extends WebController
 
     public function show(Question $question)
     {
-        return $question->load(['user']);
+        return $question->load(['user', 'tags']);
     }
 }

@@ -29,6 +29,8 @@ class Role extends EntrustRole implements HasPresenter
 
     protected $fillable = ['name', 'display_name', 'description', 'type', 'credit_low', 'credit_high', 'user_id'];
 
+    protected $hidden = ['credit_low', 'credit_high', 'description', 'type', 'created_at', 'updated_at', 'user_id'];
+
     public static function relationArrayWithCache()
     {
         return Cache::remember('all_assigned_roles', $minutes = 60, function () {

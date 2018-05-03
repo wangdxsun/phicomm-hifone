@@ -35,16 +35,39 @@ class Question extends BaseModel
         'thumbnails'
     ];
 
-    protected $hidden = [];
+    protected $hidden = [
+        'body_original',
+        'bad_word',
+        'device',
+        'ip',
+        'last_op_user_id',
+        'last_op_time',
+        'last_op_reason',
+        'last_answer_time',
+        'deleted_at',
+        'updated_at'
+    ];
 
     public function User()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->select(['id', 'username', 'role', 'avatar_url']);
     }
 
     public function answers()
     {
         return $this->hasMany(Answer::class);
+    }
+
+    public function tags()
+    {
+        return $this->morphToMany(Tag::class, 'taggable');
+    }
+
+    public function scopeOfTag($query, $tagId)
+    {
+        return $query->whereHas('tags', function ($query) use ($tagId) {
+            return $query->where('tag_id', $tagId);
+        });
     }
 
     //审核通过
