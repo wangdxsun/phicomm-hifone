@@ -11,7 +11,6 @@
 
 namespace Hifone\Events\Excellent;
 
-use Hifone\Models\User;
 
 final class ExcellentWasAddedEvent implements ExcellentEventInterface
 {
@@ -21,12 +20,14 @@ final class ExcellentWasAddedEvent implements ExcellentEventInterface
      * @var \Hifone\Models\Favorite
      */
     public $target;
+    public $object;
 
     /**
      * Create a new favorite has reported event instance.
      */
-    public function __construct($target)
+    public function __construct($target, $object)
     {
         $this->target = $target;
+        $this->object = $object;
     }
 }

@@ -8,6 +8,7 @@
 
 namespace Hifone\Http\Controllers\App\V1;
 
+use Hifone\Events\Thread\ThreadWasSharedEvent;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\ThreadBll;
@@ -139,5 +140,13 @@ class ThreadController extends AppController
 
         return success('投票成功');
     }
+
+    //帖子被分享，需要增加智慧果
+    public function addScoreThreadShared()
+    {
+        event(new ThreadWasSharedEvent());
+        return success('分享帖子');
+    }
+
 
 }

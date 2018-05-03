@@ -13,6 +13,7 @@ namespace Hifone\Handlers\Commands\Credit;
 
 use Carbon\Carbon;
 use Hifone\Commands\Credit\AddCreditCommand;
+use Hifone\Events\Credit\LevelUpEvent;
 use Hifone\Models\Credit;
 use Hifone\Models\CreditRule;
 use Hifone\Services\Dates\DateFactory;
@@ -50,6 +51,7 @@ class AddCreditCommandHandler
         if (!$creditRule || !$this->checkFrequency($creditRule, $command->user)) {
             return false;
         }
+        $oldCredit = $command->user->score;
         $data = [
             'user_id'           => $command->user->id,
             'rule_id'           => $creditRule->id,
@@ -58,9 +60,10 @@ class AddCreditCommandHandler
             'created_at'        => Carbon::now()->toDateTimeString(),
         ];
         // Create the credit
+
         $credit = Credit::create($data);
         $command->user->update(['score' => $credit->balance]);
-
+        event(new LevelUpEvent($command->user, $oldCredit));
         return $credit;
     }
 

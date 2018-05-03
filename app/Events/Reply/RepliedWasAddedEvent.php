@@ -15,12 +15,13 @@ final class RepliedWasAddedEvent implements ReplyEventInterface
 {
 
     public $threadUser;
-
     public $replyUser;
+    public $reply;
 
-    public function __construct($replyUser, $threadUser)
+    public function __construct($replyUser, $threadUser, $reply)
     {
         $this->replyUser = $replyUser;
         $this->threadUser = $threadUser;
+        $this->reply = $reply;
     }
 }

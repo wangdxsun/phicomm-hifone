@@ -19,6 +19,7 @@ use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Pin\SinkWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasMarkedExcellentEvent;
+use Hifone\Events\Thread\ThreadWasUppedEvent;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Node;
 use Hifone\Models\Section;
@@ -174,13 +175,13 @@ class ThreadController extends Controller
             $thread->update(['order' => 1]);
             $this->updateOpLog($thread, '置顶');
             event(new ThreadWasPinnedEvent($thread));
-            event(new PinWasAddedEvent($thread->user, 'Thread'));
+            event(new PinWasAddedEvent($thread->user, $thread));
         } elseif ($thread->order < 0) {
             //全局下沉
             $thread->update(['order' => 1]);
             $this->updateOpLog($thread, '置顶');
             event(new ThreadWasPinnedEvent($thread));
-            event(new PinWasAddedEvent($thread->user, 'Thread'));
+            event(new PinWasAddedEvent($thread->user,  $thread));
         }
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
@@ -201,6 +202,7 @@ class ThreadController extends Controller
               //不是版块置顶也不是全局置顶
                 $thread->update(['node_order' => 1]);
             }
+            event(new NodePinWasAddedEvent($thread->user, $thread));
         }
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
@@ -231,7 +233,7 @@ class ThreadController extends Controller
             $thread->is_excellent = 1;
             $thread->excellent_time = Carbon::now()->toDateTimeString();
             $this->updateOpLog($thread, '精华');
-            event(new ExcellentWasAddedEvent($thread->user));
+            event(new ExcellentWasAddedEvent($thread->user, $thread));
             event(new ThreadWasMarkedExcellentEvent($thread));
         }
         //更新热度值
@@ -369,6 +371,9 @@ class ThreadController extends Controller
             $thread->heat = $thread->heat_compute;
             $this->updateOpLog($thread, '提升帖子', $heatOffset);
             $thread->save();
+            if ($heatOffset > 0) {
+                event(new ThreadWasUppedEvent($thread));
+            }
         } catch (\Exception $e) {
             return Redirect::back()->withErrors($e->getMessage());
         }

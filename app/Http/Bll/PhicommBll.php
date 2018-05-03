@@ -246,7 +246,6 @@ class PhicommBll extends BaseBll
         $token = Auth::token();
         $header = "Authorization:$token";
         $res = json_decode(curl_form_post(env('PORTRAIT'), $data, $header, 'POST'), true);
-
         if ($res) {
             switch($res['error']){
                 case 0:

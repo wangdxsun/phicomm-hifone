@@ -250,7 +250,7 @@ class ThreadController extends Controller
         } else {
             $thread->is_excellent = 1;
             $this->updateOpLog($thread, '精华');
-            event(new ExcellentWasAddedEvent($thread->user));
+            event(new ExcellentWasAddedEvent($thread->user, $thread));
             event(new ThreadWasMarkedExcellentEvent($thread));
         }
         //更新热度值
