@@ -6,7 +6,7 @@
         </li>
        @foreach($sub_nav as $key => $item)
             <li class="{{ $key == $current_nav ? 'active' : null }}"><a href="{{ $item['url'] }}"><i class="{{ $item['icon'] }}"></i> {{ $item['title'] }}</a></li>
-      @endforeach
+       @endforeach
     </ul>
   </div>
 </div>

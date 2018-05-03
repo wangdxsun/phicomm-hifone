@@ -57,6 +57,8 @@ class WebRoutes
             $router->get('banners/{carousel}', 'BannerController@show')->name('banner.show')->middleware('active:web');
             $router->get('report/reason', 'ReportController@reason');
 
+            //问答相关
+
             //登录相关
             $router->post('register/pre', 'PhicommController@preRegister');
             $router->post('register', 'PhicommController@register');
