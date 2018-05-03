@@ -17,7 +17,6 @@ trait Recent
      * Scope a query order by created desc.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param int                                   $userId
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */

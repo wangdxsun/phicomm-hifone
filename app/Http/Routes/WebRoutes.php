@@ -26,12 +26,7 @@ class WebRoutes
      */
     public function map(Registrar $router)
     {
-        $router->group([
-            'namespace' => 'Web',
-            'prefix' => 'web/v1',
-            'middleware' => 'web',
-            'as' => 'web.'
-        ], function ($router) {
+        $router->group(['namespace' => 'Web', 'prefix' => 'web/v1', 'middleware' => 'web', 'as' => 'web.'], function ($router) {
             $router->get('emotions', 'GeneralController@emotion');
             $router->get('captcha', 'CommonController@captcha')->name('captcha');
 
@@ -56,6 +51,10 @@ class WebRoutes
             $router->get('banners', 'BannerController@index');
             $router->get('banners/{carousel}', 'BannerController@show')->name('banner.show')->middleware('active:web');
             $router->get('report/reason', 'ReportController@reason');
+
+            //问答相关
+            $router->get('questions', 'QuestionController@index');
+            $router->get('excellent', 'QuestionController@getExcellent');
 
             //登录相关
             $router->post('register/pre', 'PhicommController@preRegister');
