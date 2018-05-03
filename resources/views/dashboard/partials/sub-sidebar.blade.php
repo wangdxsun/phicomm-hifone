@@ -7,7 +7,8 @@
         @foreach($sub_menu as $key => $item)
         <li>
             <a href="{{ $item['url'] }}" class="{{ $key == $current_menu ? 'active' : null }}">
-                <i class="{{ isset($item['icon']) ? $item['icon'] : null }}"></i> {{ $item['title'] }}</a>
+                <i class="{{ isset($item['icon']) ? $item['icon'] : null }}"></i> {{ $item['title'] }}
+            </a>
         </li>
         @endforeach
     </ul>

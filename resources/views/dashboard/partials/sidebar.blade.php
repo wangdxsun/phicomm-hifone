@@ -24,6 +24,14 @@
                     <span>帖子管理</span>
                 </a>
             </li>
+
+            <li  {!! set_active('dashboard/questions*') !!}>
+                <a href="{{ route('dashboard.questions.index') }}">
+                    <i class="fa fa-file-o"></i>
+                    <span>问答管理</span>
+                </a>
+            </li>
+
             <li {!! set_active('dashboard/reply*') !!}>
                 <a href="{{ route('dashboard.reply.audit') }}">
                     <i class="fa fa-comments-o"></i>

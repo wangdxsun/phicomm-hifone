@@ -10,9 +10,6 @@
  */
 
 namespace Hifone\Http\Routes;
-
-use Hifone\Http\Controllers\Dashboard\TagController;
-use Hifone\Http\Controllers\Dashboard\ThreadController;
 use Illuminate\Contracts\Routing\Registrar;
 
 /**
@@ -68,6 +65,22 @@ class DashboardRoutes
 
             $router->get('reply/audit', 'ReplyController@audit')->name('reply.audit');
             $router->get('reply/trash', 'ReplyController@trashView')->name('reply.trash');
+
+            //问答相关
+            $router->get('questions/index', 'QuestionController@index')->name('questions.index');
+            $router->get('questions/audit', 'QuestionController@audit')->name('questions.audit');
+            $router->get('questions/trash', 'QuestionController@trash')->name('questions.trash');
+            $router->post('questions/{question}/pin', 'QuestionController@pin');
+            $router->post('questions/{question}/sink', 'QuestionController@sink');
+            $router->post('questions/{question}/excellent', 'QuestionController@excellent');
+
+            $router->get('answers/index', 'AnswerController@index')->name('answers.index');
+            $router->get('answers/audit', 'AnswerController@audit')->name('answers.audit');
+            $router->get('answers/trash', 'AnswerController@trash')->name('answers.trash');
+
+            $router->get('comments/index', 'CommentController@index')->name('comments.index');
+            $router->get('comments/audit', 'CommentController@audit')->name('comments.audit');
+            $router->get('comments/trash', 'CommentController@trash')->name('comments.trash');
         });
 
         //为版主和实习版主开放后台帖子管理和回帖管理的相关权限--资源路由
@@ -77,6 +90,7 @@ class DashboardRoutes
             'namespace' => 'Dashboard'
         ], function (Registrar $router) {
             $router->resource('thread', 'ThreadController');
+            $router->resource('questions', 'QuestionController');
             $router->resource('reply', 'ReplyController');
         });
 
