@@ -90,8 +90,23 @@ class Thread extends BaseModel implements TaggableInterface
         'node_order'
     ];
 
-    protected $hidden = ['body_original', 'bad_word', 'is_blocked', 'heat_offset', 'follower_count', 'ip',
-        'last_op_user_id', 'last_op_reason', 'last_op_time', 'deleted_at'];
+    protected $hidden = [
+        'body_original',
+        'bad_word',
+        'is_blocked',
+        'heat_offset',
+        'follower_count',
+        'ip',
+        'last_op_user_id',
+        'last_op_reason',
+        'last_op_time',
+        'deleted_at',
+        'channel',
+        'device',
+        'dev_info',
+        'contact',
+        'last_reply_user_id'
+    ];
 
     /**
      * The validation rules.
@@ -179,8 +194,7 @@ class Thread extends BaseModel implements TaggableInterface
 
     public function user()
     {
-        return $this->belongsTo(User::class)->select(['id', 'phicomm_id', 'username', 'avatar_url', 'role', 'password', 'thread_count', 'score',
-            'notification_reply_count', 'notification_at_count', 'notification_system_count', 'notification_chat_count', 'notification_follow_count']);
+        return $this->belongsTo(User::class)->select(['id', 'phicomm_id', 'username', 'avatar_url', 'role', 'thread_count', 'score']);
     }
 
     public function lastOpUser()

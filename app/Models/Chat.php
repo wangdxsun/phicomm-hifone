@@ -25,6 +25,11 @@ class Chat extends BaseModel
         'message',
     ];
 
+    protected $hidden = [
+        'from_to',
+        'updated_at'
+    ];
+
     /**
      * The validation rules.
      *

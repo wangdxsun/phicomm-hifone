@@ -10,8 +10,9 @@ namespace Hifone\Models;
 
 use Hifone\Models\Scopes\CommonTrait;
 use Hifone\Models\Traits\Taggable;
+use Hifone\Services\Tag\TaggableInterface;
 
-class Question extends BaseModel
+class Question extends BaseModel implements TaggableInterface
 {
     use CommonTrait, Taggable;
 
@@ -36,6 +37,7 @@ class Question extends BaseModel
     ];
 
     protected $hidden = [
+        'user_id',
         'body_original',
         'bad_word',
         'device',

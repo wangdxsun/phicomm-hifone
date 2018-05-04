@@ -20,6 +20,14 @@ class Credit extends BaseModel
      */
     protected $fillable = ['user_id', 'rule_id', 'balance', 'body', 'frequency_tag','created_at'];
 
+    protected $hidden = [
+        'id',
+        'user_id',
+        'rule_id',
+        'frequency_tag',
+        'balance',
+        'updated_at'
+    ];
     /**
      * The validation rules.
      *

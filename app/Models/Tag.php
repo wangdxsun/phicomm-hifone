@@ -17,7 +17,7 @@ class Tag extends Model
 {
     protected $fillable = ['name', 'type', 'count'];
 
-    protected $hidden = ['created_at', 'updated_at', 'tag_type_id', 'channel', 'count'];
+    protected $hidden = ['created_at', 'updated_at', 'tag_type_id', 'channel', 'count', 'pivot'];
 
     const AUTO = 0;
 

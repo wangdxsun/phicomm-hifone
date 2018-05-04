@@ -122,6 +122,8 @@ class WebRoutes
                 $router->get('notification/watch', 'NotificationController@watch');
 
                 $router->post('logout', 'PhicommController@logout');
+
+                $router->post('questions', 'QuestionController@store');
             });
 
             //后台管理员

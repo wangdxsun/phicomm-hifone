@@ -29,7 +29,20 @@ class Comment extends BaseModel
         'ip',
     ];
 
-    protected $hidden = [];
+    protected $hidden = [
+        'body_original',
+        'bad_word',
+        'user_id',
+        'answer_id',
+        'comment_id',
+        'device',
+        'ip',
+        'last_op_user_id',
+        'last_op_time',
+        'last_op_reason',
+        'updated_at',
+        'deleted_at'
+    ];
 
     public function User()
     {
