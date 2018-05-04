@@ -35,15 +35,18 @@ class TagType extends BaseModel
         [
             'value' => 0,
             'name' => 'thread',
-            'display_name' => '帖子标签'],
+            'display_name' => '帖子标签'
+        ],
         [
             'value' => 1,
             'name' => 'user',
-            'display_name' => '用户标签'],
+            'display_name' => '用户标签'
+        ],
         [
             'value' => 2,
             'name'  => 'question',
-            'display_name'  => '问题标签'],
+            'display_name'  => '问题标签'
+        ],
 
     ];
 
@@ -53,9 +56,16 @@ class TagType extends BaseModel
         return $this->hasMany(Tag::class,'tag_type_id','id');
     }
 
+    //
     public function scopeOfType($query, $id)
     {
         return $query->where('type', $id);
+    }
+
+    //排除自动标签（用户标签中手动添加的标签）
+    public function scopeNotAuto($query)
+    {
+        return $query->whereNull('channel');
     }
 
 }

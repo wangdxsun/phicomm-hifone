@@ -9,28 +9,39 @@ use Input;
 
 class TagTypeController extends Controller
 {
+    //用户标签分类（不含自动标签）
     public function index()
     {
         $tagTypes = TagType::ofType([TagType::USER])->with('tags')->get();
         return View::make('dashboard.tagTypes.index')
             ->with('tagTypes', $tagTypes)
-            ->withCurrentMenu('index');
+            ->withCurrentMenu('userTagType');
 
     }
 
+    public function question()
+    {
+        $tagTypes = TagType::ofType([TagType::QUESTION])->with('tags')->get();
+        return View::make('dashboard.questionTagTypes.index')
+            ->with('tagTypes', $tagTypes)
+            ->withCurrentMenu('questionTagType');
+    }
+
+    //新增用户标签分类
     public function create()
     {
         return View::make('dashboard.tagTypes.create_edit')
-            ->withCurrentMenu('index');
+            ->withCurrentMenu('userTagType');
     }
 
+    //编辑用户标签分类
     public function edit(TagType $tagType)
     {
         $types = array_get(TagType::$types[$tagType->type], 'display_name');
         return View::make('dashboard.tagTypes.create_edit')
             ->with('tagType', $tagType)
             ->with('types', json_encode($types))
-            ->withCurrentMenu('index');
+            ->withCurrentMenu('userTagType');
 
     }
 

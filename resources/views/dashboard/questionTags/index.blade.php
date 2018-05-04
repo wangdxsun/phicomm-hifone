@@ -9,9 +9,9 @@
             @include('dashboard.partials.sub-nav')
         @endif
         <div class="header sub-header">
-            <i class="fa fa-tag"></i> 用户标签
+            <i class="fa fa-tag"></i> 问题子类
             @if(Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Founder'))
-                <a class="btn btn-sm btn-success pull-right" href="{{ route('dashboard.tag.create') }}">新增用户标签</a>
+                <a class="btn btn-sm btn-success pull-right" href="{{ route('dashboard.question.tag.create') }}">新增问题子类</a>
             @endif
         </div>
         <div class="row">
@@ -19,8 +19,8 @@
                 <table class="table table-bordered table-striped table-condensed">
                     <tbody>
                     <tr class="head">
-                        <td class="first">标签编号</td>
-                        <td>标签名</td>
+                        <td class="first">子类编号</td>
+                        <td>子类名</td>
                         <td>所属分类</td>
                         <td>操作</td>
                     </tr>
@@ -31,8 +31,8 @@
                             <td>{{ $tag->tagType ? $tag->tagType->display_name : '自动标签'}}</td>
                             @if ($tag->tagType  && $tag->tagType->display_name != '自动标签')
                                 <td>
-                                    <a href="/dashboard/tag/{{ $tag->id }}/edit" title="编辑"><i class="fa fa-pencil"></i></a>
-                                    <a href="/dashboard/tag/{{ $tag->id }}/destroy" title="删除"><i class="fa fa-trash"></i></a>
+                                    <a href="/dashboard/question/tag/{{ $tag->id }}/edit" title="编辑"><i class="fa fa-pencil"></i></a>
+                                    <a href="/dashboard/question/tag/{{ $tag->id }}/destroy" title="删除"><i class="fa fa-trash"></i></a>
                                 </td>
                             @else
                                 <td></td>

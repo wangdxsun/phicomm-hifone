@@ -7,16 +7,16 @@ class TagMenuComposer
     public function compose(View $view)
     {
         $subMenu = [
-            'userTag' => [
-                'title'  => '用户标签',
-                'url'    => route('dashboard.tag.user'),
-                'icon'   => 'fa fa-user',
+            'userTagType' => [
+                'title'  => '标签分类',
+                'url'    => route('dashboard.tag.type.index'),
+                'icon'   => 'fa fa-tags',
                 'active' => false,
             ],
-            'questionTag' => [
-                'title'  => '问题标签',
-                'url'    => route('dashboard.tag.question'),
-                'icon'   => 'fa fa-question',
+            'userTag' => [
+                'title'  => '用户标签',
+                'url'    => route('dashboard.tag'),
+                'icon'   => 'fa fa-user',
                 'active' => false,
             ],
         ];

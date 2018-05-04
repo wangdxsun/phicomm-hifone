@@ -1253,6 +1253,7 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
         'Text_Template' => __DIR__ . '/..' . '/phpunit/php-text-template/src/Template.php',
         'UpdateQaModulesTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_28_144428_update_qa_modules_table.php',
         'UpdateTagTable' => __DIR__ . '/../..' . '/database/migrations/2018_05_03_142032_update_tag_table.php',
+        'UpdateTagtypesTable' => __DIR__ . '/../..' . '/database/migrations/2018_05_03_182937_update_tagtypes_table.php',
         'Whoops\\Module' => __DIR__ . '/..' . '/filp/whoops/src/deprecated/Zend/Module.php',
         'Whoops\\Provider\\Zend\\ExceptionStrategy' => __DIR__ . '/..' . '/filp/whoops/src/deprecated/Zend/ExceptionStrategy.php',
         'Whoops\\Provider\\Zend\\RouteNotFoundStrategy' => __DIR__ . '/..' . '/filp/whoops/src/deprecated/Zend/RouteNotFoundStrategy.php',
