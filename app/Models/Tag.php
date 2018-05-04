@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tag extends Model
 {
-    protected $fillable = ['name', 'type', 'count'];
+    protected $fillable = ['name', 'tag_type_id', 'count'];
 
     protected $hidden = ['created_at', 'updated_at', 'tag_type_id', 'channel', 'count', 'pivot'];
 

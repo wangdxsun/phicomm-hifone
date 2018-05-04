@@ -63,6 +63,7 @@ class UserController extends Controller
         //传入所有用户标签类
         $userTagTypes = TagType::ofType([TagType::USER])->with('tags')->get();
         //传入标签个数的数组
+
         $tagCounts = range(1, Tag::whereIn('tag_type_id', $userTagTypes->pluck('id')->toArray())->count());
 
         return View::make('dashboard.users.index')

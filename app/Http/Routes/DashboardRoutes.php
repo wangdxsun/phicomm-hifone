@@ -81,6 +81,8 @@ class DashboardRoutes
             $router->get('comments/index', 'CommentController@index')->name('comments.index');
             $router->get('comments/audit', 'CommentController@audit')->name('comments.audit');
             $router->get('comments/trash', 'CommentController@trash')->name('comments.trash');
+
+
         });
 
         //为版主和实习版主开放后台帖子管理和回帖管理的相关权限--资源路由
@@ -144,6 +146,7 @@ class DashboardRoutes
             $router->post('carousel/app/store', 'CarouselController@storeApp')->name('carousel.store.app');
             $router->post('carousel/{carousel}/close', 'CarouselController@close')->name('carousel.close');
 
+            //用户标签分类
             $router->get('tag/type/index','TagTypeController@index')->name('tag.type.index');
             $router->get('tag/type/create','TagTypeController@create')->name('tag.type.create');
             $router->get('tag/type/{tagType}/edit','TagTypeController@edit')->name('tag.type.edit');
@@ -151,16 +154,30 @@ class DashboardRoutes
             $router->post('tag/type/store','TagTypeController@store')->name('tag.type.store');
             $router->delete('tag/type/{tagType}','TagTypeController@destroy')->name('tag.type.destroy');
 
-            $router->get('tag/user','TagController@user')->name('tag.user');
-            $router->get('tag/question','TagController@question')->name('tag.question');
-            $router->get('tag/index','TagController@index')->name('tag.index');
-            $router->get('tag/thread','TagController@thread')->name('tag.thread');
+            //用户标签
+            $router->get('tag','TagController@user')->name('tag');
             $router->get('tag/create','TagController@create')->name('tag.create');
             $router->get('tag/{tag}/edit','TagController@edit')->name('tag.edit');
             $router->patch('tag/{tag}/update','TagController@update')->name('tag.update');
             $router->post('tag/store','TagController@store')->name('tag.store');
             $router->get('tag/{tag}/destroy','TagController@destroy')->name('tag.destroy');
             $router->put('user/{user}/tag/update','UserController@tagUpdate')->name('user.tag.update');
+
+            //问题标签
+            $router->get('question/tag','TagController@question')->name('question.tag');
+            $router->get('question/tag/create','TagController@createQuestionTag')->name('question.tag.create');
+            $router->post('question/tag/store','TagController@storeQuestionTag')->name('question.tag.store');
+            $router->get('question/tag/{tag}/edit','TagController@editQuestionTag')->name('question.tag.edit');
+            $router->patch('question/tag/{tag}/update','TagController@updateQuestionTag')->name('question.tag.update');
+            $router->get('question/tag/{tag}/destroy','TagController@destroyQuestionTag')->name('question.tag.destroy');
+
+            $router->get('question/tag/type','TagTypeController@question')->name('question.tag.type');
+            $router->get('question/tag/type/create','TagTypeController@createQuestionTagType')->name('question.tag.type.create');
+            $router->get('question/tag/type/{tagType}/edit','TagTypeController@editQuestionTagType')->name('question.tag.type.edit');
+            $router->patch('question/tag/type/{tagType}/update','TagTypeController@updateQuestionTagType')->name('question.tag.type.update');
+            $router->post('question/tag/type/store','TagTypeController@storeQuestionTagType')->name('question.tag.type.store');
+            $router->delete('question/tag/type/{tagType}','TagTypeController@destroyQuestionTagType')->name('question.tag.type.destroy');
+
 
 
             // Settings
