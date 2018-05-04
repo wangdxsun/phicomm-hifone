@@ -33,8 +33,10 @@ class QuestionController extends WebController
 
     }
 
-    public function show(Question $question)
+    public function show(Question $question, QuestionBll $questionBll)
     {
-        return $question->load(['user', 'tags']);
+        $question = $questionBll->showQuestion($question);
+
+        return $question;
     }
 }

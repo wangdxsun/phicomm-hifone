@@ -9,6 +9,8 @@
 namespace Hifone\Http\Bll;
 
 use Hifone\Models\Question;
+use Auth;
+use Hifone\Models\User;
 
 class QuestionBll extends BaseBll
 {
@@ -21,5 +23,15 @@ class QuestionBll extends BaseBll
         }
 
         return $questions;
+    }
+
+    public function showQuestion(Question $question)
+    {
+        $question = $question->load(['user', 'tags']);
+        $question->followed = Auth::check() ? Auth::user()->hasFollowQuestion($question) : false;
+        $question->user->followed = Auth::check()? User::hasFollowUser($question->user) : false;
+        $question->reported = Auth::check() ? Auth::user()->hasReportQuestion($question) : false;
+
+        return $question;
     }
 }

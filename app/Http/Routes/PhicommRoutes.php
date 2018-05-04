@@ -16,7 +16,7 @@ class PhicommRoutes
     {
         $router->group([
             'as' => 'auth.',
-            'middleware' => ['web', 'localize', 'guest'],
+            'middleware' => ['web', 'guest'],
             'prefix' => 'phicomm'
         ], function (Registrar $router) {
             $router->get('login', 'PhicommController@getLogin')->name('login');
@@ -33,7 +33,7 @@ class PhicommRoutes
 
         $router->group([
             'as' => 'auth.',
-            'middleware' => ['web', 'localize', 'auth'],
+            'middleware' => ['web', 'auth'],
             'prefix' => 'auth'
         ], function (Registrar $router) {
             $router->get('logout', 'PhicommController@getLogout')->name('logout');

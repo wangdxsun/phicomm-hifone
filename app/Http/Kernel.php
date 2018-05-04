@@ -43,7 +43,6 @@ class Kernel extends HttpKernel
             \Illuminate\Cookie\Middleware\EncryptCookies::class,
             \Illuminate\Session\Middleware\StartSession::class,
             \Hifone\Http\Middleware\Acceptable::class,
-            \Hifone\Http\Middleware\Timezone::class,
             \Barryvdh\Cors\HandleCors::class,
         ],
     ];
@@ -58,9 +57,6 @@ class Kernel extends HttpKernel
         'auth.basic'    => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'auth.api'      => \Hifone\Http\Middleware\ApiAuthentication::class,
         'guest'         => \Hifone\Http\Middleware\RedirectIfAuthenticated::class,
-        'localize'      => \Hifone\Http\Middleware\Localize::class,
-        'ready'         => \Hifone\Http\Middleware\ReadyForUse::class,
-        'not_installed' => \Hifone\Http\Middleware\RedirectIfInstallCompleted::class,
         'role'          => \Zizaco\Entrust\Middleware\EntrustRole::class,
         'permission'    => \Zizaco\Entrust\Middleware\EntrustPermission::class,
         'ability'       => \Zizaco\Entrust\Middleware\EntrustAbility::class,

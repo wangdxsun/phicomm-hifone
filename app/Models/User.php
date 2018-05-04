@@ -426,6 +426,31 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         return $this->replies()->ofThread($thread)->count() > 0;
     }
 
+    public function hasFollowQuestion(Question $question)
+    {
+        return $this->follows()->ofType(Question::class)->ofId($question->id)->count() > 0;
+    }
+
+    public function hasReportQuestion(Question $question)
+    {
+        return $this->reports()->ofType(Question::class)->ofId($question->id)->count() > 0;
+    }
+
+    public function hasInviteUser(User $user, Question $question)
+    {
+        return $this->invites($question->id)->where('id', $user->id)->count() > 0;
+    }
+
+    public function invites(Question $question)
+    {
+        return $this->belongsToMany(User::class, 'from_user_id', 'to_user_id')->wherePivot('question_id', $question->id);
+    }
+
+    public function questions()
+    {
+        return $this->hasMany(Question::class);
+    }
+
     public function likes()
     {
         return $this->hasMany(Like::class);

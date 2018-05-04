@@ -15,8 +15,8 @@
       <div class="media">
       <div class="media-heading">
         {{ trans('hifone.credits.balance_current') }}
-       <span class="coin_list" data-toggle="tooltip", data-placement="bottom" title="{{ $current_user->score }}">
-        {{ $current_user->score }}
+       <span class="coin_list" data-toggle="tooltip", data-placement="bottom" title="{{ auth()->user()->score }}">
+        {{ auth()->user()->score }}
         </span>
         </div>
       </div>

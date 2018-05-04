@@ -27,7 +27,7 @@ class ForumRoutes
      */
     public function map(Registrar $router)
     {
-        $router->group(['middleware' => ['web', 'localize']], function (Registrar $router) {
+        $router->group(['middleware' => ['web']], function (Registrar $router) {
             $router->get('/', 'ThreadController@index')->name('home');
             $router->get('/search', 'ThreadController@search')->name('search')->middleware('active:web');
             $router->get('/excellent', 'HomeController@excellent')->name('excellent');

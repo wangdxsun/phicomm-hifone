@@ -21,7 +21,7 @@
     <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-touch-icon-144x144.png">
     <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-touch-icon-152x152.png">
 
-    <title>{{ $page_title or $site_title }}</title>
+    <title>{{ config('site_name') }}</title>
 
     <link rel="stylesheet" href="{{ elixir('dist/css/all.css') }}">
     @yield('css')

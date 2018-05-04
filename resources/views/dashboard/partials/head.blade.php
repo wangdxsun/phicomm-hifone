@@ -19,7 +19,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-touch-icon-152x152.png">
     <link rel="stylesheet" href="/css/elementui.css">
 
-    <title>{{ $sub_header or $site_title }}</title>
+    <title>{{ config('site_name') }}</title>
 
     <link rel="stylesheet" href="{{ elixir('dist/css/all.css') }}">
     <script src="{{ elixir('dist/js/all.js') }}"></script>

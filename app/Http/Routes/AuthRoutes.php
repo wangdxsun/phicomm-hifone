@@ -29,7 +29,7 @@ class AuthRoutes
     {
         $router->group([
             'as' => 'hifone.',
-            'middleware' => ['web', 'localize'],
+            'middleware' => ['web'],
             'prefix' => 'auth',
             'namespace' => 'Auth'
         ], function (Registrar $router) {

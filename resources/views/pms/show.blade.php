@@ -35,7 +35,7 @@
   </div>
   <div class="panel-body">
     <div class="reply-box form">
-    @if($current_user)
+    @if(auth()->user())
             {!! Form::open(['route' => ['messages.update', $thread->id], 'method' => 'PUT']) !!}
       <input type="hidden" name="reply[thread_id]" value="{{ $thread->id }}" />
         {{--
