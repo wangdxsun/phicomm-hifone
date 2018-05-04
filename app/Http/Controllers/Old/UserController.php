@@ -88,7 +88,6 @@ class UserController extends Controller
         $data = Input::only('nickname', 'company', 'website', 'signature', 'bio', 'location');
         try {
             $user->update($data);
-            $user->updateIndex();
         } catch (ValidationException $e) {
             return Redirect::route('user.edit')
                 ->withInput(Input::all())
@@ -194,7 +193,6 @@ class UserController extends Controller
         }
         $avatar = dispatch(new UploadImageCommand(request()->file('avatar')));
         Auth::user()->update(['avatar_url' => $avatar['filename']]);
-        Auth::user()->updateIndex();
         if (Auth::phicommId()) {
             $phicommBll->upload($avatar['localFile']);
         }

@@ -150,7 +150,6 @@ class ReplyBll extends BaseBll
             }
 
             event(new ReplyWasAuditedEvent($reply));
-            $reply->thread->updateIndex();
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
