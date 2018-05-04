@@ -6,9 +6,11 @@
  * Time: 10:01
  */
 
-namespace Hifone\Http\Controllers\Web;
+namespace Hifone\Http\Controllers\App\V1;
 
-class AnswerController extends WebController
+use Hifone\Http\Controllers\App\AppController;
+
+class AnswerController extends AppController
 {
     public function index()
     {

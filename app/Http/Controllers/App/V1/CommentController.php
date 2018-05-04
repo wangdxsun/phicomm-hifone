@@ -3,12 +3,14 @@
  * Created by PhpStorm.
  * User: qiuling.jiang
  * Date: 2018/5/3
- * Time: 10:01
+ * Time: 10:04
  */
 
-namespace Hifone\Http\Controllers\Web;
+namespace Hifone\Http\Controllers\App\V1;
 
-class AnswerController extends WebController
+use Hifone\Http\Controllers\App\AppController;
+
+class CommentController extends AppController
 {
     public function index()
     {
