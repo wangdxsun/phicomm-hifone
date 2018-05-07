@@ -276,7 +276,6 @@ class ThreadController extends Controller
     //从待审核列表审核通过帖子
     public function postAudit(Thread $thread)
     {
-        event(new ThreadWasAddedEvent($thread));
         return $this->passAudit($thread);
     }
 
@@ -299,12 +298,13 @@ class ThreadController extends Controller
                 $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);
             }
             $thread->user->update(['thread_count' => $thread->user->threads()->visibleAndDeleted()->count()]);
-            event(new ThreadWasAuditedEvent($thread));
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
             return Redirect::back()->withErrors($e->getMessage());
         }
+        event(new ThreadWasAuditedEvent($thread));
+        event(new ThreadWasAddedEvent($thread));
 
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }

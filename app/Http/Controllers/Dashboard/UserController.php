@@ -164,6 +164,7 @@ class UserController extends Controller
                         $user->praModerators()->detach();
                     }
                 }
+
                 $user->role_id = $roleId;
                 $this->updateOpLog($user, '修改用户信息');
             });

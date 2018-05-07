@@ -50,7 +50,7 @@
                             <tbody>
                             <tr class="head">
                                 <td style="width: 70px;">编号</td>
-                                <td style="width: 180px;">标题</td>
+                                <td style="width: 180px;">问题标题</td>
                                 <td style="width: 80px;">提问者</td>
                                 <td style="width: 90px;">用户设备信息</td>
                                 <td style="width: 90px;">IP地址</td>
@@ -105,4 +105,23 @@
                 </div>
             </div>
     </div>
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                date_start:"",
+                date_end:"",
+            };
+        },
+        computed: {
+            date_start_str: function () {
+                return this.date_start === '' ? '' : this.date_start.format('yyyy-MM-dd hh:mm:ss');
+            },
+            date_end_str: function () {
+                return this.date_end === '' ? '' : this.date_end.format('yyyy-MM-dd hh:mm:ss');
+            }
+        }
+    });
+</script>
 @stop
