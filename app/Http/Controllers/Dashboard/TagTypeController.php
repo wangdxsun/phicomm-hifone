@@ -9,76 +9,114 @@ use Input;
 
 class TagTypeController extends Controller
 {
-    //用户标签分类（不含自动标签）
-    public function index()
+    //标签分类（不含自动标签）
+    public function tagType($system)
     {
-        $tagTypes = TagType::ofType([TagType::USER])->with('tags')->get();
-        return View::make('dashboard.tagTypes.index')
-            ->with('tagTypes', $tagTypes)
-            ->withCurrentMenu('userTagType');
+        if ($system == 'user') {
+            $tagTypes = TagType::ofType([TagType::USER])->with('tags')->get();
+            return View::make('dashboard.tagTypes.index')
+                ->with('tagTypes', $tagTypes)
+                ->withCurrentMenu('userTagType');
+        } elseif ($system == 'question') {
+            $tagTypes = TagType::ofType([TagType::QUESTION])->with('tags')->get();
+            return View::make('dashboard.questionTagTypes.index')
+                ->with('tagTypes', $tagTypes)
+                ->withCurrentMenu('questionTagType');
+        }
+    }
+
+    //新增标签分类
+    public function create($system)
+    {
+        if ($system == 'user') {
+            return View::make('dashboard.tagTypes.create_edit')
+                ->withCurrentMenu('userTagType');
+        } elseif ($system == 'question') {
+            return View::make('dashboard.questionTagTypes.create_edit')
+                ->withCurrentMenu('questionTagType');
+        }
 
     }
 
-    public function question()
-    {
-        $tagTypes = TagType::ofType([TagType::QUESTION])->with('tags')->get();
-        return View::make('dashboard.questionTagTypes.index')
-            ->with('tagTypes', $tagTypes)
-            ->withCurrentMenu('questionTagType');
-    }
-
-    //新增用户标签分类
-    public function create()
-    {
-        return View::make('dashboard.tagTypes.create_edit')
-            ->withCurrentMenu('userTagType');
-    }
-
-    //编辑用户标签分类
-    public function edit(TagType $tagType)
+    //编辑标签分类
+    public function edit(TagType $tagType, $system)
     {
         $types = array_get(TagType::$types[$tagType->type], 'display_name');
-        return View::make('dashboard.tagTypes.create_edit')
-            ->with('tagType', $tagType)
-            ->with('types', json_encode($types))
-            ->withCurrentMenu('userTagType');
-
+        if ($system == 'user') {
+            return View::make('dashboard.tagTypes.create_edit')
+                ->with('tagType', $tagType)
+                ->with('types', json_encode($types))
+                ->withCurrentMenu('userTagType');
+        } elseif ($system == 'question') {
+            return View::make('dashboard.questionTagTypes.create_edit')
+                ->with('tagType', $tagType)
+                ->with('types', json_encode($types))
+                ->withCurrentMenu('questionTagType');
+        }
     }
 
-    public function update(TagType $tagType)
+    public function update(TagType $tagType, $system)
     {
         $tagTypeData = Input::get('tagType');
-        if ($tagType->display_name != array_get($tagTypeData, 'display_name') && null != TagType::where('display_name', array_get($tagTypeData, 'display_name'))->first()) {
-            return Redirect::back()
-                ->withErrors('标签分类名已存在');
+        if ($system == 'user') {
+            if ($tagType->display_name != array_get($tagTypeData, 'display_name') && null != TagType::where('display_name', array_get($tagTypeData, 'display_name'))->first()) {
+                return Redirect::back()
+                    ->withErrors('标签分类名已存在');
+            }
+            $tagTypeData['type'] = 1;
+            $tagType->update($tagTypeData);
+            return Redirect::route('dashboard.tag.type', ['user'])
+                ->withSuccess('标签分类已更新');
+        } elseif ($system == 'question') {
+            if ($tagType->display_name != array_get($tagTypeData, 'display_name') && null != TagType::where('display_name', array_get($tagTypeData, 'display_name'))->first()) {
+                return Redirect::back()
+                    ->withErrors('问题分类名已存在');
+            }
+            $tagTypeData['type'] = 2;
+            $tagType->update($tagTypeData);
+            return Redirect::route('dashboard.question.tag.type', ['question'])
+                ->withSuccess('问题分类已更新');
         }
-        $tagTypeData['type'] = 1;
-        $tagType->update($tagTypeData);
-        return Redirect::route('dashboard.tag.type.index')
-            ->withSuccess('标签分类已更新');
     }
 
-    public function store()
+    public function store($system)
     {
         $tagTypeData = Input::get('tagType');
-        if (null != TagType::where('display_name', array_get($tagTypeData, 'display_name'))->first()) {
-            return Redirect::back()
-                ->withErrors('标签分类名已存在');
+        if ($system == 'user') {
+            if (null != TagType::where('display_name', array_get($tagTypeData, 'display_name'))->first()) {
+                return Redirect::back()
+                    ->withErrors('标签分类名已存在');
+            }
+            $tagTypeData['type'] = 1;
+            TagType::create($tagTypeData);
+            return Redirect::route('dashboard.tag.type', ['user'])
+                ->withSuccess('标签分类已新增');
+        } elseif ($system == 'question') {
+            if (null != TagType::where('display_name', array_get($tagTypeData, 'display_name'))->first()) {
+                return Redirect::back()
+                    ->withErrors('问题分类名已存在');
+            }
+            $tagTypeData['type'] = 2;
+            TagType::create($tagTypeData);
+            return Redirect::route('dashboard.question.tag.type', ['question'])
+                ->withSuccess('问题分类已更新');
         }
-        $tagTypeData['type'] = 1;
-        TagType::create($tagTypeData);
-        return Redirect::route('dashboard.tag.type.index')
-            ->withSuccess('标签分类已新增');
+
     }
 
     //删除标签分类，同时删除分类下的所有标签
-    public function destroy(TagType $tagType)
+    public function destroy(TagType $tagType, $system)
     {
         $tags = $tagType->tags;
         foreach ($tags as $tag) {
             $tag->delete();
         }
         $tagType->delete();
-        return Redirect::back()->withSuccess('已删除该标签分类及分类下所有标签！');
+        if($system == 'user') {
+            return Redirect::back()->withSuccess('已删除该标签分类及分类下所有标签！');
+        } elseif ($system == 'question') {
+            return Redirect::back()->withSuccess('已删除该问题分类及分类下所有子类！');
+        }
+
     }
 }

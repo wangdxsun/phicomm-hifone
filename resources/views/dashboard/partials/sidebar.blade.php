@@ -40,15 +40,15 @@
             </li>
 
             <li  {!! set_active('dashboard/question/tag*') !!}>
-                <a href="{{ route('dashboard.question.tag') }}">
+                <a href="{{ route('dashboard.question.tag', ['question']) }}">
                     <i class="fa fa-flag"></i>
-                    <span>问题标签管理</span>
+                    <span>问题分类管理</span>
                 </a>
             </li>
 
             @if (Auth::user()->hasRole('Admin')  || Auth::user()->hasRole('Founder'))
                 <li {!! set_active('dashboard/tag*') !!}>
-                    <a href="{{ route('dashboard.tag') }}">
+                    <a href="{{ route('dashboard.tag', ['user']) }}">
                         <i class="fa fa-tags"></i>
                         <span>用户标签管理</span>
                     </a>
