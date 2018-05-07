@@ -171,13 +171,17 @@ class Node extends BaseModel implements HasPresenter
     //查询主板块下版主信息
     public function moderators()
     {
-        return $this->belongsToMany(User::class,'moderators','node_id','user_id');
+        return $this->belongsToMany(User::class,'moderators','node_id','user_id')->select([
+            'users.id', 'phicomm_id', 'username', 'avatar_url', 'role'
+        ]);
     }
 
     //查询主板块下实习版主信息
     public function praModerators()
     {
-        return $this->belongsToMany(User::class, 'pra_moderators', 'node_id','user_id');
+        return $this->belongsToMany(User::class, 'pra_moderators', 'node_id','user_id')->select([
+            'users.id', 'phicomm_id', 'username', 'avatar_url', 'role'
+        ]);
     }
 
     public function getIconAttribute()

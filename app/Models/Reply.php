@@ -44,8 +44,21 @@ class Reply extends BaseModel
         'contact',
     ];
 
-    protected $hidden = ['body_original', 'bad_word', 'is_block', 'ip', 'last_op_user_id', 'last_op_time', 'last_op_reason',
-        'updated_at', 'deleted_at'];
+    protected $hidden = [
+        'body_original',
+        'bad_word',
+        'is_block',
+        'ip',
+        'last_op_user_id',
+        'last_op_time',
+        'last_op_reason',
+        'updated_at',
+        'deleted_at',
+        'contact',
+        'channel',
+        'dev_info',
+
+    ];
 
     protected $dates = ['deleted_at', 'last_op_time'];
 
@@ -82,9 +95,7 @@ class Reply extends BaseModel
     public function user()
     {
         return $this->belongsTo(User::class)
-            ->select(['id', 'phicomm_id', 'username', 'avatar_url', 'password', 'score',
-                'notification_reply_count', 'notification_at_count',
-                'notification_system_count', 'notification_chat_count', 'notification_follow_count']);
+            ->select(['id', 'phicomm_id', 'username', 'avatar_url', 'score']);
     }
 
     public function lastOpUser()

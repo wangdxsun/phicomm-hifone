@@ -298,8 +298,6 @@ class ThreadController extends Controller
                 $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);
             }
             $thread->user->update(['thread_count' => $thread->user->threads()->visibleAndDeleted()->count()]);
-            $threadForIndex = clone $thread;
-            $threadForIndex->addToIndex();
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
@@ -320,7 +318,6 @@ class ThreadController extends Controller
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
             $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);
             $thread->user->update(['thread_count' => $thread->user->threads()->visibleAndDeleted()->count()]);
-            $thread->removeFromIndex();
             event(new ThreadWasTrashedEvent($thread));
             DB::commit();
         } catch (\Exception $e) {

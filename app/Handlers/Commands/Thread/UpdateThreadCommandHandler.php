@@ -90,20 +90,6 @@ class UpdateThreadCommandHandler
             $originalSubNode = SubNode::find($original_subNode_id);
             event(new ThreadWasMovedEvent($thread, $originalSubNode));
         }
-        $threadForIndex = clone $thread;
-        if ($oldStatus == Thread::VISIBLE) {
-            //从审核通过到审核通过和审核中
-            if ($thread->status == Thread::VISIBLE) {
-                $threadForIndex->updateIndex();
-            } else {
-                $threadForIndex->removeFromIndex();
-            }
-        } else {
-            //从审核中到审核通过和审核中
-            if ($thread->status == Thread::VISIBLE) {
-                $threadForIndex->addToIndex();
-            }
-        }
 
         return $thread;
     }

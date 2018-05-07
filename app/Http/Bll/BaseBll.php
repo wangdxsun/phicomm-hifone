@@ -27,11 +27,6 @@ class BaseBll
         }
     }
 
-    public function needNoAudit(Thread $thread)
-    {
-        return !$this->hasVideo($thread->body) && !$this->hasUrl($thread->body) && !$this->hasImage($thread->body) && $thread->bad_word === '';
-    }
-
     public function hasImage($body)
     {
         //不全是表情

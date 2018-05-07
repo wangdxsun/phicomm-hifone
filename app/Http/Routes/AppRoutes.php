@@ -51,6 +51,11 @@ class AppRoutes
             $router->get('threads/{thread}/replies/{sort?}', 'ThreadController@replies')->where('sort', 'like|desc|asc')->where('thread', '[0-9]+');
             $router->get('replies/{reply}', 'ReplyController@show');
 
+            //问答相关
+            $router->get('questions', 'QuestionController@index');
+            $router->get('questions/{question}', 'QuestionController@show')->where('question', '[0-9]+');
+            $router->get('questions/tagTypes', 'TagController@tagTypes');
+
             // Authorization Required
             $router->group(['middleware' => 'auth:hifone'], function ($router) {
                 $router->post('upload', 'CommonController@upload');
@@ -87,6 +92,8 @@ class AppRoutes
                 $router->get('notification/at', 'NotificationController@at');
                 $router->get('notification/system', 'NotificationController@system');
                 $router->get('notification/watch', 'NotificationController@watch');
+
+                $router->post('questions', 'QuestionController@store');
             });
         });
     }

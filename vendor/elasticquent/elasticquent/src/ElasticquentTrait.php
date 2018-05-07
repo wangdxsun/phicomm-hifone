@@ -378,11 +378,11 @@ trait ElasticquentTrait
      */
     public function addToIndex()
     {
-        if ($this instanceof Thread) {
-            $this->body = strip_tags($this->body);
-        }
         if (!$this->exists) {
             throw new Exception('Document does not exist.');
+        }
+        if ($this instanceof Thread) {
+            $this->body = strip_tags($this->body);
         }
 
         $params = $this->getBasicEsParams();
@@ -416,9 +416,6 @@ trait ElasticquentTrait
     public function updateIndex()
     {
         if ($this instanceof Thread) {
-            if ($this->status !== Thread::VISIBLE) {
-                return false;
-            }
             $this->body = strip_tags($this->body);
         }
         $params = $this->getBasicEsParams();
@@ -901,4 +898,20 @@ trait ElasticquentTrait
 
     }
 
+    public static function bootElasticquentTrait()
+    {
+        static::saved(function ($model) {
+            $modelForIndex = clone $model;
+            try {
+                $modelForIndex->updateIndex();
+            } catch (Exception $e) {
+                $modelForIndex->addToIndex();
+            }
+        });
+
+        static::created(function ($model) {
+            $modelForIndex = clone $model;
+            $modelForIndex->addToIndex();
+        });
+    }
 }

@@ -6,26 +6,20 @@
  * Time: 9:21
  */
 
-namespace Hifone\Http\Controllers\Web;
+namespace Hifone\Http\Controllers\App\V1;
 
 use Hifone\Exceptions\HifoneException;
 use Hifone\Http\Bll\QuestionBll;
+use Hifone\Http\Controllers\App\AppController;
 use Hifone\Models\Question;
 use Auth;
 
-class QuestionController extends WebController
+class QuestionController extends AppController
 {
     public function index(QuestionBll $questionBll)
     {
         $tagId = request('tag_id');
         $questions = $questionBll->questions($tagId);
-
-        return $questions;
-    }
-
-    public function getExcellent()
-    {
-        $questions = Question::with(['user', 'tags'])->orderBy('is_excellent', 'desc')->orderBy('order', 'desc')->recent()->limit(3)->get();
 
         return $questions;
     }
@@ -42,7 +36,16 @@ class QuestionController extends WebController
             'score'=> 'required|int|min:5'
         ]);
         $tagIds = explode(',', request('tag_ids'));
-        if (mb_strlen(strip_tags(request('body'))) > 800) {
+        $bodies = json_decode(request('body'), true);
+        $content = '';
+        foreach ($bodies as $body) {
+            if ($body['type'] == 'text') {
+                $content.= "<p>".e($body['content'])."</p>";
+            } elseif ($body['type'] == 'image') {
+                $content.= "<img src='".$body['content']."'/>";
+            }
+        }
+        if (mb_strlen(strip_tags($content)) > 800) {
             throw new HifoneException('请输入内容0~800个字');
         } elseif (count($tagIds) == 0 || count($tagIds) > 4) {
             throw new HifoneException('请选择0~4个分类');
@@ -50,7 +53,7 @@ class QuestionController extends WebController
         //todo 判断智慧果是否够用
         $questionData = [
             'title' => request('title'),
-            'body' => request('body'),
+            'body' => $content,
             'score' => request('score'),
             'tagIds' => $tagIds
         ];

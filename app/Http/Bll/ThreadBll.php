@@ -123,7 +123,7 @@ class ThreadBll extends BaseBll
         ));
 
         //发布投票贴
-        if (1 == array_get($threadData, 'is_vote')) {
+        if (array_get($threadData, 'is_vote')) {
             $threadTemp->update([
                 'is_vote' => 1,
                 'option_max' => array_get($threadData, 'option_max', 1),
@@ -543,8 +543,6 @@ class ThreadBll extends BaseBll
         try {
             $thread->status = Thread::VISIBLE;
             $this->updateOpLog($thread, '自动审核通过');
-            $threadForIndex = clone $thread;
-            $threadForIndex->addToIndex();
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
             if ($thread->subNode) {
                 $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);
@@ -642,5 +640,10 @@ class ThreadBll extends BaseBll
         }
 
         return $selects;
+    }
+
+    public function needNoAudit(Thread $thread)
+    {
+        return !$this->hasVideo($thread->body) && !$this->hasUrl($thread->body) && !$this->hasImage($thread->body) && $thread->bad_word === '';
     }
 }
