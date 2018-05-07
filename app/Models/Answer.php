@@ -44,7 +44,7 @@ class Answer extends BaseModel
         'deleted_at'
     ];
 
-    public function User()
+    public function user()
     {
         return $this->belongsTo(User::class);
     }

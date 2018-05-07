@@ -50,7 +50,7 @@ class Question extends BaseModel implements TaggableInterface
         'updated_at'
     ];
 
-    public function User()
+    public function user()
     {
         return $this->belongsTo(User::class)->select(['id', 'username', 'role', 'avatar_url']);
     }
