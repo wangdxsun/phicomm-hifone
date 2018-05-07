@@ -87,7 +87,7 @@ class QuestionController extends Controller
     }
 
     //加精问题
-    public function excellent(Question $question)
+    public function setExcellent(Question $question)
     {
         //1.取消加精
         if ($question->is_excellent == 1) {

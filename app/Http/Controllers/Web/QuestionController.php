@@ -23,7 +23,7 @@ class QuestionController extends WebController
         return $questions;
     }
 
-    public function getExcellent()
+    public function excellent()
     {
         $questions = Question::with(['user', 'tags'])->orderBy('is_excellent', 'desc')->orderBy('order', 'desc')->recent()->limit(3)->get();
 
