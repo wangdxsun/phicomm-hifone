@@ -73,6 +73,10 @@ class DashboardRoutes
             $router->post('questions/{question}/pin', 'QuestionController@pin');
             $router->post('questions/{question}/sink', 'QuestionController@sink');
             $router->post('questions/{question}/excellent', 'QuestionController@excellent');
+            $router->post('questions/batchMove', 'QuestionController@batchMoveQuestion')->name('question.move');
+            $router->post('questions/batchAudit', 'QuestionController@postBatchAudit');//batch audit thread
+            $router->post('questions/{question}/audit', 'QuestionController@postAudit');
+
 
             $router->get('answers/index', 'AnswerController@index')->name('answers.index');
             $router->get('answers/audit', 'AnswerController@audit')->name('answers.audit');

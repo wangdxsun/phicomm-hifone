@@ -2,23 +2,23 @@
 
 @section('content')
     @include('vendor.ueditor.assets')
-<div class="content-wrapper">
-    <div class="header sub-header" id="general">
+    <div class="content-wrapper">
+        <div class="header sub-header" id="general">
         <span class="uppercase">
             {{ trans('dashboard.threads.edit.title') }}
         </span>
-    </div>
-     @if(isset($sub_nav))
-    @include('dashboard.partials.sub-nav')
-    @endif
-    <div class="row">
-        <div class="col-md-12">
-            @if(isset($thread))
-                {!! Form::model($thread, ['route' => ['dashboard.thread.update', $thread->id], 'id' => 'thread-edit-form', 'method' => 'patch']) !!}
-                <input type="hidden" name="id" value={{$thread->id}}>
-            @else
-                {!! Form::open(['route' => 'dashboard.thread.store','id' => 'thread-create-form', 'method' => 'post']) !!}
-            @endif
+        </div>
+        @if(isset($sub_nav))
+            @include('dashboard.partials.sub-nav')
+        @endif
+        <div class="row">
+            <div class="col-md-12">
+                @if(isset($thread))
+                    {!! Form::model($thread, ['route' => ['dashboard.thread.update', $thread->id], 'id' => 'thread-edit-form', 'method' => 'patch']) !!}
+                    <input type="hidden" name="id" value={{$thread->id}}>
+                @else
+                    {!! Form::open(['route' => 'dashboard.thread.store','id' => 'thread-create-form', 'method' => 'post']) !!}
+                @endif
                 <fieldset>
                     <div class="form-group">
                         <label for="thread-title">{{ trans('hifone.threads.title') }}</label>
@@ -48,27 +48,27 @@
                         <a class="btn btn-default" href="{!! ($thread->status == 0) ? route('dashboard.thread.index') : route('dashboard.thread.audit') !!} ">{{ trans('forms.cancel') }}</a>
                     </div>
                 </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-<!-- 实例化编辑器 -->
-<script type="text/javascript">
-    var ue = UE.getEditor('container',{
-        toolbars: [
-            ['fontsize','forecolor','backcolor', 'bold', 'italic', 'underline', 'strikethrough', 'blockquote', 'insertunorderedlist',
-                'insertorderedlist', 'justifyleft','justifycenter', 'justifyright',  'link', 'insertimage', 'attachment','insertvideo','fullscreen']
-        ],
-        elementPathEnabled: false,
-        enableContextMenu: false,
-        autoClearEmptyNode:true,
-        wordCount:false,
-        imagePopup:false,
-        initialFrameHeight:500,
-        autotypeset:{ indent: true,imageBlockLine: 'center' }
-    });
-    ue.ready(function() {
-        ue.execCommand('serverparam', '_token', '{{ csrf_token() }}'); // 设置 CSRF token.
-    });
-</script>
+    <!-- 实例化编辑器 -->
+    <script type="text/javascript">
+        var ue = UE.getEditor('container',{
+            toolbars: [
+                ['fontsize','forecolor','backcolor', 'bold', 'italic', 'underline', 'strikethrough', 'blockquote', 'insertunorderedlist',
+                    'insertorderedlist', 'justifyleft','justifycenter', 'justifyright',  'link', 'insertimage', 'attachment','insertvideo','fullscreen']
+            ],
+            elementPathEnabled: false,
+            enableContextMenu: false,
+            autoClearEmptyNode:true,
+            wordCount:false,
+            imagePopup:false,
+            initialFrameHeight:500,
+            autotypeset:{ indent: true,imageBlockLine: 'center' }
+        });
+        ue.ready(function() {
+            ue.execCommand('serverparam', '_token', '{{ csrf_token() }}'); // 设置 CSRF token.
+        });
+    </script>
 @stop

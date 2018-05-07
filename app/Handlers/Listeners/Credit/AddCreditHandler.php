@@ -20,6 +20,7 @@ use Hifone\Events\Follow\FollowWasRemovedEvent;
 use Hifone\Events\Image\ImageWasUploadedEvent;
 use Hifone\Events\Like\LikeWasRemovedEvent;
 use Hifone\Events\Pin\NodePinWasAddedEvent;
+use Hifone\Events\Question\QuestionWasAuditedEvent;
 use Hifone\Events\Reply\ReplyWasAddedEvent;
 use Hifone\Events\Reply\RepliedWasAddedEvent;
 use Hifone\Events\Reply\ReplyWasTrashedEvent;
@@ -52,6 +53,7 @@ class AddCreditHandler
     public function handle(EventInterface $event)
     {
         $action = '';
+        $user = null;
         if ($event instanceof ThreadWasAddedEvent) {
             $action = 'thread_new';
             $user = $event->thread->user;
@@ -186,6 +188,10 @@ class AddCreditHandler
         } elseif ($event instanceof ReportWasPassedEvent) {//举报成功加积分
             $action = 'report';
             $user = $event->report->user;
+        } elseif ($event instanceof QuestionWasAuditedEvent) {
+            //问题审核通过
+            $action = 'question_audited';
+            $user = $event->user;
         }
 
         $this->apply($event, $action, $user);

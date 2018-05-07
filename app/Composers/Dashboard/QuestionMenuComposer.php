@@ -8,7 +8,7 @@ class QuestionMenuComposer
     public function compose(View $view)
     {
         $subMenu = [
-            'index' => [
+            'question' => [
                 'title'  => '问题',
                 'url'    => route('dashboard.questions.index'),
                 'icon'   => 'fa fa-check',
@@ -60,7 +60,7 @@ class QuestionMenuComposer
                     ],
                 ],
             ],
-            'content' => [
+            'comment' => [
                 'title'  => '评论',
                 'url'    => route('dashboard.comments.index'),
                 'icon'   => 'fa fa-bar-chart',

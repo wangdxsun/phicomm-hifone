@@ -244,6 +244,11 @@ class EventServiceProvider extends ServiceProvider
         \Hifone\Events\Pin\NodePinWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
         ],
+
+        //问答（从回收站、待审核变成审核通过）增加经验值，发通知，计数
+        \Hifone\Events\Question\QuestionWasAuditedEvent::class => [
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+        ],
     ];
 
     /**

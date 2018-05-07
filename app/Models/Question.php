@@ -8,12 +8,14 @@
 
 namespace Hifone\Models;
 
+use AltThree\Validator\ValidatingTrait;
+use Elasticquent\ElasticquentTrait;
 use Hifone\Models\Scopes\CommonTrait;
 use Hifone\Models\Traits\Taggable;
 
 class Question extends BaseModel
 {
-    use CommonTrait, Taggable;
+    use CommonTrait, Taggable, ValidatingTrait, Taggable, ElasticquentTrait;
 
     //问题状态
     const VISIBLE = 0;//正常问题
@@ -50,7 +52,7 @@ class Question extends BaseModel
 
     public function User()
     {
-        return $this->belongsTo(User::class)->select(['id', 'username', 'role', 'avatar_url']);
+        return $this->belongsTo(User::class)->select(['id','username', 'password', 'score']);
     }
 
     public function answers()
@@ -88,7 +90,7 @@ class Question extends BaseModel
         return $query->whereIn('status', [static::TRASH, static::DELETED]);//审核未通过和已删除
     }
 
-    //正常和已删除
+    //审核通过和通过后删除
     public function scopeVisibleAndDeleted($query)
     {
         return $query->whereIn('status', [static::VISIBLE, static::DELETED]);
@@ -121,4 +123,5 @@ class Question extends BaseModel
     {
         return $this->is_excellent ? 'fa fa-diamond text-danger' : 'fa fa-diamond';
     }
+
 }
