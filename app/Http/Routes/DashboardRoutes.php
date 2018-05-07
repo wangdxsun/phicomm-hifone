@@ -46,7 +46,7 @@ class DashboardRoutes
             $router->post('thread/{thread}/pin', 'ThreadController@pin');
             $router->post('thread/{thread}/node/pin', 'ThreadController@nodePin');
             $router->post('thread/{thread}/sink', 'ThreadController@sink');
-            $router->post('thread/{thread}/excellent', 'ThreadController@excellent');
+            $router->post('thread/{thread}/excellent', 'ThreadController@setExcellent');
             $router->post('thread/{thread}/recycle', 'ThreadController@recycle');
             $router->get('thread/{thread}/heat_offset','ThreadController@getHeatOffset');
             $router->post('thread/{thread}/heat_offset','ThreadController@setHeatOffset');
@@ -57,12 +57,6 @@ class DashboardRoutes
             $router->post('reply/{reply}/index/to/trash', 'ReplyController@indexToTrash');
             $router->post('reply/{reply}/pin', 'ReplyController@pin');
             $router->post('reply/{reply}/recycle', 'ReplyController@recycle');
-
-            $router->post('thread/{thread}/pin', 'ThreadController@pin');
-            $router->post('thread/{thread}/sink', 'ThreadController@sink');
-            $router->post('thread/{thread}/excellent', 'ThreadController@setExcellent');
-            $router->post('thread/{thread}/recycle', 'ThreadController@recycle');
-
             $router->get('reply/audit', 'ReplyController@audit')->name('reply.audit');
             $router->get('reply/trash', 'ReplyController@trashView')->name('reply.trash');
 
@@ -72,7 +66,7 @@ class DashboardRoutes
             $router->get('questions/trash', 'QuestionController@trash')->name('questions.trash');
             $router->post('questions/{question}/pin', 'QuestionController@pin');
             $router->post('questions/{question}/sink', 'QuestionController@sink');
-            $router->post('questions/{question}/excellent', 'QuestionController@excellent');
+            $router->post('questions/{question}/excellent', 'QuestionController@setExcellent');
 
             $router->get('answers/index', 'AnswerController@index')->name('answers.index');
             $router->get('answers/audit', 'AnswerController@audit')->name('answers.audit');

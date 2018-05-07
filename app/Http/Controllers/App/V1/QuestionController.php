@@ -47,8 +47,10 @@ class QuestionController extends AppController
         }
         if (mb_strlen(strip_tags($content)) > 800) {
             throw new HifoneException('请输入内容0~800个字');
-        } elseif (count($tagIds) == 0 || count($tagIds) > 4) {
-            throw new HifoneException('请选择0~4个分类');
+        } elseif (count($tagIds) == 0) {
+            throw new HifoneException('请选择标签哦~');
+        } elseif (count($tagIds) > 4) {
+            throw new HifoneException('最多选择4个标签哦~');
         }
         //todo 判断智慧果是否够用
         $questionData = [
