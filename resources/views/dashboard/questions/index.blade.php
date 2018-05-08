@@ -22,7 +22,7 @@
                     <div class="toolbar">
                         <form class="form-inline">
                             <div class="form-group">
-                                <input type="text" name="question[id]" class="form-control" placeholder="编号" style="width: 100px;"
+                                <input type="text" name="question[id]" class="form-control" placeholder="问题编号" style="width: 100px;"
                                        @if (isset($search['id']))
                                        value="{{ $search['id'] }}"
                                         @endif >
@@ -51,12 +51,13 @@
                             <tr class="head">
                                 <td style="width: 70px;">编号</td>
                                 <td style="width: 180px;">问题标题</td>
+                                <td style="width: 180px;">问题子类</td>
                                 <td style="width: 80px;">提问者</td>
-                                <td style="width: 90px;">用户设备信息</td>
                                 <td style="width: 90px;">IP地址</td>
-                                <td style="width: 50px;">回答数</td>
+                                <td style="width: 50px;">回答</td>
+                                <td style="width: 50px;">查看</td>
                                 <td style="width: 90px;">提问时间</td>
-                                <td style="width: 90px;">悬赏分值</td>
+                                <td style="width: 90px;">悬赏</td>
                                 <td style="width: 80px;">操作人</td>
                                 <td style="width: 90px;">操作时间</td>
                                 <td style="width: 120px;">操作</td>
@@ -65,24 +66,13 @@
                                 <tr>
                                     <td>{{ $question->id }}</td>
                                     <td>{{ $question->title }}</td>
+                                    <td></td>
                                     <td>
                                         <a href="{{ route('user.show', ['id'=>$question->user->id]) }}" target="_blank">{{ $question->user->username }}</a>
                                     </td>
-                                    <td>
-                                        {{--@if(sizeof($question->device) > 0)--}}
-                                            {{--<a data-toggle="collapse" href="#dev_info{{ $question->id }}" aria-expanded="false">查看更多</a>--}}
-                                            {{--<div class="collapse well" id="dev_info{{ $question->id }}" style="min-width: 230px">--}}
-                                                {{--@foreach($question->device as $info)--}}
-                                                    {{--@foreach($info as $key => $item)--}}
-                                                        {{--{{$key." : ".$item}}<br>--}}
-                                                    {{--@endforeach--}}
-                                                {{--@endforeach--}}
-                                            {{--</div>--}}
-                                        {{--@endif--}}
-                                        {{ 'aaa' }}
-                                    </td>
                                     <td>{{ $question->ip }}</td>
                                     <td>{{ $question->answer_count }}</td>
+                                    <td>{{ $question->view_count }}</td>
                                     <td>{{ $question->created_time }}</td>
                                     <td>{{ $question->score }}</td>
                                     <td>{{ $question->lastOpUser->username }}</td>
@@ -92,7 +82,7 @@
                                         <a data-url="/dashboard/questions/{{ $question->id }}/pin" data-method="post" title="置顶"><i class="{{ $question->pin }}"></i></a>
                                         <a data-url="/dashboard/questions/{{ $question->id }}/sink" data-method="post" title="下沉"><i class="{{ $question->sink }}"></i></a>
                                         <a href="/dashboard/questions/{{ $question->id }}/edit"><i class="fa fa-pencil" title="编辑"></i></a>
-                                        <a data-url="/dashboard/thread/{{ $question->id }}/index/to/trash" data-title="帖子移入垃圾站" data-method="post" class="need-reason" title="删除"><i class="fa fa-trash"></i></a>
+                                        <a data-url="/dashboard/questions/{{ $question->id }}/index/to/trash" data-title="问题移入回收站" data-method="post" class="need-reason" title="删除"><i class="fa fa-trash"></i></a>
                                     </td>
                                 </tr>
                             @endforeach

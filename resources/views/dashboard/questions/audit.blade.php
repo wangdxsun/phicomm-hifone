@@ -29,12 +29,10 @@
                             <td style="width: 180px;">问题标题</td>
                             <td style="width: 250px;">问题内容</td>
                             <td style="width: 70px;">敏感词</td>
-                            <td style="width: 70px;">问题分类</td>
                             <td style="width: 70px;">问题子类</td>
                             <td style="width: 70px;">提问者</td>
-                            <td style="width: 90px;">用户设备信息</td>
-                            <td style="width: 100px;">IP地址</td>
                             <td style="width: 80px;">提问时间</td>
+                            <td style="width: 80px;">悬赏</td>
                             <td style="width: 70px;">操作</td>
                         </tr>
                         @foreach($questions as $question)
@@ -46,14 +44,16 @@
                                     <div class="replyContent">
                                         {!! $question->body !!}
                                     </div>
+                                    @if(Str::length($question->body) > 26 || Str::contains($question->body,['<img']))
+                                        <a  data-toggle="collapse" href="#question{{ $question->id }}" aria-expanded="false">查看更多</a>
+                                        <div  class="collapse well" id="question{{ $question->id }}">{!! $question->body !!}</div>
+                                    @endif
                                 </td>
                                 <td>{{ $question->bad_word }}</td>
                                 <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>{{ $question->ip }}</td>
+                                <td><a href="{{ route('user.show', ['id'=>$question->user->id]) }}" target="_blank">{{ $question->user->username }}</a></td>
                                 <td>{{ $question->created_time }}</td>
+                                <td>{{ $question->score }}</td>
                                 <td>
                                     <a data-url="/dashboard/questions/{{$question->id}}/audit" data-method="post"><i class="fa fa-check"></i></a>
                                     <a href="/dashboard/questions/{{$question->id}}/edit"><i class="fa fa-pencil"></i></a>

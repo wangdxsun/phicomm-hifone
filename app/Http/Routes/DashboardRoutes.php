@@ -60,7 +60,7 @@ class DashboardRoutes
             $router->get('reply/audit', 'ReplyController@audit')->name('reply.audit');
             $router->get('reply/trash', 'ReplyController@trashView')->name('reply.trash');
 
-            //问答相关
+            //问题相关
             $router->get('questions/index', 'QuestionController@index')->name('questions.index');
             $router->get('questions/audit', 'QuestionController@audit')->name('questions.audit');
             $router->get('questions/trash', 'QuestionController@trash')->name('questions.trash');
@@ -71,9 +71,14 @@ class DashboardRoutes
             $router->post('questions/batchAudit', 'QuestionController@postBatchAudit');//batch audit thread
             $router->post('questions/{question}/audit', 'QuestionController@postAudit');
 
+            //回答相关
             $router->get('answers/index', 'AnswerController@index')->name('answers.index');
             $router->get('answers/audit', 'AnswerController@audit')->name('answers.audit');
             $router->get('answers/trash', 'AnswerController@trash')->name('answers.trash');
+            $router->post('answers/{answer}/pin', 'AnswerController@pin');
+            $router->post('answers/batchMove', 'AnswerController@batchMoveQuestion');
+            $router->post('answers/batchAudit', 'AnswerController@postBatchAudit');//batch audit thread
+            $router->post('answers/{answer}/audit', 'AnswerController@postAudit');
 
             $router->get('comments/index', 'CommentController@index')->name('comments.index');
             $router->get('comments/audit', 'CommentController@audit')->name('comments.audit');
@@ -91,6 +96,7 @@ class DashboardRoutes
             $router->resource('thread', 'ThreadController');
             $router->resource('questions', 'QuestionController');
             $router->resource('reply', 'ReplyController');
+            $router->resource('answers', 'AnswerController');
         });
 
         //限制管理员的特有后台管理权限

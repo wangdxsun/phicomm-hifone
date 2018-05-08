@@ -8,11 +8,13 @@
 
 namespace Hifone\Models;
 
+use AltThree\Validator\ValidatingTrait;
+use Elasticquent\ElasticquentTrait;
 use Hifone\Models\Scopes\CommonTrait;
 
 class Answer extends BaseModel
 {
-    use CommonTrait;
+    use CommonTrait, ValidatingTrait, ElasticquentTrait;
 
     //问题状态
     const VISIBLE = 0;//正常问题
@@ -27,7 +29,8 @@ class Answer extends BaseModel
         'device',
         'status',
         'ip',
-        'thumbnails'
+        'thumbnails',
+        'order'
     ];
 
     protected $hidden = [
@@ -71,5 +74,51 @@ class Answer extends BaseModel
     public function scopeVisibleAndDeleted($query)
     {
         return $query->whereIn('status', [static::VISIBLE, static::DELETED]);
+    }
+
+    //回答对应的问题
+    public function question()
+    {
+        return $this->belongsTo(Question::class);
+    }
+
+    public function lastOpUser()
+    {
+        return $this->belongsTo(User::class, 'last_op_user_id');
+    }
+
+    //置顶图标
+    public function getPinAttribute()
+    {
+        return $this->order == 1 ? 'fa fa-thumb-tack text-danger' : 'fa fa-thumb-tack';
+    }
+
+    public function scopeSearch($query, $searches = [])
+    {
+        foreach ($searches as $key => $value) {
+            if ($key == 'user_name') {
+                $query->whereHas('user', function ($query) use ($value){
+                    $query->where('username', 'like',"%$value%");
+                });
+            } elseif ($key == 'body') {
+                $query->where('body', 'LIKE', "%$value%");
+            } elseif ($key == 'title') {
+                $query->whereHas('question', function ($query) use ($value){
+                    $query->where('title', 'LIKE', "%$value%");
+                });
+            } elseif ($key == 'date_start') {
+                if ($value == "") {
+                    continue;
+                }
+                $query->where('created_at', '>=', $value);
+            } elseif ($key == 'date_end') {
+                if ($value == "") {
+                    continue;
+                }
+                $query->where('created_at', '<=', $value);
+            } else {
+                $query->where($key, $value);
+            }
+        }
     }
 }

@@ -16,7 +16,7 @@ use Hifone\Services\Tag\TaggableInterface;
 
 class Question extends BaseModel implements TaggableInterface
 {
-    use CommonTrait, Taggable, ValidatingTrait, Taggable, ElasticquentTrait;
+    use CommonTrait, ValidatingTrait, Taggable, ElasticquentTrait;
 
     //问题状态
     const VISIBLE = 0;//正常问题
