@@ -10,13 +10,13 @@ class QuestionTagMenuComposer
         $subMenu = [
             'questionTagType' => [
                 'title'  => '问题分类',
-                'url'    => route('dashboard.question.tag.type'),
+                'url'    => route('dashboard.question.tag.type', ['question']),
                 'icon'   => 'fa fa-sitemap',
                 'active' => false,
             ],
             'questionTag' => [
                 'title'  => '问题子类',
-                'url'    => route('dashboard.question.tag'),
+                'url'    => route('dashboard.question.tag', ['question']),
                 'icon'   => 'fa fa-bookmark',
                 'active' => false,
             ],

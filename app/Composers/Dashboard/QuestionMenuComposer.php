@@ -9,7 +9,7 @@ class QuestionMenuComposer
     {
         $subMenu = [
             'question' => [
-                'title'  => '问题',
+                'title'  => '提问',
                 'url'    => route('dashboard.questions.index'),
                 'icon'   => 'fa fa-check',
                 'active' => false,
@@ -61,7 +61,7 @@ class QuestionMenuComposer
                 ],
             ],
             'comment' => [
-                'title'  => '评论',
+                'title'  => '回复',
                 'url'    => route('dashboard.comments.index'),
                 'icon'   => 'fa fa-bar-chart',
                 'active' => false,

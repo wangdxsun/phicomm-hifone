@@ -18,122 +18,118 @@ class TagController extends Controller
         ]);
     }
 
-    //查询所有的用户标签(含自动标签)
-    public function user()
+    //查询标签(用户含自动标签/问题分类)
+    public function index($system)
     {
-        $tags = Tag::whereIn('tag_type_id', TagType::ofType([TagType::USER])->pluck('id'))->orWhere('channel', '=', 0)->with('tagType')->get();
-        return View::make('dashboard.tags.index')
-            ->with('tags', $tags)
-            ->withCurrentMenu('userTag');
+        if ($system == 'user') {
+            $tags = Tag::whereIn('tag_type_id', TagType::ofType([TagType::USER])->pluck('id'))->orWhere('channel', '=', 0)->with('tagType')->get();
+            return View::make('dashboard.tags.index')
+                ->with('tags', $tags)
+                ->withCurrentMenu('userTag');
+        } elseif ($system == 'question') {
+            $tags = Tag::whereIn('tag_type_id', TagType::ofType([TagType::QUESTION])->pluck('id'))->with('tagType')->get();
+            return View::make('dashboard.questionTags.index')
+                ->with('tags', $tags)
+                ->withCurrentMenu('questionTag');
+        }
 
     }
 
-    //查询所有的问题标签
-    public function question()
+    //新增标签
+    public function create($system)
     {
-        $tags = Tag::whereIn('tag_type_id', TagType::ofType([TagType::QUESTION])->pluck('id'))->with('tagType')->get();
-        return View::make('dashboard.questionTags.index')
-            ->with('tags', $tags)
-            ->withCurrentMenu('questionTag');
+        if ($system == 'user') {
+            $tagTypes = TagType::ofType([TagType::USER])->get();
+            return View::make('dashboard.tags.create_edit')
+                ->with('tagTypes', $tagTypes)
+                ->withCurrentMenu('userTag');
+        } elseif ($system == 'question') {
+            $tagTypes = TagType::ofType([TagType::QUESTION])->get();
+            return View::make('dashboard.questionTags.create_edit')
+                ->with('tagTypes', $tagTypes)
+                ->withCurrentMenu('questionTag');
+        }
+
 
     }
 
-    //新增用户标签
-    public function create()
+    //编辑标签
+    public function edit(Tag $tag, $system)
     {
-        $tagTypes = TagType::ofType([TagType::USER])->get();
-        return View::make('dashboard.tags.create_edit')
-            ->with('tagTypes', $tagTypes)
-            ->withCurrentMenu('userTag');
+        if ($system == 'user') {
+            return View::make('dashboard.tags.create_edit')
+                ->with('tag', $tag)
+                ->with('tagTypes', TagType::ofType([TagType::USER])->get())
+                ->withCurrentMenu('userTag');
+        } elseif ($system == 'question') {
+            return View::make('dashboard.questionTags.create_edit')
+                ->with('tag', $tag)
+                ->with('tagTypes', TagType::ofType([TagType::QUESTION])->get())
+                ->withCurrentMenu('questionTag');
+        }
+
 
     }
 
-    //新增问题子类
-    public function createQuestionTag()
-    {
-        $tagTypes = TagType::ofType([TagType::QUESTION])->get();
-        return View::make('dashboard.questionTags.create_edit')
-            ->with('tagTypes', $tagTypes)
-            ->withCurrentMenu('questionTag');
-    }
-
-    public function edit(Tag $tag)
-    {
-        return View::make('dashboard.tags.create_edit')
-            ->with('tag', $tag)
-            ->with('tagTypes', TagType::ofType([TagType::USER])->get())
-            ->withCurrentMenu('userTag');
-
-    }
-
-    public function editQuestionTag(Tag $tag)
-    {
-        return View::make('dashboard.questionTags.create_edit')
-            ->with('tag', $tag)
-            ->with('tagTypes', TagType::ofType([TagType::QUESTION])->get())
-            ->withCurrentMenu('questionTag');
-
-    }
-
-    public function update(Tag $tag)
+    //更新标签
+    public function update(Tag $tag, $system)
     {
         $tagData = Input::get('tag');
         if ($tag->name != array_get($tagData, 'name') && null != Tag::where('name', array_get($tagData, 'name'))->first()) {
-            return Redirect::back()
-                ->withErrors('标签名已存在');
+            if ($system == 'user') {
+                return Redirect::back()
+                    ->withErrors('标签名已存在');
+            } elseif ($system == 'question') {
+                return Redirect::back()
+                    ->withErrors('子类名已存在');
+            }
+
         }
         $tag->update($tagData);
-        return Redirect::route('dashboard.tag')
-            ->withSuccess('标签已更新');
-    }
-
-    public function updateQuestionTag(Tag $tag)
-    {
-        $tagData = Input::get('tag');
-        if ($tag->name != array_get($tagData, 'name') && null != Tag::where('name', array_get($tagData, 'name'))->first()) {
-            return Redirect::back()
-                ->withErrors('子类名已存在');
+        if ($system == 'user') {
+            return Redirect::route('dashboard.tag', ['user'])
+                ->withSuccess('用户标签已更新');
+        } elseif ($system == 'question') {
+            return Redirect::route('dashboard.question.tag', ['question'])
+                ->withSuccess('问题子类已更新');
         }
-        $tag->update($tagData);
-        return Redirect::route('dashboard.question.tag')
-            ->withSuccess('标签已更新');
+
+
     }
 
-    public function store()
+    //保存标签
+    public function store($system)
     {
         $tagData = Input::get('tag');
         if (null != Tag::where('name', array_get($tagData, 'name'))->first()) {
-            return Redirect::back()
-                ->withErrors('标签名已存在');
+            if ($system == 'user') {
+                return Redirect::back()
+                    ->withErrors('标签名已存在');
+            } elseif ($system == 'question') {
+                return Redirect::back()
+                    ->withErrors('子类名已存在');
+            }
         }
         Tag::create($tagData);
-        return Redirect::route('dashboard.tag')
-            ->withSuccess('标签已新增');
-    }
-
-    public function storeQuestionTag()
-    {
-        $tagData = Input::get('tag');
-        if (null != Tag::where('name', array_get($tagData, 'name'))->first()) {
-            return Redirect::back()
-                ->withErrors('子类名已存在');
+        if ($system == 'user') {
+            return Redirect::route('dashboard.tag', ['user'])
+                ->withSuccess('用户标签已新增');
+        } elseif ($system == 'question') {
+            return Redirect::route('dashboard.question.tag', ['question'])
+                ->withSuccess('问题子类已新增');
         }
-        Tag::create($tagData);
-        return Redirect::route('dashboard.question.tag')
-            ->withSuccess('标签已新增');
-
     }
+
 
     //删除标签
-    public function destroy(Tag $tag)
+    public function destroy(Tag $tag, $system)
     {
         $tag->delete();
-        return Redirect::back()->withSuccess('已删除该标签！');
+        if ($system == 'user') {
+            return Redirect::back()->withSuccess('已删除该标签！');
+        } elseif ($system == 'question') {
+            return Redirect::back()->withSuccess('已删除该问题子类！');
+        }
     }
 
-    public function destroyQuestionTag(Tag $tag)
-    {
-        $tag->delete();
-        return Redirect::back()->withSuccess('已删除该问题子类！');
-    }
 }

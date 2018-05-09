@@ -33,7 +33,7 @@ class QuestionController extends Controller
     public function audit()
     {
         $questions = Question::audit()->orderBy('created_at', 'desc')->paginate(20);
-        $questionsCount = Question::visible()->count();
+        $questionsCount = Question::audit()->count();
         return View::make('dashboard.questions.audit')
             ->with('questionsCount', $questionsCount)
             ->with('questions', $questions)

@@ -11,9 +11,9 @@
         <div class="row">
             <div class="col-sm-12">
                 @if(isset($tagType))
-                    {!! Form::model($tagType, ['route' => ['dashboard.tag.type.update', $tagType->id], 'method' => 'patch', 'class' => 'create_form']) !!}
+                    {!! Form::model($tagType, ['route' => ['dashboard.tag.type.update', $tagType->id, 'user'], 'method' => 'patch', 'class' => 'create_form']) !!}
                 @else
-                    {!! Form::open(['route' => 'dashboard.tag.type.store', 'method' => 'post', 'class' => 'create_form']) !!}
+                    {!! Form::open(['route' => ['dashboard.tag.type.store', 'user'], 'method' => 'post', 'class' => 'create_form']) !!}
                 @endif
 
                 <fieldset>

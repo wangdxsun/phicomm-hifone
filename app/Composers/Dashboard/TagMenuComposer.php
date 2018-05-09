@@ -9,13 +9,13 @@ class TagMenuComposer
         $subMenu = [
             'userTagType' => [
                 'title'  => '标签分类',
-                'url'    => route('dashboard.tag.type.index'),
+                'url'    => route('dashboard.tag.type', ['user']),
                 'icon'   => 'fa fa-tags',
                 'active' => false,
             ],
             'userTag' => [
                 'title'  => '用户标签',
-                'url'    => route('dashboard.tag'),
+                'url'    => route('dashboard.tag', ['user']),
                 'icon'   => 'fa fa-user',
                 'active' => false,
             ],

@@ -11,9 +11,9 @@
         <div class="row">
             <div class="col-sm-12">
                 @if(isset($tag))
-                    {!! Form::model($tag, ['route' => ['dashboard.tag.update', $tag->id], 'method' => 'patch', 'class' => 'create_form']) !!}
+                    {!! Form::model($tag, ['route' => ['dashboard.tag.update', $tag->id, 'user'], 'method' => 'patch', 'class' => 'create_form']) !!}
                 @else
-                    {!! Form::open(['route' => 'dashboard.tag.store', 'method' => 'post', 'class' => 'create_form']) !!}
+                    {!! Form::open(['route' => ['dashboard.tag.store', 'user'], 'method' => 'post', 'class' => 'create_form']) !!}
                 @endif
 
                 <fieldset>
@@ -26,7 +26,7 @@
                             <label>{{ '标签分类' }}</label>
                             <select name="tag[tag_type_id]" class="form-control">
                                 @foreach($tagTypes as $tagType)
-                                <option value="{{ $tagType->id }}" {{ option_is_selected([$tagType, 'type', isset($tag) ? $tag : null]) }}>{{ $tagType->display_name }}</option>
+                                <option value="{{ $tagType->id }}" {{ option_is_selected([$tagType, 'tag_type_id', isset($tag) ? $tag : null]) }}>{{ $tagType->display_name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -38,7 +38,7 @@
                     <div class="col-xs-12">
                         <div class="form-group">
                             <button type="submit" class="btn btn-success">{{ trans('forms.save') }}</button>
-                            <a class="btn btn-default" href="{{ back_url('dashboard.tag') }}">{{ trans('forms.cancel') }}</a>
+                            <a class="btn btn-default" href="{{ back_url('dashboard.tag', ['user']) }}">{{ trans('forms.cancel') }}</a>
                         </div>
                     </div>
                 </div>

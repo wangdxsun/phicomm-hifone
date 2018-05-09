@@ -48,8 +48,7 @@ class ComposerServiceProvider extends ServiceProvider
         $factory->composer(['dashboard.carousel.*'], BannerMenuComposer::class);
         $factory->composer(['dashboard.tagTypes.*', 'dashboard.tags.*'],TagMenuComposer::class);
         //问答相关
-        $factory->composer(['dashboard.questions.*'], QuestionMenuComposer::class);
-        $factory->composer(['dashboard.answers.*'], AnswerMenuComposer::class);
+        $factory->composer(['dashboard.questions.*', 'dashboard.answers.*', 'dashboard.comments.*'], QuestionMenuComposer::class);
         $factory->composer(['dashboard.questionTags.*', 'dashboard.questionTagTypes.*'], QuestionTagMenuComposer::class);
     }
 
