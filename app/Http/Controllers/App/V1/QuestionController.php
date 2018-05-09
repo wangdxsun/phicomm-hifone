@@ -24,6 +24,14 @@ class QuestionController extends AppController
         return $questions;
     }
 
+    //悬赏问答（最新的5个提问）
+    public function recent()
+    {
+        $questions = Question::with(['user', 'tags'])->recent()->limit(5)->get();
+
+        return $questions;
+    }
+
     public function store(QuestionBll $questionBll)
     {
         if (Auth::user()->hasRole('NoComment')) {
