@@ -13,6 +13,7 @@ use Hifone\Models\TagType;
 
 class TagController extends WebController
 {
+    //问题标签列表
     public function tags()
     {
         $tagTypes = TagType::ofType(TagType::QUESTION)->get();
@@ -21,6 +22,7 @@ class TagController extends WebController
         return $tags;
     }
 
+    //问题标签列表（含分类）
     public function tagTypes()
     {
         $tagTypes = TagType::ofType(TagType::QUESTION)->with(['tags'])->get();

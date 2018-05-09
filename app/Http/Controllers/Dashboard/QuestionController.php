@@ -135,8 +135,6 @@ class QuestionController extends Controller
 
     }
 
-
-
     //批量审核通过问题
     public function postBatchAudit() {
         $count = 0;

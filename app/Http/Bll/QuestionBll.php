@@ -11,6 +11,8 @@ namespace Hifone\Http\Bll;
 use Hifone\Commands\Question\AddQuestionCommand;
 use Hifone\Models\Question;
 use Auth;
+use Hifone\Models\Tag;
+use Hifone\Models\TagType;
 use Hifone\Models\User;
 use DB;
 
@@ -50,6 +52,7 @@ class QuestionBll extends BaseBll
                 get_request_agent(),
                 getClientIp()
             ));
+            //todo 永久扣除用户智慧果
             if ($this->needNoAudit($question)) {
                 $this->autoAudit($question);
             }
@@ -74,5 +77,14 @@ class QuestionBll extends BaseBll
     public function needNoAudit(Question $question)
     {
         return !$this->hasVideo($question->body) && !$this->hasUrl($question->body) && !$this->hasImage($question->body) && $question->bad_word === '';
+    }
+
+    public function getValidTagIds($rawTagIds)
+    {
+        $tagIds = explode(',', $rawTagIds);
+        $tagTypeIds = TagType::ofType(TagType::QUESTION)->pluck('id')->toArray();
+        $tagIds = Tag::whereIn('id', $tagIds)->whereIn('tag_type_id', $tagTypeIds)->pluck('id')->toArray();
+
+        return $tagIds;
     }
 }
