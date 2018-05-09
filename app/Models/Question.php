@@ -49,7 +49,6 @@ class Question extends BaseModel implements TaggableInterface
         'last_op_user_id',
         'last_op_time',
         'last_op_reason',
-        'last_answer_time',
         'deleted_at',
         'updated_at'
     ];
