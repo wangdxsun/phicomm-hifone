@@ -79,4 +79,10 @@ class QuestionController extends AppController
 
         return $question;
     }
+
+    //获取悬赏梯度
+    public function rewards()
+    {
+        return ['rewards' => Question::$rewards];
+    }
 }
