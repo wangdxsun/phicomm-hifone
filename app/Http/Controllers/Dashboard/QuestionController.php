@@ -172,8 +172,6 @@ class QuestionController extends Controller
             $question->save();
             $this->updateOpLog($question, '审核通过问题');
             $question->user->update(['question_count' => $question->user->questions()->visibleAndDeleted()->count()]);
-            $questionForIndex = clone $question;
-            $questionForIndex->addToIndex();
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();

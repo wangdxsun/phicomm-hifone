@@ -55,7 +55,7 @@ class Question extends BaseModel implements TaggableInterface
 
     public function user()
     {
-        return $this->belongsTo(User::class)->select(['id','username', 'score']);
+        return $this->belongsTo(User::class)->select(['id', 'username', 'score', 'avatar_url']);
     }
 
     public function answers()
