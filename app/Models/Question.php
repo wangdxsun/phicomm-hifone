@@ -24,8 +24,6 @@ class Question extends BaseModel implements TaggableInterface
     const AUDIT = -2;//审核中
     const DELETED = -3;//已删除
 
-    public static $rewards = [5, 10, 15, 20];
-
     public $fillable = [
         'title',
         'body',
