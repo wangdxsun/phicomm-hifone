@@ -73,7 +73,7 @@ class QuestionController extends WebController
     //获取悬赏梯度
     public function rewards()
     {
-        $rewards = explode(',', env('REWARDS'));
+        $rewards = explode(',', env('REWARDS') ? : '5,10,15,20');
 
         return ['rewards' => $rewards];
     }
