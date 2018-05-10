@@ -56,6 +56,7 @@ class WebRoutes
             $router->get('questions', 'QuestionController@index');
             $router->get('questions/excellent', 'QuestionController@excellent');
             $router->get('questions/{question}', 'QuestionController@show')->where('question', '[0-9]+');
+            $router->get('questions/rewards', 'QuestionController@rewards');
             $router->get('questions/tags', 'TagController@tags');
             $router->get('questions/tagTypes', 'TagController@tagTypes');
 

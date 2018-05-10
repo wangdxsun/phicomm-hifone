@@ -12,6 +12,8 @@ use Hifone\Exceptions\HifoneException;
 use Hifone\Http\Bll\QuestionBll;
 use Hifone\Models\Question;
 use Auth;
+use Hifone\Models\Tag;
+use Hifone\Models\TagType;
 
 class QuestionController extends WebController
 {
@@ -41,11 +43,13 @@ class QuestionController extends WebController
             'title' => 'required|min:5|max:40',
             'score'=> 'required|int|min:5'
         ]);
-        $tagIds = explode(',', request('tag_ids'));
+        $tagIds = $questionBll->getValidTagIds(request('tag_ids'));
         if (mb_strlen(strip_tags(request('body'))) > 800) {
             throw new HifoneException('请输入内容0~800个字');
-        } elseif (count($tagIds) == 0 || count($tagIds) > 4) {
-            throw new HifoneException('请选择0~4个分类');
+        } elseif (count($tagIds) == 0) {
+            throw new HifoneException('请选择标签哦~');
+        } elseif (count($tagIds) > 4) {
+            throw new HifoneException('最多选择4个标签哦~');
         }
         //todo 判断智慧果是否够用
         $questionData = [
@@ -64,5 +68,13 @@ class QuestionController extends WebController
         $question = $questionBll->showQuestion($question);
 
         return $question;
+    }
+
+    //获取悬赏梯度
+    public function rewards()
+    {
+        $rewards = explode(',', env('REWARDS') ? : '5,10,15,20');
+
+        return ['rewards' => $rewards];
     }
 }

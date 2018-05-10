@@ -53,7 +53,9 @@ class AppRoutes
 
             //问答相关
             $router->get('questions', 'QuestionController@index');
+            $router->get('questions/recent', 'QuestionController@recent');
             $router->get('questions/{question}', 'QuestionController@show')->where('question', '[0-9]+');
+            $router->get('questions/rewards', 'QuestionController@rewards');
             $router->get('questions/tagTypes', 'TagController@tagTypes');
 
             // Authorization Required

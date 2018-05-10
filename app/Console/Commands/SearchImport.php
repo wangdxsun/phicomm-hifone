@@ -57,11 +57,11 @@ class SearchImport extends Command
                 }
                 try {
                     $user->removeFromIndex();
+                    $user->addToIndex();
+                    $this->info("Import user $id into ElasticSearch Successfully");
                 } catch (\Exception $exception) {
-
+                    $this->error($exception->getMessage());
                 }
-                $user->addToIndex();
-                $this->info("Import user $id into ElasticSearch Successfully");
                 return;
             }
             User::chunk(1000, function ($users) {
@@ -69,15 +69,13 @@ class SearchImport extends Command
                     try {
                         $user->removeFromIndex();
                     } catch (\Exception $exception) {
-
+                        $this->error($exception->getMessage());
                     }
                 }
-            });
-            User::chunk(1000, function ($users) {
                 $users->addToIndex();
             });
 
-            $this->info('Import Users into ElasticSearch Successfully');
+            $this->info("\r\nImport Users into ElasticSearch Successfully");
         } elseif ($type == 'threads') {
             $id = $this->option('id');
             if ($id) {
@@ -87,31 +85,27 @@ class SearchImport extends Command
                 }
                 try {
                     $thread->removeFromIndex();
+                    $thread->body = strip_tags($thread->body);
+                    $thread->addToIndex();
+                    $this->info("Import thread $id into ElasticSearch Successfully");
                 } catch (\Exception $exception) {
-
+                    $this->error($exception->getMessage());
                 }
-                $thread->body = strip_tags($thread->body);
-                $thread->addToIndex();
-                $this->info("Import thread $id into ElasticSearch Successfully");
                 return;
             }
             Thread::visible()->chunk(1000, function ($threads) {
                 foreach ($threads as $thread) {
                     try {
+                        $thread->body = strip_tags($thread->body);
                         $thread->removeFromIndex();
                     } catch (\Exception $exception) {
-
+                        $this->error($exception->getMessage());
                     }
-                }
-            });
-            Thread::visible()->chunk(1000, function ($threads) {
-                foreach ($threads as $thread) {
-                    $thread->body = strip_tags($thread->body);
                 }
                 $threads->addToIndex();
             });
 
-            $this->info('Import Threads into ElasticSearch Successfully');
+            $this->info("\r\nImport Threads into ElasticSearch Successfully");
         } else {
             $start = Carbon::now();
             $this->line('Delete Indices...');

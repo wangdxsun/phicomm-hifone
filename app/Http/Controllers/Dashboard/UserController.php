@@ -199,7 +199,7 @@ class UserController extends Controller
     public function login(User $user)
     {
         $user->role_id = ($user->role_id == Role::NO_LOGIN) ? Role::USER : Role::NO_LOGIN;
-        $this->updateOpLog($user, $user->role_id ? '取消禁止登录' : '禁止登录');;
+        $this->updateOpLog($user, $user->role_id ? '取消禁止登录' : '禁止登录');
         return Redirect::back()->withSuccess('修改成功');
     }
 

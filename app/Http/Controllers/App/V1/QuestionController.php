@@ -24,6 +24,14 @@ class QuestionController extends AppController
         return $questions;
     }
 
+    //悬赏问答（最新的5个提问）
+    public function recent()
+    {
+        $questions = Question::with(['user', 'tags'])->recent()->limit(5)->get();
+
+        return $questions;
+    }
+
     public function store(QuestionBll $questionBll)
     {
         if (Auth::user()->hasRole('NoComment')) {
@@ -35,7 +43,8 @@ class QuestionController extends AppController
             'title' => 'required|min:5|max:40',
             'score'=> 'required|int|min:5'
         ]);
-        $tagIds = explode(',', request('tag_ids'));
+        //App图文混排
+        $tagIds = $questionBll->getValidTagIds(request('tag_ids'));
         $bodies = json_decode(request('body'), true);
         $content = '';
         foreach ($bodies as $body) {
@@ -69,5 +78,13 @@ class QuestionController extends AppController
         $question = $questionBll->showQuestion($question);
 
         return $question;
+    }
+
+    //获取悬赏梯度
+    public function rewards()
+    {
+        $rewards = explode(',', env('REWARDS') ? : '5,10,15,20');
+
+        return ['rewards' => $rewards];
     }
 }
