@@ -172,4 +172,10 @@ class UserController extends AppController
 
     }
 
+    //用户智慧果
+    public function score(UserBll $userBll, User $user)
+    {
+        return $userBll->getUserScore($user);
+    }
+
 }

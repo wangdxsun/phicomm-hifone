@@ -10,9 +10,11 @@ namespace Hifone\Http\Bll;
 
 use Auth;
 use Config;
+use GuzzleHttp\Client;
 use Hifone\Events\User\UserWasActiveEvent;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Models\User;
+use Hifone\Services\Guzzle\Score;
 
 class UserBll extends BaseBll
 {

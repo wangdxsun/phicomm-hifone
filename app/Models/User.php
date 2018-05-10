@@ -509,4 +509,5 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
     {
         return $this->morphedByMany(Node::class, 'followable', 'follows');
     }
+
 }
