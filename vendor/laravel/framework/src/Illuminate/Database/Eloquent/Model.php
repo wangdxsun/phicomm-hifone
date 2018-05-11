@@ -1395,8 +1395,8 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
         }
 
         $this->incrementOrDecrementAttributeValue($column, $amount, $method);
-        $this->fireModelEvent('saving');
-        $this->fireModelEvent('saved', false);
+        $this->fireModelEvent('updating');
+        $this->fireModelEvent('updated', false);
 
         return $query->where($this->getKeyName(), $this->getKey())->{$method}($column, $amount, $extra);
     }
