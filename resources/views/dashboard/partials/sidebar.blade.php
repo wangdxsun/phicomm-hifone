@@ -33,7 +33,7 @@
             </li>
 
             <li  {!! set_active('dashboard/questions*') !!}>
-                <a href="{{ route('dashboard.questions.index') }}">
+                <a href="{{ route('dashboard.questions.audit') }}">
                     <i class="fa fa-question-circle"></i>
                     <span>问答管理</span>
                 </a>

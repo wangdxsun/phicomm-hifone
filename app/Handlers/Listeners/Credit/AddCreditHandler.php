@@ -21,11 +21,12 @@ use Hifone\Events\Image\ImageWasUploadedEvent;
 use Hifone\Events\Like\LikeWasRemovedEvent;
 use Hifone\Events\Pin\NodePinWasAddedEvent;
 use Hifone\Events\Question\QuestionWasAuditedEvent;
-use Hifone\Events\Reply\ReplyWasAddedEvent;
+use Hifone\Events\Question\QuestionWasDeletedEvent;
 use Hifone\Events\Reply\RepliedWasAddedEvent;
+use Hifone\Events\Reply\ReplyWasAuditedEvent;
 use Hifone\Events\Reply\ReplyWasTrashedEvent;
 use Hifone\Events\Report\ReportWasPassedEvent;
-use Hifone\Events\Thread\ThreadWasAddedEvent;
+use Hifone\Events\Thread\ThreadWasAuditedEvent;
 use Hifone\Events\Thread\ThreadWasTrashedEvent;
 use Hifone\Events\User\UserWasAddedEvent;
 use Hifone\Events\User\UserWasLoggedinAppEvent;
@@ -54,13 +55,13 @@ class AddCreditHandler
     {
         $action = '';
         $user = null;
-        if ($event instanceof ThreadWasAddedEvent) {
+        if ($event instanceof ThreadWasAuditedEvent) {
             $action = 'thread_new';
             $user = $event->thread->user;
         } elseif ($event instanceof ThreadWasTrashedEvent) {
             $action = 'thread_removed';
             $user = $event->thread->user;
-        } elseif ($event instanceof ReplyWasAddedEvent) {
+        } elseif ($event instanceof ReplyWasAuditedEvent) {
             $action = 'reply_new';
             $user = $event->reply->user;
         } elseif ($event instanceof ReplyWasTrashedEvent) {
@@ -191,6 +192,10 @@ class AddCreditHandler
         } elseif ($event instanceof QuestionWasAuditedEvent) {
             //问题审核通过
             $action = 'question_audited';
+            $user = $event->user;
+        } elseif ($event instanceof QuestionWasDeletedEvent) {
+            //审核通过的提问被删除
+            $action = 'question_deleted';
             $user = $event->user;
         }
 

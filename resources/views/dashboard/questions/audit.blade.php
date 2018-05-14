@@ -14,7 +14,7 @@
         @endif
         <div class="uppercase pull-right">
             <span class="uppercase">
-                截止当前列表的问题总数：{{ $questionsCount }}
+                截止当前, 列表的问题总数：{{ $questionsCount }}
             </span>
         </div>
         <div class="row">
@@ -29,10 +29,10 @@
                             <td style="width: 180px;">问题标题</td>
                             <td style="width: 250px;">问题内容</td>
                             <td style="width: 70px;">敏感词</td>
-                            <td style="width: 70px;">问题子类</td>
+                            <td style="width: 70px;">问题类型</td>
                             <td style="width: 70px;">提问者</td>
                             <td style="width: 80px;">提问时间</td>
-                            <td style="width: 80px;">悬赏</td>
+                            <td style="width: 80px;">悬赏分值</td>
                             <td style="width: 70px;">操作</td>
                         </tr>
                         @foreach($questions as $question)
@@ -50,7 +50,11 @@
                                     @endif
                                 </td>
                                 <td>{{ $question->bad_word }}</td>
-                                <td></td>
+                                <td>
+                                    @foreach($question->tags as $tag)
+                                        {{$tag->name}}<br>
+                                    @endforeach
+                                </td>
                                 <td><a href="{{ route('user.show', ['id'=>$question->user->id]) }}" target="_blank">{{ $question->user->username }}</a></td>
                                 <td>{{ $question->created_time }}</td>
                                 <td>{{ $question->score }}</td>

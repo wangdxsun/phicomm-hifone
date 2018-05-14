@@ -14,7 +14,7 @@ class Comment extends BaseModel
 {
     use CommonTrait;
 
-    const VISIBLE = 0;//正常问题
+    const VISIBLE = 0;//审核通过回复
     const TRASH = -1;//审核未通过
     const AUDIT = -2;//审核中
     const DELETED = -3;//已删除
@@ -27,6 +27,7 @@ class Comment extends BaseModel
         'device',
         'status',
         'ip',
+        'order'
     ];
 
     protected $hidden = [
@@ -47,6 +48,11 @@ class Comment extends BaseModel
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function answer()
+    {
+        return $this->belongsTo(Answer::class);
     }
 
     //审核通过
@@ -71,6 +77,17 @@ class Comment extends BaseModel
     public function scopeVisibleAndDeleted($query)
     {
         return $query->whereIn('status', [static::VISIBLE, static::DELETED]);
+    }
+
+    public function lastOpUser()
+    {
+        return $this->belongsTo(User::class, 'last_op_user_id');
+    }
+
+    //置顶图标
+    public function getPinAttribute()
+    {
+        return $this->order == 1 ? 'fa fa-thumb-tack text-danger' : 'fa fa-thumb-tack';
     }
 
 }

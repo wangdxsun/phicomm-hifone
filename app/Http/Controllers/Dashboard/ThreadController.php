@@ -18,7 +18,6 @@ use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Events\Pin\NodePinWasAddedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Pin\SinkWasAddedEvent;
-use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasMarkedExcellentEvent;
 use Hifone\Events\Thread\ThreadWasUppedEvent;
 use Hifone\Http\Controllers\Controller;
@@ -304,7 +303,6 @@ class ThreadController extends Controller
             return Redirect::back()->withErrors($e->getMessage());
         }
         event(new ThreadWasAuditedEvent($thread));
-        event(new ThreadWasAddedEvent($thread));
 
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }

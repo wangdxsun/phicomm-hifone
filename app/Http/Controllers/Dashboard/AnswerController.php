@@ -36,9 +36,9 @@ class AnswerController extends Controller
             ->with('current_menu', 'answer');
     }
 
-    public function trash()
+    public function trashView()
     {
-        $search = $this->filterEmptyValue(Input::get('question'));
+        $search = $this->filterEmptyValue(Input::get('answer'));
         $answers = Answer::trash()->search($search)->orderBy('last_op_time', 'desc')->paginate(20);
         $answersCount = Answer::trash()->count();
         return View::make('dashboard.answers.trash')
@@ -121,5 +121,49 @@ class AnswerController extends Controller
         //event(new QuestionWasAuditedEvent($answer->user, $answer));
 
         return Redirect::back()->withSuccess('恭喜，操作成功！');
+    }
+
+
+    //从审核通过删除回复，users表中需要将回复数-1
+    public function indexToTrash(Answer $answer)
+    {
+        DB::beginTransaction();
+        try {
+            $this->delete($answer);
+            $answer->user->update(['answer_count' => $answer->user->answers()->visibleAndDeleted()->count()]);
+            //TODO  事件
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return Redirect::back()->withErrors($e->getMessage());
+        }
+        return Redirect::back()->withSuccess('恭喜，操作成功！');
+    }
+
+
+    //从待审核删除提问
+    public function auditToTrash(Answer $answer)
+    {
+        try {
+            $this->trash($answer);
+        } catch (\Exception $e) {
+            return Redirect::back()->withErrors($e->getMessage());
+        }
+
+        return Redirect::back()->withSuccess('恭喜，操作成功！');
+    }
+
+    //审核通过列表的提问，放到回收站
+    public function delete(Answer $answer)
+    {
+        $answer->status = Answer::DELETED;
+        $this->updateOpLog($answer, '删除回复', trim(request('reason')));
+    }
+
+    //审核未通过列表的提问，放到回收站
+    public function trash(Answer $answer)
+    {
+        $answer->status = Answer::TRASH;
+        $this->updateOpLog($answer, '回复审核未通过', trim(request('reason')));
     }
 }

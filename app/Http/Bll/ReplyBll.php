@@ -11,7 +11,6 @@ namespace Hifone\Http\Bll;
 use Hifone\Commands\Image\UploadBase64ImageCommand;
 use Hifone\Commands\Reply\AddReplyCommand;
 use Hifone\Events\Reply\RepliedWasAddedEvent;
-use Hifone\Events\Reply\ReplyWasAddedEvent;
 use Hifone\Events\Reply\ReplyWasAuditedEvent;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Models\Node;
@@ -130,7 +129,6 @@ class ReplyBll extends BaseBll
         $thread = $reply->thread;
         $thread->last_reply_user_id = $reply->user_id;
         $thread->save();
-        event(new ReplyWasAddedEvent($reply));
         event(new RepliedWasAddedEvent($reply->user, $thread->user, $reply));
 
         DB::beginTransaction();

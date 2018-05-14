@@ -5,6 +5,7 @@ use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Pin\SinkWasAddedEvent;
 use Hifone\Events\Question\QuestionWasAuditedEvent;
+use Hifone\Events\Question\QuestionWasDeletedEvent;
 use Input;
 use View;
 use DB;
@@ -26,13 +27,12 @@ class QuestionController extends Controller
             ->with('search', $search)
             ->with('current_menu', 'question')
             ->with('current_nav', 'index');
-
     }
 
     //待审核列表
     public function audit()
     {
-        $questions = Question::audit()->orderBy('created_at', 'desc')->paginate(20);
+        $questions = Question::audit()->with(['user', 'tags'])->orderBy('created_at', 'desc')->paginate(20);
         $questionsCount = Question::audit()->count();
         return View::make('dashboard.questions.audit')
             ->with('questionsCount', $questionsCount)
@@ -42,7 +42,7 @@ class QuestionController extends Controller
     }
 
     //回收站列表
-    public function trash()
+    public function trashView()
     {
         $search = $this->filterEmptyValue(Input::get('question'));
         $questions = Question::trash()->search($search)->orderBy('last_op_time', 'desc')->paginate(20);
@@ -69,7 +69,6 @@ class QuestionController extends Controller
             event(new PinWasAddedEvent($question->user, $question));
         }
         return Redirect::back()->withSuccess('恭喜，操作成功！');
-
     }
 
     //下沉问题
@@ -181,6 +180,49 @@ class QuestionController extends Controller
         event(new QuestionWasAuditedEvent($question->user, $question));
 
         return Redirect::back()->withSuccess('恭喜，操作成功！');
+    }
+
+    //从审核通过删除帖子，需要将帖子数-1
+    public function indexToTrash(Question $question)
+    {
+        DB::beginTransaction();
+        try {
+            $this->delete($question);
+            $question->user->update(['question_count' => $question->user->questions()->visibleAndDeleted()->count()]);
+            //扣除经验值
+            event(new QuestionWasDeletedEvent($question->user, $question));
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return Redirect::back()->withErrors($e->getMessage());
+        }
+        return Redirect::back()->withSuccess('恭喜，操作成功！');
+    }
+
+    //从待审核删除提问
+    public function auditToTrash(Question $question)
+    {
+        try {
+            $this->trash($question);
+        } catch (\Exception $e) {
+            return Redirect::back()->withErrors($e->getMessage());
+        }
+
+        return Redirect::back()->withSuccess('恭喜，操作成功！');
+    }
+
+    //审核通过列表的提问，放到回收站
+    public function delete(Question $question)
+    {
+        $question->status = Question::DELETED;
+        $this->updateOpLog($question, '删除提问', trim(request('reason')));
+    }
+
+    //审核未通过列表的提问，放到回收站
+    public function trash(Question $question)
+    {
+        $question->status = Question::TRASH;
+        $this->updateOpLog($question, '提问审核未通过', trim(request('reason')));
     }
 
 

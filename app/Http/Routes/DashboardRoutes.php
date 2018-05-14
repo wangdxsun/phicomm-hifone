@@ -63,26 +63,35 @@ class DashboardRoutes
             //问题相关
             $router->get('questions/index', 'QuestionController@index')->name('questions.index');
             $router->get('questions/audit', 'QuestionController@audit')->name('questions.audit');
-            $router->get('questions/trash', 'QuestionController@trash')->name('questions.trash');
+            $router->get('questions/trash', 'QuestionController@trashView')->name('questions.trash');
             $router->post('questions/{question}/pin', 'QuestionController@pin');
             $router->post('questions/{question}/sink', 'QuestionController@sink');
             $router->post('questions/{question}/excellent', 'QuestionController@setExcellent');
             $router->post('questions/batchMove', 'QuestionController@batchMoveQuestion')->name('question.move');
             $router->post('questions/batchAudit', 'QuestionController@postBatchAudit');//batch audit thread
             $router->post('questions/{question}/audit', 'QuestionController@postAudit');
+            $router->post('questions/{question}/index/to/trash', 'QuestionController@indexToTrash');
+            $router->post('questions/{question}/audit/to/trash', 'QuestionController@auditToTrash');
 
             //回答相关
             $router->get('answers/index', 'AnswerController@index')->name('answers.index');
             $router->get('answers/audit', 'AnswerController@audit')->name('answers.audit');
-            $router->get('answers/trash', 'AnswerController@trash')->name('answers.trash');
+            $router->get('answers/trash', 'AnswerController@trashView')->name('answers.trash');
             $router->post('answers/{answer}/pin', 'AnswerController@pin');
-            $router->post('answers/batchMove', 'AnswerController@batchMoveQuestion');
+            $router->post('answers/batchMove', 'AnswerController@batchMoveAnswer');
             $router->post('answers/batchAudit', 'AnswerController@postBatchAudit');//batch audit thread
             $router->post('answers/{answer}/audit', 'AnswerController@postAudit');
+            $router->post('answers/{answer}/index/to/trash', 'AnswerController@indexToTrash');
+            $router->post('answers/{answer}/audit/to/trash', 'AnswerController@auditToTrash');
 
             $router->get('comments/index', 'CommentController@index')->name('comments.index');
             $router->get('comments/audit', 'CommentController@audit')->name('comments.audit');
-            $router->get('comments/trash', 'CommentController@trash')->name('comments.trash');
+            $router->get('comments/trash', 'CommentController@trashView')->name('comments.trash');
+            $router->post('comments/{comment}/pin', 'CommentController@pin');
+            $router->post('comments/batchAudit', 'CommentController@postBatchAudit');//batch audit thread
+            $router->post('comments/{comment}/audit', 'CommentController@postAudit');
+            $router->post('comments/{comment}/index/to/trash', 'CommentController@indexToTrash');
+            $router->post('comments/{comment}/audit/to/trash', 'CommentController@auditToTrash');
 
 
         });

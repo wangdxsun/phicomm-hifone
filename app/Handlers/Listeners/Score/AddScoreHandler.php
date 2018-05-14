@@ -154,7 +154,7 @@ class AddScoreHandler
 
     protected function apply($action, $user, $from, $object)
     {
-        if (!$action || !$user || !$user->phicomm_id) {
+        if (!$action || !$user || !$user->phicomm_id ) {
             return;
         }
         $job = (new AddScore($user, $action, $from, $object));
