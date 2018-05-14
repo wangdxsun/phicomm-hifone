@@ -1,11 +1,14 @@
 <?php
 namespace Hifone\Http\Controllers\Dashboard;
 
+use Hifone\Commands\Question\UpdateQuestionCommand;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Pin\SinkWasAddedEvent;
 use Hifone\Events\Question\QuestionWasAuditedEvent;
 use Hifone\Events\Question\QuestionWasDeletedEvent;
+use Hifone\Handlers\Commands\Question\UpdateQuestionCommandHandler;
+use Hifone\Models\TagType;
 use Input;
 use View;
 use DB;
@@ -19,12 +22,15 @@ class QuestionController extends Controller
     public function index()
     {
         $search = $this->filterEmptyValue(Input::get('question'));
-        $questions = Question::visible()->search($search)->orderBy('last_op_time', 'desc')->paginate(20);
+        $questions = Question::visible()->with(['user', 'tags'])->search($search)->orderBy('last_op_time', 'desc')->paginate(20);
         $questionsCount = Question::visible()->count();
+        //问题分类及相应问题子类
+        $questionTagTypes = TagType::ofType([TagType::QUESTION])->with('tags')->get();
         return View::make('dashboard.questions.index')
             ->with('questions', $questions)
             ->with('questionsCount', $questionsCount)
             ->with('search', $search)
+            ->with('questionTagTypes', $questionTagTypes)
             ->with('current_menu', 'question')
             ->with('current_nav', 'index');
     }
@@ -103,9 +109,14 @@ class QuestionController extends Controller
     public function edit(Question $question)
     {
         $menu = $question->status == Question::VISIBLE ? 'index' : 'audit';
+        $questionTags = $question->tags;
+        //问题分类及相应问题子类
+        $questionTagTypes = TagType::ofType([TagType::QUESTION])->with('tags')->get();
         return View::make('dashboard.questions.create_edit')
             ->with('question', $question)
             ->with('current_menu', 'question')
+            ->with('questionTags', json_encode($questionTags->pluck('id')->toArray()))
+            ->with('questionTagTypes', $questionTagTypes)
             ->with('current_nav', $menu);
 
     }
@@ -116,10 +127,9 @@ class QuestionController extends Controller
         //修改问题标题，标签和内容
         $questionData = Input::get('question');
         $questionData['body_original'] = $questionData['body'];
-
         try {
-            $this->updateOpLog($question, '后台编辑问题');
             //TODO 编辑问题后续的标签相关计数等
+            $question = dispatch( new UpdateQuestionCommand($question, $questionData));
 
         } catch (\Exception $e) {
             return Redirect::route('dashboard.questions.edit', $question->id)

@@ -27,6 +27,7 @@ class Question extends BaseModel implements TaggableInterface
     public $fillable = [
         'title',
         'body',
+        'body_original',
         'status',
         'score',
         'user_id',
@@ -59,11 +60,6 @@ class Question extends BaseModel implements TaggableInterface
     public function answers()
     {
         return $this->hasMany(Answer::class);
-    }
-
-    public function tags()
-    {
-        return $this->morphToMany(Tag::class, 'taggable');
     }
 
     public function scopeOfTag($query, $tagId)
@@ -123,6 +119,37 @@ class Question extends BaseModel implements TaggableInterface
     public function getExcellentAttribute()
     {
         return $this->is_excellent ? 'fa fa-diamond text-danger' : 'fa fa-diamond';
+    }
+
+    public function scopeSearch($query, $searches = [])
+    {
+        foreach ($searches as $key => $value) {
+            if ($key == 'user_name') {
+                $query->whereHas('user', function ($query) use ($value){
+                    $query->where('username', 'like',"%$value%");
+                });
+            } elseif ($key == 'body') {
+                $query->where('body', 'LIKE', "%$value%");
+            } elseif ($key == 'title') {
+                $query->where('body', 'LIKE', "%$value%");
+            } elseif ($key == 'date_start') {
+                if ($value == "") {
+                    continue;
+                }
+                $query->where('created_at', '>=', $value);
+            } elseif ($key == 'date_end') {
+                if ($value == "") {
+                    continue;
+                }
+                $query->where('created_at', '<=', $value);
+            } elseif ($key == 'tag') {
+                $query->whereHas('tags', function ($query) use ($value) {
+                   $query->where('tag_id', $value);
+                });
+            } else {
+                $query->where($key, $value);
+            }
+        }
     }
 
 }

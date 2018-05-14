@@ -103,7 +103,7 @@ class DashboardRoutes
             'namespace' => 'Dashboard'
         ], function (Registrar $router) {
             $router->resource('thread', 'ThreadController');
-            $router->resource('questions', 'QuestionController');
+            $router->resource('question', 'QuestionController');
             $router->resource('reply', 'ReplyController');
             $router->resource('answers', 'AnswerController');
         });

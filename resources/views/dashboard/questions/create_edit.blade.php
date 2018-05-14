@@ -14,15 +14,33 @@
             @endforeach
         @endif
 
-        <div class="row">
+        <div class="row" id="app">
             <div class="col-md-12">
-                {!! Form::model($question, ['route' => ['dashboard.questions.update', $question->id], 'id' => 'thread-edit-form', 'method' => 'patch']) !!}
-                <input type="hidden" name="id" value={{$question->id}}>
+                {!! Form::model($question, ['route' => ['dashboard.question.update', $question->id], 'id' => 'thread-edit-form', 'method' => 'patch']) !!}
                 <fieldset>
                     <div class="form-group">
                         <label for="question-title">问题标题</label>
                         <input type="text" class="form-control" name="question[title]" id="question-title" required value="{{ isset($question) ? $question->title : null }}">
                     </div>
+
+                    <div>
+                        <label>{{ '问题类型' }}</label>
+                        <el-select v-model="questionTags" id="question-tags" multiple placeholder="选择标签">
+                            <el-option-group
+                                    v-for="questionTagType in questionTagTypes"
+                                    :key="questionTagType.id"
+                                    :label="questionTagType.display_name">
+                                <el-option
+                                        v-for="tag in questionTagType.tags"
+                                        :key="tag.id"
+                                        :label="tag.name"
+                                        :value="tag.id">
+                                </el-option>
+                            </el-option-group>
+                        </el-select>
+                        <el-input :value="questionTags"  type="hidden" resize="both"  style="width: 60px; height: 10px;" name="question[questionTags]"></el-input>
+                    </div>
+
 
 
                     <div class="form-group">
@@ -58,4 +76,22 @@
             ue.execCommand('serverparam', '_token', '{{ csrf_token() }}'); // 设置 CSRF token.
         });
     </script>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    questionTagTypes: {!! $questionTagTypes !!},
+                    questionTags: {!! $questionTags or json_encode([])  !!} ,
+                };
+            },
+        })
+    </script>
+
+    <style>
+        .el-select {
+            width:100%;
+        }
+    </style>
 @stop
