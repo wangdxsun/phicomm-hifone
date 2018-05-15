@@ -99,6 +99,7 @@ class SearchImport extends Command
             } catch (\Exception $exception) {
                 $this->error($exception->getMessage());
             }
+            return;
         }
         User::chunk(1000, function ($users) {
             foreach ($users as $user) {
@@ -129,6 +130,7 @@ class SearchImport extends Command
             } catch (\Exception $exception) {
                 $this->error($exception->getMessage());
             }
+            return;
         }
         Thread::visible()->chunk(1000, function ($threads) {
             foreach ($threads as $thread) {
@@ -160,6 +162,7 @@ class SearchImport extends Command
             } catch (\Exception $exception) {
                 $this->error($exception->getMessage());
             }
+            return;
         }
         Question::visible()->chunk(1000, function ($questions) {
             foreach ($questions as $question) {
@@ -191,19 +194,21 @@ class SearchImport extends Command
             } catch (\Exception $exception) {
                 $this->error($exception->getMessage());
             }
-        }
-        Answer::with('question')->chunk(100, function ($answers) {
-            foreach ($answers as $answer) {
-                try {
-                    $answer->body = strip_tags($answer->body);
-                    $answer->removeFromIndex();
-                } catch (\Exception $exception) {
-                    $this->error($exception->getMessage());
+        } else {
+            Answer::with('question')->chunk(100, function ($answers) {
+                foreach ($answers as $answer) {
+                    try {
+                        $answer->body = strip_tags($answer->body);
+                        $answer->question->body = strip_tags($answer->question->body);
+                        $answer->removeFromIndex();
+                    } catch (\Exception $exception) {
+                        $this->error($exception->getMessage());
+                    }
                 }
-            }
-            $answers->addToIndex();
-        });
+                $answers->addToIndex();
+            });
 
-        $this->info("\r\nImport Questions into ElasticSearch Successfully");
+            $this->info("\r\nImport Answers into ElasticSearch Successfully");
+        }
     }
 }

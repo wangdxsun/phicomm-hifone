@@ -87,4 +87,11 @@ class QuestionBll extends BaseBll
 
         return $tagIds;
     }
+
+    public function search($keyword)
+    {
+        $questions = Question::searchQuestion($keyword)->load(['user', 'tags'])->paginate(15);
+
+        return $questions;
+    }
 }

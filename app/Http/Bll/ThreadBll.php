@@ -52,7 +52,7 @@ class ThreadBll extends BaseBll
     public function search($keyword, $recent = null)
     {
         if (empty($keyword)) {
-            $threads = new Paginator([], 15);
+            $threads = new LengthAwarePaginator([], 0, 15);
         } else {
             $this->searchWords($keyword);
             $threads = Thread::searchThread($keyword, $recent)->load(['user', 'node'])->paginate(15);
@@ -64,7 +64,7 @@ class ThreadBll extends BaseBll
     public function webSearch($keyword)
     {
         if (empty($keyword)) {
-            $threads = new Paginator([], 0, 15);
+            $threads = new LengthAwarePaginator([], 0, 15);
         } else {
             $threads = Thread::searchThread($keyword);
             $this->searchWords($keyword);

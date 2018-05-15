@@ -15,6 +15,7 @@ use Hifone\Events\User\UserWasActiveEvent;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Models\User;
 use Hifone\Services\Guzzle\Score;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class UserBll extends BaseBll
 {
@@ -60,10 +61,15 @@ class UserBll extends BaseBll
     //全局搜索用户
     public function search($keyword)
     {
-        $users = User::searchUser($keyword)->paginate(15);
-        foreach ($users as $user) {
-            $user['followed'] = User::hasFollowUser($user);
+        if (empty($keyword)) {
+            $users = new LengthAwarePaginator([], 0, 15);
+        } else {
+            $users = User::searchUser($keyword)->paginate(15);
+            foreach ($users as $user) {
+                $user['followed'] = User::hasFollowUser($user);
+            }
         }
+
         return $users;
     }
 

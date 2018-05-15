@@ -57,6 +57,8 @@ class AppRoutes
             $router->get('questions/{question}', 'QuestionController@show')->where('question', '[0-9]+');
             $router->get('questions/rewards', 'QuestionController@rewards');
             $router->get('questions/tagTypes', 'TagController@tagTypes');
+            $router->get('questions/search/{keyword}/{a?}/{b?}/{c?}', 'QuestionController@search');
+            $router->get('answers/search/{keyword}/{a?}/{b?}/{c?}', 'AnswerController@search');
 
             // Authorization Required
             $router->group(['middleware' => 'auth:hifone'], function ($router) {

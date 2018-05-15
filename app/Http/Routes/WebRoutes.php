@@ -59,6 +59,8 @@ class WebRoutes
             $router->get('questions/rewards', 'QuestionController@rewards');
             $router->get('questions/tags', 'TagController@tags');
             $router->get('questions/tagTypes', 'TagController@tagTypes');
+            $router->get('questions/search/{keyword}/{a?}/{b?}/{c?}', 'QuestionController@search');
+            $router->get('answers/search/{keyword}/{a?}/{b?}/{c?}', 'AnswerController@search');
 
             //登录相关
             $router->post('register/pre', 'PhicommController@preRegister');

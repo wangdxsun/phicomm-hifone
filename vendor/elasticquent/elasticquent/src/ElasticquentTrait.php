@@ -4,6 +4,8 @@ namespace Elasticquent;
 
 use Carbon\Carbon;
 use Exception;
+use Hifone\Models\Answer;
+use Hifone\Models\Question;
 use Hifone\Models\Thread;
 use ReflectionMethod;
 use Illuminate\Database\Eloquent\Model;
@@ -471,8 +473,11 @@ trait ElasticquentTrait
         if (!$this->exists) {
             throw new Exception('Document does not exist.');
         }
-        if ($this instanceof Thread) {
+        if ($this instanceof Thread || $this instanceof Question) {
             $this->body = strip_tags($this->body);
+        } elseif ($this instanceof Answer) {
+            $this->body = strip_tags($this->body);
+            $this->question->body = strip_tags($this->question->body);
         }
 
         $params = $this->getBasicEsParams();

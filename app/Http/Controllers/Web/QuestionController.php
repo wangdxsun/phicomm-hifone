@@ -14,6 +14,7 @@ use Hifone\Models\Question;
 use Auth;
 use Hifone\Models\Tag;
 use Hifone\Models\TagType;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class QuestionController extends WebController
 {
@@ -76,5 +77,16 @@ class QuestionController extends WebController
         $rewards = explode(',', env('REWARDS') ? : '5,10,15,20');
 
         return ['rewards' => $rewards];
+    }
+
+    public function search($keyword, QuestionBll $questionBll)
+    {
+        if (empty($keyword)) {
+            $questions = new LengthAwarePaginator([], 0, 15);
+        } else {
+            $questions = $questionBll->search($keyword);
+        }
+
+        return $questions;
     }
 }
