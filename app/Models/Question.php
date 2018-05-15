@@ -13,10 +13,11 @@ use Elasticquent\ElasticquentTrait;
 use Hifone\Models\Scopes\CommonTrait;
 use Hifone\Models\Traits\Taggable;
 use Hifone\Services\Tag\TaggableInterface;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Question extends BaseModel implements TaggableInterface
 {
-    use CommonTrait, ValidatingTrait, Taggable, ElasticquentTrait;
+    use CommonTrait, ValidatingTrait, Taggable, ElasticquentTrait, SoftDeletes;
 
     //问题状态
     const VISIBLE = 0;//正常问题
@@ -51,6 +52,25 @@ class Question extends BaseModel implements TaggableInterface
         'deleted_at',
         'updated_at'
     ];
+
+    protected $mappingProperties = [
+        'title' => [
+            'type' => 'string',
+            'analyzer' => 'ik_max_word',
+        ],
+        'body' => [
+            'type' => 'string',
+            'analyzer' => 'ik_max_word',
+        ],
+        'created_at' => [
+            'type' => 'date',
+            'format' => 'yyyy-MM-dd HH:mm',
+        ]
+    ];
+
+    protected $dates = ['deleted_at'];
+
+    protected $dateFormat = 'Y-m-d H:i';
 
     public function user()
     {

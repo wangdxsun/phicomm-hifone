@@ -4,6 +4,8 @@ namespace Elasticquent;
 
 use Carbon\Carbon;
 use Exception;
+use Hifone\Models\Answer;
+use Hifone\Models\Question;
 use Hifone\Models\Thread;
 use ReflectionMethod;
 use Illuminate\Database\Eloquent\Model;
@@ -306,9 +308,7 @@ trait ElasticquentTrait
                             'must' => [
                                 [
                                     'range' => [
-                                        'created_at' => [
-                                            'gte' => $recent
-                                        ]
+                                        'created_at' => ['gte' => $recent]
                                     ],
                                 ],[
                                     'term' => [
@@ -321,7 +321,6 @@ trait ElasticquentTrait
                 ]
             ],
             'highlight' => [
-                'order' => 'score',
                 'fields' => [
                     'title' => ["number_of_fragments" => 1],
                     'body' => ["number_of_fragments" => 1, "fragment_size" => 55],
@@ -342,7 +341,7 @@ trait ElasticquentTrait
     {
         $instance = new static;
 
-        $offset = (request('page', 1) -1) * 15;
+        $offset = (request('page', 1) - 1) * 15;
         $params = $instance->getBasicEsParams(true, true, true, 15, $offset);
 
         $params['body'] = [
@@ -350,11 +349,10 @@ trait ElasticquentTrait
                 'multi_match' => [
                     'query' => $term,
                     'type' => 'cross_fields',
-                    'fields' => ['username']
+                    'fields' => ['title^2', 'body']
                 ]
             ],
             'highlight' => [
-                'order' => 'score',
                 'fields' => [
                     'username' => ["number_of_fragments" => 1],
                 ]
@@ -362,6 +360,100 @@ trait ElasticquentTrait
             'sort' => [
                 '_score' => ['order' => 'desc'],
                 'score' => ['order' => 'desc']
+            ]
+        ];
+
+        $result = $instance->getElasticSearchClient()->search($params);
+
+        return static::hydrateElasticsearchResult($result);
+    }
+
+    public static function searchQuestion($term)
+    {
+        $instance = new static;
+
+        $offset = (request('page', 1) - 1) * 15;
+        $params = $instance->getBasicEsParams(true, true, true, 15, $offset);
+
+        $params['body'] = [
+            'query' => [
+                'filtered' => [
+                    'query' => [
+                        'multi_match' => [
+                            'query' => $term,
+                            'type' => 'cross_fields',
+                            'fields' => ['title^2', 'body']
+                        ],
+                    ],
+                    'filter' => [
+                        'bool' => [
+                            'must' => [
+                                [
+                                    'term' => [
+                                        'status' => 0
+                                    ]
+                                ]
+                            ],
+                        ]
+                    ]
+                ]
+            ],
+            'highlight' => [
+                'fields' => [
+                    'title' => ["number_of_fragments" => 1],
+                    'body' => ["number_of_fragments" => 1, "fragment_size" => 55],
+                ]
+            ],
+            'sort' => [
+                '_score' => ['order' => 'desc'],
+                'created_at' => ['order' => 'desc']
+            ]
+        ];
+
+        $result = $instance->getElasticSearchClient()->search($params);
+
+        return static::hydrateElasticsearchResult($result);
+    }
+
+    public static function searchAnswer($term)
+    {
+        $instance = new static;
+
+        $offset = (request('page', 1) - 1) * 15;
+        $params = $instance->getBasicEsParams(true, true, true, 15, $offset);
+
+        $params['body'] = [
+            'query' => [
+                'filtered' => [
+                    'query' => [
+                        'multi_match' => [
+                            'query' => $term,
+                            'type' => 'cross_fields',
+                            'fields' => ['question.title^2', 'body']
+                        ],
+                    ],
+                    'filter' => [
+                        'bool' => [
+                            'must' => [
+                                [
+                                    'term' => [
+                                        'status' => 0
+                                    ]
+                                ]
+                            ],
+                        ]
+                    ]
+                ]
+            ],
+            'highlight' => [
+                'fields' => [
+                    'question.title' => ["number_of_fragments" => 1],
+                    'body' => ["number_of_fragments" => 1, "fragment_size" => 55],
+                ]
+            ],
+            'sort' => [
+                '_score' => ['order' => 'desc'],
+                'created_at' => ['order' => 'desc']
             ]
         ];
 
@@ -381,8 +473,11 @@ trait ElasticquentTrait
         if (!$this->exists) {
             throw new Exception('Document does not exist.');
         }
-        if ($this instanceof Thread) {
+        if ($this instanceof Thread || $this instanceof Question) {
             $this->body = strip_tags($this->body);
+        } elseif ($this instanceof Answer) {
+            $this->body = strip_tags($this->body);
+            $this->question->body = strip_tags($this->question->body);
         }
 
         $params = $this->getBasicEsParams();
@@ -900,7 +995,7 @@ trait ElasticquentTrait
 
     public static function bootElasticquentTrait()
     {
-        static::saved(function ($model) {
+        static::updated(function ($model) {
             $modelForIndex = clone $model;
             try {
                 $modelForIndex->updateIndex();

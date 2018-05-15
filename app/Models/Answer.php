@@ -11,10 +11,11 @@ namespace Hifone\Models;
 use AltThree\Validator\ValidatingTrait;
 use Elasticquent\ElasticquentTrait;
 use Hifone\Models\Scopes\CommonTrait;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Answer extends BaseModel
 {
-    use CommonTrait, ValidatingTrait, ElasticquentTrait;
+    use CommonTrait, ValidatingTrait, ElasticquentTrait, SoftDeletes;
 
     //问题状态
     const VISIBLE = 0;//正常问题
@@ -46,6 +47,25 @@ class Answer extends BaseModel
         'updated_at',
         'deleted_at'
     ];
+
+    protected $mappingProperties = [
+        'title' => [
+            'type' => 'string',
+            'analyzer' => 'ik_max_word',
+        ],
+        'body' => [
+            'type' => 'string',
+            'analyzer' => 'ik_max_word',
+        ],
+        'created_at' => [
+            'type' => 'date',
+            'format' => 'yyyy-MM-dd HH:mm',
+        ]
+    ];
+
+    protected $dates = ['deleted_at'];
+
+    protected $dateFormat = 'Y-m-d H:i';
 
     public function user()
     {
