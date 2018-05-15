@@ -69,7 +69,7 @@ class AnswerController extends Controller
 
     public function update(Answer $answer)
     {
-        //修改问题标题，标签和内容
+        //修改回答内容
         $answerData = Input::get('answer');
         $answerData['body_original'] = $answerData['body'];
         try {
@@ -103,7 +103,7 @@ class AnswerController extends Controller
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
-    //批量审核通过问题
+    //批量审核通过回答
     public function postBatchAudit() {
         $count = 0;
         $answerIds = Input::get('batch');
@@ -125,13 +125,13 @@ class AnswerController extends Controller
         }
     }
 
-    //从待审核列表审核通过问题
+    //从待审核列表审核通过回答
     public function postAudit(Answer $answer)
     {
         return $this->passAudit($answer);
     }
 
-    //将问题状态修改为审核通过,需要将问题数加1
+    //将回答状态修改为审核通过,需要将回答数加1
     public function passAudit(Answer $answer)
     {
         DB::beginTransaction();
@@ -156,7 +156,7 @@ class AnswerController extends Controller
     }
 
 
-    //从审核通过删除回复，users表中需要将回复数-1
+    //从审核通过删除回复，users表中需要将回答数-1
     public function indexToTrash(Answer $answer)
     {
         DB::beginTransaction();
@@ -173,7 +173,7 @@ class AnswerController extends Controller
     }
 
 
-    //从待审核删除提问
+    //从待审核删除回答
     public function auditToTrash(Answer $answer)
     {
         try {
@@ -185,17 +185,17 @@ class AnswerController extends Controller
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
-    //审核通过列表的提问，放到回收站
+    //审核通过列表的回答，放到回收站
     public function delete(Answer $answer)
     {
         $answer->status = Answer::DELETED;
-        $this->updateOpLog($answer, '删除回复', trim(request('reason')));
+        $this->updateOpLog($answer, '删除回答', trim(request('reason')));
     }
 
-    //审核未通过列表的提问，放到回收站
+    //审核未通过列表的回答，放到回收站
     public function trash(Answer $answer)
     {
         $answer->status = Answer::TRASH;
-        $this->updateOpLog($answer, '回复审核未通过', trim(request('reason')));
+        $this->updateOpLog($answer, '回答审核未通过', trim(request('reason')));
     }
 }
