@@ -9,12 +9,15 @@
 namespace Hifone\Http\Bll;
 
 use Hifone\Commands\Question\AddQuestionCommand;
+use Hifone\Exceptions\HifoneException;
+use Hifone\Jobs\RewardScore;
 use Hifone\Models\Question;
 use Auth;
 use Hifone\Models\Tag;
 use Hifone\Models\TagType;
 use Hifone\Models\User;
 use DB;
+use Hifone\Services\Guzzle\Score;
 
 class QuestionBll extends BaseBll
 {
@@ -52,7 +55,9 @@ class QuestionBll extends BaseBll
                 get_request_agent(),
                 getClientIp()
             ));
-            //todo 永久扣除用户智慧果
+            //永久扣除用户智慧果
+            dispatch(new RewardScore(Auth::user(), $questionData['score'] * -1));
+
             if ($this->needNoAudit($question)) {
                 $this->autoAudit($question);
             }
@@ -86,5 +91,19 @@ class QuestionBll extends BaseBll
         $tagIds = Tag::whereIn('id', $tagIds)->whereIn('tag_type_id', $tagTypeIds)->pluck('id')->toArray();
 
         return $tagIds;
+    }
+
+    //判断智慧果是否够用
+    public function checkScore($phicommId)
+    {
+        $data = ['userId' => $phicommId];
+        $current = app(Score::class)->get('score/current', $data);
+
+        $rewards = explode(',', env('REWARDS') ? : '5,10,15,20');
+        $threshold = $rewards[0];
+
+        if ($current < $threshold) {
+            throw new HifoneException('智慧果不足');
+        }
     }
 }

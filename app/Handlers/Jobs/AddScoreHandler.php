@@ -9,6 +9,7 @@ use Hifone\Services\Guzzle\Score;
 
 class AddScoreHandler
 {
+    //定项增加积分项目
     public function handle(AddScore $addScore)
     {
         $data =  [
@@ -23,7 +24,7 @@ class AddScoreHandler
         app(Score::class)->post('score', $data);
     }
 
-//生成唯一流水号
+    //生成唯一流水号
     public function orderNumber(AddScore $addScore)
     {
         return 'BBS_'.$addScore->action.'_'.$addScore->user->phicomm_id.$addScore->from.$addScore->object;

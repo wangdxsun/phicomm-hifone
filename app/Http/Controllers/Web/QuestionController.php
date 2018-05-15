@@ -51,7 +51,8 @@ class QuestionController extends WebController
         } elseif (count($tagIds) > 4) {
             throw new HifoneException('最多选择4个标签哦~');
         }
-        //todo 判断智慧果是否够用
+        $questionBll->checkScore(Auth::user()->phicomm_id);
+
         $questionData = [
             'title' => request('title'),
             'body' => request('body'),
