@@ -174,22 +174,30 @@ class AddCreditHandler
             }
             $user = $event->target;
         } elseif ($event instanceof LikeWasAddedEvent) {
-            $action = 'like';
-            $user = $event->target;
+            if (Auth::id() == $event->user->id && ($event->object instanceof Question || $event->object instanceof Answer) ) {
+                return false;//操作者和被操作者相同
+            } else {
+                $action = 'like';
+            }
+            $user = $event->user;
         } elseif ($event instanceof LikeWasRemovedEvent) {
-            $action = 'like_removed';
-            $user = $event->target;
+            if (Auth::id() == $event->user->id && ($event->object instanceof Question || $event->object instanceof Answer) ) {
+                return false;//操作者和被操作者相同
+            } else {
+                $action = 'like_removed';
+            }
+            $user = $event->user;
         } elseif ($event instanceof LikedWasAddedEvent) {
-            $user = $event->target;
+            $user = $event->user;
             if (Auth::id() == $user->id) {
-                return false;//操作者和被操作者相同，加分在主动事件已完成，不重复加分
+                return false;//操作者和被操作者相同
             } else {
                 $action = 'liked';
             }
         } elseif ($event instanceof LikedWasRemovedEvent) {
-            $user = $event->target;
+            $user = $event->user;
             if (Auth::id() == $user->id) {
-                return false;//操作者和被操作者相同，加分在主动事件已完成，不重复加分
+                return false;//操作者和被操作者相同
             } else{
                 $action = 'liked_removed';
             }

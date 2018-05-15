@@ -14,13 +14,13 @@ namespace Hifone\Handlers\Listeners\Notification;
 use Auth;
 use Hifone\Events\EventInterface;
 use Hifone\Events\Follow\FollowedWasAddedEvent;
+use Hifone\Events\Like\LikedWasAddedEvent;
 use Hifone\Events\Reply\ReplyWasPinnedEvent;
 use Hifone\Events\Thread\ThreadWasMarkedExcellentEvent;
-use Hifone\Events\Thread\ThreadWasMovedEvent;
 use Hifone\Events\Favorite\FavoriteWasAddedEvent;
+use Hifone\Models\Reply;
 use Hifone\Models\Thread;
 use Hifone\Events\Thread\ThreadWasPinnedEvent;
-use Hifone\Events\Thread\ThreadWasLikedEvent;
 class SendSingleNotificationHandler
 {
     /**
@@ -31,17 +31,15 @@ class SendSingleNotificationHandler
         // follow
         if ($event instanceof FollowedWasAddedEvent) {
             $this->follow($event->target);
-        } elseif ($event instanceof ThreadWasLikedEvent) {
+        } elseif ($event instanceof LikedWasAddedEvent) {
             //like oneself's thread or reply ,there is no notification.
-            if (Auth::user()->id != $event->target->user->id){
-                $this->like($event->target);
+            if (Auth::user()->id != $event->user->id){
+                $this->like($event->user);
             }
         } elseif ($event instanceof FavoriteWasAddedEvent) {
             $this->favorite($event->thread);
         } elseif ($event instanceof ThreadWasMarkedExcellentEvent) {
             $this->markedExcellent($event->target);
-//        } elseif ($event instanceof ThreadWasMovedEvent) {
-//            $this->movedThread($event->target);
         } elseif ($event instanceof ThreadWasPinnedEvent){
             $this->threadPinned($event->target);
         } elseif ($event instanceof ReplyWasPinnedEvent){
@@ -62,7 +60,12 @@ class SendSingleNotificationHandler
 
     protected function like($target)
     {
-        $type = ($target instanceof Thread) ? 'thread_like' : 'reply_like';
+        $type = null;
+        if ($target instanceof Thread) {
+            $type = 'thread_like';
+        } elseif ($target instanceof Reply) {
+            $type = 'reply_like';
+        }
         app('notifier')->notify($type, Auth::user(), $target->user, $target);
     }
 

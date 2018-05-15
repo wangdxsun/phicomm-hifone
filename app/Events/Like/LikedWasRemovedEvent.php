@@ -18,13 +18,13 @@ final class LikedWasRemovedEvent implements LikeEventInterface
      *
      * @var \Hifone\Models\Like
      */
-    public $target;
+    public $user;
 
     /**
      * Create a new thread has reported event instance.
      */
-    public function __construct($target)
+    public function __construct($user)
     {
-        $this->target = $target;
+        $this->user = $user;
     }
 }

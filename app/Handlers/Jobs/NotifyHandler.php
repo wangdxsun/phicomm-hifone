@@ -12,6 +12,9 @@ class NotifyHandler
 {
     public function handle(Notify $notify)
     {
+        if (null == $notify->type) {
+            return;
+        }
         //判断是否通知过
         if ($this->isNotified($notify->author->id, $notify->user->id, $notify->object, $notify->type)) {
             return;

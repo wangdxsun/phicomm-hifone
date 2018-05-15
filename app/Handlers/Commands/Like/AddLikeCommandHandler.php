@@ -17,10 +17,8 @@ use Hifone\Events\Like\LikeWasAddedEvent;
 use Hifone\Events\Like\LikedWasAddedEvent;
 use Hifone\Events\Like\LikedWasRemovedEvent;
 use Hifone\Events\Like\LikeWasRemovedEvent;
-use Hifone\Events\Thread\ThreadWasLikedEvent;
 use Hifone\Models\Like;
 use Hifone\Models\User;
-use Hifone\Services\Dates\DateFactory;
 
 class AddLikeCommandHandler
 {
@@ -42,7 +40,7 @@ class AddLikeCommandHandler
                 $target->likes()->forUser(Auth::id())->WithUp()->delete();
                 $target->decrement('like_count', 1);
 
-                event(new LikeWasRemovedEvent(Auth::user()));
+                event(new LikeWasRemovedEvent(Auth::user(), $target));
                 event(new LikedWasRemovedEvent($user));
             });
         } elseif ($target->likes()->forUser(Auth::id())->WithDown()->sharedLock()->count()) {
@@ -51,46 +49,18 @@ class AddLikeCommandHandler
             $target->likes()->create(['user_id' => Auth::id(), 'rating' => Like::LIKE]);
             $target->increment('like_count', 2);
 
-            event(new ThreadWasLikedEvent($target));//点赞帖子或回复
-            event(new LikeWasAddedEvent(Auth::user()));//用户主动点赞
-            event(new LikedWasAddedEvent($user, $target));//帖子或回复被赞
+            event(new LikeWasAddedEvent(Auth::user(), $target));//用户主动点赞
+            event(new LikedWasAddedEvent($user, $target));//被赞
         } else {
             //点赞
             \DB::transaction(function () use ($target, $user) {
                 $target->likes()->create(['user_id' => Auth::id(), 'rating' => Like::LIKE]);
                 $target->increment('like_count', 1);
 
-                event(new ThreadWasLikedEvent($target));
                 event(new LikeWasAddedEvent(Auth::user()));
                 event(new LikedWasAddedEvent($user, $target));
             });
         }
     }
 
-    protected function unlikeAction($target)
-    {
-        $user = User::find($target->user_id);
-        if ($target->likes()->forUser(Auth::id())->WithDown()->count()) {
-            // click second time for remove unlike
-            $target->likes()->forUser(Auth::id())->WithDown()->delete();
-            $target->increment('like_count', 1);
-
-            event(new LikedWasAddedEvent($user));
-        } elseif ($target->likes()->forUser(Auth::id())->WithUp()->count()) {
-            // user already clicked like once
-            $target->likes()->forUser(Auth::id())->WithUp()->delete();
-            $target->likes()->create(['user_id' => Auth::id(), 'rating' => Like::UNLIKE]);
-            $target->decrement('like_count', 2);
-
-            event(new LikeWasAddedEvent(Auth::user()));
-            event(new LikedWasAddedEvent($user));
-        } else {
-            // click first time
-            $target->likes()->create(['user_id' => Auth::id(), 'rating' => Like::UNLIKE]);
-            $target->decrement('like_count', 1);
-
-            event(new ThreadWasLikedEvent($target));
-            event(new LikedWasRemovedEvent($user));
-        }
-    }
 }

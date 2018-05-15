@@ -67,7 +67,7 @@ class AddScoreHandler
 
         } elseif ($event instanceof LikedWasAddedEvent) {
             //帖子或回复被赞，增加智慧果
-            $user = $event->target;
+            $user = $event->user;
             if (Auth::id() == $user->id) {
                 return false;//操作者和被操作者相同，不加智慧果
             } elseif ($event->class instanceof Thread) {

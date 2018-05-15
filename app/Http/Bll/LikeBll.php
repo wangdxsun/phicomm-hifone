@@ -11,6 +11,8 @@ namespace Hifone\Http\Bll;
 use Hifone\Commands\Like\AddLikeCommand;
 use Auth;
 use Hifone\Exceptions\HifoneException;
+use Hifone\Models\Answer;
+use Hifone\Models\Question;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
 
@@ -34,5 +36,25 @@ class LikeBll extends BaseBll
         dispatch(new AddLikeCommand($reply));
 
         return ['liked' => Auth::user()->hasLikeReply($reply)];
+    }
+
+    public function likeQuestion($question)
+    {
+        if ($question->status <> Question::VISIBLE) {
+            throw new HifoneException('该提问已被删除');
+        }
+        dispatch(new AddLikeCommand($question));
+
+        return ['liked' => Auth::user()->hasLikeQuestion($question)];
+    }
+
+    public function likeAnswer($answer)
+    {
+        if ($answer->status <> Answer::VISIBLE) {
+            throw new HifoneException('该回答已被删除');
+        }
+        dispatch(new AddLikeCommand($answer));
+
+        return ['liked' => Auth::user()->hasLikeAnswer($answer)];
     }
 }

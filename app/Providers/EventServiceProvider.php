@@ -101,10 +101,6 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
 
-        // 按赞发通知
-        \Hifone\Events\Thread\ThreadWasLikedEvent::class => [
-            \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
-        ],
         \Hifone\Events\Like\LikeWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
@@ -113,9 +109,15 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
             \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
         ],
-        //帖子、回复被点赞，增加经验值和智慧果
+        //帖子、回复被点赞，增加经验值和智慧果，发通知
         \Hifone\Events\Like\LikedWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+            \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
+        ],
+
+        //帖子、回复被点赞，增加经验值和智慧果，发通知
+        \Hifone\Events\Like\LikedWasRemovedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
 
