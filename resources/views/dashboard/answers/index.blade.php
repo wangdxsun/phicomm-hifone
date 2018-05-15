@@ -14,7 +14,7 @@
         @endif
         <div class="uppercase pull-right">
             <span class="uppercase">
-                截止当前列表的问题总数：{{ $answersCount }}
+                截止当前, 列表总数：{{ $answersCount }}
             </span>
         </div>
         <div class="row" id="app">
@@ -34,7 +34,23 @@
                                    @if (isset($search['user_name']))
                                    value="{{ $search['user_name'] }}"
                                     @endif >
+                            {{--按标签筛选，提供所有的问题标签供选择--}}
+                            <el-select v-model="questionTags" placeholder="问题类型">
+                                <el-option-group
+                                        v-for="questionTagType in questionTagTypes"
+                                        :key="questionTagType.id"
+                                        :label="questionTagType.display_name">
+                                    <el-option
+                                            v-for="tag in questionTagType.tags"
+                                            :key="tag.id"
+                                            :label="tag.name"
+                                            :value="tag.id">
+                                    </el-option>
+                                </el-option-group>
+                            </el-select>
+                            <input type="hidden" class="form-control" :value="questionTags" name="answer[tag]">
                         </div>
+
 
                         <el-date-picker type="datetime" placeholder="开始时间" v-model="date_start"></el-date-picker>
                         <el-date-picker type="datetime" placeholder="结束时间" v-model="date_end"></el-date-picker>
@@ -64,9 +80,21 @@
                         @foreach($answers as $answer)
                             <tr>
                                 <td>{{ $answer->id }}</td>
-                                <td>{{ $answer->body }}</td>
+                                <td>
+                                    <div class="replyContent">
+                                        {!! $answer->body !!}
+                                    </div>
+                                    @if(Str::length($answer->body) > 26 || Str::contains($answer->body,['<img']))
+                                        <a  data-toggle="collapse" href="#asnwer{{ $answer->id }}" aria-expanded="false">查看更多</a>
+                                        <div  class="collapse well" id="answer{{ $answer->id }}">{!! $answer->body !!}</div>
+                                    @endif
+                                </td>
                                 <td>{{ $answer->question->title }}</td>
-                                <td></td>
+                                <td>
+                                    @foreach($answer->question->tags as $tag)
+                                        {{$tag->name}}<br>
+                                    @endforeach
+                                </td>
                                 <td>
                                     <a href="{{ route('user.show', ['id'=>$answer->user->id]) }}" target="_blank">{{ $answer->user->username }}</a>
                                 </td>
@@ -76,7 +104,7 @@
                                 <td>{{ $answer->lastOpUser->username }}</td>
                                 <td>{{ $answer->last_op_time }}</td>
                                 <td>
-                                    <a href="/dashboard/answers/{{ $answer->id }}/edit"><i class="fa fa-pencil" title="编辑"></i></a>
+                                    <a href="/dashboard/answer/{{ $answer->id }}/edit"><i class="fa fa-pencil" title="编辑"></i></a>
                                     <a data-url="/dashboard/answers/{{ $answer->id }}/pin" data-method="post" title="置顶"><i class="{{ $answer->pin }}"></i></a>
                                     <a data-url="/dashboard/answers/{{ $answer->id }}/index/to/trash" data-title="回答移入回收站" data-method="post" class="need-reason" title="删除"><i class="fa fa-trash"></i></a>
                                 </td>
@@ -98,6 +126,8 @@
                 return {
                     date_start:"",
                     date_end:"",
+                    questionTagTypes: {!! $questionTagTypes !!},
+                    questionTags: '',
                 };
             },
             computed: {

@@ -1,21 +1,19 @@
 <?php
-namespace Hifone\Handlers\Commands\Question;
+namespace Hifone\Handlers\Commands\Answer;
 
-use Hifone\Commands\Question\UpdateQuestionCommand;
-use Hifone\Models\Question;
 use Agent;
 use Auth;
 use Carbon\Carbon;
-use Redirect;
+use Hifone\Commands\Answer\UpdateAnswerCommand;
+use Hifone\Models\Answer;
 
-class UpdateQuestionCommandHandler
+class UpdateAnswerCommandHandler
 {
-    public function handle(UpdateQuestionCommand $command)
+    public function handle(UpdateAnswerCommand $command)
     {
-        $question = $command->question;
+        $answer = $command->answer;
         if (isset($command->data['body']) && $command->data['body']) {
             $command->data['body_original'] = $command->data['body'];
-            //$command->data['excerpt'] = Question::makeExcerpt($command->data['body']);
             $command->data['body'] = app('parser.at')->parse($command->data['body']);
             $command->data['body'] = app('parser.emotion')->parse($command->data['body']);
             //只有H5和app发帖需要自动转义链接，web端不需要
@@ -29,19 +27,11 @@ class UpdateQuestionCommandHandler
 
         //用户编辑状态回退、精华失效
         if (!Auth::user()->hasRole(['Admin', 'Founder'])) {
-            $command->data['status'] = Question::AUDIT;
-            $command->data['is_excellent'] = 0;
+            $command->data['status'] = Answer::AUDIT;
         }
 
-        $question->update($this->filter($command->data));
-        if ($command->data['questionTags'] == '') {
-            return Redirect::route('dashboard.questions.edit', $question->id)
-                ->withErrors('请选择问题类型');
-        } else {
-            $tagData = explode(',', $command->data['questionTags']);
-            $question->tags()->sync($tagData);
-        }
-        return $question;
+        $answer->update($this->filter($command->data));
+        return $answer;
     }
 
     protected function filter($data)

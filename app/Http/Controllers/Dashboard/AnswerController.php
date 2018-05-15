@@ -1,7 +1,12 @@
 <?php
 namespace Hifone\Http\Controllers\Dashboard;
 
+use Hifone\Commands\Answer\UpdateAnswerCommand;
+use Hifone\Events\Answer\AnswerWasAuditedEvent;
+use Hifone\Events\Answer\AnswerWasDeletedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
+use Hifone\Events\Pin\PinWasRemovedEvent;
+use Hifone\Models\TagType;
 use Input;
 use DB;
 use View;
@@ -15,19 +20,22 @@ class AnswerController extends Controller
     public function index()
     {
         $search = $this->filterEmptyValue(Input::get('answer'));
-        $answers = Answer::visible()->search($search)->orderBy('last_op_time', 'desc')->paginate(20);
+        $answers = Answer::visible()->with(['user', 'question.tags'])->search($search)->orderBy('last_op_time', 'desc')->paginate(20);
         $answersCount = Answer::visible()->count();
+        //问题分类及相应问题子类
+        $questionTagTypes = TagType::ofType([TagType::QUESTION])->with('tags')->get();
         return View::make('dashboard.answers.index')
             ->with('answers', $answers)
             ->with('answersCount', $answersCount)
             ->with('search', $search)
+            ->with('questionTagTypes', $questionTagTypes)
             ->with('current_nav', 'index')
             ->with('current_menu', 'answer');
     }
 
     public function audit()
     {
-        $answers = Answer::audit()->orderBy('last_op_time', 'desc')->paginate(20);
+        $answers = Answer::audit()->with(['user' ,'question.tags'])->orderBy('last_op_time', 'desc')->paginate(20);
         $answersCount = Answer::audit()->count();
         return View::make('dashboard.answers.audit')
             ->with('answers', $answers)
@@ -39,7 +47,7 @@ class AnswerController extends Controller
     public function trashView()
     {
         $search = $this->filterEmptyValue(Input::get('answer'));
-        $answers = Answer::trash()->search($search)->orderBy('last_op_time', 'desc')->paginate(20);
+        $answers = Answer::trash()->with(['user', 'question.tags'])->search($search)->orderBy('last_op_time', 'desc')->paginate(20);
         $answersCount = Answer::trash()->count();
         return View::make('dashboard.answers.trash')
             ->with('search', $search)
@@ -51,12 +59,33 @@ class AnswerController extends Controller
 
     public function edit(Answer $answer)
     {
+        $menu = $answer->status == Answer::VISIBLE ? 'index' : 'audit';
 
+        return View::make('dashboard.answers.create_edit')
+            ->with('answer', $answer)
+            ->with('current_menu', 'answer')
+            ->with('current_nav', $menu);
     }
 
-    public function update()
+    public function update(Answer $answer)
     {
+        //修改回答内容
+        $answerData = Input::get('answer');
+        $answerData['body_original'] = $answerData['body'];
+        try {
+            //TODO 编辑问题后续的标签相关计数等
+            $answer = dispatch( new UpdateAnswerCommand($answer, $answerData));
 
+        } catch (\Exception $e) {
+            return Redirect::route('dashboard.answer.edit', $answer->id)
+                ->withInput($answerData)
+                ->withErrors($e->getMessage());
+        }
+
+        if ($answer->status == Answer::VISIBLE) {
+            return Redirect::route('dashboard.answers.index')->withSuccess('恭喜，操作成功！');
+        }
+        return Redirect::route('dashboard.answers.audit')->withSuccess('恭喜，操作成功！');
     }
 
     public function pin(Answer $answer)
@@ -65,6 +94,7 @@ class AnswerController extends Controller
         if (1 == $answer->order) {
             $answer->update(['order' => 0]);
             $this->updateOpLog($answer, '取消置顶回答');
+            event(new PinWasRemovedEvent($answer->user, $answer));
         } else {
             $answer->update(['order' => 1]);
             $this->updateOpLog($answer, '置顶回答');
@@ -73,7 +103,7 @@ class AnswerController extends Controller
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
-    //批量审核通过问题
+    //批量审核通过回答
     public function postBatchAudit() {
         $count = 0;
         $answerIds = Input::get('batch');
@@ -95,13 +125,13 @@ class AnswerController extends Controller
         }
     }
 
-    //从待审核列表审核通过问题
+    //从待审核列表审核通过回答
     public function postAudit(Answer $answer)
     {
         return $this->passAudit($answer);
     }
 
-    //将问题状态修改为审核通过,需要将问题数加1
+    //将回答状态修改为审核通过,需要将回答数加1
     public function passAudit(Answer $answer)
     {
         DB::beginTransaction();
@@ -117,21 +147,23 @@ class AnswerController extends Controller
             DB::rollBack();
             return Redirect::back()->withErrors($e->getMessage());
         }
-        //问题审核通过，加经验值
-        //event(new QuestionWasAuditedEvent($answer->user, $answer));
+        //回答审核通过，加经验值
+        if($answer->user->id != $answer->question->user->id) {
+            event(new AnswerWasAuditedEvent($answer->user, $answer));
+        }
 
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
 
-    //从审核通过删除回复，users表中需要将回复数-1
+    //从审核通过删除回复，users表中需要将回答数-1
     public function indexToTrash(Answer $answer)
     {
         DB::beginTransaction();
         try {
             $this->delete($answer);
             $answer->user->update(['answer_count' => $answer->user->answers()->visibleAndDeleted()->count()]);
-            //TODO  事件
+            event(new AnswerWasDeletedEvent($answer->user, $answer));
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
@@ -141,7 +173,7 @@ class AnswerController extends Controller
     }
 
 
-    //从待审核删除提问
+    //从待审核删除回答
     public function auditToTrash(Answer $answer)
     {
         try {
@@ -153,17 +185,17 @@ class AnswerController extends Controller
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
-    //审核通过列表的提问，放到回收站
+    //审核通过列表的回答，放到回收站
     public function delete(Answer $answer)
     {
         $answer->status = Answer::DELETED;
-        $this->updateOpLog($answer, '删除回复', trim(request('reason')));
+        $this->updateOpLog($answer, '删除回答', trim(request('reason')));
     }
 
-    //审核未通过列表的提问，放到回收站
+    //审核未通过列表的回答，放到回收站
     public function trash(Answer $answer)
     {
         $answer->status = Answer::TRASH;
-        $this->updateOpLog($answer, '回复审核未通过', trim(request('reason')));
+        $this->updateOpLog($answer, '回答审核未通过', trim(request('reason')));
     }
 }

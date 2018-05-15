@@ -14,7 +14,7 @@
         @endif
         <div class="uppercase pull-right">
             <span class="uppercase">
-                截止当前, 列表的问题总数：{{ $questionsCount }}
+                截止当前, 列表总数：{{ $questionsCount }}
             </span>
         </div>
             <div class="row" id="app">

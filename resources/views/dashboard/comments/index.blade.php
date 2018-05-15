@@ -14,7 +14,7 @@
         @endif
         <div class="uppercase pull-right">
             <span class="uppercase">
-                截止当前,列表的回复总数：{{ $commentsCount }}
+                截止当前,列表总数：{{ $commentsCount }}
             </span>
         </div>
             <div class="row" id="app">
@@ -34,6 +34,21 @@
                                        @if (isset($search['user_id']))
                                        value="{{ $search['user_id'] }}"
                                         @endif >
+                                {{--按标签筛选，提供所有的问题标签供选择--}}
+                                <el-select v-model="questionTags" placeholder="问题类型">
+                                    <el-option-group
+                                            v-for="questionTagType in questionTagTypes"
+                                            :key="questionTagType.id"
+                                            :label="questionTagType.display_name">
+                                        <el-option
+                                                v-for="tag in questionTagType.tags"
+                                                :key="tag.id"
+                                                :label="tag.name"
+                                                :value="tag.id">
+                                        </el-option>
+                                    </el-option-group>
+                                </el-select>
+                                <input type="hidden" class="form-control" :value="questionTags" name="comment[tag]">
                             </div>
 
                             <el-date-picker type="datetime" placeholder="开始时间" v-model="date_start"></el-date-picker>
@@ -63,9 +78,21 @@
                             @foreach($comments as $comment)
                                 <tr>
                                     <td>{{ $comment->id }}</td>
-                                    <td>{{ $comment->body }}</td>
+                                    <td>
+                                        <div class="replyContent">
+                                            {!! $comment->body !!}
+                                        </div>
+                                        @if(Str::length($comment->body) > 26 || Str::contains($comment->body,['<img']))
+                                            <a  data-toggle="collapse" href="#comment{{ $comment->id }}" aria-expanded="false">查看更多</a>
+                                            <div  class="collapse well" id="comment{{ $comment->id }}">{!! $comment->body !!}</div>
+                                        @endif
+                                    </td>
                                     <td>{{ $comment->answer->question->title }}</td>
-                                    <td></td>
+                                    <td>
+                                        @foreach($comment->answer->question->tags as $tag)
+                                            {{ $tag->name }}<br>
+                                        @endforeach
+                                    </td>
                                     <td>
                                         <a href="{{ route('user.show', ['id'=>$comment->user->id]) }}" target="_blank">{{ $comment->user->username }}</a>
                                     </td>
@@ -74,9 +101,8 @@
                                     <td>{{ $comment->lastOpUser->username }}</td>
                                     <td>{{ $comment->last_op_time }}</td>
                                     <td>
-                                        <a data-url="/dashboard/comments/{{ $comment->id }}/pin" data-method="post" title="置顶"><i class="{{ $comment->pin }}"></i></a>
-                                        <a href="/dashboard/comments/{{ $comment->id }}/edit"><i class="fa fa-pencil" title="编辑"></i></a>
-                                        <a data-url="/dashboard/comments/{{ $comment->id }}/index/to/trash" data-title="问题移入回收站" data-method="post" class="need-reason" title="删除"><i class="fa fa-trash"></i></a>
+                                        <a href="/dashboard/comment/{{ $comment->id }}/edit"><i class="fa fa-pencil" title="编辑"></i></a>
+                                        <a data-url="/dashboard/comments/{{ $comment->id }}/index/to/trash" data-title="回复移入回收站" data-method="post" class="need-reason" title="删除"><i class="fa fa-trash"></i></a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -96,6 +122,8 @@
             return {
                 date_start:"",
                 date_end:"",
+                questionTagTypes: {!! $questionTagTypes !!},
+                questionTags: '',
             };
         },
         computed: {
