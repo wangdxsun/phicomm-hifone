@@ -60,7 +60,7 @@
                                 <td>{{ $question->score }}</td>
                                 <td>
                                     <a data-url="/dashboard/questions/{{$question->id}}/audit" data-method="post"><i class="fa fa-check"></i></a>
-                                    <a href="/dashboard/questions/{{$question->id}}/edit"><i class="fa fa-pencil"></i></a>
+                                    <a href="/dashboard/question/{{$question->id}}/edit"><i class="fa fa-pencil"></i></a>
                                     <a data-url="/dashboard/questions/{{ $question->id }}/audit/to/trash" data-method="post" class="need-reason"><i class="fa fa-trash"></i></a>
                                 </td>
                             </tr>
