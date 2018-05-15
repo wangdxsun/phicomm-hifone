@@ -106,6 +106,11 @@ class Answer extends BaseModel
                 $query->whereHas('question', function ($query) use ($value){
                     $query->where('title', 'LIKE', "%$value%");
                 });
+            } elseif ($key == 'tag'){
+                $query->whereHas('question.tags', function ($query) use ($value){
+                    $query->where('tag_id', $value);
+                });
+
             } elseif ($key == 'date_start') {
                 if ($value == "") {
                     continue;

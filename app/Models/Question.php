@@ -131,7 +131,7 @@ class Question extends BaseModel implements TaggableInterface
             } elseif ($key == 'body') {
                 $query->where('body', 'LIKE', "%$value%");
             } elseif ($key == 'title') {
-                $query->where('body', 'LIKE', "%$value%");
+                $query->where('title', 'LIKE', "%$value%");
             } elseif ($key == 'date_start') {
                 if ($value == "") {
                     continue;

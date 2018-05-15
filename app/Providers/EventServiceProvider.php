@@ -134,10 +134,14 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
             \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
         ],
-        //帖子、回复置顶加积分、智慧果
+        //帖子、回复、提问、回答置顶加经验值、智慧果
         \Hifone\Events\Pin\PinWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
             \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
+        ],
+        //提问、回答置顶被取消扣除经验值
+        \Hifone\Events\Pin\PinWasRemovedEvent::class => [
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
         //下沉
         \Hifone\Events\Pin\SinkWasAddedEvent::class => [
@@ -250,6 +254,15 @@ class EventServiceProvider extends ServiceProvider
 
         //审核通过的提问被删除，扣除经验值
         \Hifone\Events\Question\QuestionWasDeletedEvent::class => [
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+        ],
+
+        //回答（从回收站、待审核变成审核通过）增加经验值，发通知，计数
+        \Hifone\Events\Answer\AnswerWasAuditedEvent::class => [
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+        ],
+        //审核通过的回答被删除，扣除经验值
+        \Hifone\Events\Answer\AnswerWasDeletedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
     ];

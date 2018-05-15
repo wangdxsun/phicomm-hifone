@@ -13,6 +13,8 @@ namespace Hifone\Handlers\Listeners\Credit;
 
 use Auth;
 use Hifone\Commands\Credit\AddCreditCommand;
+use Hifone\Events\Answer\AnswerWasAuditedEvent;
+use Hifone\Events\Answer\AnswerWasDeletedEvent;
 use Hifone\Events\EventInterface;
 use Hifone\Events\Favorite\FavoriteThreadWasAddedEvent;
 use Hifone\Events\Favorite\FavoriteThreadWasRemovedEvent;
@@ -20,6 +22,7 @@ use Hifone\Events\Follow\FollowWasRemovedEvent;
 use Hifone\Events\Image\ImageWasUploadedEvent;
 use Hifone\Events\Like\LikeWasRemovedEvent;
 use Hifone\Events\Pin\NodePinWasAddedEvent;
+use Hifone\Events\Pin\PinWasRemovedEvent;
 use Hifone\Events\Question\QuestionWasAuditedEvent;
 use Hifone\Events\Question\QuestionWasDeletedEvent;
 use Hifone\Events\Reply\RepliedWasAddedEvent;
@@ -116,6 +119,13 @@ class AddCreditHandler
                 $action = 'answer_pin';
             }
             $user = $event->user;
+        } elseif ($event instanceof PinWasRemovedEvent) {
+            if ($event->object instanceof Question){
+                $action = 'question_pin_removed';
+            }  elseif ($event->object instanceof Answer) {
+                $action = 'answer_pin_removed';
+            }
+            $user = $event->user;
         } elseif($event instanceof  NodePinWasAddedEvent){
             $user = $event->user;
             $action = 'thread_node_pin';
@@ -196,6 +206,14 @@ class AddCreditHandler
         } elseif ($event instanceof QuestionWasDeletedEvent) {
             //审核通过的提问被删除
             $action = 'question_deleted';
+            $user = $event->user;
+        } elseif ($event instanceof AnswerWasAuditedEvent) {
+            //回答审核通过
+            $action = 'answer_audited';
+            $user = $event->user;
+        } elseif ($event instanceof AnswerWasDeletedEvent) {
+            //审核通过的回答被删除
+            $action = 'answer_deleted';
             $user = $event->user;
         }
 

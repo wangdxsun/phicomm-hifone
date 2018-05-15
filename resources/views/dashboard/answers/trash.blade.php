@@ -57,9 +57,21 @@
                     @foreach($answers as $answer)
                         <tr>
                             <td>{{ $answer->id }}</td>
-                            <td>{{ $answer->body }}</td>
+                            <td>
+                                <div class="replyContent">
+                                    {!! $answer->body !!}
+                                </div>
+                                @if(Str::length($answer->body) > 26 || Str::contains($answer->body,['<img']))
+                                    <a  data-toggle="collapse" href="#asnwer{{ $answer->id }}" aria-expanded="false">查看更多</a>
+                                    <div  class="collapse well" id="answer{{ $answer->id }}">{!! $answer->body !!}</div>
+                                @endif
+                            </td>
                             <td>{{ $answer->question->title }}</td>
-                            <td></td>
+                            <td>
+                                @foreach($answer->question->tags as $tag)
+                                    {{$tag->name}}<br>
+                                @endforeach
+                            </td>
                             <td>
                                 <a href="{{ route('user.show', ['id'=>$answer->user->id]) }}" target="_blank">{{ $answer->user->username }}</a>
                             </td>
