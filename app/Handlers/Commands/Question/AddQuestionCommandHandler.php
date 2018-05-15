@@ -52,4 +52,5 @@ class AddQuestionCommandHandler
 
         return $question;
     }
+
 }

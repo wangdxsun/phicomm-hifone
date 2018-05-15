@@ -18,7 +18,6 @@ use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Events\Pin\NodePinWasAddedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Pin\SinkWasAddedEvent;
-use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasMarkedExcellentEvent;
 use Hifone\Events\Thread\ThreadWasUppedEvent;
 use Hifone\Http\Controllers\Controller;
@@ -138,7 +137,6 @@ class ThreadController extends Controller
      */
     public function update(Thread $thread)
     {
-
         //修改帖子标题，版块和正文
         $threadData = Input::get('thread');
         $threadData['node_id'] = SubNode::find($threadData['sub_node_id'])->node->id;
@@ -304,7 +302,6 @@ class ThreadController extends Controller
             return Redirect::back()->withErrors($e->getMessage());
         }
         event(new ThreadWasAuditedEvent($thread));
-        event(new ThreadWasAddedEvent($thread));
 
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }

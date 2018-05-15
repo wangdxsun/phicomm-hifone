@@ -15,13 +15,13 @@
                     <tr class="head">
                         <td style="width: 30px;">#</td>
                         <td>举报类型</td>
-                        <td >帖子标题或回帖内容</td>
-                        <td >举报人</td>
-                        <td >举报原因</td>
-                        <td >举报时间</td>
-                        <td >处理人</td>
-                        <td >处理结果</td>
-                        <td >处理时间</td>
+                        <td>帖子标题或回帖内容</td>
+                        <td>举报人</td>
+                        <td>举报原因</td>
+                        <td>举报时间</td>
+                        <td>处理人</td>
+                        <td>处理结果</td>
+                        <td>处理时间</td>
                         <td style="width: 70px;">操作</td>
                     </tr>
                     @foreach($reports as $report)

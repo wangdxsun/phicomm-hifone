@@ -466,16 +466,6 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         return $this->belongsToMany(User::class, 'from_user_id', 'to_user_id')->wherePivot('question_id', $question->id);
     }
 
-    public function questions()
-    {
-        return $this->hasMany(Question::class);
-    }
-
-    public function answers()
-    {
-        return $this->hasMany(Answer::class);
-    }
-
     public function likes()
     {
         return $this->hasMany(Like::class);
@@ -508,6 +498,24 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
     public function followedNodes()
     {
         return $this->morphedByMany(Node::class, 'followable', 'follows');
+    }
+
+    //问题
+    public function questions()
+    {
+        return $this->hasMany(Question::class);
+    }
+
+    //回答
+    public function answers()
+    {
+        return $this->hasMany(Answer::class);
+    }
+
+    //回复
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
     }
 
 }

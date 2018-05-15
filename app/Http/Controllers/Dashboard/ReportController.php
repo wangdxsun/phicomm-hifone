@@ -11,10 +11,15 @@
 
 namespace Hifone\Http\Controllers\Dashboard;
 
+use Hifone\Events\Answer\AnswerWasDeletedEvent;
+use Hifone\Events\Question\QuestionWasDeletedEvent;
 use Hifone\Events\Reply\ReplyWasTrashedEvent;
 use Hifone\Events\Report\ReportWasPassedEvent;
 use Hifone\Events\Thread\ThreadWasTrashedEvent;
 use Hifone\Http\Controllers\Controller;
+use Hifone\Models\Answer;
+use Hifone\Models\Question;
+use Hifone\Models\Reply;
 use Hifone\Models\Report;
 use Hifone\Models\Thread;
 use Redirect;
@@ -43,20 +48,29 @@ class ReportController extends Controller
     public function index()
     {
         $search = $this->filterEmptyValue(Input::get('report'));
-        $reports = Report::audited()->search($search)->with('user', 'lastOpUser', 'reportable')->orderBy('created_at', 'desc')->paginate(20);
+        $reports = Report::audited()->search($search)->threadAndReply()->with('user', 'lastOpUser', 'reportable')->orderBy('created_at', 'desc')->paginate(20);
 
         return View::make('dashboard.reports.index')
             ->withReports($reports)
             ->withCurrentMenu('index');
     }
 
-    public function audit()
+    public function thread()
     {
-        $reports = Report::audit()->with(['reportable', 'user'])->orderBy('created_at', 'desc')->paginate(20);
+        $reports = Report::audit()->threadAndReply()->with(['reportable', 'user'])->orderBy('created_at', 'desc')->paginate(20);
 
-        return View::make('dashboard.reports.audit')
+        return View::make('dashboard.reports.thread')
             ->withReports($reports)
-            ->withCurrentMenu('audit');
+            ->withCurrentMenu('thread');
+    }
+
+    public function question()
+    {
+        $reports = Report::audit()->questionAndAnswer()->with(['reportable', 'user'])->orderBy('created_at', 'desc')->paginate(20);
+
+        return View::make('dashboard.reports.question')
+            ->withReports($reports)
+            ->withCurrentMenu('question');
     }
 
     public function trash(Report $report)
@@ -68,11 +82,19 @@ class ReportController extends Controller
             $target->node->update(['thread_count' => $target->node->threads()->visible()->count()]);
             $target->user->update(['thread_count' => $target->user->threads()->visibleAndDeleted()->count()]);
             event(new ThreadWasTrashedEvent($target));
-        } else {
+        } elseif ($target instanceof Reply) {
             $operation = '删除回复';
             $target->thread->update(['reply_count' => $target->thread->replies()->visibleAndDeleted()->count()]);
             $target->user->update(['reply_count' => $target->user->replies()->visibleAndDeleted()->count()]);
             event(new ReplyWasTrashedEvent($target));
+        } elseif ($target instanceof Question) {
+            $operation = '删除提问';
+            $target->user->update(['question_count' => $target->user->questions()->visibleAndDeleted()->count()]);
+            event(new QuestionWasDeletedEvent($target->user, $target));
+        } elseif ($target instanceof Answer) {
+            $operation = '删除回复';
+            $target->user->update(['answer_count' => $target->user->answers()->visibleAndDeleted()->count()]);
+            event(new AnswerWasDeletedEvent($target->user, $target));
         }
         $this->updateOpLog($target, $operation, trim(request('reason')));
         $reports = Report::where('reportable_id', $report->reportable_id)->where('reportable_type', $report->reportable_type)->get();

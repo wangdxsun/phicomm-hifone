@@ -1,10 +1,15 @@
 <?php
 namespace Hifone\Http\Controllers\Dashboard;
 
+use Hifone\Commands\Question\UpdateQuestionCommand;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
+use Hifone\Events\Pin\PinWasRemovedEvent;
 use Hifone\Events\Pin\SinkWasAddedEvent;
 use Hifone\Events\Question\QuestionWasAuditedEvent;
+use Hifone\Events\Question\QuestionWasDeletedEvent;
+use Hifone\Handlers\Commands\Question\UpdateQuestionCommandHandler;
+use Hifone\Models\TagType;
 use Input;
 use View;
 use DB;
@@ -18,21 +23,23 @@ class QuestionController extends Controller
     public function index()
     {
         $search = $this->filterEmptyValue(Input::get('question'));
-        $questions = Question::visible()->search($search)->orderBy('last_op_time', 'desc')->paginate(20);
+        $questions = Question::visible()->with(['user', 'tags'])->search($search)->orderBy('last_op_time', 'desc')->paginate(20);
         $questionsCount = Question::visible()->count();
+        //问题分类及相应问题子类
+        $questionTagTypes = TagType::ofType([TagType::QUESTION])->with('tags')->get();
         return View::make('dashboard.questions.index')
             ->with('questions', $questions)
             ->with('questionsCount', $questionsCount)
             ->with('search', $search)
+            ->with('questionTagTypes', $questionTagTypes)
             ->with('current_menu', 'question')
             ->with('current_nav', 'index');
-
     }
 
     //待审核列表
     public function audit()
     {
-        $questions = Question::audit()->orderBy('created_at', 'desc')->paginate(20);
+        $questions = Question::audit()->with(['user', 'tags'])->orderBy('created_at', 'desc')->paginate(20);
         $questionsCount = Question::audit()->count();
         return View::make('dashboard.questions.audit')
             ->with('questionsCount', $questionsCount)
@@ -42,7 +49,7 @@ class QuestionController extends Controller
     }
 
     //回收站列表
-    public function trash()
+    public function trashView()
     {
         $search = $this->filterEmptyValue(Input::get('question'));
         $questions = Question::trash()->search($search)->orderBy('last_op_time', 'desc')->paginate(20);
@@ -63,13 +70,13 @@ class QuestionController extends Controller
         if (1 == $question->order) {
             $question->update(['order' => 0]);
             $this->updateOpLog($question, '取消置顶问题');
+            event(new PinWasRemovedEvent($question->user, $question));
         } else {
             $question->update(['order' => 1]);
             $this->updateOpLog($question, '置顶问题');
             event(new PinWasAddedEvent($question->user, $question));
         }
         return Redirect::back()->withSuccess('恭喜，操作成功！');
-
     }
 
     //下沉问题
@@ -104,9 +111,14 @@ class QuestionController extends Controller
     public function edit(Question $question)
     {
         $menu = $question->status == Question::VISIBLE ? 'index' : 'audit';
+        $questionTags = $question->tags;
+        //问题分类及相应问题子类
+        $questionTagTypes = TagType::ofType([TagType::QUESTION])->with('tags')->get();
         return View::make('dashboard.questions.create_edit')
             ->with('question', $question)
             ->with('current_menu', 'question')
+            ->with('questionTags', json_encode($questionTags->pluck('id')->toArray()))
+            ->with('questionTagTypes', $questionTagTypes)
             ->with('current_nav', $menu);
 
     }
@@ -117,13 +129,12 @@ class QuestionController extends Controller
         //修改问题标题，标签和内容
         $questionData = Input::get('question');
         $questionData['body_original'] = $questionData['body'];
-
         try {
-            $this->updateOpLog($question, '后台编辑问题');
             //TODO 编辑问题后续的标签相关计数等
+            $question = dispatch( new UpdateQuestionCommand($question, $questionData));
 
         } catch (\Exception $e) {
-            return Redirect::route('dashboard.questions.edit', $question->id)
+            return Redirect::route('dashboard.question.edit', $question->id)
                 ->withInput($questionData)
                 ->withErrors($e->getMessage());
         }
@@ -181,6 +192,49 @@ class QuestionController extends Controller
         event(new QuestionWasAuditedEvent($question->user, $question));
 
         return Redirect::back()->withSuccess('恭喜，操作成功！');
+    }
+
+    //从审核通过删除帖子，需要将帖子数-1
+    public function indexToTrash(Question $question)
+    {
+        DB::beginTransaction();
+        try {
+            $this->delete($question);
+            $question->user->update(['question_count' => $question->user->questions()->visibleAndDeleted()->count()]);
+            //扣除经验值
+            event(new QuestionWasDeletedEvent($question->user, $question));
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return Redirect::back()->withErrors($e->getMessage());
+        }
+        return Redirect::back()->withSuccess('恭喜，操作成功！');
+    }
+
+    //从待审核删除提问
+    public function auditToTrash(Question $question)
+    {
+        try {
+            $this->trash($question);
+        } catch (\Exception $e) {
+            return Redirect::back()->withErrors($e->getMessage());
+        }
+
+        return Redirect::back()->withSuccess('恭喜，操作成功！');
+    }
+
+    //审核通过列表的提问，放到回收站
+    public function delete(Question $question)
+    {
+        $question->status = Question::DELETED;
+        $this->updateOpLog($question, '删除提问', trim(request('reason')));
+    }
+
+    //审核未通过列表的提问，放到回收站
+    public function trash(Question $question)
+    {
+        $question->status = Question::TRASH;
+        $this->updateOpLog($question, '提问审核未通过', trim(request('reason')));
     }
 
 

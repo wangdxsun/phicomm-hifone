@@ -31,6 +31,22 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Notification\SendAppendNotificationHandler::class,
         ],
 
+        //帖子审核通过(加经验值、数据统计)
+        \Hifone\Events\Thread\ThreadWasAuditedEvent::class => [
+            \Hifone\Handlers\Listeners\Notification\SendThreadNotificationHandler::class,
+            \Hifone\Handlers\Listeners\Stats\UpdateStatsHandler::class,
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+            \Hifone\Handlers\Listeners\Stats\UpdateDailyStatsHandler::class,
+        ],
+
+        //回复审核通过(加经验值、数据统计)
+        \Hifone\Events\Reply\ReplyWasAuditedEvent::class => [
+            \Hifone\Handlers\Listeners\Stats\UpdateDailyStatsHandler::class,
+            \Hifone\Handlers\Listeners\Notification\SendReplyNotificationHandler::class,
+            \Hifone\Handlers\Listeners\Stats\UpdateStatsHandler::class,
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+        ],
+
         // 增加经验值后通知用户
         \Hifone\Events\Credit\CreditWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
@@ -113,32 +129,25 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Link\RemoveLinkCacheHandler::class,
         ],
 
-        // 回帖
-        \Hifone\Events\Reply\ReplyWasAddedEvent::class => [
-            \Hifone\Handlers\Listeners\Notification\SendReplyNotificationHandler::class,
-            \Hifone\Handlers\Listeners\Stats\UpdateStatsHandler::class,
-            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
-        ],
         //帖子被回复（经验值、智慧果）
         \Hifone\Events\Reply\RepliedWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
             \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
         ],
-        //帖子、回复置顶加积分、智慧果
+        //帖子、回复、提问、回答置顶加经验值、智慧果
         \Hifone\Events\Pin\PinWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
             \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
+        ],
+        //提问、回答置顶被取消扣除经验值
+        \Hifone\Events\Pin\PinWasRemovedEvent::class => [
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
         //下沉
         \Hifone\Events\Pin\SinkWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
-        //发表帖子
-        \Hifone\Events\Thread\ThreadWasAddedEvent::class => [
-            \Hifone\Handlers\Listeners\Notification\SendThreadNotificationHandler::class,
-            \Hifone\Handlers\Listeners\Stats\UpdateStatsHandler::class,
-            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
-        ],
+
         //上传头像(经验值、智慧果)
         \Hifone\Events\Image\AvatarWasUploadedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
@@ -206,14 +215,7 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Chat\NewChatMessageHandler::class,
         ],
 
-        //帖子审核通过
-        \Hifone\Events\Thread\ThreadWasAuditedEvent::class => [
-            \Hifone\Handlers\Listeners\Stats\UpdateDailyStatsHandler::class,
-        ],
-        //回复审核通过
-        \Hifone\Events\Reply\ReplyWasAuditedEvent::class => [
-            \Hifone\Handlers\Listeners\Stats\UpdateDailyStatsHandler::class,
-        ],
+
         //帖子移入垃圾箱
         \Hifone\Events\Thread\ThreadWasTrashedEvent::class => [
             \Hifone\Handlers\Listeners\Stats\UpdateDailyStatsHandler::class,
@@ -245,8 +247,22 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
         ],
 
-        //问答（从回收站、待审核变成审核通过）增加经验值，发通知，计数
+        //问题（从回收站、待审核变成审核通过）增加经验值，发通知，计数
         \Hifone\Events\Question\QuestionWasAuditedEvent::class => [
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+        ],
+
+        //审核通过的提问被删除，扣除经验值
+        \Hifone\Events\Question\QuestionWasDeletedEvent::class => [
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+        ],
+
+        //回答（从回收站、待审核变成审核通过）增加经验值，发通知，计数
+        \Hifone\Events\Answer\AnswerWasAuditedEvent::class => [
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+        ],
+        //审核通过的回答被删除，扣除经验值
+        \Hifone\Events\Answer\AnswerWasDeletedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
     ];

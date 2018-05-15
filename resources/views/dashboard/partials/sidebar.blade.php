@@ -33,7 +33,7 @@
             </li>
 
             <li  {!! set_active('dashboard/questions*') !!}>
-                <a href="{{ route('dashboard.questions.index') }}">
+                <a href="{{ route('dashboard.questions.audit') }}">
                     <i class="fa fa-question-circle"></i>
                     <span>问答管理</span>
                 </a>
@@ -98,8 +98,8 @@
                         <span>私信群发</span>
                     </a>
                 </li>
-                <li {!! set_active('dashboard/report*') !!}>
-                    <a href="{{ route('dashboard.report.audit') }}">
+                <li {!! set_active('dashboard/reports*') !!}>
+                    <a href="{{ route('dashboard.reports.question') }}">
                         <i class="fa fa-hand-stop-o"></i>
                         <span>举报管理</span>
                     </a>

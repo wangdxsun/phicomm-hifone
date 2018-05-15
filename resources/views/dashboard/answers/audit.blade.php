@@ -14,7 +14,7 @@
         @endif
         <div class="uppercase pull-right">
             <span class="uppercase">
-                截止当前列表的问题总数：{{ $answersCount }}
+                截止当前, 列表总数：{{ $answersCount }}
             </span>
         </div>
         <div class="row">
@@ -29,11 +29,11 @@
                             <td style="width: 180px;">回答内容</td>
                             <td style="width: 70px;">敏感词</td>
                             <td style="width: 70px;">问题标题</td>
-                            <td style="width: 70px;">问题子类</td>
+                            <td style="width: 70px;">问题类型</td>
                             <td style="width: 70px;">回答人</td>
                             <td style="width: 70px;">IP地址</td>
                             <td style="width: 80px;">回答时间</td>
-                            <td style="width: 80px;">悬赏</td>
+                            <td style="width: 80px;">悬赏分值</td>
                             <td style="width: 70px;">操作</td>
                         </tr>
                         @foreach($answers as $answer)
@@ -51,14 +51,18 @@
                                 </td>
                                 <td>{{ $answer->bad_word }}</td>
                                 <td>{{ $answer->question->title }}</td>
-                                <td></td>
+                                <td>
+                                    @foreach($answer->question->tags as $tag)
+                                        {{$tag->name}}<br>
+                                    @endforeach
+                                </td>
                                 <td><a href="{{ route('user.show', ['id'=>$answer->user->id]) }}" target="_blank">{{ $answer->user->username }}</a></td>
                                 <td>{{ $answer->ip }}</td>
                                 <td>{{ $answer->created_time }}</td>
-                                <td>{{ $answer->score }}</td>
+                                <td>{{ $answer->question->score }}</td>
                                 <td>
                                     <a data-url="/dashboard/answers/{{$answer->id}}/audit" data-method="post"><i class="fa fa-check"></i></a>
-                                    <a href="/dashboard/answers/{{$answer->id}}/edit"><i class="fa fa-pencil"></i></a>
+                                    <a href="/dashboard/answer/{{$answer->id}}/edit"><i class="fa fa-pencil"></i></a>
                                     <a data-url="/dashboard/answers/{{ $answer->id }}/audit/to/trash" data-method="post" class="need-reason"><i class="fa fa-trash"></i></a>
                                 </td>
                             </tr>

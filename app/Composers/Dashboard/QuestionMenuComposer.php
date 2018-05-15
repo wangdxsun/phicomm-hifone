@@ -10,7 +10,7 @@ class QuestionMenuComposer
         $subMenu = [
             'question' => [
                 'title'  => '提问',
-                'url'    => route('dashboard.questions.index'),
+                'url'    => route('dashboard.questions.audit'),
                 'icon'   => 'fa fa-check',
                 'active' => false,
                 'sub_nav'=> [
@@ -36,7 +36,7 @@ class QuestionMenuComposer
             ],
             'answer' => [
                 'title'  => '回答',
-                'url'    => route('dashboard.answers.index'),
+                'url'    => route('dashboard.answers.audit'),
                 'icon'   => 'fa fa-bar-chart',
                 'active' => false,
                 'sub_nav'=> [
@@ -62,7 +62,7 @@ class QuestionMenuComposer
             ],
             'comment' => [
                 'title'  => '回复',
-                'url'    => route('dashboard.comments.index'),
+                'url'    => route('dashboard.comments.audit'),
                 'icon'   => 'fa fa-bar-chart',
                 'active' => false,
                 'sub_nav'=> [

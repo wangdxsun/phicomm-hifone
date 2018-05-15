@@ -12,7 +12,7 @@ final class QuestionWasAuditedEvent implements QuestionEventInterface
     /**
      * Create a new thread has reported event instance.
      */
-    public function __construct(User $user, Question $question)
+    public function __construct(User $user, $question)
     {
         $this->question = $question;
         $this->user = $user;

@@ -15,7 +15,6 @@ use AltThree\Validator\ValidationException;
 use Hifone\Commands\Reply\UpdateReplyCommand;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Reply\RepliedWasAddedEvent;
-use Hifone\Events\Reply\ReplyWasAddedEvent;
 use Hifone\Events\Reply\ReplyWasPinnedEvent;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Reply;
@@ -199,7 +198,6 @@ class ReplyController extends Controller
         $thread->last_reply_user_id = $reply->user_id;
         //审核通过时不再更新帖子的修改时间，取最近一次审核通过回复的创建时间
         $thread->save();
-        event(new ReplyWasAddedEvent($reply));
         event(new RepliedWasAddedEvent($reply->user, $thread->user, $reply));
 
         return $this->passAudit($reply);

@@ -17,6 +17,7 @@ use Hifone\Composers\Dashboard\NodeMenuComposer;
 use Hifone\Composers\Dashboard\QuestionMenuComposer;
 use Hifone\Composers\Dashboard\QuestionTagMenuComposer;
 use Hifone\Composers\Dashboard\ReplyMenuComposer;
+use Hifone\Composers\Dashboard\ReportMenuComposer;
 use Hifone\Composers\Dashboard\RoleMenuComposer;
 use Hifone\Composers\Dashboard\SettingMenuComposer;
 use Hifone\Composers\Dashboard\StatMenuComposer;
@@ -50,6 +51,8 @@ class ComposerServiceProvider extends ServiceProvider
         //问答相关
         $factory->composer(['dashboard.questions.*', 'dashboard.answers.*', 'dashboard.comments.*'], QuestionMenuComposer::class);
         $factory->composer(['dashboard.questionTags.*', 'dashboard.questionTagTypes.*'], QuestionTagMenuComposer::class);
+        $factory->composer(['dashboard.reports.*'], ReportMenuComposer::class);
+
     }
 
     /**

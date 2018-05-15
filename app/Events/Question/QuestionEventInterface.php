@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Hifone\Events\Question;
 
 use Hifone\Events\EventInterface;

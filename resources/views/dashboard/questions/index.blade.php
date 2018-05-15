@@ -14,7 +14,7 @@
         @endif
         <div class="uppercase pull-right">
             <span class="uppercase">
-                截止当前列表的问题总数：{{ $questionsCount }}
+                截止当前, 列表总数：{{ $questionsCount }}
             </span>
         </div>
             <div class="row" id="app">
@@ -30,10 +30,25 @@
                                        @if (isset($search['title']))
                                        value="{{ $search['title'] }}"
                                         @endif >
-                                <input type="text" name="question[user_id]" class="form-control" placeholder="提问者" style="width: 100px;"
-                                       @if (isset($search['user_id']))
-                                       value="{{ $search['user_id'] }}"
+                                <input type="text" name="question[user_name]" class="form-control" placeholder="提问者" style="width: 100px;"
+                                       @if (isset($search['user_name']))
+                                       value="{{ $search['user_name'] }}"
                                         @endif >
+                                {{--按标签筛选，提供所有的问题标签供选择--}}
+                                <el-select v-model="questionTags" placeholder="问题类型">
+                                    <el-option-group
+                                            v-for="questionTagType in questionTagTypes"
+                                            :key="questionTagType.id"
+                                            :label="questionTagType.display_name">
+                                        <el-option
+                                                v-for="tag in questionTagType.tags"
+                                                :key="tag.id"
+                                                :label="tag.name"
+                                                :value="tag.id">
+                                        </el-option>
+                                    </el-option-group>
+                                </el-select>
+                                <input type="hidden" class="form-control" :value="questionTags" name="question[tag]">
                             </div>
 
                             <el-date-picker type="datetime" placeholder="开始时间" v-model="date_start"></el-date-picker>
@@ -51,13 +66,13 @@
                             <tr class="head">
                                 <td style="width: 70px;">编号</td>
                                 <td style="width: 180px;">问题标题</td>
-                                <td style="width: 180px;">问题子类</td>
+                                <td style="width: 180px;">问题类型</td>
                                 <td style="width: 80px;">提问者</td>
                                 <td style="width: 90px;">IP地址</td>
-                                <td style="width: 50px;">回答</td>
-                                <td style="width: 50px;">查看</td>
+                                <td style="width: 50px;">回答数</td>
+                                <td style="width: 50px;">查看数</td>
                                 <td style="width: 90px;">提问时间</td>
-                                <td style="width: 90px;">悬赏</td>
+                                <td style="width: 90px;">悬赏分值</td>
                                 <td style="width: 80px;">操作人</td>
                                 <td style="width: 90px;">操作时间</td>
                                 <td style="width: 120px;">操作</td>
@@ -66,7 +81,11 @@
                                 <tr>
                                     <td>{{ $question->id }}</td>
                                     <td>{{ $question->title }}</td>
-                                    <td></td>
+                                    <td>
+                                        @foreach($question->tags as $tag)
+                                            {{$tag->name}}<br>
+                                        @endforeach
+                                    </td>
                                     <td>
                                         <a href="{{ route('user.show', ['id'=>$question->user->id]) }}" target="_blank">{{ $question->user->username }}</a>
                                     </td>
@@ -81,7 +100,7 @@
                                         <a data-url="/dashboard/questions/{{ $question->id }}/excellent" data-method="post" title="精华"><i class="{{ $question->excellent }}"></i></a>
                                         <a data-url="/dashboard/questions/{{ $question->id }}/pin" data-method="post" title="置顶"><i class="{{ $question->pin }}"></i></a>
                                         <a data-url="/dashboard/questions/{{ $question->id }}/sink" data-method="post" title="下沉"><i class="{{ $question->sink }}"></i></a>
-                                        <a href="/dashboard/questions/{{ $question->id }}/edit"><i class="fa fa-pencil" title="编辑"></i></a>
+                                        <a href="/dashboard/question/{{ $question->id }}/edit"><i class="fa fa-pencil" title="编辑"></i></a>
                                         <a data-url="/dashboard/questions/{{ $question->id }}/index/to/trash" data-title="问题移入回收站" data-method="post" class="need-reason" title="删除"><i class="fa fa-trash"></i></a>
                                     </td>
                                 </tr>
@@ -102,6 +121,8 @@
             return {
                 date_start:"",
                 date_end:"",
+                questionTagTypes: {!! $questionTagTypes !!},
+                questionTags: '',
             };
         },
         computed: {

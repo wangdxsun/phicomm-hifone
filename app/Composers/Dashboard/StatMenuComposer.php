@@ -61,6 +61,12 @@ class StatMenuComposer
                 'icon'   => 'fa fa-file',
                 'active' => false,
             ],
+            'question_answer' => [
+                'title'  => '新增回答和提问',
+                'url'    => route('dashboard.stat.questions.answers.count'),
+                'icon'   => 'fa fa-file',
+                'active' => false,
+            ],
             'zeroReply' => [
                 'title'  => '零回复统计',
                 'url'    => route('dashboard.stat.zeroReply'),

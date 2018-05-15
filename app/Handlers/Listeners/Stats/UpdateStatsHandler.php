@@ -14,8 +14,8 @@ namespace Hifone\Handlers\Listeners\Stats;
 use Cache;
 use Hifone\Events\EventInterface;
 use Hifone\Events\Image\ImageWasUploadedEvent;
-use Hifone\Events\Reply\ReplyWasAddedEvent;
-use Hifone\Events\Thread\ThreadWasAddedEvent;
+use Hifone\Events\Reply\ReplyWasAuditedEvent;
+use Hifone\Events\Thread\ThreadWasAuditedEvent;
 use Hifone\Events\User\UserWasAddedEvent;
 use Hifone\Models\Stats;
 
@@ -24,9 +24,9 @@ class UpdateStatsHandler
     public function handle(EventInterface $event)
     {
         $key = 'stats';
-        if ($event instanceof ReplyWasAddedEvent) {
+        if ($event instanceof ReplyWasAuditedEvent) {
             Stats::newReply();
-        } elseif ($event instanceof ThreadWasAddedEvent) {
+        } elseif ($event instanceof ThreadWasAuditedEvent) {
             Stats::newThread();
         } elseif ($event instanceof UserWasAddedEvent) {
             Stats::newUser();

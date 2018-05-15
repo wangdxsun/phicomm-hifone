@@ -63,26 +63,35 @@ class DashboardRoutes
             //问题相关
             $router->get('questions/index', 'QuestionController@index')->name('questions.index');
             $router->get('questions/audit', 'QuestionController@audit')->name('questions.audit');
-            $router->get('questions/trash', 'QuestionController@trash')->name('questions.trash');
+            $router->get('questions/trash', 'QuestionController@trashView')->name('questions.trash');
             $router->post('questions/{question}/pin', 'QuestionController@pin');
             $router->post('questions/{question}/sink', 'QuestionController@sink');
             $router->post('questions/{question}/excellent', 'QuestionController@setExcellent');
             $router->post('questions/batchMove', 'QuestionController@batchMoveQuestion')->name('question.move');
             $router->post('questions/batchAudit', 'QuestionController@postBatchAudit');//batch audit thread
             $router->post('questions/{question}/audit', 'QuestionController@postAudit');
+            $router->post('questions/{question}/index/to/trash', 'QuestionController@indexToTrash');
+            $router->post('questions/{question}/audit/to/trash', 'QuestionController@auditToTrash');
 
             //回答相关
             $router->get('answers/index', 'AnswerController@index')->name('answers.index');
             $router->get('answers/audit', 'AnswerController@audit')->name('answers.audit');
-            $router->get('answers/trash', 'AnswerController@trash')->name('answers.trash');
+            $router->get('answers/trash', 'AnswerController@trashView')->name('answers.trash');
             $router->post('answers/{answer}/pin', 'AnswerController@pin');
-            $router->post('answers/batchMove', 'AnswerController@batchMoveQuestion');
+            $router->post('answers/batchMove', 'AnswerController@batchMoveAnswer');
             $router->post('answers/batchAudit', 'AnswerController@postBatchAudit');//batch audit thread
             $router->post('answers/{answer}/audit', 'AnswerController@postAudit');
+            $router->post('answers/{answer}/index/to/trash', 'AnswerController@indexToTrash');
+            $router->post('answers/{answer}/audit/to/trash', 'AnswerController@auditToTrash');
 
             $router->get('comments/index', 'CommentController@index')->name('comments.index');
             $router->get('comments/audit', 'CommentController@audit')->name('comments.audit');
-            $router->get('comments/trash', 'CommentController@trash')->name('comments.trash');
+            $router->get('comments/trash', 'CommentController@trashView')->name('comments.trash');
+            $router->post('comments/{comment}/pin', 'CommentController@pin');
+            $router->post('comments/batchAudit', 'CommentController@postBatchAudit');//batch audit thread
+            $router->post('comments/{comment}/audit', 'CommentController@postAudit');
+            $router->post('comments/{comment}/index/to/trash', 'CommentController@indexToTrash');
+            $router->post('comments/{comment}/audit/to/trash', 'CommentController@auditToTrash');
 
 
         });
@@ -94,9 +103,10 @@ class DashboardRoutes
             'namespace' => 'Dashboard'
         ], function (Registrar $router) {
             $router->resource('thread', 'ThreadController');
-            $router->resource('questions', 'QuestionController');
+            $router->resource('question', 'QuestionController');
             $router->resource('reply', 'ReplyController');
-            $router->resource('answers', 'AnswerController');
+            $router->resource('answer', 'AnswerController');
+            $router->resource('comment', 'CommentController');
         });
 
         //限制管理员的特有后台管理权限
@@ -111,10 +121,11 @@ class DashboardRoutes
             $router->post('user/{user}/avatar', 'UserController@avatar');
             $router->post('user/{user}/comment', 'UserController@comment');
             $router->post('user/{user}/login', 'UserController@login');
-            $router->get('report/audit', 'ReportController@audit')->name('report.audit');
+            $router->get('reports/thread', 'ReportController@thread')->name('reports.thread');
+            $router->get('reports/question', 'ReportController@question')->name('reports.question');
             $router->post('node/{moderator}/audit/to/trash', 'NodeController@auditToTrash');
-            $router->post('report/{report}/trash', 'ReportController@trash');
-            $router->post('report/{report}/ignore', 'ReportController@ignore');
+            $router->post('reports/{report}/trash', 'ReportController@trash');
+            $router->post('reports/{report}/ignore', 'ReportController@ignore');
 
             $router->get('stat', 'StatController@index')->name('stat.index');
             $router->get('stat/node', 'StatController@node')->name('stat.node');
@@ -126,6 +137,7 @@ class DashboardRoutes
             $router->get('stat/user/h5', 'StatController@userCountH5')->name('stat.user.h5');
             $router->get('stat/threads/count', 'StatController@dailyThreadCount')->name('stat.daily.threads.count');
             $router->get('stat/replies/count', 'StatController@dailyReplyCount')->name('stat.daily.replies.count');
+            $router->get('stat/questions/and/answers/count', 'StatController@dailyQuestionsAndAnswersCount')->name('stat.questions.answers.count');
             $router->get('stat/zeroReply', 'StatController@zeroReplyCount')->name('stat.zeroReply');
             $router->get('stat/banner/{carousel}', 'StatController@banner_detail')->name('stat.banner.show');
             $router->get('stat/interaction', 'StatController@userInteraction')->name('stat.interaction');
@@ -236,7 +248,7 @@ class DashboardRoutes
             $router->resource('creditRule', 'CreditController');
             $router->resource('notice', 'NoticeController');
             $router->resource('carousel', 'CarouselController');
-            $router->resource('report', 'ReportController');
+//            $router->resource('report', 'ReportController');
             $router->resource('log', 'LogController');
         });
 

@@ -10,7 +10,6 @@ namespace Hifone\Http\Bll;
 
 use Hifone\Commands\Image\UploadBase64ImageCommand;
 use Hifone\Commands\Thread\AddThreadCommand;
-use Hifone\Events\Thread\ThreadWasAddedEvent;
 use Hifone\Events\Thread\ThreadWasAuditedEvent;
 use Hifone\Events\Thread\ThreadWasViewedEvent;
 use Hifone\Exceptions\HifoneException;
@@ -538,7 +537,6 @@ class ThreadBll extends BaseBll
     public function autoAudit(Thread $thread)
     {
         //自动审核通过，触发相应的代码逻辑
-        event(new ThreadWasAddedEvent($thread));
         DB::beginTransaction();
         try {
             $thread->status = Thread::VISIBLE;
