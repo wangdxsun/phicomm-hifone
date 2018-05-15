@@ -157,7 +157,6 @@ class AddScoreHandler
         if (!$action || !$user || !$user->phicomm_id ) {
             return;
         }
-        $job = (new AddScore($user, $action, $from, $object));
-        $this->dispatch($job);
+        dispatch(new AddScore($user, $action, $from, $object));
     }
 }
