@@ -85,11 +85,25 @@ class Report extends BaseModel
     {
         switch ($this->reportable_type) {
             case Thread::class:
-                return '举报帖子';
+                return '帖子';
             case Reply::class:
-                return '举报回帖';
+                return '回帖';
+            case Question::class:
+                return '提问';
+            case Answer::class:
+                return '回答';
             default:
                 return '未知';
         }
+    }
+
+    public function scopeThreadAndReply($query)
+    {
+        return $query->whereIn('reportable_type', ['Hifone\Models\Thread', 'Hifone\Models\Reply']);
+    }
+
+    public function scopeQuestionAndAnswer($query)
+    {
+        return $query->whereIn('reportable_type', ['Hifone\Models\Question', 'Hifone\Models\Answer']);
     }
 }

@@ -121,10 +121,11 @@ class DashboardRoutes
             $router->post('user/{user}/avatar', 'UserController@avatar');
             $router->post('user/{user}/comment', 'UserController@comment');
             $router->post('user/{user}/login', 'UserController@login');
-            $router->get('report/audit', 'ReportController@audit')->name('report.audit');
+            $router->get('reports/thread', 'ReportController@thread')->name('reports.thread');
+            $router->get('reports/question', 'ReportController@question')->name('reports.question');
             $router->post('node/{moderator}/audit/to/trash', 'NodeController@auditToTrash');
-            $router->post('report/{report}/trash', 'ReportController@trash');
-            $router->post('report/{report}/ignore', 'ReportController@ignore');
+            $router->post('reports/{report}/trash', 'ReportController@trash');
+            $router->post('reports/{report}/ignore', 'ReportController@ignore');
 
             $router->get('stat', 'StatController@index')->name('stat.index');
             $router->get('stat/node', 'StatController@node')->name('stat.node');
@@ -136,6 +137,7 @@ class DashboardRoutes
             $router->get('stat/user/h5', 'StatController@userCountH5')->name('stat.user.h5');
             $router->get('stat/threads/count', 'StatController@dailyThreadCount')->name('stat.daily.threads.count');
             $router->get('stat/replies/count', 'StatController@dailyReplyCount')->name('stat.daily.replies.count');
+            $router->get('stat/questions/and/answers/count', 'StatController@dailyQuestionsAndAnswersCount')->name('stat.questions.answers.count');
             $router->get('stat/zeroReply', 'StatController@zeroReplyCount')->name('stat.zeroReply');
             $router->get('stat/banner/{carousel}', 'StatController@banner_detail')->name('stat.banner.show');
             $router->get('stat/interaction', 'StatController@userInteraction')->name('stat.interaction');
@@ -246,7 +248,7 @@ class DashboardRoutes
             $router->resource('creditRule', 'CreditController');
             $router->resource('notice', 'NoticeController');
             $router->resource('carousel', 'CarouselController');
-            $router->resource('report', 'ReportController');
+//            $router->resource('report', 'ReportController');
             $router->resource('log', 'LogController');
         });
 

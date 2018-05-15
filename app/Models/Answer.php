@@ -126,4 +126,15 @@ class Answer extends BaseModel
             }
         }
     }
+
+    public function reports()
+    {
+        return $this->morphMany(Report::class, 'reportable');
+    }
+
+    public function getReportAttribute()
+    {
+        return $this->body;
+    }
+
 }

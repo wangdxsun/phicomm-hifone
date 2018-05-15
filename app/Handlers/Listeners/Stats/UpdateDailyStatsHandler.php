@@ -19,6 +19,7 @@ use Hifone\Events\Thread\ThreadWasTrashedEvent;
 use Hifone\Events\Reply\ReplyWasAuditedEvent;
 use Hifone\Events\Reply\ReplyWasTrashedEvent;
 
+//主板块每日净新增发帖、新增回帖数目
 class UpdateDailyStatsHandler
 {
     public function handle(EventInterface $event)
