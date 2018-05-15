@@ -151,5 +151,16 @@ class Question extends BaseModel implements TaggableInterface
             }
         }
     }
+    public function reports()
+    {
+        return $this->morphMany(Report::class, 'reportable');
+    }
+
+    public function getReportAttribute()
+    {
+        return $this->title;
+    }
+
+
 
 }

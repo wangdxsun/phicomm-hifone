@@ -9,8 +9,10 @@
 namespace Hifone\Http\Controllers\Dashboard;
 
 use Hifone\Http\Controllers\Controller;
+use Hifone\Models\Answer;
 use Hifone\Models\Carousel;
 use Hifone\Models\Node;
+use Hifone\Models\Question;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
@@ -229,6 +231,43 @@ class StatController extends Controller
             ->withCurrentMenu('reply')
             ->with('statsArr', $statsArr);
     }
+
+    public function dailyQuestionsAndAnswersCount()
+    {
+        $dailyCount = DB::select("select stat.date, count(stat.qid) as question_cnt, count(stat.aid) as answer_cnt from 
+                                                (select q.id as qid, null as aid, substr(q.created_at, 1, 10) as date
+                                                from questions as q
+                                                where q.`status` = 0
+                                                union all
+                                                select null as qid, a.id as aid, substr(a.created_at, 1, 10) as date
+                                                from answers as a
+                                                join questions as q
+                                                on a.question_id = q.id
+                                                where a.`status` = 0) as stat
+                                                group by stat.date
+                                                order by stat.date desc limit 30");
+
+        $statsArr = array();
+        foreach ($dailyCount as $count) {
+            $statsArr[$count->date] = [
+                'date' => $count->date,
+                'question_count' => $count->question_cnt,
+                'answer_count' => $count->answer_cnt
+            ];
+        }
+        $questionsCount = 0;
+        $answersCount = 0;
+        foreach ($statsArr as $key => $value) {
+            $questionsCount += $value['question_count'];
+            $answersCount += $value['answer_count'];
+        }
+        return view('dashboard.stats.questions')
+            ->with('statsArr', $statsArr)
+            ->with('questionsCount', $answersCount)
+            ->with('answersCount', $answersCount)
+            ->withCurrentMenu('question_answer');
+    }
+
     //数据统计之零回复统计
     public function zeroReplyCount()
     {
