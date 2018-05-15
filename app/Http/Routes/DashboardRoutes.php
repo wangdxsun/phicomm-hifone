@@ -106,6 +106,7 @@ class DashboardRoutes
             $router->resource('question', 'QuestionController');
             $router->resource('reply', 'ReplyController');
             $router->resource('answer', 'AnswerController');
+            $router->resource('comment', 'CommentController');
         });
 
         //限制管理员的特有后台管理权限

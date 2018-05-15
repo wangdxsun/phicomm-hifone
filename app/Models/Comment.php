@@ -90,4 +90,38 @@ class Comment extends BaseModel
         return $this->order == 1 ? 'fa fa-thumb-tack text-danger' : 'fa fa-thumb-tack';
     }
 
+    public function scopeSearch($query, $searches = [])
+    {
+        foreach ($searches as $key => $value) {
+            if ($key == 'user_name') {
+                $query->whereHas('user', function ($query) use ($value){
+                    $query->where('username', 'like',"%$value%");
+                });
+            } elseif ($key == 'body') {
+                $query->where('body', 'LIKE', "%$value%");
+            } elseif ($key == 'title') {
+                $query->whereHas('answer.question', function ($query) use ($value){
+                    $query->where('title', 'LIKE', "%$value%");
+                });
+            } elseif ($key == 'tag'){
+                $query->whereHas('answer.question.tags', function ($query) use ($value){
+                    $query->where('tag_id', $value);
+                });
+
+            } elseif ($key == 'date_start') {
+                if ($value == "") {
+                    continue;
+                }
+                $query->where('created_at', '>=', $value);
+            } elseif ($key == 'date_end') {
+                if ($value == "") {
+                    continue;
+                }
+                $query->where('created_at', '<=', $value);
+            } else {
+                $query->where($key, $value);
+            }
+        }
+    }
+
 }

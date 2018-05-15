@@ -1,8 +1,9 @@
 <?php
 namespace Hifone\Http\Controllers\Dashboard;
 
-use Hifone\Events\Pin\PinWasAddedEvent;
+use Hifone\Commands\Comment\UpdateCommentCommand;
 use DB;
+use Hifone\Models\TagType;
 use View;
 use Input;
 use Redirect;
@@ -13,20 +14,23 @@ class CommentController extends Controller
 {
     public function index()
     {
-        $search = $this->filterEmptyValue(Input::get('answer'));
-        $comments = Comment::visible()->search($search)->with(['answer', 'answer.question'])->orderBy('last_op_time', 'desc')->paginate(20);
+        $search = $this->filterEmptyValue(Input::get('comment'));
+        $comments = Comment::visible()->search($search)->with(['user', 'answer', 'answer.question.tags'])->orderBy('last_op_time', 'desc')->paginate(20);
         $commentsCount = Comment::visible()->count();
+        //问题分类及相应问题子类
+        $questionTagTypes = TagType::ofType([TagType::QUESTION])->with('tags')->get();
         return View::make('dashboard.comments.index')
             ->with('comments', $comments)
             ->with('commentsCount', $commentsCount)
             ->with('search', $search)
+            ->with('questionTagTypes', $questionTagTypes)
             ->with('current_menu', 'comment')
             ->with('current_nav', 'index');
     }
 
     public function audit()
     {
-        $comments = Comment::audit()->orderBy('last_op_time', 'desc')->paginate(20);
+        $comments = Comment::audit()->with(['user', 'answer', 'answer.question.tags'])->orderBy('last_op_time', 'desc')->paginate(20);
         $commentsCount = Comment::audit()->count();
         return View::make('dashboard.comments.audit')
             ->with('comments', $comments)
@@ -39,7 +43,7 @@ class CommentController extends Controller
     public function trashView()
     {
         $search = $this->filterEmptyValue(Input::get('comment'));
-        $comments = Comment::trash()->search($search)->orderBy('last_op_time', 'desc')->paginate(20);
+        $comments = Comment::trash()->with(['user', 'answer', 'answer.question.tags'])->search($search)->orderBy('last_op_time', 'desc')->paginate(20);
         $commentsCount = Comment::trash()->count();
         return View::make('dashboard.comments.trash')
             ->with('comments', $comments)
@@ -47,20 +51,6 @@ class CommentController extends Controller
             ->with('search', $search)
             ->with('current_menu', 'comment')
             ->with('current_nav', 'trash');
-    }
-
-    public function pin(Comment $comment)
-    {
-        //1.取消置顶
-        if (1 == $comment->order) {
-            $comment->update(['order' => 0]);
-            $this->updateOpLog($comment, '取消置顶回复');
-        } else {
-            $comment->update(['order' => 1]);
-            $this->updateOpLog($comment, '置顶回复');
-            event(new PinWasAddedEvent($comment->user, $comment));
-        }
-        return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
     //批量审核通过回复
@@ -91,7 +81,7 @@ class CommentController extends Controller
         return $this->passAudit($comment);
     }
 
-    //将问题状态修改为审核通过,需要将问题数加1
+    //将回复状态修改为审核通过,需要将回复数加1
     public function passAudit(Comment $comment)
     {
         DB::beginTransaction();
@@ -105,7 +95,6 @@ class CommentController extends Controller
             DB::rollBack();
             return Redirect::back()->withErrors($e->getMessage());
         }
-        //
 
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
@@ -117,7 +106,6 @@ class CommentController extends Controller
         try {
             $this->delete($comment);
             $comment->user->update(['comment_count' => $comment->user->comments()->visibleAndDeleted()->count()]);
-            //TODO  事件
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
@@ -127,7 +115,7 @@ class CommentController extends Controller
     }
 
 
-    //从待审核删除提问
+    //从待审核删除回复
     public function auditToTrash(Comment $comment)
     {
         try {
@@ -139,20 +127,48 @@ class CommentController extends Controller
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
-    //审核通过列表的提问，放到回收站
+    //审核通过列表的回复，放到回收站
     public function delete(Comment $comment)
     {
         $comment->status = Comment::DELETED;
         $this->updateOpLog($comment, '删除回复', trim(request('reason')));
     }
 
-    //审核未通过列表的提问，放到回收站
+    //审核未通过列表的回复，放到回收站
     public function trash(Comment $comment)
     {
         $comment->status = Comment::TRASH;
         $this->updateOpLog($comment, '回复审核未通过', trim(request('reason')));
     }
 
+    public function edit(Comment $comment)
+    {
+        $menu = $comment->status == Comment::VISIBLE ? 'index' : 'audit';
 
+        return View::make('dashboard.comments.create_edit')
+            ->with('comment', $comment)
+            ->with('current_menu', 'comment')
+            ->with('current_nav', $menu);
+    }
+
+    public function update(Comment $comment)
+    {
+        //修改回复内容
+        $commentData = Input::get('comment');
+        $commentData['body_original'] = $commentData['body'];
+        try {
+            $comment = dispatch( new UpdateCommentCommand($comment, $commentData));
+
+        } catch (\Exception $e) {
+            return Redirect::route('dashboard.comment.edit', $comment->id)
+                ->withInput($commentData)
+                ->withErrors($e->getMessage());
+        }
+
+        if ($comment->status == Comment::VISIBLE) {
+            return Redirect::route('dashboard.comments.index')->withSuccess('恭喜，操作成功！');
+        }
+        return Redirect::route('dashboard.comments.audit')->withSuccess('恭喜，操作成功！');
+    }
 
 }

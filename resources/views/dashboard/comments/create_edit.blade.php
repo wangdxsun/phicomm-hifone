@@ -16,18 +16,18 @@
 
         <div class="row" id="app">
             <div class="col-md-12">
-                {!! Form::model($answer, ['route' => ['dashboard.answer.update', $answer->id], 'id' => 'thread-edit-form', 'method' => 'patch']) !!}
+                {!! Form::model($comment, ['route' => ['dashboard.comment.update', $comment->id], 'id' => 'thread-edit-form', 'method' => 'patch']) !!}
                 <fieldset>
                     <div class="form-group">
                         <label>内容</label>
-                        <script id="container" name="answer[body]" type="text/plain">{!!  isset($answer) ? $answer->body : null !!}</script>
+                        <script id="container" name="answer[body]" type="text/plain">{!!  isset($comment) ? $comment->body : null !!}</script>
                     </div>
                 </fieldset>
 
                 <div class='form-group'>
                     <div class='btn-group'>
                         <button type="submit" class="btn btn-success" >{{ trans('forms.update') }}</button>
-                        <a class="btn btn-default" href="{!! ($answer->status == 0) ? route('dashboard.answers.index') : route('dashboard.answers.audit') !!} ">{{ trans('forms.cancel') }}</a>
+                        <a class="btn btn-default" href="{!! ($comment->status == 0) ? route('dashboard.comments.index') : route('dashboard.comments.audit') !!} ">{{ trans('forms.cancel') }}</a>
                     </div>
                 </div>
             </div>

@@ -14,7 +14,7 @@
         @endif
         <div class="uppercase pull-right">
             <span class="uppercase">
-                截止当前,列表的回复总数：{{ $commentsCount }}
+                截止当前,列表总数：{{ $commentsCount }}
             </span>
         </div>
             <div class="row" id="app">
@@ -35,7 +35,7 @@
                                        value="{{ $search['user_id'] }}"
                                         @endif >
                             </div>
-
+                            <button class="btn btn-default">搜索</button>
                         </form>
                     </div>
                     <form method="POST">
@@ -58,9 +58,21 @@
                             @foreach($comments as $comment)
                                 <tr>
                                     <td>{{ $comment->id }}</td>
-                                    <td>{{ $comment->body }}</td>
+                                    <td>
+                                        <div class="replyContent">
+                                            {!! $comment->body !!}
+                                        </div>
+                                        @if(Str::length($comment->body) > 26 || Str::contains($comment->body,['<img']))
+                                            <a  data-toggle="collapse" href="#comment{{ $comment->id }}" aria-expanded="false">查看更多</a>
+                                            <div  class="collapse well" id="comment{{ $comment->id }}">{!! $comment->body !!}</div>
+                                        @endif
+                                    </td>
                                     <td>{{ $comment->answer->question->title }}</td>
-                                    <td></td>
+                                    <td>
+                                        @foreach($comment->answer->question->tags as $tag)
+                                            {{ $tag->name }}<br>
+                                        @endforeach
+                                    </td>
                                     <td>
                                         <a href="{{ route('user.show', ['id'=>$comment->user->id]) }}" target="_blank">{{ $comment->user->username }}</a>
                                     </td>
