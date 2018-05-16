@@ -211,7 +211,7 @@ class ThreadBll extends BaseBll
         $updateData['title'] = array_get($threadData, 'title');
         $updateData['body'] = $threadData['body'];
         $updateData['body_original'] = $threadData['body'];//更新原始内容
-        $updateData['excerpt'] = Thread::makeExcerpt($threadData['body']);//更新摘要
+        $updateData['excerpt'] = app('parser.emotion')->makeExcerpt($threadData['body']);//更新摘要
         $updateData['thumbnails'] = getFirstImageUrl($threadData['body']);//更新图片预览
         $updateData['sub_node_id'] = array_get($threadData, 'sub_node_id');
         //更新草稿贴编辑时间
@@ -255,7 +255,7 @@ class ThreadBll extends BaseBll
         $updateData['title'] = $threadData['title'];
         $updateData['body'] = $threadData['body'];
         $updateData['body_original'] = $threadData['body'];//更新原始内容
-        $updateData['excerpt'] = Thread::makeExcerpt($threadData['body']);//更新摘要
+        $updateData['excerpt'] = app('parser.emotion')->makeExcerpt($threadData['body']);//更新摘要
         $updateData['thumbnails'] = getFirstImageUrl($threadData['body']);//更新图片预览
         $updateData['sub_node_id'] = $threadData['sub_node_id'];
         //草稿发帖后创建、回复、编辑时间记录为发帖时间

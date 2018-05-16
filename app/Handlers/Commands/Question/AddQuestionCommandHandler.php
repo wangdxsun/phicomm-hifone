@@ -10,7 +10,6 @@ namespace Hifone\Handlers\Commands\Question;
 
 use Hifone\Commands\Question\AddQuestionCommand;
 use Hifone\Models\Question;
-use Hifone\Models\Thread;
 use Hifone\Services\Filter\WordsFilter;
 use Hifone\Services\Tag\AddTag;
 use Agent;
@@ -32,7 +31,7 @@ class AddQuestionCommandHandler
             'title' => $command->title,
             'body_original' => $command->body,
             'thumbnails' => $thumbnails,
-            'excerpt' => Thread::makeExcerpt($command->body),
+            'excerpt' => app('parser.emotion')->makeExcerpt($command->body),
             'bad_word' => $this->filter->filterWord($command->title.$command->body),
             'score' => $command->score,
             'user_id' => $command->userId,

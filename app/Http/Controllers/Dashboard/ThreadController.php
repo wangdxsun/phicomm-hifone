@@ -140,10 +140,6 @@ class ThreadController extends Controller
         //修改帖子标题，版块和正文
         $threadData = Input::get('thread');
         $threadData['node_id'] = SubNode::find($threadData['sub_node_id'])->node->id;
-
-        $threadData['body_original'] = $threadData['body'];
-
-        $threadData['excerpt'] = Thread::makeExcerpt($threadData['body']);
         try {
             $this->updateOpLog($thread, '修改帖子');
 

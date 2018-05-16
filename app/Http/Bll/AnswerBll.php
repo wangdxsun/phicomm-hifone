@@ -9,6 +9,8 @@
 namespace Hifone\Http\Bll;
 
 use Hifone\Models\Answer;
+use Illuminate\Support\Facades\DB;
+use Auth;
 
 class AnswerBll extends BaseBll
 {
