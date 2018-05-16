@@ -17,6 +17,7 @@ class NotificationBll extends BaseBll
 {
     public function watch()
     {
+        //todo 新接口兼容问题
         $notifications = Notification::forUser(Auth::id())->watch()->whereHas('thread', function ($query) {
             $query->visibleAndDeleted();
         })->with(['thread.user', 'thread.node'])->recent()->paginate();
@@ -24,6 +25,13 @@ class NotificationBll extends BaseBll
         Auth::user()->save();
 
         return $notifications;
+    }
+
+    public function watchQA()
+    {
+        //todo 我的关注 问题 新增多少条新回答，计算新回答总数sum('answer_count')并返回分页follows数据；
+        //点击问题详情页时清楚每个关注问题的新回答，此接口不清除；
+        //请求时机
     }
 
     public function reply()
