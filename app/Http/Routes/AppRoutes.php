@@ -98,6 +98,7 @@ class AppRoutes
                 $router->get('notification/watch', 'NotificationController@watch');
 
                 $router->post('questions', 'QuestionController@store');
+                $router->post('answers', 'AnswerController@store');
             });
         });
     }

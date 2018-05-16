@@ -127,6 +127,7 @@ class WebRoutes
                 $router->post('logout', 'PhicommController@logout');
 
                 $router->post('questions', 'QuestionController@store');
+                $router->post('answers', 'AnswerController@store');
             });
 
             //后台管理员
