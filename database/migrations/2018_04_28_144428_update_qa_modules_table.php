@@ -27,7 +27,6 @@ class UpdateQaModulesTable extends Migration
         });
         //users表追加is_expert 追加question_count 追加answer_count 追加comment_count
         Schema::table('users', function ($table) {
-            $table->tinyInteger('is_expert')->comment('是否专家')->after('score');
             $table->unsignedInteger('question_count')->comment('提问数')->after('is_expert');
             $table->unsignedInteger('answer_count')->comment('回答数')->after('question_count');
             $table->unsignedInteger('comment_count')->comment('回答的评论数')->after('answer_count');
