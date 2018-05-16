@@ -8,17 +8,27 @@
 
 namespace Hifone\Commands\Question;
 
+use Hifone\Models\Question;
+
 final class AddQuestionCommand
 {
     public $title;
+
     public $body;
+
     public $userId;
+
     public $tagIds;
+
     public $score;
+
     public $device;
+
     public $ip;
 
-    public function __construct($title, $body, array $tagIds, $score, $userId, $device = '', $ip = '')
+    public $status;
+
+    public function __construct($title, $body, array $tagIds, $score, $userId, $device = '', $ip = '', $status = Question::AUDIT)
     {
         $this->title =$title;
         $this->body = $body;
@@ -27,5 +37,6 @@ final class AddQuestionCommand
         $this->score = $score;
         $this->device = $device;
         $this->ip = $ip;
+        $this->status = $status;
     }
 }

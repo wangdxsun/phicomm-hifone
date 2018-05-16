@@ -1,20 +1,20 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: qiuling.jiang
- * Date: 2018/5/4
- * Time: 10:33
+ * User: daoxin.wang
+ * Date: 2018/5/16
+ * Time: 16:12
  */
 
-namespace Hifone\Handlers\Commands\Question;
+namespace Hifone\Handlers\Commands\Answer;
 
-use Hifone\Commands\Question\AddQuestionCommand;
-use Hifone\Models\Question;
+
+use Hifone\Commands\Answer\AddAnswerCommand;
+use Hifone\Models\Answer;
 use Hifone\Services\Filter\WordsFilter;
 use Hifone\Services\Tag\AddTag;
-use Agent;
 
-class AddQuestionCommandHandler
+class AddAnswerCommandHandler
 {
     private $filter;
 
@@ -23,18 +23,17 @@ class AddQuestionCommandHandler
         $this->filter = $filter;
     }
 
-    public function handle(AddQuestionCommand $command)
+    public function handle(AddAnswerCommand $command)
     {
         $thumbnails = getFirstImageUrl($command->body);
 
         $data = [
-            'title' => $command->title,
             'body_original' => $command->body,
             'thumbnails' => $thumbnails,
             'excerpt' => app('parser.emotion')->makeExcerpt($command->body),
-            'bad_word' => $this->filter->filterWord($command->title.$command->body),
-            'score' => $command->score,
+            'bad_word' => $this->filter->filterWord($command->body),
             'user_id' => $command->userId,
+            'question_id' => $command->questionId,
             'device' => $command->device,
             'ip' => $command->ip,
             'status' => $command->status
@@ -46,11 +45,9 @@ class AddQuestionCommandHandler
             $command->body = app('parser.link')->parse($command->body);
         }
         $data['body'] = clean($command->body);
-        $question = Question::create($data);
+        $answer = Answer::create($data);
 
-        app(AddTag::class)->attach($question, $command->tagIds);
-
-        return $question;
+        return $answer;
     }
 
 }
