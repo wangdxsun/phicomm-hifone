@@ -7,8 +7,10 @@ use Hifone\Models\User;
 class FavoriteWasAddedEvent implements FavoriteEventInterface
 {
     public $user;
-    public function __construct(User $user)
+    public $object;
+    public function __construct(User $user, $object)
     {
         $this->user = $user;
+        $this->object = $object;
     }
 }

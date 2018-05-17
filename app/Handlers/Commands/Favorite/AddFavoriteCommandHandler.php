@@ -53,13 +53,13 @@ class AddFavoriteCommandHandler
             }
 
             event(new FavoritedWasRemovedEvent($thread->user));//帖子被取消收藏，被动事件
-            event(new FavoriteWasRemovedEvent(Auth::user()));//取消对帖子的收藏，主动事件
+            event(new FavoriteWasRemovedEvent(Auth::user(), $thread));//取消对帖子的收藏，主动事件
         } else {
             Auth::user()->favoriteThreads()->attach($thread->id);
             $thread->increment('favorite_count', 1);
 
             event(new FavoritedWasAddedEvent($thread));//帖子被收藏，被动事件
-            event(new FavoriteWasAddedEvent(Auth::user()));//收藏帖子，主动事件
+            event(new FavoriteWasAddedEvent(Auth::user(), $thread));//收藏帖子，主动事件
         }
     }
 }

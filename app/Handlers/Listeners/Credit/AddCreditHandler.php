@@ -90,25 +90,33 @@ class AddCreditHandler
         } elseif ($event instanceof FavoritedWasAddedEvent) {
             $user = $event->object->user;
             if (Auth::id() == $user->id) {
-                //帖子被收藏，需要加积分，自己收藏自己的帖子只需要主动操作加分
+                //帖子被收藏，需要加积分，自己的帖子被自己收藏不加分
                 return false;
             } else {
-                $action = 'favorite';
+                $action = 'favorited';
             }
         } elseif ($event instanceof FavoriteWasAddedEvent) {
             $user = $event->user;
-            $action = 'thread_favorite';
+            if (Auth::id() == $event->object->user->id) {
+                //帖子被收藏，需要加积分，自己收藏自己的帖子不加分
+                return false;
+            }
+            $action = 'favorite';
         } elseif ($event instanceof FavoritedWasRemovedEvent) {
             $user = $event->user;
             if (Auth::id() == $user->id) {
-                //帖子被取消收藏，需要减积分，取消收藏自己的帖子不会减积分
+                //帖子被取消收藏，需要减积分，对自己操作无效
                 return false;
             } else {
-                $action = 'favorite_removed';
+                $action = 'favorited_removed';
             }
         } elseif ($event instanceof FavoriteWasRemovedEvent) {
             $user = $event->user;
-            $action = 'thread_favorite_removed';
+            if (Auth::id() == $event->object->user->id) {
+                //取消收藏扣分，对自己的操作无效
+                return false;
+            }
+            $action = 'favorite_removed';
         } elseif ($event instanceof PinWasAddedEvent) {
             if (Auth::id() == $event->user->id) {
                 //对自己的操作不加分

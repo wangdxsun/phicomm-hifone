@@ -1252,6 +1252,7 @@ class ComposerStaticInit4c32443c4831f352405a2e52558bdeb5
         'SebastianBergmann\\Version' => __DIR__ . '/..' . '/sebastian/version/src/Version.php',
         'TestCase' => __DIR__ . '/..' . '/barryvdh/laravel-cors/tests/TestCase.php',
         'Text_Template' => __DIR__ . '/..' . '/phpunit/php-text-template/src/Template.php',
+        'UpdateCreditRuleTable' => __DIR__ . '/../..' . '/database/migrations/2018_05_17_151138_update_credit_rule_table.php',
         'UpdateCreditTable' => __DIR__ . '/../..' . '/database/migrations/2018_05_16_170449_update_credit_table.php',
         'UpdateQaModulesTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_28_144428_update_qa_modules_table.php',
         'UpdateTagTable' => __DIR__ . '/../..' . '/database/migrations/2018_05_03_142032_update_tag_table.php',

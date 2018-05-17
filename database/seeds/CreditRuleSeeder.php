@@ -77,5 +77,11 @@ class CreditRuleSeeder extends Seeder
 
         DB::table('credit_rules')->delete(51);
 
+        DB::table('credit_rules')->where('slug', 'favorite')->update(['slug' => 'favorited']);
+        DB::table('credit_rules')->where('slug', 'thread_favorite')->update(['slug' => 'favorite']);
+        DB::table('credit_rules')->where('slug', 'favorite_removed')->update(['slug' => 'favorited_removed']);
+        DB::table('credit_rules')->where('slug', 'thread_favorite_removed')->update(['slug' => 'favorite_removed']);
+
+
     }
 }
