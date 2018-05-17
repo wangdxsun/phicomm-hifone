@@ -166,11 +166,15 @@ class AddCreditHandler
                 $user = $event->target;
             }
         } elseif ($event instanceof ExcellentWasAddedEvent) {
+            if (Auth::id() == $event->object->user_id) {
+                return false;//操作者和被操作者相同
+            }
             if ($event->object instanceof Thread) {
                 $action = 'thread_excellent';
             } elseif ($event->object instanceof Question) {
                 $action = 'question_excellent';
             }
+            $object = $event->object;
             $user = $event->user;
         } elseif ($event instanceof LikeWasAddedEvent) {
             if (Auth::id() == $event->object->user_id) {

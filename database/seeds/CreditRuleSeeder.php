@@ -67,6 +67,14 @@ class CreditRuleSeeder extends Seeder
             'reward' => -2
         ]);
 
+        DB::table('credit_rules')->insert([
+            'name'   => '问题被加精',
+            'slug'   => 'question_excellent',
+            'type'   => 1,
+            'times'  => 40,
+            'reward' => 2
+        ]);
+
         DB::table('credit_rules')->delete(51);
 
     }

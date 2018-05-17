@@ -60,6 +60,7 @@ class AppRoutes
             $router->get('questions/search/{keyword}/{a?}/{b?}/{c?}', 'QuestionController@search');
             $router->get('answers/search/{keyword}/{a?}/{b?}/{c?}', 'AnswerController@search');
             $router->post('questions/{question}/pin', 'QuestionController@pin');
+            $router->post('questions/{question}/excellent', 'QuestionController@setExcellent');
             $router->post('answers/{answer}/pin', 'AnswerController@pin');
 
             // Authorization Required

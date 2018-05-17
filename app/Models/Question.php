@@ -38,7 +38,8 @@ class Question extends BaseModel implements TaggableInterface
         'created_at',
         'updated_at',
         'thumbnails',
-        'like_count'
+        'like_count',
+        'is_excellent'
     ];
 
     protected $hidden = [

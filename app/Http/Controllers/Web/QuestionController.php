@@ -8,6 +8,7 @@
 
 namespace Hifone\Http\Controllers\Web;
 
+use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Http\Bll\QuestionBll;
@@ -90,19 +91,14 @@ class QuestionController extends WebController
         return $questions;
     }
 
-    //置顶问题
-    public function pin(Question $question)
+    public function pin(QuestionBll $questionBll, Question $question)
     {
-        //1.取消置顶
-        if (1 == $question->order) {
-            $question->update(['order' => 0]);
-            $this->updateOpLog($question, '取消置顶问题');
-        } else {
-            $question->update(['order' => 1]);
-            $this->updateOpLog($question, '置顶问题');
-            event(new PinWasAddedEvent($question->user, $question));
-        }
-        return ['pin' => $question->order > 0 ? true : false];
+        return $questionBll->pin($question);
+    }
+
+    public function setExcellent(QuestionBll $questionBll, Question $question)
+    {
+        return $questionBll->setExcellent($question);
     }
 
 }
