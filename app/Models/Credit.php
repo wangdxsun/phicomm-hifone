@@ -18,7 +18,7 @@ class Credit extends BaseModel
      *
      * @var string[]
      */
-    protected $fillable = ['user_id', 'rule_id', 'balance', 'body', 'frequency_tag','created_at'];
+    protected $fillable = ['user_id', 'rule_id', 'balance', 'body', 'frequency_tag','created_at','object_type', 'object_id'];
 
     protected $hidden = [
         'id',

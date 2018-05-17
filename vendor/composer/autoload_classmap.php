@@ -617,6 +617,8 @@ return array(
     'SebastianBergmann\\Version' => $vendorDir . '/sebastian/version/src/Version.php',
     'TestCase' => $vendorDir . '/barryvdh/laravel-cors/tests/TestCase.php',
     'Text_Template' => $vendorDir . '/phpunit/php-text-template/src/Template.php',
+    'UpdateCreditRuleTable' => $baseDir . '/database/migrations/2018_05_17_151138_update_credit_rule_table.php',
+    'UpdateCreditTable' => $baseDir . '/database/migrations/2018_05_16_170449_update_credit_table.php',
     'UpdateQaModulesTable' => $baseDir . '/database/migrations/2018_04_28_144428_update_qa_modules_table.php',
     'UpdateTagTable' => $baseDir . '/database/migrations/2018_05_03_142032_update_tag_table.php',
     'Whoops\\Module' => $vendorDir . '/filp/whoops/src/deprecated/Zend/Module.php',

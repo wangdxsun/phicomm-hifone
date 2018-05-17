@@ -37,7 +37,9 @@ class Question extends BaseModel implements TaggableInterface
         'ip',
         'created_at',
         'updated_at',
-        'thumbnails'
+        'thumbnails',
+        'like_count',
+        'is_excellent'
     ];
 
     protected $hidden = [
@@ -70,7 +72,7 @@ class Question extends BaseModel implements TaggableInterface
 
     protected $dates = ['deleted_at'];
 
-    protected $dateFormat = 'Y-m-d H:i';
+    //protected $dateFormat = 'Y-m-d H:i';
 
     public function user()
     {
@@ -80,6 +82,16 @@ class Question extends BaseModel implements TaggableInterface
     public function answers()
     {
         return $this->hasMany(Answer::class);
+    }
+
+    public function likes()
+    {
+        return $this->morphMany(Like::class, 'likeable');
+    }
+
+    public function followers()
+    {
+        return $this->morphMany(Follow::class, 'followable');
     }
 
     public function scopeOfTag($query, $tagId)

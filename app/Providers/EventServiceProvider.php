@@ -52,22 +52,22 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
 
-        // Favorite帖子被收藏,增加智慧果
-        \Hifone\Events\Favorite\FavoriteWasAddedEvent::class => [
+        // 帖子、提问被收藏,增加经验值、智慧果，发通知
+        \Hifone\Events\Favorite\FavoritedWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
         //帖子被取消收藏,发帖人相关逻辑
-        \Hifone\Events\Favorite\FavoriteWasRemovedEvent::class => [
+        \Hifone\Events\Favorite\FavoritedWasRemovedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
-        //收藏帖子，收藏人的相关逻辑
-        \Hifone\Events\Favorite\FavoriteThreadWasAddedEvent::class => [
+        //收藏，收藏人的相关逻辑
+        \Hifone\Events\Favorite\FavoriteWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
         //取消对帖子的收藏，收藏人的相关逻辑
-        \Hifone\Events\Favorite\FavoriteThreadWasRemovedEvent::class => [
+        \Hifone\Events\Favorite\FavoriteWasRemovedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
 
@@ -92,6 +92,7 @@ class EventServiceProvider extends ServiceProvider
         \Hifone\Events\Excellent\ExcellentWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+            \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
         // Image
 
@@ -101,13 +102,14 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
 
+        //主动点赞（点赞帖子、回复等）
         \Hifone\Events\Like\LikeWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
 
+        //主动取消点赞（点赞帖子、回复等）
         \Hifone\Events\Like\LikeWasRemovedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
-            \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
         ],
         //帖子、回复被点赞，增加经验值和智慧果，发通知
         \Hifone\Events\Like\LikedWasAddedEvent::class => [
@@ -116,7 +118,7 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
 
-        //帖子、回复被点赞，增加经验值和智慧果，发通知
+        //帖子、回复被取消赞
         \Hifone\Events\Like\LikedWasRemovedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
@@ -136,14 +138,11 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
             \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
         ],
-        //帖子、回复、提问、回答置顶加经验值、智慧果
+        //帖子、回复、提问、回答置顶加经验值、智慧果,发通知
         \Hifone\Events\Pin\PinWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
             \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
-        ],
-        //提问、回答置顶被取消扣除经验值
-        \Hifone\Events\Pin\PinWasRemovedEvent::class => [
-            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+            \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
         //下沉
         \Hifone\Events\Pin\SinkWasAddedEvent::class => [
@@ -155,21 +154,8 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
             \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
         ],
-        //
-        \Hifone\Events\Thread\ThreadWasMarkedExcellentEvent::class => [
-            \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
-        ],
-        //置顶帖子发通知
-        \Hifone\Events\Thread\ThreadWasPinnedEvent::class => [
-            \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
-        ],
 
-        //置顶评论/回复发通知
-        \Hifone\Events\Reply\ReplyWasPinnedEvent::class => [
-            \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
-        ],
 
-        //
         \Hifone\Events\Thread\ThreadWasMovedEvent::class => [
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
             \Hifone\Handlers\Listeners\Thread\UpdateThreadNodesHandler::class,

@@ -4,7 +4,7 @@ namespace Hifone\Handlers\Listeners\Score;
 use Hifone\Events\Credit\LevelUpEvent;
 use Hifone\Events\EventInterface;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
-use Hifone\Events\Favorite\FavoriteWasAddedEvent;
+use Hifone\Events\Favorite\FavoritedWasAddedEvent;
 use Hifone\Events\Follow\FollowedWasAddedEvent;
 use Hifone\Events\Like\LikedWasAddedEvent;
 use Hifone\Events\Pin\NodePinWasAddedEvent;
@@ -70,23 +70,23 @@ class AddScoreHandler
             $user = $event->user;
             if (Auth::id() == $user->id) {
                 return false;//操作者和被操作者相同，不加智慧果
-            } elseif ($event->class instanceof Thread) {
+            } elseif ($event->object instanceof Thread) {
                 $action = Config::get('setting.thread_liked', null);
                 //帖子id
-                $object = $event->class->id;
+                $object = $event->object->id;
             } else {
                 $action = Config::get('setting.reply_liked', null);
                 //回复id
-                $object = $event->class->id;
+                $object = $event->object->id;
 
             }
         } elseif ($event instanceof ExcellentWasAddedEvent) {
             //帖子被加精
-            if (Auth::id() == $event->target->id) {
+            if (Auth::id() == $event->user->id) {
                 return false;//操作者和被操作者相同，不加智慧果
             } else {
                 $action = Config::get('setting.thread_excellent', null);
-                $user = $event->target;
+                $user = $event->user;
                 $object = $event->object->id;
                 $from = '';
             }
@@ -98,14 +98,14 @@ class AddScoreHandler
                 return false;//操作者和被操作者相同，不加智慧果
             }
             $action = Config::get('setting.user_followed', null);
-        } elseif ($event instanceof FavoriteWasAddedEvent) {
-            $user = $event->thread->user;
+        } elseif ($event instanceof FavoritedWasAddedEvent) {
+            $user = $event->object->user;
             if (Auth::id() == $user->id) {
                 //帖子被收藏，需要加智慧果，自己收藏自己的帖子不加
                 return false;
             } else {
                 $action = Config::get('setting.thread_favorited', null);
-                $object = $event->thread->id;
+                $object = $event->object->id;
             }
         } elseif ($event instanceof LevelUpEvent) {
             //社区经验值等级提升，增加智慧果

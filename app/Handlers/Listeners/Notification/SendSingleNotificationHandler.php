@@ -13,14 +13,13 @@ namespace Hifone\Handlers\Listeners\Notification;
 
 use Auth;
 use Hifone\Events\EventInterface;
+use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Events\Follow\FollowedWasAddedEvent;
 use Hifone\Events\Like\LikedWasAddedEvent;
-use Hifone\Events\Reply\ReplyWasPinnedEvent;
-use Hifone\Events\Thread\ThreadWasMarkedExcellentEvent;
-use Hifone\Events\Favorite\FavoriteWasAddedEvent;
+use Hifone\Events\Pin\PinWasAddedEvent;
+use Hifone\Events\Favorite\FavoritedWasAddedEvent;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
-use Hifone\Events\Thread\ThreadWasPinnedEvent;
 class SendSingleNotificationHandler
 {
     /**
@@ -34,16 +33,14 @@ class SendSingleNotificationHandler
         } elseif ($event instanceof LikedWasAddedEvent) {
             //like oneself's thread or reply ,there is no notification.
             if (Auth::user()->id != $event->user->id){
-                $this->like($event->user);
+                $this->like($event->object);
             }
-        } elseif ($event instanceof FavoriteWasAddedEvent) {
-            $this->favorite($event->thread);
-        } elseif ($event instanceof ThreadWasMarkedExcellentEvent) {
-            $this->markedExcellent($event->target);
-        } elseif ($event instanceof ThreadWasPinnedEvent){
-            $this->threadPinned($event->target);
-        } elseif ($event instanceof ReplyWasPinnedEvent){
-            $this->replyPinned($event->target);
+        } elseif ($event instanceof FavoritedWasAddedEvent) {
+            $this->favorite($event->object);
+        } elseif ($event instanceof ExcellentWasAddedEvent) {
+            $this->markedExcellent($event->object);
+        } elseif ($event instanceof PinWasAddedEvent){
+            $this->pin($event->object);
         }
     }
 
@@ -89,14 +86,13 @@ class SendSingleNotificationHandler
         app('notifier')->notify($action, $user, $user, $credit);
     }
 
-    protected function threadPinned($target)
+    protected function pin($object)
     {
-        app('notifier')->notify('thread_pin', Auth::user(), $target->user, $target);
-    }
-
-    protected function replyPinned($target)
-    {
-        app('notifier')->notify('reply_pin', Auth::user(), $target->user, $target);
+        if( $object instanceof Reply) {
+            app('notifier')->notify('reply_pin', Auth::user(), $object->user, $object);
+        } elseif ($object instanceof Thread) {
+            app('notifier')->notify('thread_pin', Auth::user(), $object->user, $object);
+        }
     }
 
 }

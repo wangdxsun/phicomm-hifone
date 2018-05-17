@@ -12,7 +12,9 @@ use Hifone\Http\Bll\LikeBll;
 use Hifone\Http\Controllers\App\AppController;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
-use Response;
+use Hifone\Models\Answer;
+use Hifone\Models\Comment;
+
 
 class LikeController extends AppController
 {
@@ -24,5 +26,15 @@ class LikeController extends AppController
     public function reply(Reply $reply, LikeBll $likeBll)
     {
         return $likeBll->likeReply($reply);
+    }
+
+    public function answer(Answer $answer, LikeBll $likeBll)
+    {
+        return $likeBll->likeAnswer($answer);
+    }
+
+    public function comment(Comment $comment, LikeBll $likeBll)
+    {
+        return $likeBll->likeComment($comment);
     }
 }

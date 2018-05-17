@@ -161,7 +161,6 @@ class ReplyController extends Controller
             $reply->increment('order', 1);
             $this->updateOpLog($reply, '置顶');
             event(new PinWasAddedEvent($reply->user,  $reply));
-            event(new ReplyWasPinnedEvent($reply));
         }
 
         return Redirect::back()->withSuccess('恭喜，操作成功');

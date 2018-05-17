@@ -60,19 +60,28 @@ class CreditRuleSeeder extends Seeder
         ]);
 
         DB::table('credit_rules')->insert([
-            'name'   => '提问置顶被取消',
-            'slug'   => 'question_pin_removed',
+            'name'   => '回帖被置顶',
+            'slug'   => 'reply_pin',
             'type'   => 1,
             'times'  => 40,
             'reward' => -2
         ]);
 
         DB::table('credit_rules')->insert([
-            'name'   => '回答置顶被取消',
-            'slug'   => 'answer_pin_removed',
+            'name'   => '问题被加精',
+            'slug'   => 'question_excellent',
             'type'   => 1,
             'times'  => 40,
-            'reward' => -2
+            'reward' => 2
         ]);
+
+        DB::table('credit_rules')->delete(51);
+
+        DB::table('credit_rules')->where('slug', 'favorite')->update(['slug' => 'favorited']);
+        DB::table('credit_rules')->where('slug', 'thread_favorite')->update(['slug' => 'favorite']);
+        DB::table('credit_rules')->where('slug', 'favorite_removed')->update(['slug' => 'favorited_removed']);
+        DB::table('credit_rules')->where('slug', 'thread_favorite_removed')->update(['slug' => 'favorite_removed']);
+
+
     }
 }

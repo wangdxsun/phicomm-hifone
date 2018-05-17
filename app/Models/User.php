@@ -375,6 +375,18 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         }
     }
 
+    public function isFollowQuestion(Question $question)
+    {
+        if (Auth::guest()) {
+            return 'unFollow';
+        }
+        if (Auth::user()->follows()->ofType(Question::class)->ofId($question->id)->count() > 0){
+            return "followed";
+        } else {
+            return "unFollow";
+        }
+    }
+
     public static function hasFollowUser(User $user)
     {
         if (Auth::guest()) {
@@ -424,6 +436,11 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
     public function hasLikeAnswer(Answer $answer)
     {
         return $this->likes()->ofType(Answer::class)->ofId($answer->id)->count() > 0;
+    }
+
+    public function hasLikeComment(Comment $comment)
+    {
+        return $this->likes()->ofType(Comment::class)->ofId($comment->id)->count() > 0;
     }
 
     public function hasReportThread(Thread $thread)
