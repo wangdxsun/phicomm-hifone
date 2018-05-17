@@ -118,10 +118,6 @@ class AddCreditHandler
             }
             $action = 'favorite_removed';
         } elseif ($event instanceof PinWasAddedEvent) {
-            if (Auth::id() == $event->user->id) {
-                //对自己的操作不加分
-                return false;
-            }
             if ($event->object instanceof Thread){
                 $action = 'thread_pin';
             } elseif($event->object instanceof Reply){
