@@ -32,7 +32,6 @@ class AnswerBll extends BaseBll
 
     public function createAnswer($answerData)
     {
-        $this->checkQuestion($answerData['question_id']);
         DB::beginTransaction();
         try {
             $answer = dispatch(new AddAnswerCommand(
@@ -75,7 +74,7 @@ class AnswerBll extends BaseBll
         return !$this->hasVideo($answer->body) && !$this->hasUrl($answer->body) && !$this->hasImage($answer->body) && $answer->bad_word === '';
     }
 
-    private function checkQuestion($questionId)
+    public function checkQuestion($questionId)
     {
         $question = Question::find($questionId);
         if (is_null($question)) {
@@ -84,4 +83,15 @@ class AnswerBll extends BaseBll
             throw new HifoneException('该问答已被删除');
         }
     }
+
+    public function checkPermission()
+    {
+        if (Auth::user()->hasRole('NoComment')) {
+            throw new HifoneException('你已被禁言');
+        } elseif (Auth::user()->score < 0) {
+            throw new HifoneException('对不起，你所在的用户组无法发言');
+        }
+    }
+
+
 }
