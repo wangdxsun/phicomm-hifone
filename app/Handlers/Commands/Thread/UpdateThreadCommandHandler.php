@@ -48,7 +48,7 @@ class UpdateThreadCommandHandler
 
         if (isset($command->data['body']) && $command->data['body']) {
             $command->data['body_original'] = $command->data['body'];
-            $command->data['excerpt'] = Thread::makeExcerpt($command->data['body']);
+            $command->data['excerpt'] = app('parser.emotion')->makeExcerpt($command->data['body']);
             $command->data['body'] = app('parser.at')->parse($command->data['body']);
             $command->data['body'] = app('parser.emotion')->parse($command->data['body']);
             //只有H5和app发帖需要自动转义链接，web端不需要

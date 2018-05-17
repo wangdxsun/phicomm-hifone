@@ -42,19 +42,13 @@ class QuestionController extends AppController
         }
         $this->validate(request(), [
             'title' => 'required|min:5|max:40',
-            'score'=> 'required|int|min:5'
+            'score'=> 'required|int'
         ]);
         //App图文混排
-        $tagIds = $questionBll->getValidTagIds(request('tag_ids'));
         $bodies = json_decode(request('body'), true);
-        $content = '';
-        foreach ($bodies as $body) {
-            if ($body['type'] == 'text') {
-                $content.= "<p>".e($body['content'])."</p>";
-            } elseif ($body['type'] == 'image') {
-                $content.= "<img src='".$body['content']."'/>";
-            }
-        }
+        $content = $this->makeMixedContent($bodies);
+
+        $tagIds = $questionBll->getValidTagIds(request('tag_ids'));
         if (mb_strlen(strip_tags($content)) > 800) {
             throw new HifoneException('请输入内容0~800个字');
         } elseif (count($tagIds) == 0) {
