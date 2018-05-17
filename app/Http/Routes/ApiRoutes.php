@@ -81,7 +81,6 @@ class ApiRoutes
                 $router->post('follow/threads/{thread}', 'FollowController@thread')->where('thread', '[0-9]+');
                 $router->post('like/threads/{thread}', 'LikeController@thread')->where('thread', '[0-9]+');
                 $router->post('like/replies/{reply}', 'LikeController@reply')->where('reply', '[0-9]+');
-                $router->post('like/questions/{question}', 'LikeController@question')->where('question', '[0-9]+');
                 $router->post('like/answers/{answer}', 'LikeController@answer')->where('answer', '[0-9]+');
                 $router->post('like/comments/{comment}', 'LikeController@comment')->where('comment', '[0-9]+');
                 $router->post('favorite/threads/{thread}', 'FavoriteController@threadFavorite')->where('thread', '[0-9]+');

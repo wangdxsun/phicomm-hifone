@@ -60,6 +60,7 @@ class AppRoutes
             $router->get('questions/search/{keyword}/{a?}/{b?}/{c?}', 'QuestionController@search');
             $router->get('answers/search/{keyword}/{a?}/{b?}/{c?}', 'AnswerController@search');
             $router->post('questions/{question}/pin', 'QuestionController@pin');
+            $router->post('answers/{answer}/pin', 'AnswerController@pin');
 
             // Authorization Required
             $router->group(['middleware' => 'auth:hifone'], function ($router) {
@@ -76,7 +77,6 @@ class AppRoutes
                 $router->post('follow/node/{node}', 'FollowController@node')->where('node', '[0-9]+');
                 $router->post('like/thread/{thread}', 'LikeController@thread')->where('thread', '[0-9]+');
                 $router->post('like/reply/{reply}', 'LikeController@reply')->where('reply', '[0-9]+');
-                $router->post('like/questions/{question}', 'LikeController@question')->where('question', '[0-9]+');
                 $router->post('like/answers/{answer}', 'LikeController@answer')->where('answer', '[0-9]+');
                 $router->post('like/comments/{comment}', 'LikeController@comment')->where('comment', '[0-9]+');
                 $router->post('report/thread/{thread}', 'ReportController@thread')->where('thread', '[0-9]+');

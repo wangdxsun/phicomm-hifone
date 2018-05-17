@@ -62,6 +62,7 @@ class WebRoutes
             $router->get('questions/search/{keyword}/{a?}/{b?}/{c?}', 'QuestionController@search');
             $router->get('answers/search/{keyword}/{a?}/{b?}/{c?}', 'AnswerController@search');
             $router->post('questions/{question}/pin', 'QuestionController@pin');
+            $router->post('answers/{answer}/pin', 'AnswerController@pin');
 
             //登录相关
             $router->post('register/pre', 'PhicommController@preRegister');
@@ -105,7 +106,6 @@ class WebRoutes
                 $router->post('follow/threads/{thread}', 'FollowController@thread')->where('thread', '[0-9]+');
                 $router->post('like/threads/{thread}', 'LikeController@thread')->where('thread', '[0-9]+');
                 $router->post('like/replies/{reply}', 'LikeController@reply')->where('reply', '[0-9]+');
-                $router->post('like/questions/{question}', 'LikeController@question')->where('question', '[0-9]+');
                 $router->post('like/answers/{answer}', 'LikeController@answer')->where('answer', '[0-9]+');
                 $router->post('like/comments/{comment}', 'LikeController@comment')->where('comment', '[0-9]+');
                 $router->post('favorite/threads/{thread}', 'FavoriteController@threadFavorite')->where('thread', '[0-9]+');
