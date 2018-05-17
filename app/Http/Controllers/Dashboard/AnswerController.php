@@ -5,7 +5,6 @@ use Hifone\Commands\Answer\UpdateAnswerCommand;
 use Hifone\Events\Answer\AnswerWasAuditedEvent;
 use Hifone\Events\Answer\AnswerWasDeletedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
-use Hifone\Events\Pin\PinWasRemovedEvent;
 use Hifone\Models\TagType;
 use Input;
 use DB;
@@ -94,7 +93,6 @@ class AnswerController extends Controller
         if (1 == $answer->order) {
             $answer->update(['order' => 0]);
             $this->updateOpLog($answer, '取消置顶回答');
-            event(new PinWasRemovedEvent($answer->user, $answer));
         } else {
             $answer->update(['order' => 1]);
             $this->updateOpLog($answer, '置顶回答');

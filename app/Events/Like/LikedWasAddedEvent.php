@@ -20,14 +20,14 @@ final class LikedWasAddedEvent implements LikeEventInterface
      * @var \Hifone\Models\Like
      */
     public $user;
-    public $class;
+    public $object;
 
     /**
      * Create a new thread has reported event instance.
      */
-    public function __construct($user, $class=null)
+    public function __construct($user, $object=null)
     {
         $this->user = $user;
-        $this->class = $class;
+        $this->object = $object;
     }
 }

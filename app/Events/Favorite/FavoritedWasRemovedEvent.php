@@ -9,10 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Hifone\Events\Excellent;
+namespace Hifone\Events\Favorite;
 
+use Hifone\Models\User;
 
-final class ExcellentWasAddedEvent implements ExcellentEventInterface
+final class FavoritedWasRemovedEvent implements FavoriteEventInterface
 {
     /**
      * The favorite that has been reported.
@@ -20,14 +21,12 @@ final class ExcellentWasAddedEvent implements ExcellentEventInterface
      * @var \Hifone\Models\Favorite
      */
     public $user;
-    public $object;
 
     /**
      * Create a new favorite has reported event instance.
      */
-    public function __construct($user, $object)
+    public function __construct(User $user)
     {
         $this->user = $user;
-        $this->object = $object;
     }
 }

@@ -36,6 +36,7 @@ class AddLikeCommandHandler
         $user = User::find($target->user_id);
         if ($target->likes()->forUser(Auth::id())->WithUp()->sharedLock()->count()) {
             //取消点赞
+
             \DB::transaction(function () use ($target, $user) {
                 $target->likes()->forUser(Auth::id())->WithUp()->delete();
                 $target->decrement('like_count', 1);
@@ -49,16 +50,16 @@ class AddLikeCommandHandler
             $target->likes()->create(['user_id' => Auth::id(), 'rating' => Like::LIKE]);
             $target->increment('like_count', 2);
 
-            event(new LikeWasAddedEvent(Auth::user(), $target));//用户主动点赞
-            event(new LikedWasAddedEvent($user, $target));//被赞
+            event(new LikeWasAddedEvent(Auth::user(), $target));//用户主动点赞like
+            event(new LikedWasAddedEvent($user, $target));//被赞liked
         } else {
             //点赞
             \DB::transaction(function () use ($target, $user) {
                 $target->likes()->create(['user_id' => Auth::id(), 'rating' => Like::LIKE]);
                 $target->increment('like_count', 1);
 
-                event(new LikeWasAddedEvent(Auth::user()));
-                event(new LikedWasAddedEvent($user, $target));
+                event(new LikeWasAddedEvent(Auth::user(), $target));  //用户主动点赞like
+                event(new LikedWasAddedEvent($user, $target));//被赞liked
             });
         }
     }

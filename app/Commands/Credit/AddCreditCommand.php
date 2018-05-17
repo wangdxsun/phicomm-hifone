@@ -14,8 +14,8 @@ namespace Hifone\Commands\Credit;
 final class AddCreditCommand
 {
     public $action;
-
     public $user;
+    public $object;
 
     /**
      * The validation rules.
@@ -32,9 +32,10 @@ final class AddCreditCommand
      * @param $action
      * @param $user
      */
-    public function __construct($action, $user)
+    public function __construct($action, $user, $object)
     {
         $this->action = $action;
         $this->user = $user;
+        $this->object = $object;
     }
 }

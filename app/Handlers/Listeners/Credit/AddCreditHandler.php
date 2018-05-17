@@ -16,13 +16,12 @@ use Hifone\Commands\Credit\AddCreditCommand;
 use Hifone\Events\Answer\AnswerWasAuditedEvent;
 use Hifone\Events\Answer\AnswerWasDeletedEvent;
 use Hifone\Events\EventInterface;
-use Hifone\Events\Favorite\FavoriteThreadWasAddedEvent;
-use Hifone\Events\Favorite\FavoriteThreadWasRemovedEvent;
+use Hifone\Events\Favorite\FavoriteWasAddedEvent;
+use Hifone\Events\Favorite\FavoriteWasRemovedEvent;
 use Hifone\Events\Follow\FollowWasRemovedEvent;
 use Hifone\Events\Image\ImageWasUploadedEvent;
 use Hifone\Events\Like\LikeWasRemovedEvent;
 use Hifone\Events\Pin\NodePinWasAddedEvent;
-use Hifone\Events\Pin\PinWasRemovedEvent;
 use Hifone\Events\Question\QuestionWasAuditedEvent;
 use Hifone\Events\Question\QuestionWasDeletedEvent;
 use Hifone\Events\Reply\RepliedWasAddedEvent;
@@ -34,8 +33,8 @@ use Hifone\Events\Thread\ThreadWasTrashedEvent;
 use Hifone\Events\User\UserWasAddedEvent;
 use Hifone\Events\User\UserWasLoggedinAppEvent;
 use Hifone\Events\User\UserWasLoggedinEvent;
-use Hifone\Events\Favorite\FavoriteWasAddedEvent;
-use Hifone\Events\Favorite\FavoriteWasRemovedEvent;
+use Hifone\Events\Favorite\FavoritedWasAddedEvent;
+use Hifone\Events\Favorite\FavoritedWasRemovedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Pin\SinkWasAddedEvent;
 use Hifone\Events\Follow\FollowWasAddedEvent;
@@ -48,6 +47,7 @@ use Hifone\Events\Like\LikedWasRemovedEvent;
 use Hifone\Events\Image\AvatarWasUploadedEvent;
 use Hifone\Events\User\UserWasLoggedinWebEvent;
 use Hifone\Models\Answer;
+use Hifone\Models\Comment;
 use Hifone\Models\Question;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
@@ -58,6 +58,7 @@ class AddCreditHandler
     {
         $action = '';
         $user = null;
+        $object = null;
         if ($event instanceof ThreadWasAuditedEvent) {
             $action = 'thread_new';
             $user = $event->thread->user;
@@ -86,18 +87,18 @@ class AddCreditHandler
         } elseif ($event instanceof UserWasLoggedinEvent || $event instanceof UserWasLoggedinWebEvent || $event instanceof UserWasLoggedinAppEvent) {
             $action = 'login';
             $user = $event->user;
-        } elseif ($event instanceof FavoriteWasAddedEvent) {
-            $user = $event->thread->user;
+        } elseif ($event instanceof FavoritedWasAddedEvent) {
+            $user = $event->object->user;
             if (Auth::id() == $user->id) {
                 //帖子被收藏，需要加积分，自己收藏自己的帖子只需要主动操作加分
                 return false;
             } else {
                 $action = 'favorite';
             }
-        } elseif ($event instanceof FavoriteThreadWasAddedEvent) {
+        } elseif ($event instanceof FavoriteWasAddedEvent) {
             $user = $event->user;
             $action = 'thread_favorite';
-        } elseif ($event instanceof FavoriteWasRemovedEvent) {
+        } elseif ($event instanceof FavoritedWasRemovedEvent) {
             $user = $event->user;
             if (Auth::id() == $user->id) {
                 //帖子被取消收藏，需要减积分，取消收藏自己的帖子不会减积分
@@ -105,28 +106,26 @@ class AddCreditHandler
             } else {
                 $action = 'favorite_removed';
             }
-        } elseif ($event instanceof FavoriteThreadWasRemovedEvent) {
+        } elseif ($event instanceof FavoriteWasRemovedEvent) {
             $user = $event->user;
             $action = 'thread_favorite_removed';
         } elseif ($event instanceof PinWasAddedEvent) {
+            if (Auth::id() == $event->user->id) {
+                //对自己的操作不加分
+                return false;
+            }
             if ($event->object instanceof Thread){
                 $action = 'thread_pin';
             } elseif($event->object instanceof Reply){
-                $action = 'replied_pin';
+                $action = 'reply_pin';
             } elseif ($event->object instanceof Question) {
                 $action = 'question_pin';
             } elseif ($event->object instanceof Answer) {
                 $action = 'answer_pin';
             }
             $user = $event->user;
-        } elseif ($event instanceof PinWasRemovedEvent) {
-            if ($event->object instanceof Question){
-                $action = 'question_pin_removed';
-            }  elseif ($event->object instanceof Answer) {
-                $action = 'answer_pin_removed';
-            }
-            $user = $event->user;
-        } elseif($event instanceof  NodePinWasAddedEvent){
+            $object = $event->object;
+        } elseif($event instanceof NodePinWasAddedEvent){
             $user = $event->user;
             $action = 'thread_node_pin';
         }  elseif ($event instanceof SinkWasAddedEvent) {
@@ -172,16 +171,16 @@ class AddCreditHandler
             } elseif ($event->object instanceof Question) {
                 $action = 'question_excellent';
             }
-            $user = $event->target;
+            $user = $event->user;
         } elseif ($event instanceof LikeWasAddedEvent) {
-            if (Auth::id() == $event->user->id && ($event->object instanceof Question || $event->object instanceof Answer) ) {
+            if (Auth::id() == $event->object->user_id) {
                 return false;//操作者和被操作者相同
             } else {
                 $action = 'like';
             }
             $user = $event->user;
         } elseif ($event instanceof LikeWasRemovedEvent) {
-            if (Auth::id() == $event->user->id && ($event->object instanceof Question || $event->object instanceof Answer) ) {
+            if (Auth::id() == $event->object->user_id) {
                 return false;//操作者和被操作者相同
             } else {
                 $action = 'like_removed';
@@ -225,15 +224,15 @@ class AddCreditHandler
             $user = $event->user;
         }
 
-        $this->apply($event, $action, $user);
+        $this->apply($object, $action, $user);
     }
 
-    protected function apply($event, $action, $user)
+    protected function apply($object, $action, $user)
     {
         if (!$action || !$user) {
             return;
         }
-        $credit = dispatch(new AddCreditCommand($action, $user));
+        $credit = dispatch(new AddCreditCommand($action, $user, $object));
 
         if (!$credit) {
             return;

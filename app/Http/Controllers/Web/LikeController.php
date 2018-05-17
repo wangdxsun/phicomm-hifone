@@ -4,6 +4,7 @@ namespace Hifone\Http\Controllers\Web;
 
 use Hifone\Http\Bll\LikeBll;
 use Hifone\Models\Answer;
+use Hifone\Models\Comment;
 use Hifone\Models\Question;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
@@ -28,5 +29,10 @@ class LikeController extends WebController
     public function answer(Answer $answer, LikeBll $likeBll)
     {
         return $likeBll->likeAnswer($answer);
+    }
+
+    public function comment(Comment $comment, LikeBll $likeBll)
+    {
+        return $likeBll->likeComment($comment);
     }
 }

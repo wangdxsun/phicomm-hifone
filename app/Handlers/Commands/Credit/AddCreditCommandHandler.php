@@ -11,6 +11,7 @@
 
 namespace Hifone\Handlers\Commands\Credit;
 
+use DB;
 use Carbon\Carbon;
 use Hifone\Commands\Credit\AddCreditCommand;
 use Hifone\Events\Credit\LevelUpEvent;
@@ -51,6 +52,13 @@ class AddCreditCommandHandler
         if (!$creditRule || !$this->checkFrequency($creditRule, $command->user)) {
             return false;
         }
+        if(isset($command->object)) {
+            $credit = Credit::where('user_id', $command->user->id)->where('rule_id', $creditRule->id)
+                ->where('object_type', get_class($command->object))->where('object_id', $command->object->id)->first();
+            if(isset($credit)) {
+                return false;
+            }
+        }
         $oldCredit = $command->user->score;
         $data = [
             'user_id'           => $command->user->id,
@@ -58,6 +66,9 @@ class AddCreditCommandHandler
             'balance'           => $command->user->score + $creditRule->reward,
             'body'              => $creditRule->reward,
             'created_at'        => Carbon::now()->toDateTimeString(),
+            'object_type'       => isset($command->object) ? get_class($command->object) : null,
+            'object_id'         => isset($command->object) ? $command->object->id : null
+
         ];
         // Create the credit
 

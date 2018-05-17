@@ -4,11 +4,9 @@ namespace Hifone\Http\Controllers\Dashboard;
 use Hifone\Commands\Question\UpdateQuestionCommand;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
-use Hifone\Events\Pin\PinWasRemovedEvent;
 use Hifone\Events\Pin\SinkWasAddedEvent;
 use Hifone\Events\Question\QuestionWasAuditedEvent;
 use Hifone\Events\Question\QuestionWasDeletedEvent;
-use Hifone\Handlers\Commands\Question\UpdateQuestionCommandHandler;
 use Hifone\Models\TagType;
 use Input;
 use View;
@@ -70,7 +68,6 @@ class QuestionController extends Controller
         if (1 == $question->order) {
             $question->update(['order' => 0]);
             $this->updateOpLog($question, '取消置顶问题');
-            event(new PinWasRemovedEvent($question->user, $question));
         } else {
             $question->update(['order' => 1]);
             $this->updateOpLog($question, '置顶问题');

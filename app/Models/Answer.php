@@ -65,11 +65,16 @@ class Answer extends BaseModel
 
     protected $dates = ['deleted_at'];
 
-    protected $dateFormat = 'Y-m-d H:i';
+    //protected $dateFormat = 'Y-m-d H:i';
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function likes()
+    {
+        return $this->morphMany(Like::class, 'likeable');
     }
 
     //审核通过
