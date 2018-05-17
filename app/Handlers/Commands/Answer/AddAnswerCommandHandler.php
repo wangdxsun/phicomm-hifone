@@ -12,7 +12,7 @@ namespace Hifone\Handlers\Commands\Answer;
 use Hifone\Commands\Answer\AddAnswerCommand;
 use Hifone\Models\Answer;
 use Hifone\Services\Filter\WordsFilter;
-use Hifone\Services\Tag\AddTag;
+use Agent;
 
 class AddAnswerCommandHandler
 {
