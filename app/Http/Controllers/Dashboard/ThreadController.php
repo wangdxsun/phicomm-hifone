@@ -310,6 +310,7 @@ class ThreadController extends Controller
             $this->delete($thread);
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
             $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);
+            //todo 计数不变，下行可删除
             $thread->user->update(['thread_count' => $thread->user->threads()->visibleAndDeleted()->count()]);
             event(new ThreadWasTrashedEvent($thread));
             DB::commit();
