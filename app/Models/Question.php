@@ -25,22 +25,7 @@ class Question extends BaseModel implements TaggableInterface
     const AUDIT = -2;//审核中
     const DELETED = -3;//已删除
 
-    public $fillable = [
-        'title',
-        'body',
-        'body_original',
-        'status',
-        'score',
-        'user_id',
-        'order',
-        'device',
-        'ip',
-        'created_at',
-        'updated_at',
-        'thumbnails',
-        'like_count',
-        'is_excellent'
-    ];
+    protected $guarded = ['id'];
 
     protected $hidden = [
         'user_id',

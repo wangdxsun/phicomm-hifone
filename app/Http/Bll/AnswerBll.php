@@ -37,8 +37,8 @@ class AnswerBll extends BaseBll
         try {
             $answer = dispatch(new AddAnswerCommand(
                 $answerData['body'],
-                $answerData['question_id'],
                 Auth::id(),
+                $answerData['question_id'],
                 get_request_agent(),
                 getClientIp()
             ));
