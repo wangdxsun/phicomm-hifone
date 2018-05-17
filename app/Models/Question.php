@@ -89,6 +89,11 @@ class Question extends BaseModel implements TaggableInterface
         return $this->morphMany(Like::class, 'likeable');
     }
 
+    public function followers()
+    {
+        return $this->morphMany(Follow::class, 'followable');
+    }
+
     public function scopeOfTag($query, $tagId)
     {
         return $query->whereHas('tags', function ($query) use ($tagId) {
