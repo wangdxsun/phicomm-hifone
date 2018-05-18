@@ -93,11 +93,6 @@ class QuestionController extends AppController
         return ['rewards' => $rewards];
     }
 
-   public function pin(QuestionBll $questionBll, Question $question)
-   {
-       return $questionBll->pin($question);
-   }
-
     public function setExcellent(QuestionBll $questionBll, Question $question)
     {
         return $questionBll->setExcellent($question);

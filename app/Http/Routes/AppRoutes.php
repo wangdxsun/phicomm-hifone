@@ -60,9 +60,7 @@ class AppRoutes
             $router->get('questions/tagTypes', 'TagController@tagTypes');
             $router->get('questions/search/{keyword}/{a?}/{b?}/{c?}', 'QuestionController@search');
             $router->get('answers/search/{keyword}/{a?}/{b?}/{c?}', 'AnswerController@search');
-            $router->post('questions/{question}/pin', 'QuestionController@pin');
-            $router->post('follow/questions/{question}', 'FollowController@question');
-            $router->post('answers/{answer}/pin', 'AnswerController@pin');
+
 
             // Authorization Required
             $router->group(['middleware' => 'auth:hifone'], function ($router) {
