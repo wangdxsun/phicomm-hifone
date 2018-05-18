@@ -63,6 +63,9 @@ class SearchImport extends Command
             $this->line('Create Indices...');
             Thread::createIndex();
             User::putMapping();
+            Question::putMapping();
+            Answer::putMapping();
+
             $this->line('Import Users...');
             $bar = $this->output->createProgressBar(ceil(User::count()/1000));
             User::chunk(1000, function ($users) use ($bar) {
@@ -70,9 +73,10 @@ class SearchImport extends Command
                 $bar->advance();
             });
             $this->info("\r\nImport Users into ElasticSearch Successfully!");
+
             $this->line('Import Threads...');
-            $bar = $this->output->createProgressBar(ceil(Thread::visible()->count()/200));
-            Thread::visible()->chunk(200, function ($threads) use ($bar) {
+            $bar = $this->output->createProgressBar(ceil(Thread::count()/200));
+            Thread::chunk(200, function ($threads) use ($bar) {
                 foreach ($threads as $thread) {
                     $thread->body = strip_tags($thread->body);
                 }
@@ -80,6 +84,29 @@ class SearchImport extends Command
                 $bar->advance();
             });
             $this->info("\r\nImport Threads into ElasticSearch Successfully!");
+
+            $this->line('Import Questions...');
+            $bar = $this->output->createProgressBar(ceil(Question::count()/200));
+            Question::chunk(200, function ($questions) use ($bar) {
+                foreach ($questions as $question) {
+                    $question->body = strip_tags($question->body);
+                }
+                $questions->addToIndex();
+                $bar->advance();
+            });
+            $this->info("\r\nImport Questions into ElasticSearch Successfully!");
+
+            $this->line('Import Answers...');
+            $bar = $this->output->createProgressBar(ceil(Answer::count()/200));
+            Answer::chunk(200, function ($answers) use ($bar) {
+                foreach ($answers as $answer) {
+                    $answer->body = strip_tags($answer->body);
+                }
+                $answers->addToIndex();
+                $bar->advance();
+            });
+            $this->info("\r\nImport Answers into ElasticSearch Successfully!");
+
             $end = Carbon::now();
             $this->line('共计用时：'.$end->diffInSeconds($start).'秒');
         }
@@ -94,25 +121,24 @@ class SearchImport extends Command
             }
             try {
                 $user->removeFromIndex();
-                $user->addToIndex();
-                $this->info("Import user $id into ElasticSearch Successfully");
             } catch (\Exception $exception) {
                 $this->error($exception->getMessage());
             }
-            return;
-        }
-        User::chunk(1000, function ($users) {
-            foreach ($users as $user) {
-                try {
-                    $user->removeFromIndex();
-                } catch (\Exception $exception) {
-                    $this->error($exception->getMessage());
+            $user->addToIndex();
+            $this->info("Import user $id into ElasticSearch Successfully");
+        } else {
+            User::chunk(1000, function ($users) {
+                foreach ($users as $user) {
+                    try {
+                        $user->removeFromIndex();
+                    } catch (\Exception $exception) {
+                        $this->error($exception->getMessage());
+                    }
                 }
-            }
-            $users->addToIndex();
-        });
-
-        $this->info("\r\nImport Users into ElasticSearch Successfully");
+                $users->addToIndex();
+            });
+            $this->info("\r\nImport Users into ElasticSearch Successfully");
+        }
     }
 
     private function importThread($id = null)
@@ -124,27 +150,26 @@ class SearchImport extends Command
             }
             try {
                 $thread->removeFromIndex();
-                $thread->body = strip_tags($thread->body);
-                $thread->addToIndex();
-                $this->info("Import thread $id into ElasticSearch Successfully");
             } catch (\Exception $exception) {
                 $this->error($exception->getMessage());
             }
-            return;
-        }
-        Thread::visible()->chunk(1000, function ($threads) {
-            foreach ($threads as $thread) {
-                try {
+            $thread->body = strip_tags($thread->body);
+            $thread->addToIndex();
+            $this->info("Import thread $id into ElasticSearch Successfully");
+        } else {
+            Thread::chunk(1000, function ($threads) {
+                foreach ($threads as $thread) {
+                    try {
+                        $thread->removeFromIndex();
+                    } catch (\Exception $exception) {
+                        $this->error($exception->getMessage());
+                    }
                     $thread->body = strip_tags($thread->body);
-                    $thread->removeFromIndex();
-                } catch (\Exception $exception) {
-                    $this->error($exception->getMessage());
                 }
-            }
-            $threads->addToIndex();
-        });
-
-        $this->info("\r\nImport Threads into ElasticSearch Successfully");
+                $threads->addToIndex();
+            });
+            $this->info("\r\nImport Threads into ElasticSearch Successfully");
+        }
     }
 
     private function importQuestion($id = null)
@@ -156,54 +181,54 @@ class SearchImport extends Command
             }
             try {
                 $question->removeFromIndex();
-                $question->body = strip_tags($question->body);
-                $question->addToIndex();
-                $this->info("Import question $id into ElasticSearch Successfully");
             } catch (\Exception $exception) {
                 $this->error($exception->getMessage());
             }
-            return;
-        }
-        Question::visible()->chunk(1000, function ($questions) {
-            foreach ($questions as $question) {
-                try {
+            $question->body = strip_tags($question->body);
+            $question->addToIndex();
+            $this->info("Import question $id into ElasticSearch Successfully");
+        } else {
+            Question::chunk(1000, function ($questions) {
+                foreach ($questions as $question) {
+                    try {
+                        $question->removeFromIndex();
+                    } catch (\Exception $exception) {
+                        $this->error($exception->getMessage());
+                    }
                     $question->body = strip_tags($question->body);
-                    $question->removeFromIndex();
-                } catch (\Exception $exception) {
-                    $this->error($exception->getMessage());
                 }
-            }
-            $questions->addToIndex();
-        });
-
-        $this->info("\r\nImport Questions into ElasticSearch Successfully");
+                $questions->addToIndex();
+            });
+            $this->info("\r\nImport Questions into ElasticSearch Successfully");
+        }
     }
 
     private function importAnswer($id = null)
     {
         if ($id) {
-            $question = Answer::find($id);
-            if (!$question) {
+            $answer = Answer::find($id);
+            if (!$answer) {
                 $this->error("Answer $id does't exist");
             }
             try {
-                $question->removeFromIndex();
-                $question->body = strip_tags($question->body);
-                $question->addToIndex();
-                $this->info("Import answer $id into ElasticSearch Successfully");
+                $answer->removeFromIndex();
             } catch (\Exception $exception) {
                 $this->error($exception->getMessage());
             }
+            $answer->body = strip_tags($answer->body);
+            $answer->question->body = strip_tags($answer->question->body);
+            $answer->addToIndex();
+            $this->info("Import answer $id into ElasticSearch Successfully");
         } else {
             Answer::with('question')->chunk(100, function ($answers) {
                 foreach ($answers as $answer) {
                     try {
-                        $answer->body = strip_tags($answer->body);
-                        $answer->question->body = strip_tags($answer->question->body);
                         $answer->removeFromIndex();
                     } catch (\Exception $exception) {
                         $this->error($exception->getMessage());
                     }
+                    $answer->body = strip_tags($answer->body);
+                    $answer->question->body = strip_tags($answer->question->body);
                 }
                 $answers->addToIndex();
             });

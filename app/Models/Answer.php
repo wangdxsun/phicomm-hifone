@@ -65,7 +65,10 @@ class Answer extends BaseModel
 
     protected $dates = ['deleted_at'];
 
-    protected $dateFormat = 'Y-m-d H:i';
+    public function getDates()
+    {
+        return $this->dates;
+    }
 
     public function user()
     {
