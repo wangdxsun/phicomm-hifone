@@ -32,6 +32,7 @@ class Score
     public function getScore($phicommId)
     {
         if (empty($phicommId)) {
+            Log::error('phicommId不存在');
             return 0;
         }
         try {

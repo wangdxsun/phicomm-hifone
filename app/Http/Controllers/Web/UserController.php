@@ -17,6 +17,7 @@ use Str;
 
 class UserController extends WebController
 {
+    //当前用户
     public function me(PhicommBll $phicommBll, UserBll $userBll)
     {
         $user = Auth::user();
@@ -42,8 +43,8 @@ class UserController extends WebController
         return $user;
     }
 
-    public function show(User $user, UserBll $userBll)
     //用户个人中心
+    public function show(User $user, UserBll $userBll)
     {
         $user = User::withCount(['favorites' => function ($query) {
             $query->has('thread');
