@@ -8,12 +8,13 @@
 
 namespace Hifone\Http\Controllers\Web;
 
+use Hifone\Events\Excellent\ExcellentWasAddedEvent;
+use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Exceptions\HifoneException;
+use Hifone\Http\Bll\AnswerBll;
 use Hifone\Http\Bll\QuestionBll;
 use Hifone\Models\Question;
 use Auth;
-use Hifone\Models\Tag;
-use Hifone\Models\TagType;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class QuestionController extends WebController
@@ -72,6 +73,13 @@ class QuestionController extends WebController
         return $question;
     }
 
+    public function answers(Question $question, QuestionBll $questionBll, AnswerBll $answerBll)
+    {
+        $answerBll->checkQuestion($question->id);
+
+        return $questionBll->sortAnswers($question);
+    }
+
     //获取悬赏梯度
     public function rewards()
     {
@@ -90,4 +98,15 @@ class QuestionController extends WebController
 
         return $questions;
     }
+
+    public function pin(QuestionBll $questionBll, Question $question)
+    {
+        return $questionBll->pin($question);
+    }
+
+    public function setExcellent(QuestionBll $questionBll, Question $question)
+    {
+        return $questionBll->setExcellent($question);
+    }
+
 }

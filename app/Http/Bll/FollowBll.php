@@ -11,6 +11,7 @@ namespace Hifone\Http\Bll;
 use Auth;
 use Hifone\Commands\Follow\AddFollowCommand;
 use Hifone\Exceptions\HifoneException;
+use Hifone\Models\Question;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -38,6 +39,18 @@ class FollowBll extends BaseBll
         dispatch(new AddFollowCommand($thread));
 
         return ['followed' => Auth::user()->hasFollowThread($thread)];
+    }
+
+    public function followQuestion(Question $question)
+    {
+        if ($question->status <> Question::VISIBLE) {
+            throw new HifoneException('该问题已被删除', 410);
+        }
+
+        dispatch(new AddFollowCommand($question));
+
+        return ['followed' => Auth::user()->hasFollowQuestion($question)];
+
     }
 
     public function followNode($node)

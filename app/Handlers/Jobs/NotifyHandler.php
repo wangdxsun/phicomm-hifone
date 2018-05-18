@@ -12,6 +12,9 @@ class NotifyHandler
 {
     public function handle(Notify $notify)
     {
+        if (null == $notify->type) {
+            return;
+        }
         //判断是否通知过
         if ($this->isNotified($notify->author->id, $notify->user->id, $notify->object, $notify->type)) {
             return;
@@ -20,6 +23,7 @@ class NotifyHandler
         if ($notify->author->id == $notify->user->id) {
             return;
         }
+
 
         if ($notify->type == 'reply_like' || $notify->type == 'thread_like' || $notify->type == 'user_follow'
             || $notify->type == 'thread_favorite' || $notify->type == 'thread_pin' || $notify->type == 'thread_mark_excellent' || $notify->type == 'reply_pin') {

@@ -25,20 +25,7 @@ class Question extends BaseModel implements TaggableInterface
     const AUDIT = -2;//审核中
     const DELETED = -3;//已删除
 
-    public $fillable = [
-        'title',
-        'body',
-        'body_original',
-        'status',
-        'score',
-        'user_id',
-        'order',
-        'device',
-        'ip',
-        'created_at',
-        'updated_at',
-        'thumbnails'
-    ];
+    protected $guarded = ['id'];
 
     protected $hidden = [
         'user_id',
@@ -83,6 +70,16 @@ class Question extends BaseModel implements TaggableInterface
     public function answers()
     {
         return $this->hasMany(Answer::class);
+    }
+
+    public function likes()
+    {
+        return $this->morphMany(Like::class, 'likeable');
+    }
+
+    public function followers()
+    {
+        return $this->morphMany(Follow::class, 'followable');
     }
 
     public function scopeOfTag($query, $tagId)

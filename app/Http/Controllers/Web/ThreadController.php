@@ -8,8 +8,6 @@ use Hifone\Commands\Thread\UpdateThreadCommand;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Pin\SinkWasAddedEvent;
-use Hifone\Events\Thread\ThreadWasMarkedExcellentEvent;
-use Hifone\Events\Thread\ThreadWasPinnedEvent;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\ThreadBll;
@@ -258,7 +256,6 @@ class ThreadController extends WebController
             $thread->excellent_time = Carbon::now()->toDateTimeString();
             $this->updateOpLog($thread, '精华');
             event(new ExcellentWasAddedEvent($thread->user, $thread));
-            event(new ThreadWasMarkedExcellentEvent($thread));
         }
         //更新热度值
         $thread->heat = $thread->heat_compute;
@@ -279,14 +276,12 @@ class ThreadController extends WebController
             }
             $thread->update(['order' => 1]);
             $this->updateOpLog($thread, '置顶');
-            event(new ThreadWasPinnedEvent($thread));
             event(new PinWasAddedEvent($thread->user,  $thread));
         } elseif ($thread->order < 0) {
-            //全局下沉
+            //从全局下沉变成全局置顶
             $thread->update(['order' => 1]);
             $this->updateOpLog($thread, '置顶');
-            event(new ThreadWasPinnedEvent($thread));
-            event(new PinWasAddedEvent($thread->user,  $thread));
+            event(new PinWasAddedEvent($thread->user, $thread));
         }
         return ['pin' => $thread->order > 0 ? true : false];
     }

@@ -83,4 +83,18 @@ abstract class Controller extends BaseController
         $logData['reason'] = $reason;
         $model->logs()->create($logData);
     }
+
+    protected function makeMixedContent($bodies)
+    {
+        $content = '';
+        foreach ($bodies as $body) {
+            if ($body['type'] == 'text') {
+                $content.= "<p>".e($body['content'])."</p>";
+            } elseif ($body['type'] == 'image') {
+                $content.= "<img src='".$body['content']."'/>";
+            }
+        }
+
+        return $content;
+    }
 }

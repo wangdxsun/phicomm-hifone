@@ -18,7 +18,6 @@ use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Events\Pin\NodePinWasAddedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Pin\SinkWasAddedEvent;
-use Hifone\Events\Thread\ThreadWasMarkedExcellentEvent;
 use Hifone\Events\Thread\ThreadWasUppedEvent;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Node;
@@ -31,7 +30,6 @@ use Redirect;
 use View;
 use Input;
 use Auth;
-use Hifone\Events\Thread\ThreadWasPinnedEvent;
 use Hifone\Events\Thread\ThreadWasAuditedEvent;
 use Hifone\Events\Thread\ThreadWasTrashedEvent;
 
@@ -140,10 +138,6 @@ class ThreadController extends Controller
         //修改帖子标题，版块和正文
         $threadData = Input::get('thread');
         $threadData['node_id'] = SubNode::find($threadData['sub_node_id'])->node->id;
-
-        $threadData['body_original'] = $threadData['body'];
-
-        $threadData['excerpt'] = Thread::makeExcerpt($threadData['body']);
         try {
             $this->updateOpLog($thread, '修改帖子');
 
@@ -163,7 +157,7 @@ class ThreadController extends Controller
     public function pin(Thread $thread)
     {
         if ($thread->order == 1) {
-            //已经是全局置顶，取消全局置顶
+            //已经是全局置顶，再次点击置顶，取消全局置顶
             $thread->update(['order' => 0]);
             $this->updateOpLog($thread, '取消置顶');
         } elseif ($thread->order == 0 ) {
@@ -173,13 +167,11 @@ class ThreadController extends Controller
             }
             $thread->update(['order' => 1]);
             $this->updateOpLog($thread, '置顶');
-            event(new ThreadWasPinnedEvent($thread));
             event(new PinWasAddedEvent($thread->user, $thread));
         } elseif ($thread->order < 0) {
-            //全局下沉
+            //从全局下沉变成全局置顶
             $thread->update(['order' => 1]);
             $this->updateOpLog($thread, '置顶');
-            event(new ThreadWasPinnedEvent($thread));
             event(new PinWasAddedEvent($thread->user,  $thread));
         }
         return Redirect::back()->withSuccess('恭喜，操作成功！');
@@ -233,7 +225,6 @@ class ThreadController extends Controller
             $thread->excellent_time = Carbon::now()->toDateTimeString();
             $this->updateOpLog($thread, '精华');
             event(new ExcellentWasAddedEvent($thread->user, $thread));
-            event(new ThreadWasMarkedExcellentEvent($thread));
         }
         //更新热度值
         $thread->heat = $thread->heat_compute;
@@ -314,6 +305,7 @@ class ThreadController extends Controller
             $this->delete($thread);
             $thread->node->update(['thread_count' => $thread->node->threads()->visible()->count()]);
             $thread->subNode->update(['thread_count' => $thread->subNode->threads()->visible()->count()]);
+            //todo 计数不变，下行可删除
             $thread->user->update(['thread_count' => $thread->user->threads()->visibleAndDeleted()->count()]);
             event(new ThreadWasTrashedEvent($thread));
             DB::commit();

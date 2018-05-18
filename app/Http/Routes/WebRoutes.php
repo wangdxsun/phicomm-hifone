@@ -56,11 +56,14 @@ class WebRoutes
             $router->get('questions', 'QuestionController@index');
             $router->get('questions/excellent', 'QuestionController@excellent');
             $router->get('questions/{question}', 'QuestionController@show')->where('question', '[0-9]+');
+            $router->get('questions/{question}/answers', 'QuestionController@answers')->where('question', '[0-9]+');
             $router->get('questions/rewards', 'QuestionController@rewards');
             $router->get('questions/tags', 'TagController@tags');
             $router->get('questions/tagTypes', 'TagController@tagTypes');
             $router->get('questions/search/{keyword}/{a?}/{b?}/{c?}', 'QuestionController@search');
             $router->get('answers/search/{keyword}/{a?}/{b?}/{c?}', 'AnswerController@search');
+
+
 
             //登录相关
             $router->post('register/pre', 'PhicommController@preRegister');
@@ -102,8 +105,11 @@ class WebRoutes
                 $router->post('replies', 'ReplyController@store');
                 $router->post('follow/users/{user}', 'FollowController@user')->where('user', '[0-9]+');
                 $router->post('follow/threads/{thread}', 'FollowController@thread')->where('thread', '[0-9]+');
+                $router->post('follow/questions/{question}', 'FollowController@question')->where('question', '[0-9]+');
                 $router->post('like/threads/{thread}', 'LikeController@thread')->where('thread', '[0-9]+');
                 $router->post('like/replies/{reply}', 'LikeController@reply')->where('reply', '[0-9]+');
+                $router->post('like/answers/{answer}', 'LikeController@answer')->where('answer', '[0-9]+');
+                $router->post('like/comments/{comment}', 'LikeController@comment')->where('comment', '[0-9]+');
                 $router->post('favorite/threads/{thread}', 'FavoriteController@threadFavorite')->where('thread', '[0-9]+');
                 $router->post('report/threads/{thread}', 'ReportController@thread')->where('thread', '[0-9]+');
                 $router->post('report/replies/{reply}', 'ReportController@reply')->where('reply', '[0-9]+');
@@ -127,6 +133,11 @@ class WebRoutes
                 $router->post('logout', 'PhicommController@logout');
 
                 $router->post('questions', 'QuestionController@store');
+                $router->post('questions/{question}/pin', 'QuestionController@pin')->where('question', '[0-9]+');
+                $router->post('questions/{question}/excellent', 'QuestionController@setExcellent')->where('question', '[0-9]+');
+                $router->post('answers', 'AnswerController@store');
+                $router->post('answers/{answer}/pin', 'AnswerController@pin')->where('answer', '[0-9]+');
+
             });
 
             //后台管理员

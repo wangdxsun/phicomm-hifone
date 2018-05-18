@@ -11,6 +11,7 @@ namespace Hifone\Http\Controllers\App\V1;
 use Hifone\Http\Bll\FollowBll;
 use Hifone\Http\Controllers\App\AppController;
 use Hifone\Models\Node;
+use Hifone\Models\Question;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
 
@@ -30,5 +31,10 @@ class FollowController extends AppController
     public function node(Node $node, FollowBll $followBll)
     {
         return $followBll->followNode($node);
+    }
+
+    public function question(Question $question, FollowBll $followBll)
+    {
+        return $followBll->followQuestion($question);
     }
 }

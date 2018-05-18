@@ -11,6 +11,7 @@
 
 namespace Hifone\Events\Like;
 
+//被赞 （帖子，评论，提问，回答）
 final class LikedWasAddedEvent implements LikeEventInterface
 {
     /**
@@ -18,15 +19,16 @@ final class LikedWasAddedEvent implements LikeEventInterface
      *
      * @var \Hifone\Models\Like
      */
-    public $target;
-    public $class;
+    public $user;
+    public $object;
 
     /**
      * Create a new thread has reported event instance.
      */
-    public function __construct($target, $class=null)
+
+    public function __construct($user, $object=null)
     {
-        $this->target = $target;
-        $this->class = $class;
+        $this->user = $user;
+        $this->object = $object;
     }
 }

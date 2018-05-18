@@ -23,16 +23,7 @@ class Answer extends BaseModel
     const AUDIT = -2;//审核中
     const DELETED = -3;//已删除
 
-    public $fillable = [
-        'body',
-        'user_id',
-        'question_id',
-        'device',
-        'status',
-        'ip',
-        'thumbnails',
-        'order'
-    ];
+    protected $guarded = ['id'];
 
     protected $hidden = [
         'body_original',
@@ -64,7 +55,7 @@ class Answer extends BaseModel
     ];
 
     protected $dates = ['deleted_at'];
-
+    
     public function getDates()
     {
         return $this->dates;
@@ -72,7 +63,12 @@ class Answer extends BaseModel
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->select(['id', 'username', 'avatar_url', 'role', 'score']);
+    }
+
+    public function likes()
+    {
+        return $this->morphMany(Like::class, 'likeable');
     }
 
     //审核通过

@@ -1,32 +1,16 @@
 <?php
-
-/*
- * This file is part of Hifone.
- *
- * (c) Hifone.com <hifone@hifone.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Hifone\Events\Favorite;
 
+//取消收藏，主动操作
 use Hifone\Models\User;
 
-final class FavoriteWasRemovedEvent implements FavoriteEventInterface
+class FavoriteWasRemovedEvent implements FavoriteEventInterface
 {
-    /**
-     * The favorite that has been reported.
-     *
-     * @var \Hifone\Models\Favorite
-     */
     public $user;
-
-    /**
-     * Create a new favorite has reported event instance.
-     */
-    public function __construct(User $user)
+    public $object;
+    public function __construct(User $user, $object)
     {
         $this->user = $user;
+        $this->object = $object;
     }
 }

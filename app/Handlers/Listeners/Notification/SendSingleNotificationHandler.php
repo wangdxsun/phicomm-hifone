@@ -13,14 +13,13 @@ namespace Hifone\Handlers\Listeners\Notification;
 
 use Auth;
 use Hifone\Events\EventInterface;
+use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Events\Follow\FollowedWasAddedEvent;
-use Hifone\Events\Reply\ReplyWasPinnedEvent;
-use Hifone\Events\Thread\ThreadWasMarkedExcellentEvent;
-use Hifone\Events\Thread\ThreadWasMovedEvent;
-use Hifone\Events\Favorite\FavoriteWasAddedEvent;
+use Hifone\Events\Like\LikedWasAddedEvent;
+use Hifone\Events\Pin\PinWasAddedEvent;
+use Hifone\Events\Favorite\FavoritedWasAddedEvent;
+use Hifone\Models\Reply;
 use Hifone\Models\Thread;
-use Hifone\Events\Thread\ThreadWasPinnedEvent;
-use Hifone\Events\Thread\ThreadWasLikedEvent;
 class SendSingleNotificationHandler
 {
     /**
@@ -31,21 +30,17 @@ class SendSingleNotificationHandler
         // follow
         if ($event instanceof FollowedWasAddedEvent) {
             $this->follow($event->target);
-        } elseif ($event instanceof ThreadWasLikedEvent) {
+        } elseif ($event instanceof LikedWasAddedEvent) {
             //like oneself's thread or reply ,there is no notification.
-            if (Auth::user()->id != $event->target->user->id){
-                $this->like($event->target);
+            if (Auth::user()->id != $event->user->id){
+                $this->like($event->object);
             }
-        } elseif ($event instanceof FavoriteWasAddedEvent) {
-            $this->favorite($event->thread);
-        } elseif ($event instanceof ThreadWasMarkedExcellentEvent) {
-            $this->markedExcellent($event->target);
-//        } elseif ($event instanceof ThreadWasMovedEvent) {
-//            $this->movedThread($event->target);
-        } elseif ($event instanceof ThreadWasPinnedEvent){
-            $this->threadPinned($event->target);
-        } elseif ($event instanceof ReplyWasPinnedEvent){
-            $this->replyPinned($event->target);
+        } elseif ($event instanceof FavoritedWasAddedEvent) {
+            $this->favorite($event->object);
+        } elseif ($event instanceof ExcellentWasAddedEvent) {
+            $this->markedExcellent($event->object);
+        } elseif ($event instanceof PinWasAddedEvent){
+            $this->pin($event->object);
         }
     }
 
@@ -62,7 +57,12 @@ class SendSingleNotificationHandler
 
     protected function like($target)
     {
-        $type = ($target instanceof Thread) ? 'thread_like' : 'reply_like';
+        $type = null;
+        if ($target instanceof Thread) {
+            $type = 'thread_like';
+        } elseif ($target instanceof Reply) {
+            $type = 'reply_like';
+        }
         app('notifier')->notify($type, Auth::user(), $target->user, $target);
     }
 
@@ -86,14 +86,13 @@ class SendSingleNotificationHandler
         app('notifier')->notify($action, $user, $user, $credit);
     }
 
-    protected function threadPinned($target)
+    protected function pin($object)
     {
-        app('notifier')->notify('thread_pin', Auth::user(), $target->user, $target);
-    }
-
-    protected function replyPinned($target)
-    {
-        app('notifier')->notify('reply_pin', Auth::user(), $target->user, $target);
+        if( $object instanceof Reply) {
+            app('notifier')->notify('reply_pin', Auth::user(), $object->user, $object);
+        } elseif ($object instanceof Thread) {
+            app('notifier')->notify('thread_pin', Auth::user(), $object->user, $object);
+        }
     }
 
 }

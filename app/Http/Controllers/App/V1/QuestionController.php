@@ -8,7 +8,10 @@
 
 namespace Hifone\Http\Controllers\App\V1;
 
+use Hifone\Events\Excellent\ExcellentWasAddedEvent;
+use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Exceptions\HifoneException;
+use Hifone\Http\Bll\AnswerBll;
 use Hifone\Http\Bll\QuestionBll;
 use Hifone\Http\Controllers\App\AppController;
 use Hifone\Models\Question;
@@ -41,19 +44,13 @@ class QuestionController extends AppController
         }
         $this->validate(request(), [
             'title' => 'required|min:5|max:40',
-            'score'=> 'required|int|min:5'
+            'score'=> 'required|int'
         ]);
         //App图文混排
-        $tagIds = $questionBll->getValidTagIds(request('tag_ids'));
         $bodies = json_decode(request('body'), true);
-        $content = '';
-        foreach ($bodies as $body) {
-            if ($body['type'] == 'text') {
-                $content.= "<p>".e($body['content'])."</p>";
-            } elseif ($body['type'] == 'image') {
-                $content.= "<img src='".$body['content']."'/>";
-            }
-        }
+        $content = $this->makeMixedContent($bodies);
+
+        $tagIds = $questionBll->getValidTagIds(request('tag_ids'));
         if (mb_strlen(strip_tags($content)) > 800) {
             throw new HifoneException('请输入内容0~800个字');
         } elseif (count($tagIds) == 0) {
@@ -81,11 +78,23 @@ class QuestionController extends AppController
         return $question;
     }
 
+    public function answers(Question $question, QuestionBll $questionBll, AnswerBll $answerBll)
+    {
+        $answerBll->checkQuestion($question->id);
+
+        return $questionBll->sortAnswers($question);
+    }
+
     //获取悬赏梯度
     public function rewards()
     {
         $rewards = explode(',', env('REWARDS') ? : '5,10,15,20');
 
         return ['rewards' => $rewards];
+    }
+
+    public function setExcellent(QuestionBll $questionBll, Question $question)
+    {
+        return $questionBll->setExcellent($question);
     }
 }

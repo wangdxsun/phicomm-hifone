@@ -16,7 +16,6 @@ use Auth;
 use Hifone\Commands\Append\AddAppendCommand;
 use Hifone\Commands\Thread\RemoveThreadCommand;
 use Hifone\Commands\Thread\UpdateThreadCommand;
-use Hifone\Events\Thread\ThreadWasMarkedExcellentEvent;
 use Hifone\Events\Thread\ThreadWasViewedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Pin\SinkWasAddedEvent;
@@ -32,7 +31,6 @@ use Hifone\Services\Filter\WordsFilter;
 use Illuminate\Support\Facades\DB;
 use Input;
 use Redirect;
-use Hifone\Events\Thread\ThreadWasPinnedEvent;
 
 class ThreadController extends Controller
 {
@@ -251,7 +249,6 @@ class ThreadController extends Controller
             $thread->is_excellent = 1;
             $this->updateOpLog($thread, '精华');
             event(new ExcellentWasAddedEvent($thread->user, $thread));
-            event(new ThreadWasMarkedExcellentEvent($thread));
         }
         //更新热度值
         $thread->heat = $thread->heat_compute;
@@ -269,7 +266,6 @@ class ThreadController extends Controller
             $thread->increment('order', 1);
             $this->updateOpLog($thread, '置顶');
             event(new PinWasAddedEvent($thread->user, 'Thread'));
-            event(new ThreadWasPinnedEvent($thread));
         }
         return Redirect::route('thread.show', $thread->id);
     }

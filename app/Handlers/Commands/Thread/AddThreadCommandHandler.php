@@ -33,7 +33,7 @@ class AddThreadCommandHandler
         $data = [
             'user_id'       => $command->user_id,
             'title'         => $command->title,
-            'excerpt'       => Thread::makeExcerpt($body),
+            'excerpt'       => app('parser.emotion')->makeExcerpt($body),
             'node_id'       => $command->node_id,
             'sub_node_id'   => $command->sub_node_id,
             'body'          => clean($body),

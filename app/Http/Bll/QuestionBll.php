@@ -9,6 +9,8 @@
 namespace Hifone\Http\Bll;
 
 use Hifone\Commands\Question\AddQuestionCommand;
+use Hifone\Events\Excellent\ExcellentWasAddedEvent;
+use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Jobs\RewardScore;
 use Hifone\Models\Question;
@@ -37,10 +39,19 @@ class QuestionBll extends BaseBll
         //todo 登录情况 清除关注该问题的新增回答数
         $question = $question->load(['user', 'tags']);
         $question->followed = Auth::check() ? Auth::user()->hasFollowQuestion($question) : false;
-        $question->user->followed = Auth::check()? User::hasFollowUser($question->user) : false;
+        $question->user->followed = Auth::check() ? User::hasFollowUser($question->user) : false;
         $question->reported = Auth::check() ? Auth::user()->hasReportQuestion($question) : false;
 
         return $question;
+    }
+
+    public function sortAnswers(Question $question)
+    {
+        //置顶、采纳、时间倒序
+        $answers = $question->answers()->visible()->with('user')
+            ->orderBy('order', 'desc')->orderBy('adopted', 'desc')->recent()->paginate();
+
+        return $answers;
     }
 
     public function createQuestion($questionData)
@@ -104,8 +115,7 @@ class QuestionBll extends BaseBll
     //判断智慧果是否够用
     public function checkScore($phicommId)
     {
-        $data = ['userId' => $phicommId];
-        $current = app(Score::class)->get('score/current', $data);
+        $current = app(Score::class)->getScore($phicommId);
 
         $rewards = explode(',', env('REWARDS') ? : '5,10,15,20');
         $threshold = $rewards[0];
@@ -113,5 +123,35 @@ class QuestionBll extends BaseBll
         if ($current < $threshold) {
             throw new HifoneException('智慧果不足');
         }
+    }
+
+    //加精问题
+    public function setExcellent(Question $question)
+    {
+        //1.取消加精
+        if ($question->is_excellent == 1) {
+            $question->update(['is_excellent' => 0]);
+            $this->updateOpLog($question, '取消问题加精');
+        } else {
+            $question->update(['is_excellent' => 1]);
+            $this->updateOpLog($question, '加精问题');
+            event(new ExcellentWasAddedEvent($question->user, $question));
+        }
+        return ['excellent' => $question->is_excellent > 0 ? true : false];
+    }
+
+    //置顶问题
+    public function pin(Question $question)
+    {
+        //1.取消置顶
+        if (1 == $question->order) {
+            $question->update(['order' => 0]);
+            $this->updateOpLog($question, '取消置顶问题');
+        } else {
+            $question->update(['order' => 1]);
+            $this->updateOpLog($question, '置顶问题');
+            event(new PinWasAddedEvent($question->user, $question));
+        }
+        return ['pin' => $question->order > 0 ? true : false];
     }
 }

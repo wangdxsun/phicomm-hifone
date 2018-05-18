@@ -75,4 +75,16 @@ class ParseEmotion
 
         return $post;
     }
+
+    public function makeExcerpt($body)
+    {
+        //将图片和表情转成文字
+        $excerpt = $this->reverseParseEmotionAndImage($body);
+        //去掉所有html标签
+        $excerpt = strip_tags($excerpt);
+        //将[表情]转成表情
+        $excerpt = $this->parse($excerpt);
+
+        return $excerpt;
+    }
 }
