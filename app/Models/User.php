@@ -368,7 +368,6 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         return Auth::user()->follows()->ofType(Thread::class)->ofId($thread->id)->count() > 0;
     }
 
-
     public static function hasFollowUser(User $user)
     {
         if (Auth::guest()) {
@@ -410,11 +409,6 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         return $this->likes()->ofType(Reply::class)->ofId($reply->id)->count() > 0;
     }
 
-    public function hasLikeQuestion(Question $question)
-    {
-        return $this->likes()->ofType(Question::class)->ofId($question->id)->count() > 0;
-    }
-
     public function hasLikeAnswer(Answer $answer)
     {
         return $this->likes()->ofType(Answer::class)->ofId($answer->id)->count() > 0;
@@ -433,6 +427,21 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
     public function hasReportReply(Reply $reply)
     {
         return $this->reports()->ofType(Reply::class)->ofId($reply->id)->count() > 0;
+    }
+
+    public function hasReportQuestion(Question $question)
+    {
+        return $this->reports()->ofType(Question::class)->ofId($question->id)->count() > 0;
+    }
+
+    public function hasReportAnswer(Answer $answer)
+    {
+        return $this->reports()->ofType(Answer::class)->ofId($answer->id)->count() > 0;
+    }
+
+    public function hasReportComment(Comment $comment)
+    {
+        return $this->reports()->ofType(Comment::class)->ofId($comment->id)->count() > 0;
     }
 
     public function hasFavoriteThread(Thread $thread)
@@ -458,11 +467,6 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
     public function hasFollowQuestion(Question $question)
     {
         return $this->follows()->ofType(Question::class)->ofId($question->id)->count() > 0;
-    }
-
-    public function hasReportQuestion(Question $question)
-    {
-        return $this->reports()->ofType(Question::class)->ofId($question->id)->count() > 0;
     }
 
     public function hasInviteUser(User $user, Question $question)

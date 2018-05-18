@@ -39,10 +39,19 @@ class QuestionBll extends BaseBll
         //todo 登录情况 清除关注该问题的新增回答数
         $question = $question->load(['user', 'tags']);
         $question->followed = Auth::check() ? Auth::user()->hasFollowQuestion($question) : false;
-        $question->user->followed = Auth::check()? User::hasFollowUser($question->user) : false;
+        $question->user->followed = Auth::check() ? User::hasFollowUser($question->user) : false;
         $question->reported = Auth::check() ? Auth::user()->hasReportQuestion($question) : false;
 
         return $question;
+    }
+
+    public function sortAnswers(Question $question)
+    {
+        //置顶、采纳、时间倒序
+        $answers = $question->answers()->visible()->with('user')
+            ->orderBy('order', 'desc')->orderBy('adopted', 'desc')->recent()->paginate();
+
+        return $answers;
     }
 
     public function createQuestion($questionData)
@@ -106,8 +115,7 @@ class QuestionBll extends BaseBll
     //判断智慧果是否够用
     public function checkScore($phicommId)
     {
-        $data = ['userId' => $phicommId];
-        $current = app(Score::class)->get('score/current', $data);
+        $current = app(Score::class)->getScore($phicommId);
 
         $rewards = explode(',', env('REWARDS') ? : '5,10,15,20');
         $threshold = $rewards[0];

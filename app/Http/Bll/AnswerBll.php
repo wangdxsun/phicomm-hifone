@@ -13,6 +13,7 @@ use Hifone\Events\Answer\AnswerWasAuditedEvent;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Models\Answer;
 use Hifone\Models\Question;
+use Hifone\Models\User;
 use Illuminate\Support\Facades\DB;
 use Auth;
 
@@ -27,7 +28,11 @@ class AnswerBll extends BaseBll
 
     public function showAnswer(Answer $answer)
     {
-        //todo 判断问题状态后再显示回答详情
+        //判断问题状态后再显示回答详情
+        $this->checkQuestion($answer->question_id);
+        $answer = $answer->load(['user', 'question']);
+        $answer->user->followed = Auth::check() ? User::hasFollowUser($answer->user) : false ;
+        $answer->reported = Auth::check() ? Auth::user()->hasReportAnswer($answer) : false;
     }
 
     public function createAnswer($answerData)
