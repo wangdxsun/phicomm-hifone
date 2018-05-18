@@ -11,6 +11,7 @@ namespace Hifone\Http\Controllers\Web;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Exceptions\HifoneException;
+use Hifone\Http\Bll\AnswerBll;
 use Hifone\Http\Bll\QuestionBll;
 use Hifone\Models\Question;
 use Auth;
@@ -72,8 +73,10 @@ class QuestionController extends WebController
         return $question;
     }
 
-    public function answers(Question $question, QuestionBll $questionBll)
+    public function answers(Question $question, QuestionBll $questionBll, AnswerBll $answerBll)
     {
+        $answerBll->checkQuestion($question->id);
+
         return $questionBll->sortAnswers($question);
     }
 
