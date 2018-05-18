@@ -55,6 +55,7 @@ class AppRoutes
             $router->get('questions', 'QuestionController@index');
             $router->get('questions/recent', 'QuestionController@recent');
             $router->get('questions/{question}', 'QuestionController@show')->where('question', '[0-9]+');
+            $router->get('questions/{question}/answers', 'QuestionController@answers')->where('question', '[0-9]+');
             $router->get('questions/rewards', 'QuestionController@rewards');
             $router->get('questions/tagTypes', 'TagController@tagTypes');
             $router->get('questions/search/{keyword}/{a?}/{b?}/{c?}', 'QuestionController@search');

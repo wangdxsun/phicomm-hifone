@@ -77,6 +77,11 @@ class QuestionController extends AppController
         return $question;
     }
 
+    public function answers(Question $question, QuestionBll $questionBll)
+    {
+        return $questionBll->sortAnswers($question);
+    }
+
     //获取悬赏梯度
     public function rewards()
     {

@@ -45,6 +45,15 @@ class QuestionBll extends BaseBll
         return $question;
     }
 
+    public function sortAnswers(Question $question)
+    {
+        //置顶、采纳、时间倒序
+        $answers = $question->answers()->visible()->with('user')
+            ->orderBy('order', 'desc')->orderBy('adopted', 'desc')->recent()->paginate();
+
+        return $answers;
+    }
+
     public function createQuestion($questionData)
     {
         DB::beginTransaction();
