@@ -33,6 +33,8 @@ class AnswerBll extends BaseBll
         $answer = $answer->load(['user', 'question']);
         $answer->user->followed = Auth::check() ? User::hasFollowUser($answer->user) : false ;
         $answer->reported = Auth::check() ? Auth::user()->hasReportAnswer($answer) : false;
+
+        return $answer;
     }
 
     public function createAnswer($answerData)
