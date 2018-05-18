@@ -91,13 +91,10 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
     ];
 
     protected $mappingProperties = [
-        'username' => [
-            'type' => 'string',
-            'analyzer' => 'standard'
-        ],
-        'score' => [
-            'type' => 'integer'
-        ]
+        'username' => ['type' => 'string', 'analyzer' => 'standard'],
+        'score' => ['type' => 'integer'],
+        'role' => ['type' => 'string', 'index' => 'no'],
+        'avatar_url' => ['type' => 'string', 'index' => 'no'],
     ];
 
     public static $orderTypes = [

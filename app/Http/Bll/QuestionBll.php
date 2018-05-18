@@ -117,7 +117,7 @@ class QuestionBll extends BaseBll
 
         return $questions;
     }
-    
+
     //判断智慧果是否够用
     public function checkScore($phicommId)
     {
