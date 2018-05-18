@@ -39,7 +39,7 @@ class QuestionBll extends BaseBll
         //todo 登录情况 清除关注该问题的新增回答数
         $question = $question->load(['user', 'tags']);
         $question->followed = Auth::check() ? Auth::user()->hasFollowQuestion($question) : false;
-        $question->user->followed = Auth::check()? User::hasFollowUser($question->user) : false;
+        $question->user->followed = Auth::check() ? User::hasFollowUser($question->user) : false;
         $question->reported = Auth::check() ? Auth::user()->hasReportQuestion($question) : false;
 
         return $question;

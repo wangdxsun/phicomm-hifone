@@ -8,7 +8,6 @@
 
 namespace Hifone\Http\Controllers\App\V1;
 
-use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Http\Bll\AnswerBll;
 use Hifone\Http\Controllers\App\AppController;
@@ -40,6 +39,13 @@ class AnswerController extends AppController
             'question_id' => request('question_id')
         ];
         $answer = $answerBll->createAnswer($answerData);
+
+        return $answer;
+    }
+
+    public function show(Answer $answer, AnswerBll $answerBll)
+    {
+        $answer = $answerBll->showAnswer($answer);
 
         return $answer;
     }
