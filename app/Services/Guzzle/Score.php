@@ -12,6 +12,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7;
 use Hifone\Exceptions\HifoneException;
+use Log;
 
 class Score
 {
@@ -28,20 +29,21 @@ class Score
         ];
     }
 
-    public function get($url, $data)
+    public function getScore($phicommId)
     {
-        if (empty($data['userId'])) {
-            return ['score' => 0];
+        if (empty($phicommId)) {
+            return 0;
         }
         try {
-            $response = $this->client->get($url, [
+            $response = $this->client->get('score/current', [
                 'headers' => $this->headers,
-                'query' => $data
+                'query' => ['userId' => $phicommId]
             ]);
             $content = json_decode($response->getBody()->getContents(), true);
-            return $content['data'];
+            return $content['data']['score'];
         } catch (ClientException $e) {
-            throw new HifoneException(Psr7\str($e->getResponse()));
+            Log::error('积分平台调用失败', [Psr7\str($e->getResponse())]);
+            return 0;
         }
     }
 

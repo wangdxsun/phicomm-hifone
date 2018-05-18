@@ -54,7 +54,7 @@ class AnswerController extends WebController
 
     public function pin(Answer $answer)
     {
-        //1.取消置顶
+        //取消置顶
         if (1 == $answer->order) {
             $answer->update(['order' => 0]);
             $this->updateOpLog($answer, '取消置顶回答');

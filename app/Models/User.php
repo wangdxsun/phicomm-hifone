@@ -380,7 +380,7 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         if (Auth::guest()) {
             return 'unFollow';
         }
-        if (Auth::user()->follows()->ofType(Question::class)->ofId($question->id)->count() > 0){
+        if (Auth::user()->follows()->ofType(Question::class)->ofId($question->id)->count() > 0) {
             return "followed";
         } else {
             return "unFollow";

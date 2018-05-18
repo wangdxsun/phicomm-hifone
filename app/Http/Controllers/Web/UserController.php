@@ -11,6 +11,7 @@ use Hifone\Http\Bll\FollowBll;
 use Hifone\Http\Bll\PhicommBll;
 use Hifone\Http\Bll\UserBll;
 use Hifone\Models\User;
+use Hifone\Services\Guzzle\Score;
 use Illuminate\Http\JsonResponse;
 use Str;
 
@@ -36,6 +37,7 @@ class UserController extends WebController
         }
         $user['isAdmin'] = ($user->role =='管理员' || $user->role =='创始人');
         $user['draft_count'] = $user->threads()->draft()->count();
+        $user['smart_score'] = app(Score::class)->getScore($user->phicommId);
 
         return $user;
     }

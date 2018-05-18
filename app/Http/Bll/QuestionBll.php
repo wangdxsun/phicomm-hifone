@@ -106,8 +106,7 @@ class QuestionBll extends BaseBll
     //判断智慧果是否够用
     public function checkScore($phicommId)
     {
-        $data = ['userId' => $phicommId];
-        $current = app(Score::class)->get('score/current', $data);
+        $current = app(Score::class)->getScore($phicommId);
 
         $rewards = explode(',', env('REWARDS') ? : '5,10,15,20');
         $threshold = $rewards[0];
