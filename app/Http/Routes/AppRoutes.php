@@ -75,6 +75,7 @@ class AppRoutes
                 $router->post('follow/user/{user}', 'FollowController@user')->where('user', '[0-9]+');
                 $router->post('follow/thread/{thread}', 'FollowController@thread')->where('thread', '[0-9]+');
                 $router->post('follow/node/{node}', 'FollowController@node')->where('node', '[0-9]+');
+                $router->post('follow/questions/{question}', 'FollowController@question')->where('question', '[0-9]+');
                 $router->post('like/thread/{thread}', 'LikeController@thread')->where('thread', '[0-9]+');
                 $router->post('like/reply/{reply}', 'LikeController@reply')->where('reply', '[0-9]+');
                 $router->post('like/answers/{answer}', 'LikeController@answer')->where('answer', '[0-9]+');
