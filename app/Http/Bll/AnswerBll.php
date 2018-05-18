@@ -31,8 +31,8 @@ class AnswerBll extends BaseBll
         //判断问题状态后再显示回答详情
         $this->checkQuestion($answer->question_id);
         $answer = $answer->load(['user', 'question']);
-        $answer->user->followed = Auth::check() ? User::hasFollowUser($answer->user) : false ;
-        $answer->reported = Auth::check() ? Auth::user()->hasReportAnswer($answer) : false;
+        $answer->user['followed'] = Auth::check() ? User::hasFollowUser($answer->user) : false ;
+        $answer['reported'] = Auth::check() ? Auth::user()->hasReportAnswer($answer) : false;
 
         return $answer;
     }

@@ -165,6 +165,15 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Thread\UpdateThreadViewCountHandler::class,
         ],
 
+        \Hifone\Events\Question\QuestionWasViewedEvent::class => [
+            \Hifone\Handlers\Listeners\Question\UpdateQuestionViewCountHandler::class,
+            \Hifone\Handlers\Listeners\Question\UpdateFollowedQuestionNewAnswerCountHandler::class,
+        ],
+
+        \Hifone\Events\Answer\AnswerWasViewedEvent::class => [
+            \Hifone\Handlers\Listeners\Answer\UpdateAnswerViewCountHandler::class,
+        ],
+
         \Hifone\Events\Banner\BannerWasViewedEvent::class => [
             \Hifone\Handlers\Listeners\Banner\UpdateBannerViewCountHandler::class,
         ],

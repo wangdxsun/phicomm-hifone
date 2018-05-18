@@ -14,6 +14,7 @@ use Hifone\Models\Scopes\CommonTrait;
 use Hifone\Models\Traits\Taggable;
 use Hifone\Services\Tag\TaggableInterface;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Auth;
 
 class Question extends BaseModel implements TaggableInterface
 {
@@ -77,6 +78,31 @@ class Question extends BaseModel implements TaggableInterface
     public function followers()
     {
         return $this->morphMany(Follow::class, 'followable');
+    }
+
+    //问题详情是否可见
+    public function isVisible()
+    {
+        //按照问题状态、用户登录态、用户是否问题提问者、分端编排
+        if ($this->status == Question::VISIBLE) {
+            return true;
+        } elseif ($this->status == Question::TRASH) {
+            if (Auth::guest()) {
+                return false;
+            } else {
+                return Auth::id() == $this->user->id;
+            }
+        } elseif ($this->status == Question::AUDIT || $this->status == Question::DELETED) {
+            if (Auth::guest()) {
+                return false;
+            } else {
+                if (isWeb()) {
+                    return Auth::id() == $this->user->id || Auth::user()->can('view_thread');
+                } else {
+                    return Auth::id() == $this->user->id;
+                }
+            }
+        }
     }
 
     public function scopeOfTag($query, $tagId)

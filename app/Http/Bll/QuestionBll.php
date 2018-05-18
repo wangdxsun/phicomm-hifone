@@ -11,6 +11,7 @@ namespace Hifone\Http\Bll;
 use Hifone\Commands\Question\AddQuestionCommand;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
+use Hifone\Events\Question\QuestionWasViewedEvent;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Jobs\RewardScore;
 use Hifone\Models\Question;
@@ -36,11 +37,16 @@ class QuestionBll extends BaseBll
 
     public function showQuestion(Question $question)
     {
-        //todo 登录情况 清除关注该问题的新增回答数
+        if (!$question->isVisible()) {
+            throw new HifoneException('该问答已被删除', 410);
+        }
+        //todo 登录态 清除关注该问题的新增回答数
+        event(new QuestionWasViewedEvent(clone $question));
+
         $question = $question->load(['user', 'tags']);
-        $question->followed = Auth::check() ? Auth::user()->hasFollowQuestion($question) : false;
-        $question->user->followed = Auth::check() ? User::hasFollowUser($question->user) : false;
-        $question->reported = Auth::check() ? Auth::user()->hasReportQuestion($question) : false;
+        $question['followed'] = Auth::check() ? Auth::user()->hasFollowQuestion($question) : false;
+        $question->user['followed'] = Auth::check() ? User::hasFollowUser($question->user) : false;
+        $question['reported'] = Auth::check() ? Auth::user()->hasReportQuestion($question) : false;
 
         return $question;
     }
@@ -128,7 +134,7 @@ class QuestionBll extends BaseBll
     //加精问题
     public function setExcellent(Question $question)
     {
-        //1.取消加精
+        //取消加精
         if ($question->is_excellent == 1) {
             $question->update(['is_excellent' => 0]);
             $this->updateOpLog($question, '取消问题加精');
@@ -143,7 +149,7 @@ class QuestionBll extends BaseBll
     //置顶问题
     public function pin(Question $question)
     {
-        //1.取消置顶
+        //取消置顶
         if (1 == $question->order) {
             $question->update(['order' => 0]);
             $this->updateOpLog($question, '取消置顶问题');
