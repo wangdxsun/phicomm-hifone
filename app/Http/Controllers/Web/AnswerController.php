@@ -24,11 +24,9 @@ class AnswerController extends WebController
 
     public function store(AnswerBll $answerBll)
     {
-        if (Auth::user()->hasRole('NoComment')) {
-            throw new HifoneException('你已被禁言');
-        } elseif (Auth::user()->score < 0) {
-            throw new HifoneException('对不起，你所在的用户组无法发言');
-        }
+        $answerBll->checkPermission();
+        $answerBll->checkQuestion(request('question_id'));
+
         $wordCount = mb_strlen(strip_tags(request('body')));
         if ($wordCount < 5 || $wordCount > 800) {
             throw new HifoneException('请输入内容5~800个字');

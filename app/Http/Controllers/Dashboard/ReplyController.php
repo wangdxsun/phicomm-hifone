@@ -249,6 +249,7 @@ class ReplyController extends Controller
             $this->delete($reply);
             $reply->thread->node->decrement('reply_count', 1);//版块回帖数-1
             $reply->thread->subNode->decrement('reply_count', 1);//子版块回帖数-1
+            //todo 计数不变，下两行可删除
             $reply->thread->update(['reply_count' => $reply->thread->replies()->visibleAndDeleted()->count()]);
             $reply->user->update(['reply_count' => $reply->user->replies()->visibleAndDeleted()->count()]);
             event(new ReplyWasTrashedEvent($reply));

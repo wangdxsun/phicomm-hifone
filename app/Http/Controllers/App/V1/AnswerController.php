@@ -24,11 +24,8 @@ class AnswerController extends AppController
 
     public function store(AnswerBll $answerBll)
     {
-        if (Auth::user()->hasRole('NoComment')) {
-            throw new HifoneException('你已被禁言');
-        } elseif (Auth::user()->score < 0) {
-            throw new HifoneException('对不起，你所在的用户组无法发言');
-        }
+        $answerBll->checkPermission();
+        $answerBll->checkQuestion(request('question_id'));
         //App图文混排
         $bodies = json_decode(request('body'), true);
         $content = $this->makeMixedContent($bodies);

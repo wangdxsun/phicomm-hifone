@@ -138,8 +138,7 @@ class AnswerController extends Controller
             $answer->save();
             $this->updateOpLog($answer, '审核通过回答');
             $answer->user->update(['answer_count' => $answer->user->answers()->visibleAndDeleted()->count()]);
-            $answerForIndex = clone $answer;
-            $answerForIndex->addToIndex();
+            $answer->question->update(['answer_count' => $answer->question->answers()->visibleAndDeleted()->count()]);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();

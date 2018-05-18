@@ -23,16 +23,7 @@ class Answer extends BaseModel
     const AUDIT = -2;//审核中
     const DELETED = -3;//已删除
 
-    public $fillable = [
-        'body',
-        'user_id',
-        'question_id',
-        'device',
-        'status',
-        'ip',
-        'thumbnails',
-        'order'
-    ];
+    protected $guarded = ['id'];
 
     protected $hidden = [
         'body_original',
