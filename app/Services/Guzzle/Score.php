@@ -32,7 +32,7 @@ class Score
     public function getScore($phicommId)
     {
         if (empty($phicommId)) {
-            Log::error('phicommId不存在');
+            Log::error('积分平台调用失败，phicommId不存在');
             return 0;
         }
         try {
