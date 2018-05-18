@@ -49,7 +49,7 @@ class FollowBll extends BaseBll
 
         dispatch(new AddFollowCommand($question));
 
-        return ['followed' => Auth::user()->isFollowQuestion($question)];
+        return ['followed' => Auth::user()->hasFollowQuestion($question)];
 
     }
 
