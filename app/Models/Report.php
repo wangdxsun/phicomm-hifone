@@ -92,6 +92,8 @@ class Report extends BaseModel
                 return '提问';
             case Answer::class:
                 return '回答';
+            case Comment::class:
+                return '回复';
             default:
                 return '未知';
         }
@@ -104,6 +106,6 @@ class Report extends BaseModel
 
     public function scopeQuestionAndAnswer($query)
     {
-        return $query->whereIn('reportable_type', ['Hifone\Models\Question', 'Hifone\Models\Answer']);
+        return $query->whereIn('reportable_type', ['Hifone\Models\Question', 'Hifone\Models\Answer', 'Hifone\Models\Comment']);
     }
 }
