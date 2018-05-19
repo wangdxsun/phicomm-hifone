@@ -11,7 +11,7 @@ namespace Hifone\Handlers\Listeners\Question;
 
 use Hifone\Events\Question\QuestionWasViewedEvent;
 
-class UpdateFollowedQuestionNewAnswerCountHandler
+class UpdateFollowNewAnswerCountHandler
 {
     public function handle(QuestionWasViewedEvent $event)
     {
