@@ -167,7 +167,7 @@ class EventServiceProvider extends ServiceProvider
 
         \Hifone\Events\Question\QuestionWasViewedEvent::class => [
             \Hifone\Handlers\Listeners\Question\UpdateQuestionViewCountHandler::class,
-            \Hifone\Handlers\Listeners\Question\UpdateFollowedQuestionNewAnswerCountHandler::class,
+            \Hifone\Handlers\Listeners\Question\UpdateFollowNewAnswerCountHandler::class,
         ],
 
         \Hifone\Events\Answer\AnswerWasViewedEvent::class => [
