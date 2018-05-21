@@ -349,7 +349,7 @@ trait ElasticquentTrait
                 'multi_match' => [
                     'query' => $term,
                     'type' => 'cross_fields',
-                    'fields' => ['title^2', 'body']
+                    'fields' => ['username']
                 ]
             ],
             'highlight' => [

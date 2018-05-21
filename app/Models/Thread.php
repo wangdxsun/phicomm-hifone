@@ -259,18 +259,14 @@ class Thread extends BaseModel implements TaggableInterface
         } elseif ($this->status == Thread::TRASH || $this->status == Thread::DRAFT) {
             if (Auth::guest()) {
                 return false;
-            } elseif (Auth::id() == $this->user->id) {
-                return true;
             } else {
-                return false;
+                return Auth::id() == $this->user->id;
             }
         } elseif ($this->status == Thread::AUDIT || $this->status == Thread::DELETED) {
             if (Auth::guest()) {
                 return false;
-            } elseif (Auth::id() == $this->user->id || Auth::user()->can('view_thread')) {
-                return true;
             } else {
-                return false;
+                return Auth::id() == $this->user->id || Auth::user()->can('view_thread');
             }
         }
     }

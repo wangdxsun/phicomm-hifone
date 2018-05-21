@@ -186,6 +186,14 @@ if (!function_exists('isApp')) {
     }
 }
 
+if (!function_exists('isWeb')) {
+    function isWeb()
+    {
+        $ua = $_SERVER['HTTP_USER_AGENT'];
+        return strpos(strtolower($ua), 'iphone') === false && strpos(strtolower($ua), 'android') === false;
+    }
+}
+
 if (!function_exists('error')) {
     function error($message = "")
     {

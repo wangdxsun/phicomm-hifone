@@ -45,9 +45,7 @@ class AnswerController extends AppController
 
     public function show(Answer $answer, AnswerBll $answerBll)
     {
-        $answer = $answerBll->showAnswer($answer);
-
-        return $answer;
+        return $answerBll->showAnswer($answer);
     }
 
 }
