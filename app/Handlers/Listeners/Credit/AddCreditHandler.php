@@ -65,17 +65,23 @@ class AddCreditHandler
             $action = 'thread_removed';
             $user = $event->thread->user;
         } elseif ($event instanceof ReplyWasAuditedEvent) {
+            if ($event->reply->user_id == $event->reply->thread->user_id) {
+                return false;
+            }
             $action = 'reply_new';
             $user = $event->reply->user;
         } elseif ($event instanceof ReplyWasTrashedEvent) {
+            if ($event->reply->user_id == $event->reply->thread->user_id) {
+                return false;
+            }
             $action = 'reply_removed';
             $user = $event->reply->user;
         } elseif ($event instanceof RepliedWasAddedEvent) {
-            $action = 'replied';
-            $user = $event->threadUser;
             if (empty($event->replyUser) || $event->threadUser->id == $event->replyUser->id) {
                 return false;
             }
+            $action = 'replied';
+            $user = $event->threadUser;
         } elseif ($event instanceof ImageWasUploadedEvent) {
             $action = 'photo_upload';
             $user = Auth::user();
@@ -223,10 +229,16 @@ class AddCreditHandler
             $user = $event->user;
         } elseif ($event instanceof AnswerWasAuditedEvent) {
             //回答审核通过
+            if($event->answer->user_id == $event->answer->question->user_id) {
+                return false;
+            }
             $action = 'answer_audited';
             $user = $event->user;
         } elseif ($event instanceof AnswerWasDeletedEvent) {
             //审核通过的回答被删除
+            if($event->answer->user_id == $event->answer->question->user_id) {
+                return false;
+            }
             $action = 'answer_deleted';
             $user = $event->user;
         }
