@@ -1,6 +1,7 @@
 <?php
 namespace Hifone\Http\Controllers\Dashboard;
 
+use Carbon\Carbon;
 use Hifone\Commands\Answer\UpdateAnswerCommand;
 use Hifone\Events\Answer\AnswerWasAuditedEvent;
 use Hifone\Events\Answer\AnswerWasDeletedEvent;
@@ -137,7 +138,10 @@ class AnswerController extends Controller
             $answer->status = Answer::VISIBLE;
             $this->updateOpLog($answer, '审核通过回答');
             $answer->user->update(['answer_count' => $answer->user->answers()->visibleAndDeleted()->count()]);
-            $answer->question->update(['answer_count' => $answer->question->answers()->visibleAndDeleted()->count()]);
+            $answer->question->update([
+                'answer_count' => $answer->question->answers()->visibleAndDeleted()->count(),
+                'last_answer_time' => Carbon::now()->toDateTimeString()
+            ]);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();

@@ -21,9 +21,9 @@ trait SearchTrait
                 $query->where('body', 'LIKE', "%$value%");
             } elseif ($key == 'username') {
                 $query->where('username', 'LIKE', "%$value%");
-            } elseif ($key == 'orderType'){
+            } elseif ($key == 'orderType') {
                 $query->orderBy($value,'desc');
-            } elseif ($key == 'tags'){
+            } elseif ($key == 'tags') {
                 foreach ($value as $tagId) {
                     $query->whereHas('tags', function ($query) use ($tagId){
                         $query->where('tag_id', $tagId);
