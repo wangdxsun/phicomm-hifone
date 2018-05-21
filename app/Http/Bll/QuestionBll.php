@@ -57,6 +57,9 @@ class QuestionBll extends BaseBll
         //置顶、采纳、时间倒序
         $answers = $question->answers()->visible()->with('user')
             ->orderBy('order', 'desc')->orderBy('adopted', 'desc')->recent()->paginate();
+        foreach ($answers as $answer) {
+            $answer['liked'] = Auth::check() ? Auth::user()->hasLikeAnswer($answer) : false;
+        }
 
         return $answers;
     }
