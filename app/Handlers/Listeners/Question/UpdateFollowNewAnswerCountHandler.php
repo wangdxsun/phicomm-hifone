@@ -29,12 +29,12 @@ class UpdateFollowNewAnswerCountHandler
         if ($event instanceof QuestionWasViewedEvent) {
             $question = $event->question;
             if (Auth::check()) {
-                $question->followers()->ofUser(Auth::id())->update(['answer_count' => 0]);
+                $question->follows()->ofUser(Auth::id())->update(['answer_count' => 0]);
             }
         } elseif ($event instanceof AnswerWasAuditedEvent) {
-            $event->answer->question->followers()->increment('answer_count', 1);
+            $event->answer->question->follows()->increment('answer_count', 1);
         } elseif ($event instanceof AnswerWasDeletedEvent) {
-            $event->answer->question->followers()->where('answer_count', '>', 0)->decrement('answer_count', 1);
+            $event->answer->question->follows()->where('answer_count', '>', 0)->decrement('answer_count', 1);
         }
     }
 

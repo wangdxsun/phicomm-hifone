@@ -78,7 +78,7 @@ class Question extends BaseModel implements TaggableInterface
         return $this->morphMany(Like::class, 'likeable');
     }
 
-    public function followers()
+    public function follows()
     {
         return $this->morphMany(Follow::class, 'followable');
     }

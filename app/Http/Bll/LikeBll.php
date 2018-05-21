@@ -62,7 +62,7 @@ class LikeBll extends BaseBll
     public function likeComment($comment)
     {
         if ($comment->status <> Comment::VISIBLE) {
-            throw new HifoneException('该回答已被删除');
+            throw new HifoneException('该回复已被删除');
         }
         dispatch(new AddLikeCommand($comment));
 
