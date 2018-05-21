@@ -59,6 +59,11 @@ class Follow extends BaseModel
         return $query->where('followable_id', $id);
     }
 
+    public function scopeOfUser($query, $id)
+    {
+        return $query->where('user_id', $id);
+    }
+
     public function follower()
     {
         return $this->belongsTo(User::class, 'followable_id');

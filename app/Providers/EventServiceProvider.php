@@ -257,10 +257,13 @@ class EventServiceProvider extends ServiceProvider
         //回答（从回收站、待审核变成审核通过）增加经验值，发通知，计数
         \Hifone\Events\Answer\AnswerWasAuditedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+            \Hifone\Handlers\Listeners\Question\UpdateFollowNewAnswerCountHandler::class,
         ],
+
         //审核通过的回答被删除，扣除经验值
         \Hifone\Events\Answer\AnswerWasDeletedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+            \Hifone\Handlers\Listeners\Question\UpdateFollowNewAnswerCountHandler::class,
         ],
     ];
 

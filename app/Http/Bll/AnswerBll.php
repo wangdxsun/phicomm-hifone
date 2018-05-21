@@ -69,8 +69,7 @@ class AnswerBll extends BaseBll
         $answer->user->update(['answer_count' => $answer->user->answers()->visibleAndDeleted()->count()]);
         $answer->question->update(['answer_count' => $answer->question->answers()->visibleAndDeleted()->count()]);
 
-        //todo 回答审核通过，更新关注人新通知数
-        //回答审核通过，加经验值
+        //回答审核通过，加经验值，更新关注人新通知数
         if($answer->user->id != $answer->question->user->id) {
             event(new AnswerWasAuditedEvent($answer->user, $answer));
         }

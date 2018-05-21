@@ -11,6 +11,7 @@ namespace Hifone\Http\Bll;
 use Hifone\Commands\Question\AddQuestionCommand;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
+use Hifone\Events\Question\QuestionWasAuditedEvent;
 use Hifone\Events\Question\QuestionWasViewedEvent;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Jobs\RewardScore;
@@ -91,10 +92,12 @@ class QuestionBll extends BaseBll
 
     public function autoAudit(Question $question)
     {
-        // todo 触发各类事件
         $question->status = Question::VISIBLE;
-        $this->updateOpLog($question, '自动审核通过');
+        $this->updateOpLog($question, '问题自动审核通过');
         $question->user->update(['question_count' => $question->user->questions()->visibleAndDeleted()->count()]);
+
+        //触发积分事件
+        event(new QuestionWasAuditedEvent($question->user, $question));
     }
 
     public function needNoAudit(Question $question)

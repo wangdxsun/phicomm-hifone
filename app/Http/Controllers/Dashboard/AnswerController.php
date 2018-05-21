@@ -135,7 +135,6 @@ class AnswerController extends Controller
         DB::beginTransaction();
         try {
             $answer->status = Answer::VISIBLE;
-            $answer->save();
             $this->updateOpLog($answer, '审核通过回答');
             $answer->user->update(['answer_count' => $answer->user->answers()->visibleAndDeleted()->count()]);
             $answer->question->update(['answer_count' => $answer->question->answers()->visibleAndDeleted()->count()]);
@@ -144,7 +143,7 @@ class AnswerController extends Controller
             DB::rollBack();
             return Redirect::back()->withErrors($e->getMessage());
         }
-        //回答审核通过，加经验值
+        //回答审核通过，加经验值, 更新关注人新通知数
         if($answer->user->id != $answer->question->user->id) {
             event(new AnswerWasAuditedEvent($answer->user, $answer));
         }
@@ -160,6 +159,7 @@ class AnswerController extends Controller
         try {
             $this->delete($answer);
             $answer->user->update(['answer_count' => $answer->user->answers()->visibleAndDeleted()->count()]);
+            //回答删除，扣经验值, 更新关注人新通知数
             event(new AnswerWasDeletedEvent($answer->user, $answer));
             DB::commit();
         } catch (\Exception $e) {
