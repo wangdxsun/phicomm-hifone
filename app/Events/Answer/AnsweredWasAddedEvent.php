@@ -1,20 +1,19 @@
 <?php
-
 namespace Hifone\Events\Answer;
 
 use Hifone\Models\User;
-//回答审核通过
-final class AnswerWasAuditedEvent implements AnswerEventInterface
+//提问被回答
+final class AnsweredWasAddedEvent implements AnswerEventInterface
 {
-    public $answer;
+    public $question;
     public $user;
 
     /**
      * Create a new thread has reported event instance.
      */
-    public function __construct(User $user, $answer)
+    public function __construct(User $user, $question)
     {
-        $this->answer = $answer;
+        $this->question = $question;
         $this->user = $user;
     }
 }

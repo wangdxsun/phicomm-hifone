@@ -3,6 +3,7 @@ namespace Hifone\Http\Controllers\Dashboard;
 
 use Carbon\Carbon;
 use Hifone\Commands\Answer\UpdateAnswerCommand;
+use Hifone\Events\Answer\AnsweredWasAddedEvent;
 use Hifone\Events\Answer\AnswerWasAuditedEvent;
 use Hifone\Events\Answer\AnswerWasDeletedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
@@ -149,6 +150,7 @@ class AnswerController extends Controller
         }
         //回答审核通过，加经验值, 更新关注人新通知数
         event(new AnswerWasAuditedEvent($answer->user, $answer));
+        event(new AnsweredWasAddedEvent($answer->user, $answer->questin));
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 

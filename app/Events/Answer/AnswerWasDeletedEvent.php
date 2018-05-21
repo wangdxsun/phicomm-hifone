@@ -2,7 +2,7 @@
 namespace Hifone\Events\Answer;
 
 use Hifone\Models\User;
-
+//审核通过的回答被删除
 final class AnswerWasDeletedEvent implements AnswerEventInterface
 {
     public $answer;
