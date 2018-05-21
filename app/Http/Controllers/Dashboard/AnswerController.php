@@ -1,6 +1,7 @@
 <?php
 namespace Hifone\Http\Controllers\Dashboard;
 
+use Carbon\Carbon;
 use Hifone\Commands\Answer\UpdateAnswerCommand;
 use Hifone\Events\Answer\AnsweredWasAddedEvent;
 use Hifone\Events\Answer\AnswerWasAuditedEvent;
@@ -136,16 +137,18 @@ class AnswerController extends Controller
         DB::beginTransaction();
         try {
             $answer->status = Answer::VISIBLE;
-            $answer->save();
             $this->updateOpLog($answer, '审核通过回答');
             $answer->user->update(['answer_count' => $answer->user->answers()->visibleAndDeleted()->count()]);
-            $answer->question->update(['answer_count' => $answer->question->answers()->visibleAndDeleted()->count()]);
+            $answer->question->update([
+                'answer_count' => $answer->question->answers()->visibleAndDeleted()->count(),
+                'last_answer_time' => Carbon::now()->toDateTimeString()
+            ]);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
             return Redirect::back()->withErrors($e->getMessage());
         }
-        //回答审核通过，加经验值
+        //回答审核通过，加经验值, 更新关注人新通知数
         event(new AnswerWasAuditedEvent($answer->user, $answer));
         event(new AnsweredWasAddedEvent($answer->user, $answer->questin));
         return Redirect::back()->withSuccess('恭喜，操作成功！');
@@ -159,6 +162,7 @@ class AnswerController extends Controller
         try {
             $this->delete($answer);
             $answer->user->update(['answer_count' => $answer->user->answers()->visibleAndDeleted()->count()]);
+            //回答删除，扣经验值, 更新关注人新通知数
             event(new AnswerWasDeletedEvent($answer->user, $answer));
             DB::commit();
         } catch (\Exception $e) {

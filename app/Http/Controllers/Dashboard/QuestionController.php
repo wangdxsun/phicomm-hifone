@@ -177,7 +177,6 @@ class QuestionController extends Controller
         DB::beginTransaction();
         try {
             $question->status = Question::VISIBLE;
-            $question->save();
             $this->updateOpLog($question, '审核通过问题');
             $question->user->update(['question_count' => $question->user->questions()->visibleAndDeleted()->count()]);
             DB::commit();
