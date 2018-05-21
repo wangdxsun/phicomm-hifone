@@ -258,6 +258,15 @@ class EventServiceProvider extends ServiceProvider
         \Hifone\Events\Answer\AnswerWasAuditedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
+        //提问被回答
+        \Hifone\Events\Answer\AnsweredWasAddedEvent::class => [
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+        ],
+        //回答被回复
+        \Hifone\Events\Comment\CommentedWasAddedEvent::class => [
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+        ],
+
         //审核通过的回答被删除，扣除经验值
         \Hifone\Events\Answer\AnswerWasDeletedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,

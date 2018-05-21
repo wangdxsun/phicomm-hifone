@@ -13,8 +13,10 @@ namespace Hifone\Handlers\Listeners\Credit;
 
 use Auth;
 use Hifone\Commands\Credit\AddCreditCommand;
+use Hifone\Events\Answer\AnsweredWasAddedEvent;
 use Hifone\Events\Answer\AnswerWasAuditedEvent;
 use Hifone\Events\Answer\AnswerWasDeletedEvent;
+use Hifone\Events\Comment\CommentedWasAddedEvent;
 use Hifone\Events\EventInterface;
 use Hifone\Events\Favorite\FavoriteWasAddedEvent;
 use Hifone\Events\Favorite\FavoriteWasRemovedEvent;
@@ -234,6 +236,13 @@ class AddCreditHandler
             }
             $action = 'answer_audited';
             $user = $event->user;
+        } elseif ($event instanceof AnsweredWasAddedEvent) {
+            //提问被回答
+            if($event->question->user_id == $event->user->id) {
+                return false;
+            }
+            $action = 'question_answered';
+            $user = $event->question->user;
         } elseif ($event instanceof AnswerWasDeletedEvent) {
             //审核通过的回答被删除
             if($event->answer->user_id == $event->answer->question->user_id) {
@@ -241,6 +250,13 @@ class AddCreditHandler
             }
             $action = 'answer_deleted';
             $user = $event->user;
+        } elseif ($event instanceof CommentedWasAddedEvent) {
+            //回答被回复
+            if($event->answer->user_id == $event->user->id) {
+                return false;
+            }
+            $action = 'answer_commented';
+            $user = $event->answer->user;
         }
 
         $this->apply($object, $action, $user);
