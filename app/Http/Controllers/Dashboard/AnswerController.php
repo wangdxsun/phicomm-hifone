@@ -145,7 +145,7 @@ class AnswerController extends Controller
             return Redirect::back()->withErrors($e->getMessage());
         }
         //回答审核通过，加经验值
-        if($answer->user->id != $answer->question->user->id) {
+        if($answer->user_id != $answer->question->user_id) {
             event(new AnswerWasAuditedEvent($answer->user, $answer));
         }
 
@@ -160,7 +160,10 @@ class AnswerController extends Controller
         try {
             $this->delete($answer);
             $answer->user->update(['answer_count' => $answer->user->answers()->visibleAndDeleted()->count()]);
-            event(new AnswerWasDeletedEvent($answer->user, $answer));
+            if($answer->user_id != $answer->question->user_id) {
+                event(new AnswerWasDeletedEvent($answer->user, $answer));
+            }
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();

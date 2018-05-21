@@ -47,7 +47,6 @@ use Hifone\Events\Like\LikedWasRemovedEvent;
 use Hifone\Events\Image\AvatarWasUploadedEvent;
 use Hifone\Events\User\UserWasLoggedinWebEvent;
 use Hifone\Models\Answer;
-use Hifone\Models\Comment;
 use Hifone\Models\Question;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
