@@ -129,7 +129,9 @@ class ReplyBll extends BaseBll
         $thread = $reply->thread;
         $thread->last_reply_user_id = $reply->user_id;
         $thread->save();
-        event(new RepliedWasAddedEvent($reply->user, $thread->user, $reply));
+        if($reply->user_id != $reply->thread->user_id) {
+            event(new RepliedWasAddedEvent($reply->user, $thread->user, $reply));
+        }
 
         DB::beginTransaction();
         try {
