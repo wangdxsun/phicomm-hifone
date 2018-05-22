@@ -1,0 +1,14 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: qiuling.jiang
+ * Date: 2018/5/21
+ * Time: 14:51
+ */
+
+namespace Hifone\Exceptions\Consts;
+
+class ThreadEx
+{
+    const DELETED = 1000;
+}
