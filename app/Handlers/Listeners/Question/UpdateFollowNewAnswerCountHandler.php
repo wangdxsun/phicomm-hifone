@@ -19,7 +19,6 @@ class UpdateFollowNewAnswerCountHandler
 {
     public function handle(EventInterface $event)
     {
-        //TODO 关注该问题的用户，关注动态中该帖子的新回答数清零
         /**
          *  分三种情况讨论：
          *  1. QuestionWasViewedEvent 某条记录清零 当前查看用户关注该问题的计数；

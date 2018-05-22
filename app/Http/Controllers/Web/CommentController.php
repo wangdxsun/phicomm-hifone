@@ -8,7 +8,23 @@
 
 namespace Hifone\Http\Controllers\Web;
 
+use Hifone\Http\Bll\CommentBll;
+
 class CommentController extends WebController
 {
+    public function store(CommentBll $commentBll)
+    {
+        $commentBll->checkPermission();
+        $commentBll->checkComment(request('comment_id'));
+        $commentBll->checkAnswer(request('answer_id'));
 
+        $commentData = [
+            'body' => request('body'),
+            'answer_id' => request('answer_id'),
+            'comment_id' => request('comment_id'),
+        ];
+        $comment = $commentBll->createComment($commentData);
+
+        return $comment;
+    }
 }

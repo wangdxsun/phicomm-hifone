@@ -47,12 +47,17 @@ class Comment extends BaseModel
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->select(['id', 'username', 'avatar_url', 'role', 'score']);
     }
 
     public function answer()
     {
         return $this->belongsTo(Answer::class);
+    }
+
+    public function comment()
+    {
+        return $this->belongsTo(Comment::class);
     }
 
     public function likes()

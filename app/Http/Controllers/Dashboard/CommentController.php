@@ -1,6 +1,7 @@
 <?php
 namespace Hifone\Http\Controllers\Dashboard;
 
+use Carbon\Carbon;
 use Hifone\Commands\Comment\UpdateCommentCommand;
 use DB;
 use Hifone\Events\Comment\CommentedWasAddedEvent;
@@ -88,9 +89,12 @@ class CommentController extends Controller
         DB::beginTransaction();
         try {
             $comment->status = Comment::VISIBLE;
-            $comment->save();
             $this->updateOpLog($comment, '审核通过回复');
             $comment->user->update(['comment_count' => $comment->user->comments()->visibleAndDeleted()->count()]);
+            $comment->answer->update([
+                'comment_count' => $comment->answer->comments()->visibleAndDeleted()->count(),
+                'last_comment_time' => Carbon::now()->toDateTimeString()
+            ]);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();

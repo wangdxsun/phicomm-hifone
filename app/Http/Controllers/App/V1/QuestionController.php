@@ -37,11 +37,7 @@ class QuestionController extends AppController
 
     public function store(QuestionBll $questionBll)
     {
-        if (Auth::user()->hasRole('NoComment')) {
-            throw new HifoneException('对不起，你已被管理员禁止发言');
-        } elseif (Auth::user()->score < 0) {
-            throw new HifoneException('对不起，你所在的用户组无法发言');
-        }
+        $questionBll->checkPermission();
         $this->validate(request(), [
             'title' => 'required|min:5|max:40',
             'score'=> 'required|int'

@@ -105,6 +105,7 @@ class AppRoutes
 
                 $router->post('questions', 'QuestionController@store');
                 $router->post('answers', 'AnswerController@store');
+                $router->post('comments', 'CommentController@store');
             });
         });
     }

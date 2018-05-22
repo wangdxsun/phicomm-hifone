@@ -137,6 +137,7 @@ class WebRoutes
                 $router->post('questions/{question}/excellent', 'QuestionController@setExcellent')->where('question', '[0-9]+');
                 $router->post('answers', 'AnswerController@store');
                 $router->post('answers/{answer}/pin', 'AnswerController@pin')->where('answer', '[0-9]+');
+                $router->post('comments', 'CommentController@store');
 
             });
 

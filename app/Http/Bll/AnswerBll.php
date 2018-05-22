@@ -11,6 +11,7 @@ namespace Hifone\Http\Bll;
 use Carbon\Carbon;
 use Hifone\Commands\Answer\AddAnswerCommand;
 use Hifone\Events\Answer\AnswerWasAuditedEvent;
+use Hifone\Exceptions\Consts\QuestionEx;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Models\Answer;
 use Hifone\Models\Question;
@@ -74,9 +75,7 @@ class AnswerBll extends BaseBll
         ]);
 
         //回答审核通过，加经验值，更新关注人新通知数
-        if($answer->user->id != $answer->question->user->id) {
-            event(new AnswerWasAuditedEvent($answer->user, $answer));
-        }
+        event(new AnswerWasAuditedEvent($answer->user, $answer));
     }
 
     public function needNoAudit(Answer $answer)
@@ -88,20 +87,10 @@ class AnswerBll extends BaseBll
     {
         $question = Question::find($questionId);
         if (is_null($question)) {
-            throw new HifoneException('问答不存在');
+            throw new HifoneException('问答不存在', QuestionEx::NOT_EXISTED);
         } elseif ($question->status <> Question::VISIBLE) {
-            throw new HifoneException('该问答已被删除');
+            throw new HifoneException('该问答已被删除', QuestionEx::DELETED);
         }
     }
-
-    public function checkPermission()
-    {
-        if (Auth::user()->hasRole('NoComment')) {
-            throw new HifoneException('你已被禁言');
-        } elseif (Auth::user()->score < 0) {
-            throw new HifoneException('对不起，你所在的用户组无法发言');
-        }
-    }
-
 
 }
