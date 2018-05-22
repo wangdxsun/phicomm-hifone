@@ -28,8 +28,6 @@ class Answer extends BaseModel
     protected $hidden = [
         'body_original',
         'bad_word',
-        'user_id',
-        'question_id',
         'device',
         'ip',
         'last_op_user_id',
