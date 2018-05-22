@@ -29,7 +29,6 @@ class Question extends BaseModel implements TaggableInterface
     protected $guarded = ['id'];
 
     protected $hidden = [
-        'user_id',
         'body_original',
         'bad_word',
         'device',
