@@ -216,6 +216,8 @@ class DashboardRoutes
                 $router->post('adspace/order', 'ApiController@postUpdateAdspaceOrder');
                 $router->post('location/order', 'ApiController@postUpdateLocationOrder');
                 $router->post('carousel/order', 'ApiController@postUpdateCarouselOrder');
+                $router->post('tag/order', 'ApiController@postUpdateTagOrder');
+                $router->post('tagType/order', 'ApiController@postUpdateTagTypeOrder');
             });
         });
 

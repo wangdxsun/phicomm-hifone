@@ -19,6 +19,8 @@ use Hifone\Models\Location;
 use Hifone\Models\Node;
 use Hifone\Models\Section;
 use Hifone\Models\SubNode;
+use Hifone\Models\Tag;
+use Hifone\Models\TagType;
 use Illuminate\Support\Facades\Request;
 
 class ApiController extends Controller
@@ -105,4 +107,24 @@ class ApiController extends Controller
 
         return $carouselData;
     }
+
+    public function postUpdateTagOrder()
+    {
+        $tagData = Request::get('ids');
+
+        foreach ($tagData as $order => $tagId) {
+            Tag::find($tagId)->update(['order' => $order + 1]);
+        }
+    }
+
+    public function postUpdateTagTypeOrder()
+    {
+        $tagTypeData = Request::get('ids');
+
+        foreach ($tagTypeData as $order => $tagTypeId) {
+            TagType::find($tagTypeId)->update(['order' => $order + 1]);
+        }
+    }
+
+
 }

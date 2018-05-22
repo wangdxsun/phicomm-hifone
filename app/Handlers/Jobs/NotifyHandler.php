@@ -45,7 +45,7 @@ class NotifyHandler
         $notify->object->notifications()->create($data);
 
         //消息推送
-        if ($notify->type <> 'followed_user_new_thread') {
+        if ($notify->type <> 'followed_user_new_thread' && $notify->type <> 'followed_user_new_question') {
             $this->pushNotify($notify->author, $notify->user, $notify->type, $notify->object);
         }
     }
@@ -131,6 +131,18 @@ class NotifyHandler
                 return "【管理员】置顶你的评论";
             case 'thread_mark_excellent'://加精华
                 return "【管理员】加精了你的帖子";
+            case 'question_mention'://提问中@我
+                return "【" . $operator->username . "】提问中提到了你";
+            case 'answer_mention'://回答中@我
+                return "【" . $operator->username . "】回答中提到了你";
+            case 'question_new_answer'://回答提问
+                return "【" . $operator->username . "】回答了你";
+            case 'comment':
+                return "【" . $operator->username . "】回复了你";
+            case 'answer_like'://点赞回答
+                return "【" . $operator->username . "】赞了你的回答";
+            case 'comment_like'://点赞回复
+                return "【" . $operator->username . "】赞了你的回复";
             default :
                 throw new HifoneException("推送类型 $typeStr 不支持");
         }
@@ -138,6 +150,7 @@ class NotifyHandler
 
     protected function makeMessage($type, $object)
     {
+        $message='';
         if ($object instanceof Thread) {
             $message = $object->title;
         } elseif ($object instanceof Reply) {
@@ -153,6 +166,7 @@ class NotifyHandler
 
     protected function makeOutline($from, $object)
     {
+        $outline = '';
         if ($object instanceof Thread) {
             $outline = $object->title;
         } elseif ($object instanceof Reply) {
@@ -205,6 +219,20 @@ class NotifyHandler
                 return '1007';
             case 'thread_mark_excellent'://加精华 跳帖子详情
                 return '1008';
+            case 'question_mention'://提问中@我
+                return '1009';
+            case 'answer_mention'://回答中@我
+                return '1010';
+            case 'comment_mention'://回复中@我
+                return '1011';
+            case 'question_new_answer'://回答提问
+                return '1012';
+            case 'comment'://回复
+                return '1013';
+            case 'answer_like':
+                return '1014';
+            case 'comment_like':
+                return '1015';
             default :
                 throw new HifoneException("推送类型 $typeStr 不支持");
         }
