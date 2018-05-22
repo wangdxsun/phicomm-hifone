@@ -83,6 +83,9 @@ class AppRoutes
                 $router->post('like/comments/{comment}', 'LikeController@comment')->where('comment', '[0-9]+');
                 $router->post('report/thread/{thread}', 'ReportController@thread')->where('thread', '[0-9]+');
                 $router->post('report/reply/{reply}', 'ReportController@reply')->where('reply', '[0-9]+');
+                $router->post('report/question/{question}', 'ReportController@question')->where('question', '[0-9]+');
+                $router->post('report/answer/{answer}', 'ReportController@answer')->where('answer', '[0-9]+');
+                $router->post('report/comment/{comment}', 'ReportController@comment')->where('comment', '[0-9]+');
                 $router->post('favorite/thread/{thread}', 'FavoriteController@createOrDeleteFavorite')->where('thread', '[0-9]+');
                 $router->get('user/reply/feedbacks', 'UserController@replyFeedbacks');
                 $router->get('user/feedbacks', 'UserController@feedbacks');

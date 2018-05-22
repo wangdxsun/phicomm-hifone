@@ -113,6 +113,9 @@ class WebRoutes
                 $router->post('favorite/threads/{thread}', 'FavoriteController@threadFavorite')->where('thread', '[0-9]+');
                 $router->post('report/threads/{thread}', 'ReportController@thread')->where('thread', '[0-9]+');
                 $router->post('report/replies/{reply}', 'ReportController@reply')->where('reply', '[0-9]+');
+                $router->post('report/question/{question}', 'ReportController@question')->where('question', '[0-9]+');
+                $router->post('report/answer/{answer}', 'ReportController@answer')->where('answer', '[0-9]+');
+                $router->post('report/comment/{comment}', 'ReportController@comment')->where('comment', '[0-9]+');
                 $router->get('notification', 'NotificationController@index');
                 $router->get('user/watch', 'NotificationController@watch');
                 $router->get('user/credit', 'UserController@credit');

@@ -28,7 +28,7 @@ class Report extends BaseModel
     public $rules = [
         'user_id' => 'required|int',
         'reportable_id' => 'required|int',
-        'reportable_type' => 'required|in:Hifone\Models\Thread,Hifone\Models\Reply',
+        'reportable_type' => 'required|in:Hifone\Models\Thread,Hifone\Models\Reply,Hifone\Models\Question,Hifone\Models\Answer,Hifone\Models\Comment',
         'reason' => 'required|string',
     ];
 

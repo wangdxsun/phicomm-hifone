@@ -65,11 +65,6 @@ class Comment extends BaseModel
         return $this->morphMany(Like::class, 'likeable');
     }
 
-    public function comment()
-    {
-        return $this->belongsTo(Comment::class);
-    }
-
     //审核通过
     public function scopeVisible($query)
     {

@@ -9,7 +9,13 @@
 namespace Hifone\Http\Bll;
 
 use Auth;
+use Hifone\Exceptions\Consts\AnswerEx;
+use Hifone\Exceptions\Consts\CommentEx;
+use Hifone\Exceptions\Consts\QuestionEx;
 use Hifone\Exceptions\HifoneException;
+use Hifone\Models\Answer;
+use Hifone\Models\Comment;
+use Hifone\Models\Question;
 use Hifone\Models\Reply;
 use Hifone\Models\Report;
 use Hifone\Models\Thread;
@@ -49,6 +55,57 @@ class ReportBll
         $reportData['user_id'] = Auth::id();
 
         $reply->reports()->create($reportData);
+    }
+
+    public function reportQuestion(Question $question)
+    {
+        if ($question->status <> Question::VISIBLE) {
+            throw new HifoneException('该问答已被删除', QuestionEx::DELETED);
+        }
+        if (Auth::id() === $question->user->id) {
+            throw new HifoneException('自己不能举报自己哦');
+        }
+        if (Auth::user()->hasReportQuestion($question)) {
+            throw new HifoneException('已举报');
+        }
+        $reportData = Input::get('report');
+        $reportData['user_id'] = Auth::id();
+
+        $question->reports()->create($reportData);
+    }
+
+    public function reportAnswer(Answer $answer)
+    {
+        if ($answer->status <> Answer::VISIBLE) {
+            throw new HifoneException('该回答已被删除', AnswerEx::DELETED);
+        }
+        if (Auth::id() === $answer->user->id) {
+            throw new HifoneException('自己不能举报自己哦');
+        }
+        if (Auth::user()->hasReportAnswer($answer)) {
+            throw new HifoneException('已举报');
+        }
+        $reportData = Input::get('report');
+        $reportData['user_id'] = Auth::id();
+
+        $answer->reports()->create($reportData);
+    }
+
+    public function reportComment(Comment $comment)
+    {
+        if ($comment->status <> Comment::VISIBLE) {
+            throw new HifoneException('该回复已被删除', CommentEx::DELETED);
+        }
+        if (Auth::id() === $comment->user->id) {
+            throw new HifoneException('自己不能举报自己哦');
+        }
+        if (Auth::user()->hasReportAnswer($comment)) {
+            throw new HifoneException('已举报');
+        }
+        $reportData = Input::get('report');
+        $reportData['user_id'] = Auth::id();
+
+        $comment->reports()->create($reportData);
     }
 
     public function getReason()
