@@ -22,6 +22,8 @@ use Hifone\Models\Answer;
 use Hifone\Models\Comment;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
+use Hifone\Models\User;
+
 class SendSingleNotificationHandler
 {
     /**
@@ -50,7 +52,7 @@ class SendSingleNotificationHandler
         if ($target instanceof Thread) {
             $type = 'thread_follow';
             app('notifier')->notify($type, Auth::user(), $target->user, $target);
-        } elseif ($target instanceof Reply) {
+        } elseif ($target instanceof User) {
             $type = 'user_follow';
             app('notifier')->notify($type, Auth::user(), $target, $target);
         }
