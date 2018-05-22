@@ -85,6 +85,6 @@ class ParseEmotion
         //将[表情]转成表情
         $excerpt = $this->parse($excerpt);
 
-        return $excerpt;
+        return str_limit($excerpt, 200);
     }
 }

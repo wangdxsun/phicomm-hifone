@@ -29,7 +29,6 @@ class Question extends BaseModel implements TaggableInterface
     protected $guarded = ['id'];
 
     protected $hidden = [
-        'user_id',
         'body_original',
         'bad_word',
         'device',
@@ -78,7 +77,7 @@ class Question extends BaseModel implements TaggableInterface
         return $this->morphMany(Like::class, 'likeable');
     }
 
-    public function followers()
+    public function follows()
     {
         return $this->morphMany(Follow::class, 'followable');
     }

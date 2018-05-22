@@ -46,7 +46,7 @@ class QuestionBll extends BaseBll
 
         $question = $question->load(['user', 'tags']);
         $question['followed'] = Auth::check() ? Auth::user()->hasFollowQuestion($question) : false;
-        $question->user['followed'] = Auth::check() ? User::hasFollowUser($question->user) : false;
+        $question->user['followed'] = User::hasFollowUser($question->user);
         $question['reported'] = Auth::check() ? Auth::user()->hasReportQuestion($question) : false;
 
         return $question;
@@ -57,6 +57,9 @@ class QuestionBll extends BaseBll
         //置顶、采纳、时间倒序
         $answers = $question->answers()->visible()->with('user')
             ->orderBy('order', 'desc')->orderBy('adopted', 'desc')->recent()->paginate();
+        foreach ($answers as $answer) {
+            $answer['liked'] = Auth::check() ? Auth::user()->hasLikeAnswer($answer) : false;
+        }
 
         return $answers;
     }

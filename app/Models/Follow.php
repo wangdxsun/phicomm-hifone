@@ -78,4 +78,9 @@ class Follow extends BaseModel
     {
         return $this->belongsTo(Node::class, 'followable_id');
     }
+
+    public function question()
+    {
+        return $this->belongsTo(Question::class, 'followable_id');
+    }
 }
