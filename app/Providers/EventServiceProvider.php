@@ -111,7 +111,7 @@ class EventServiceProvider extends ServiceProvider
         \Hifone\Events\Like\LikeWasRemovedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
-        //帖子、回复被点赞，增加经验值和智慧果，发通知
+        //被点赞，增加经验值和智慧果，发通知
         \Hifone\Events\Like\LikedWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
@@ -247,6 +247,7 @@ class EventServiceProvider extends ServiceProvider
         //问题（从回收站、待审核变成审核通过）增加经验值，发通知，计数
         \Hifone\Events\Question\QuestionWasAuditedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
+            \Hifone\Handlers\Listeners\Notification\SendQuestionNotificationHandler::class,
         ],
 
         //审核通过的提问被删除，扣除经验值
@@ -258,6 +259,12 @@ class EventServiceProvider extends ServiceProvider
         \Hifone\Events\Answer\AnswerWasAuditedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
             \Hifone\Handlers\Listeners\Question\UpdateFollowNewAnswerCountHandler::class,
+            \Hifone\Handlers\Listeners\Notification\SendAnswerNotificationHandler::class,
+        ],
+
+        //comment审核通过，发通知
+        \Hifone\Events\Comment\CommentWasAuditedEvent::class => [
+            \Hifone\Handlers\Listeners\Notification\SendCommentNotificationHandler::class,
         ],
 
         //提问被回答

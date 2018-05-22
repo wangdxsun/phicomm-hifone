@@ -116,6 +116,10 @@ class Answer extends BaseModel
     {
         return $this->order == 1 ? 'fa fa-thumb-tack text-danger' : 'fa fa-thumb-tack';
     }
+    public function notifications()
+    {
+        return $this->morphMany(Notification::class, 'object');
+    }
 
     public function scopeSearch($query, $searches = [])
     {

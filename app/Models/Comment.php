@@ -65,6 +65,11 @@ class Comment extends BaseModel
         return $this->morphMany(Like::class, 'likeable');
     }
 
+    public function comment()
+    {
+        return $this->belongsTo(Comment::class);
+    }
+
     //审核通过
     public function scopeVisible($query)
     {
@@ -92,6 +97,11 @@ class Comment extends BaseModel
     public function lastOpUser()
     {
         return $this->belongsTo(User::class, 'last_op_user_id');
+    }
+
+    public function notifications()
+    {
+        return $this->morphMany(Notification::class, 'object');
     }
 
     //置顶图标

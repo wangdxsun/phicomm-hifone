@@ -18,8 +18,12 @@ use Hifone\Events\Follow\FollowedWasAddedEvent;
 use Hifone\Events\Like\LikedWasAddedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Favorite\FavoritedWasAddedEvent;
+use Hifone\Models\Answer;
+use Hifone\Models\Comment;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
+use Hifone\Models\User;
+
 class SendSingleNotificationHandler
 {
     /**
@@ -27,11 +31,9 @@ class SendSingleNotificationHandler
      */
     public function handle(EventInterface $event)
     {
-        // follow
         if ($event instanceof FollowedWasAddedEvent) {
             $this->follow($event->target);
         } elseif ($event instanceof LikedWasAddedEvent) {
-            //like oneself's thread or reply ,there is no notification.
             if (Auth::user()->id != $event->user->id){
                 $this->like($event->object);
             }
@@ -46,11 +48,12 @@ class SendSingleNotificationHandler
 
     protected function follow($target)
     {
-        $type = ($target instanceof Thread) ? 'thread_follow' : 'user_follow';
-
-        if ($type == 'thread_follow') {
+        $type = null;
+        if ($target instanceof Thread) {
+            $type = 'thread_follow';
             app('notifier')->notify($type, Auth::user(), $target->user, $target);
-        } else {
+        } elseif ($target instanceof User) {
+            $type = 'user_follow';
             app('notifier')->notify($type, Auth::user(), $target, $target);
         }
     }
@@ -62,6 +65,10 @@ class SendSingleNotificationHandler
             $type = 'thread_like';
         } elseif ($target instanceof Reply) {
             $type = 'reply_like';
+        } elseif ($target instanceof Answer) {
+            $type = 'answer_like';
+        } elseif ($target instanceof Comment) {
+            $type = 'comment_like';
         }
         app('notifier')->notify($type, Auth::user(), $target->user, $target);
     }

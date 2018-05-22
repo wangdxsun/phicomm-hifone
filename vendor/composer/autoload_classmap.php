@@ -8,6 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'AddPhicommIdToUsersTable' => $baseDir . '/database/old_migrations/2017_01_19_142026_add_phicomm_id_to_users_table.php',
     'AddSoftdeletesToThreadsTable' => $baseDir . '/database/old_migrations/2014_12_04_124531_add_softdeletes_to_threads_table.php',
+    'AddTagTableOrder' => $baseDir . '/database/migrations/2018_05_21_140300_add_tag_table_order.php',
     'AlterLastReadInParticipantsTable' => $baseDir . '/database/old_migrations/2014_11_20_131739_alter_last_read_in_participants_table.php',
     'AlterTableTagsAddCountColumn' => $baseDir . '/database/old_migrations/2016_06_29_120100_alter_table_tags_add_count_column.php',
     'AlterTableUsersAddLocaleColumn' => $baseDir . '/database/old_migrations/2016_06_29_185009_alter_table_users_add_locale_column.php',
@@ -617,7 +618,6 @@ return array(
     'SebastianBergmann\\Version' => $vendorDir . '/sebastian/version/src/Version.php',
     'TestCase' => $vendorDir . '/barryvdh/laravel-cors/tests/TestCase.php',
     'Text_Template' => $vendorDir . '/phpunit/php-text-template/src/Template.php',
-    'UpdateCreditRuleTable' => $baseDir . '/database/migrations/2018_05_17_151138_update_credit_rule_table.php',
     'UpdateCreditTable' => $baseDir . '/database/migrations/2018_05_16_170449_update_credit_table.php',
     'UpdateQaModulesTable' => $baseDir . '/database/migrations/2018_04_28_144428_update_qa_modules_table.php',
     'UpdateTagTable' => $baseDir . '/database/migrations/2018_05_03_142032_update_tag_table.php',

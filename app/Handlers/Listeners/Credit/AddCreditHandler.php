@@ -52,6 +52,7 @@ use Hifone\Models\Answer;
 use Hifone\Models\Question;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
+use Hifone\Models\User;
 
 class AddCreditHandler
 {
@@ -149,32 +150,42 @@ class AddCreditHandler
         } elseif ($event instanceof FollowWasAddedEvent) {
             if ($event->target instanceof Thread) {
                 $action = 'follow_thread';
-            } else {
+            } elseif ($event->target instanceof User) {
                 $action = 'follow_user';
+            } elseif ($event->target instanceof Question) {
+                $action = 'follow_question';
             }
             $user = Auth::user();
         } elseif ($event instanceof FollowWasRemovedEvent) {
             if ($event->target instanceof Thread) {
                 $action = 'follow_thread_removed';
-            } else {
+            } elseif ($event->target instanceof User) {
                 $action = 'follow_user_removed';
+            } elseif ($event->target instanceof Question) {
+                $action = 'follow_question_removed';
             }
             $user = Auth::user();
         } elseif ($event instanceof FollowedWasAddedEvent) {
             if ($event->target instanceof Thread) {
                 $action = 'followed_thread';
                 $user = $event->target->user;
-            } else {
+            } elseif ($event->target instanceof User) {
                 $action = 'followed_user';
                 $user = $event->target;
+            } elseif ($event->target instanceof Question) {
+                $action = 'question_followed';
+                $user = $event->target->user;
             }
         } elseif ($event instanceof FollowedWasRemovedEvent) {
             if ($event->target instanceof Thread) {
                 $action = 'followed_thread_removed';
                 $user = $event->target->user;
-            } else {
+            } elseif ($event->target instanceof User) {
                 $action = 'followed_user_removed';
                 $user = $event->target;
+            }  elseif ($event->target instanceof Question) {
+                $action = 'question_followed_removed';
+                $user = $event->target->user;
             }
         } elseif ($event instanceof ExcellentWasAddedEvent) {
             if (Auth::id() == $event->object->user_id) {

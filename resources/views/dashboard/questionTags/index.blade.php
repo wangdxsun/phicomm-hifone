@@ -15,10 +15,11 @@
             @endif
         </div>
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-12" id="item-list" data-item-name="node">
                 <table class="table table-bordered table-striped table-condensed">
                     <tbody>
                     <tr class="head">
+                        <td style="width: 120px;">排序</td>
                         <td class="first">子类编号</td>
                         <td>子类名</td>
                         <td>所属分类</td>
@@ -26,6 +27,9 @@
                     </tr>
                     @foreach($tags as $tag)
                         <tr>
+                            <td>
+                                <span class="drag-handle"><i class="fa fa-navicon"></i></span>
+                            </td>
                             <td>{{ $tag->id }}</td>
                             <td>{{ $tag->name }}</td>
                             <td>{{ $tag->tagType ? $tag->tagType->display_name : '自动标签'}}</td>
