@@ -46,7 +46,7 @@ class QuestionBll extends BaseBll
 
         $question = $question->load(['user', 'tags']);
         $question['followed'] = Auth::check() ? Auth::user()->hasFollowQuestion($question) : false;
-        $question->user['followed'] = Auth::check() ? User::hasFollowUser($question->user) : false;
+        $question->user['followed'] = User::hasFollowUser($question->user);
         $question['reported'] = Auth::check() ? Auth::user()->hasReportQuestion($question) : false;
 
         return $question;
