@@ -60,6 +60,11 @@ class Comment extends BaseModel
         return $this->belongsTo(Comment::class);
     }
 
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
     public function likes()
     {
         return $this->morphMany(Like::class, 'likeable');
