@@ -54,5 +54,10 @@ class Tag extends Model
         return $query->where('channel', $channel);
     }
 
+    public function scopeOfNotAuto($query)
+    {
+        return $query->where('channel', '<>',0);
+    }
+
 
 }

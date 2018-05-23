@@ -51,29 +51,7 @@ class BannerController extends AppController
         if ($carousel->start_version == '全部版本') {
             return true;
         }
-        $versionArr = explode('.', $version);
-        $versionArrStart = explode('.', $carousel->start_version);
-        $versionArrEnd = explode('.', $carousel->end_version);
-        return $this->compare($versionArrStart, $versionArr) &&
-            $this->compare($versionArr,$versionArrEnd);
-    }
-
-    /**
-     * 比较版本号
-     * 如果$versionA <= $versionB return true
-     * 如果$versionA > $versionB return false
-     */
-    private function compare($versionA, $versionB) {
-        for ($i = 0; $i < 3; $i++) {
-            if (intval($versionA[$i]) < intval($versionB[$i])) {
-                return true;
-            } elseif (intval($versionA[$i]) == intval($versionB[$i])) {
-                continue;
-            } else {
-                return false;
-            }
-        }
-        return true;
+        return version_compare($carousel->start_version, $version) && version_compare($version, $carousel->end_version);
     }
 
 }
