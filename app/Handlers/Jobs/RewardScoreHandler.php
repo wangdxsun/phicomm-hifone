@@ -17,7 +17,7 @@ class RewardScoreHandler
             'serialNumber'    => $this->orderNumber($rewardScore),
         ];
 
-        app(Score::class)->post('score/customize', $data);
+        app(Score::class)->customize($data);
     }
 
     //生成唯一流水号
