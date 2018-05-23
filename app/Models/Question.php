@@ -87,6 +87,11 @@ class Question extends BaseModel implements TaggableInterface
         return $this->morphMany(Notification::class, 'object');
     }
 
+    public function followers()
+    {
+        return $this->morphMany(Follow::class, 'followable');
+    }
+
     //问题详情是否可见
     public function isVisible()
     {
