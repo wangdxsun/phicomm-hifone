@@ -11,6 +11,7 @@ namespace Hifone\Http\Controllers\Web;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Http\Bll\AnswerBll;
+use Hifone\Http\Bll\CommentBll;
 use Hifone\Models\Answer;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Auth;
@@ -39,6 +40,19 @@ class AnswerController extends WebController
         $answer = $answerBll->createAnswer($answerData);
 
         return $answer;
+    }
+
+    public function show(Answer $answer, AnswerBll $answerBll)
+    {
+        return $answerBll->showAnswer($answer);
+    }
+
+    public function comments(Answer $answer, AnswerBll $answerBll, CommentBll $commentBll)
+    {
+        $answerBll->checkQuestion($answer->question_id);
+        $commentBll->checkAnswer($answer->id);
+
+        return $answerBll->sortComments($answer);
     }
 
     public function search($keyword, AnswerBll $answerBll)

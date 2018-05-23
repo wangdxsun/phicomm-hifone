@@ -54,11 +54,15 @@ class QuestionBll extends BaseBll
 
     public function sortAnswers(Question $question)
     {
+        if (!$question->isVisible()) {
+            throw new HifoneException('该问答已被删除', 410);
+        }
         //置顶、采纳、时间倒序
-        $answers = $question->answers()->visible()->with('user')
+        $answers = $question->answers()->visibleAndDeleted()->with('user')
             ->orderBy('order', 'desc')->orderBy('adopted', 'desc')->recent()->paginate();
         foreach ($answers as $answer) {
             $answer['liked'] = Auth::check() ? Auth::user()->hasLikeAnswer($answer) : false;
+            $answer['reported'] = Auth::check() ? Auth::user()->hasReportAnswer($answer) : false;
         }
 
         return $answers;

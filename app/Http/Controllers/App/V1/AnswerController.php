@@ -49,7 +49,7 @@ class AnswerController extends AppController
         $answerBll->checkQuestion($answer->question_id);
         $commentBll->checkAnswer($answer->id);
 
-        return $commentBll->sortComments($answer);
+        return $answerBll->sortComments($answer);
     }
 
 }

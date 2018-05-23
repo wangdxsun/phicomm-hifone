@@ -39,6 +39,19 @@ class AnswerBll extends BaseBll
         return $answer;
     }
 
+    public function sortComments(Answer $answer)
+    {
+        $this->checkQuestion($answer->question_id);
+        $comments = $answer->comments()->visibleAndDeleted()
+            ->with(['user', 'comment.user'])->orderBy('order', 'desc')->recent()->paginate();
+        foreach ($comments as $comment) {
+            $comment['liked'] = Auth::check() ? Auth::user()->hasLikeComment($comment) : false;
+            $comment['reported'] = Auth::check() ? Auth::user()->hasReportComment($comment) : false;
+        }
+
+        return $comments;
+    }
+
     public function createAnswer($answerData)
     {
         DB::beginTransaction();

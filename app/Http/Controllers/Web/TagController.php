@@ -17,7 +17,7 @@ class TagController extends WebController
     public function tags()
     {
         $tagTypes = TagType::ofType(TagType::QUESTION)->get();
-        $tags = Tag::whereIn('tag_type_id', array_pluck($tagTypes, 'id'))->get();
+        $tags = Tag::whereIn('tag_type_id', array_pluck($tagTypes, 'id'))->orderBy('order')->limit(5)->get();
 
         return $tags;
     }

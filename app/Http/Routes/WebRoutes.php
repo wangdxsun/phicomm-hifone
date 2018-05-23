@@ -62,6 +62,8 @@ class WebRoutes
             $router->get('questions/tagTypes', 'TagController@tagTypes');
             $router->get('questions/search/{keyword}/{a?}/{b?}/{c?}', 'QuestionController@search');
             $router->get('answers/search/{keyword}/{a?}/{b?}/{c?}', 'AnswerController@search');
+            $router->get('answers/{answer}', 'AnswerController@show')->where('answer', '[0-9]+');
+            $router->get('answers/{answer}/comments', 'AnswerController@comments')->where('answer', '[0-9]+');
 
 
 
