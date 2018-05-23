@@ -21,7 +21,7 @@ class AddScoreHandler
                 ]
             ]
         ];
-        app(Score::class)->post('score', $data);
+        app(Score::class)->addScore($data);
     }
 
     //生成唯一流水号

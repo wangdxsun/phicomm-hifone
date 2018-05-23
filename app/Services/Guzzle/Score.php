@@ -48,18 +48,38 @@ class Score
         }
     }
 
-    public function post($url, $data)
+    //通用加积分
+    public function addScore($data)
+    {
+        if (empty($data['userId'])) {
+            return;
+        }
+        try {
+            $response = $this->client->post('score', [
+                'headers' => $this->headers,
+                'json' => $data
+            ]);
+            $content = json_decode($response->getBody()->getContents(), true);
+            return $content;
+        } catch (ClientException $e) {
+            Log::error('积分平台调用失败', [Psr7\str($e->getResponse())]);
+            return;
+        }
+    }
+
+    //自定义积分接口
+    public function customize($data)
     {
         if (empty($data['userId'])) {
             return ['score' => 0];
         }
         try {
-            $response = $this->client->post($url, [
+            $response = $this->client->post('score/customize', [
                 'headers' => $this->headers,
                 'json' => $data
             ]);
             $content = json_decode($response->getBody()->getContents(), true);
-            if ($content['data']['errorCode'] == 10003) {
+            if (array_get($content['data'], 'errorCode') == 10003) {
                 throw new HifoneException('智慧果不足');
             }
             return $content;
