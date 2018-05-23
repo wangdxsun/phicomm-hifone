@@ -34,6 +34,17 @@ class QuestionController extends WebController
         return $questions;
     }
 
+    public function search($keyword, QuestionBll $questionBll)
+    {
+        if (empty($keyword)) {
+            $questions = new LengthAwarePaginator([], 0, 15);
+        } else {
+            $questions = $questionBll->search($keyword);
+        }
+
+        return $questions;
+    }
+
     public function store(QuestionBll $questionBll)
     {
         $questionBll->checkPermission();
@@ -82,17 +93,6 @@ class QuestionController extends WebController
         $rewards = explode(',', env('REWARDS') ? : '5,10,15,20');
 
         return ['rewards' => $rewards];
-    }
-
-    public function search($keyword, QuestionBll $questionBll)
-    {
-        if (empty($keyword)) {
-            $questions = new LengthAwarePaginator([], 0, 15);
-        } else {
-            $questions = $questionBll->search($keyword);
-        }
-
-        return $questions;
     }
 
     public function pin(QuestionBll $questionBll, Question $question)

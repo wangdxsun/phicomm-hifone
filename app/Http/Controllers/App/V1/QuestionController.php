@@ -16,6 +16,7 @@ use Hifone\Http\Bll\QuestionBll;
 use Hifone\Http\Controllers\App\AppController;
 use Hifone\Models\Question;
 use Auth;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class QuestionController extends AppController
 {
@@ -31,6 +32,17 @@ class QuestionController extends AppController
     public function recent()
     {
         $questions = Question::with(['user', 'tags'])->recent()->limit(5)->get();
+
+        return $questions;
+    }
+
+    public function search($keyword, QuestionBll $questionBll)
+    {
+        if (empty($keyword)) {
+            $questions = new LengthAwarePaginator([], 0, 15);
+        } else {
+            $questions = $questionBll->search($keyword);
+        }
 
         return $questions;
     }
