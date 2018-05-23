@@ -22,7 +22,6 @@ use Hifone\Models\Section;
 use Hifone\Models\User;
 use Hifone\Services\Filter\WordsFilter;
 use Auth;
-use Hifone\Services\Guzzle\Score;
 
 class UserController extends AppController
 {
@@ -48,7 +47,6 @@ class UserController extends AppController
             }
         }
         $user['isAdmin'] = ($user->role =='管理员' || $user->role =='创始人');
-        $user['smart_score'] = app(Score::class)->getScore($user->phicomm_id);
 
         return $user;
     }
