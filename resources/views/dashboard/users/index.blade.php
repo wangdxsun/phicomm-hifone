@@ -137,6 +137,7 @@
                                                     </el-option>
                                                 </el-option-group>
                                             </el-select>
+                                            <input type="hidden" class="form-control" :value="editUserTags" name="user[tags]">
                                         </div>
                                         <div class="row">
                                             <div class="col-xs-12">
