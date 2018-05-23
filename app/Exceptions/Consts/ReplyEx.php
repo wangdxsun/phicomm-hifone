@@ -10,5 +10,6 @@ namespace Hifone\Exceptions\Consts;
 
 class ReplyEx
 {
-    const DELETED = 2000;
+    const DELETED = 2000;//评论已删除
+    const NOT_EXISTED = 2001;//评论不存在
 }

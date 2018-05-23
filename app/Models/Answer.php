@@ -66,6 +66,11 @@ class Answer extends BaseModel
         return $this->belongsTo(User::class)->select(['id', 'username', 'avatar_url', 'role', 'score']);
     }
 
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
     public function likes()
     {
         return $this->morphMany(Like::class, 'likeable');

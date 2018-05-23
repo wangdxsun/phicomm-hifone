@@ -150,7 +150,7 @@ class AnswerController extends Controller
         }
         //回答审核通过，加经验值, 更新关注人新通知数
         event(new AnswerWasAuditedEvent($answer->user, $answer));
-        event(new AnsweredWasAddedEvent($answer->user, $answer->questin));
+        event(new AnsweredWasAddedEvent($answer->user, $answer->question));
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 

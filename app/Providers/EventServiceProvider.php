@@ -279,7 +279,6 @@ class EventServiceProvider extends ServiceProvider
         //审核通过的回答被删除，扣除经验值
         \Hifone\Events\Answer\AnswerWasDeletedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
-            \Hifone\Handlers\Listeners\Question\UpdateFollowNewAnswerCountHandler::class,
         ],
     ];
 

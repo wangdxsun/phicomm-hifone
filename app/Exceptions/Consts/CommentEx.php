@@ -10,5 +10,7 @@ namespace Hifone\Exceptions\Consts;
 
 class CommentEx
 {
-    const DELETED = 5000;
+    const DELETED = 5000;//回复已删除
+    const NOT_EXISTED = 5001;//回复不存在
+
 }

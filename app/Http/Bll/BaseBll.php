@@ -10,6 +10,9 @@ namespace Hifone\Http\Bll;
 
 use Carbon\Carbon;
 use Hifone\Events\User\UserWasActiveEvent;
+use Hifone\Exceptions\Consts\CommentEx;
+use Hifone\Exceptions\Consts\CommonEx;
+use Hifone\Exceptions\HifoneException;
 use Hifone\Models\BaseModel;
 use Auth;
 use Hifone\Models\Thread;
@@ -41,7 +44,7 @@ class BaseBll
 
     public function hasVideo($body)
     {
-        return mb_strpos($body, 'iframe') <> false;
+        return mb_strpos($body, '<iframe') <> false;
     }
 
     public function updateOpLog(BaseModel $model, $operation, $reason = null)
@@ -55,5 +58,12 @@ class BaseBll
         $logData['operation'] = $operation;
         $logData['reason'] = $reason;
         $model->logs()->create($logData);
+    }
+
+    public function checkPermission()
+    {
+        if (Auth::user()->hasRole('NoComment') || Auth::user()->score < 0) {
+            throw new HifoneException('你已被禁言', CommonEx::NO_COMMENT);
+        }
     }
 }

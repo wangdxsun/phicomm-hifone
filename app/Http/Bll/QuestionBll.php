@@ -41,7 +41,7 @@ class QuestionBll extends BaseBll
         if (!$question->isVisible()) {
             throw new HifoneException('该问答已被删除', 410);
         }
-        //todo 登录态 清除关注该问题的新增回答数
+        //清除关注该问题的新增回答数
         event(new QuestionWasViewedEvent(clone $question));
 
         $question = $question->load(['user', 'tags']);

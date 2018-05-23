@@ -192,7 +192,9 @@ class ReplyBll extends BaseBll
     {
         if (!empty($replyId)) {
             $reply = Reply::find($replyId);
-            if ($reply == null || $reply->status <> Reply::VISIBLE) {
+            if (is_null($reply)) {
+                throw new HifoneException('评论不存在');
+            } elseif ($reply->status <> Reply::VISIBLE) {
                 throw new HifoneException('该评论已被删除');
             }
         }
@@ -208,7 +210,7 @@ class ReplyBll extends BaseBll
         }
     }
 
-    private function checkPermission()
+    public function checkPermission()
     {
         if (Auth::user()->hasRole('NoComment')) {
             throw new HifoneException('对不起，你已被管理员禁止发言');
