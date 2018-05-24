@@ -71,7 +71,7 @@ class FollowBll extends BaseBll
 
     public function followQuestions(User $user)
     {
-        return $user->followQuestions()->with('user')->lastAnswer()->paginate(15);
+        return $user->followQuestions()->with('user', 'tags')->lastAnswer()->paginate(15);
     }
 
 }
