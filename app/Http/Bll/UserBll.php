@@ -14,6 +14,7 @@ use GuzzleHttp\Client;
 use Hifone\Events\User\UserWasActiveEvent;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Models\Question;
+use Hifone\Models\Tag;
 use Hifone\Models\User;
 use Hifone\Services\Guzzle\Score;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -136,6 +137,29 @@ class UserBll extends BaseBll
     public function getFollowNewAnswerCount(User $user)
     {
         return $user->follows()->ofType(Question::class)->sum('answer_count');
+    }
+
+    //获取专家用户列表
+    public function getExpertUsers(User $user)
+    {
+        $tag = Tag::findTagByName('专家');
+        $search['tags'] = [array_get($tag, 'id')];
+        $users = User::search($search)->paginate(15);
+        foreach ($users as $user) {
+            $user['invited'] = 0;
+        }
+
+        return $users;
+    }
+
+    //获取关注用户列表(关注时间倒序)
+    public function getFollowUsers(User $user)
+    {
+        $users = $user->followUsers()->paginate(15);
+        foreach ($users as $user) {
+            $user['invited'] = 0;
+        }
+        return $users;
     }
 
 }

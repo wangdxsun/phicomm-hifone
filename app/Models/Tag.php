@@ -59,5 +59,9 @@ class Tag extends Model
         return $query->where('channel', '<>',0);
     }
 
+    public static function findTagByName($name)
+    {
+        return static::where('name', 'like', $name)->first();
+    }
 
 }

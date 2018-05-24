@@ -28,6 +28,8 @@ class AppRoutes
             $router->get('users/{user}/questions', 'UserController@questions')->where('user', '[0-9]+');
             $router->get('users/{user}/answers', 'UserController@answers')->where('user', '[0-9]+');
             $router->get('users/{user}/follow/questions', 'UserController@followQuestions')->where('user', '[0-9]+');
+            $router->get('users/{user}/follow/users', 'UserController@followUsers')->where('user', '[0-9]+');
+            $router->get('users/{user}/expert/users', 'UserController@expertUsers')->where('user', '[0-9]+');
             $router->get('ranks', 'RankController@ranks');
 
             //内容相关

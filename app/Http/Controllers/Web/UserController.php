@@ -124,6 +124,18 @@ class UserController extends WebController
         return $replies;
     }
 
+    //邀请专家用户列表
+    public function expertUsers(User $user, UserBll $userBll)
+    {
+        return $userBll->getExpertUsers($user);
+    }
+
+    //邀请关注用户列表
+    public function followUsers(User $user, UserBll $userBll)
+    {
+        return $userBll->getFollowUsers($user);
+    }
+
     public function credit(UserBll $userBll, CommonBll $commonBll)
     {
         $commonBll->loginWeb();
