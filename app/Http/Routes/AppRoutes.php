@@ -25,6 +25,7 @@ class AppRoutes
             $router->get('users/{user}/threads', 'UserController@threads')->where('user', '[0-9]+');
             $router->get('users/{user}/replies', 'UserController@replies')->where('user', '[0-9]+');
             $router->get('users/{user}/favorites', 'UserController@favorites')->where('user', '[0-9]+');
+            $router->get('users/{user}/follow/questions', 'UserController@followQuestions')->where('user', '[0-9]+');
             $router->get('ranks', 'RankController@ranks');
 
             //内容相关

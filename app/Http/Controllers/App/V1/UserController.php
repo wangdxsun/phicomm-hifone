@@ -71,6 +71,7 @@ class UserController extends AppController
         return $user;
     }
 
+    //我关注的人
     public function follows(User $user, FollowBll $followBll)
     {
         $follows = $followBll->follows($user);
@@ -81,6 +82,7 @@ class UserController extends AppController
         return $follows;
     }
 
+    //我的粉丝
     public function followers(User $user, FollowBll $followBll)
     {
         $followers = $followBll->followers($user);
@@ -93,6 +95,15 @@ class UserController extends AppController
         return $followers;
     }
 
+    //我关注的问题
+    public function followQuestions(User $user, FollowBll $followBll)
+    {
+        $questions = $followBll->followQuestions($user);
+
+        return $questions;
+    }
+
+    //我发出的帖子
     public function threads(User $user, UserBll $userBll)
     {
         $threads = $userBll->getThreads($user);
@@ -100,6 +111,7 @@ class UserController extends AppController
         return $threads;
     }
 
+    //我发出的评论
     public function replies(User $user, UserBll $userBll)
     {
         $replies = $userBll->getReplies($user);
