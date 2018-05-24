@@ -538,4 +538,9 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         return $this->hasMany(Comment::class);
     }
 
+    public function scopeExpert($query)
+    {
+        return $query->orderBy('answer_count', 'desc')->orderBy('score', 'desc');
+    }
+
 }

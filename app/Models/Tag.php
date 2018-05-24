@@ -61,7 +61,7 @@ class Tag extends Model
 
     public static function findTagByName($name)
     {
-        return static::where('name', 'like', $name)->first();
+        return static::where('name', $name)->first();
     }
 
 }

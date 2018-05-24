@@ -144,7 +144,7 @@ class UserBll extends BaseBll
     {
         $tag = Tag::findTagByName('专家');
         $search['tags'] = [array_get($tag, 'id')];
-        $users = User::search($search)->paginate(15);
+        $users = User::search($search)->select('id', 'avatar_url', 'username', 'answer_count', 'follower_count')->expert()->paginate(15);
         foreach ($users as $user) {
             $user['invited'] = 0;
         }
