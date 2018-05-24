@@ -119,6 +119,22 @@ class UserController extends AppController
         return $replies;
     }
 
+    //我发出的提问
+    public function questions(User $user, UserBll $userBll)
+    {
+        $replies = $userBll->getQuestions($user);
+
+        return $replies;
+    }
+
+    //我发出的回答
+    public function answers(User $user, UserBll $userBll)
+    {
+        $replies = $userBll->getAnswers($user);
+
+        return $replies;
+    }
+
     public function credit(UserBll $userBll, CommonBll $commonBll)
     {
         $commonBll->loginApp();

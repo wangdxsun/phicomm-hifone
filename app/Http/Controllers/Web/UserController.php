@@ -110,6 +110,20 @@ class UserController extends WebController
         return $drafts;
     }
 
+    public function questions(User $user, UserBll $userBll)
+    {
+        $replies = $userBll->getQuestions($user);
+
+        return $replies;
+    }
+
+    public function answers(User $user, UserBll $userBll)
+    {
+        $replies = $userBll->getAnswers($user);
+
+        return $replies;
+    }
+
     public function credit(UserBll $userBll, CommonBll $commonBll)
     {
         $commonBll->loginWeb();

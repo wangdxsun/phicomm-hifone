@@ -58,6 +58,22 @@ class UserBll extends BaseBll
         return $drafts;
     }
 
+    public function getQuestions(User $user)
+    {
+        $questions = $user->questions()->visibleAndDeleted()->with(['user','tags'])->recent()->paginate();
+
+        return $questions;
+    }
+
+    public function getAnswers(User $user)
+    {
+        $answers = $user->answers()->visibleAndDeleted()->whereHas('question', function ($query) {
+            $query->visibleAndDeleted();
+        })->with(['user', 'question'])->recent()->paginate();
+
+        return $answers;
+    }
+
     //全局搜索用户
     public function search($keyword)
     {
