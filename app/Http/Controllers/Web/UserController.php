@@ -82,6 +82,13 @@ class UserController extends WebController
         return $followers;
     }
 
+    public function followQuestions(User $user, FollowBll $followBll)
+    {
+        $questions = $followBll->followQuestions($user);
+
+        return $questions;
+    }
+
     public function threads(User $user, UserBll $userBll)
     {
         $threads = $userBll->getThreads($user);
