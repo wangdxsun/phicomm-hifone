@@ -13,6 +13,7 @@ use Config;
 use GuzzleHttp\Client;
 use Hifone\Events\User\UserWasActiveEvent;
 use Hifone\Exceptions\HifoneException;
+use Hifone\Models\Question;
 use Hifone\Models\User;
 use Hifone\Services\Guzzle\Score;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -130,6 +131,11 @@ class UserBll extends BaseBll
             $replyFeedbacks = [];
         }
         return $replyFeedbacks;
+    }
+
+    public function getFollowNewAnswerCount(User $user)
+    {
+        return $user->follows()->ofType(Question::class)->sum('answer_count');
     }
 
 }

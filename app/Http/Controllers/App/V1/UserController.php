@@ -26,7 +26,7 @@ use Auth;
 class UserController extends AppController
 {
     //获取当前用户信息
-    public function me(PhicommBll $phicommBll)
+    public function me(PhicommBll $phicommBll, UserBll $userBll)
     {
         if (empty(Auth::phicommId())) {
             throw new HifoneException('缺少token');
@@ -47,6 +47,7 @@ class UserController extends AppController
             }
         }
         $user['isAdmin'] = ($user->role =='管理员' || $user->role =='创始人');
+        $user['follow_new_answer_count'] = $userBll->getFollowNewAnswerCount($user);
 
         return $user;
     }
