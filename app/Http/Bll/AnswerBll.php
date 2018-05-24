@@ -72,7 +72,7 @@ class AnswerBll extends BaseBll
             DB::rollBack();
             throw $exception;
         }
-        $answer = Answer::find($answer->id)->load(['user', 'question.user', 'question.tags']);
+        $answer = Answer::find($answer->id)->load(['user']);
 
         return $answer;
     }
