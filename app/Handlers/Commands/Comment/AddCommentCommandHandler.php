@@ -27,12 +27,8 @@ class AddCommentCommandHandler
 
     public function handle(AddCommentCommand $command)
     {
-        $thumbnails = getFirstImageUrl($command->body);
-
         $data = [
             'body_original' => $command->body,
-            'thumbnails' => $thumbnails,
-            'excerpt' => app('parser.emotion')->makeExcerpt($command->body),
             'bad_word' => $this->filter->filterWord($command->body),
             'user_id' => $command->userId,
             'answer_id' => $command->answerId,
