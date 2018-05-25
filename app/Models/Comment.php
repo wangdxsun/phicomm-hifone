@@ -21,6 +21,8 @@ class Comment extends BaseModel
 
     public $fillable = [
         'body',
+        'body_original',
+        'bad_word',
         'user_id',
         'answer_id',
         'comment_id',
