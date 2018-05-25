@@ -41,7 +41,7 @@ class CommentBll extends BaseBll
             DB::rollBack();
             throw $exception;
         }
-        $comment = Comment::find($comment->id)->load(['user']);
+        $comment = Comment::find($comment->id)->load(['user', 'comment.user']);
 
         return $comment;
     }
