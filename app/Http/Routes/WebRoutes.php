@@ -91,9 +91,6 @@ class WebRoutes
             $router->get('users/{user}/drafts', 'UserController@drafts')->where('user', '[0-9]+');
             $router->get('users/{user}/questions', 'UserController@questions')->where('user', '[0-9]+');
             $router->get('users/{user}/answers', 'UserController@answers')->where('user', '[0-9]+');
-            $router->get('users/{user}/follow/questions', 'UserController@followQuestions')->where('user', '[0-9]+');
-            $router->get('users/{user}/follow/users', 'UserController@followUsers')->where('user', '[0-9]+');
-            $router->get('users/{user}/expert/users', 'UserController@expertUsers')->where('user', '[0-9]+');
             $router->get('rank', 'RankController@ranks');
             $router->get('ranks', 'RankController@ranks');
 
@@ -148,6 +145,10 @@ class WebRoutes
                 $router->post('answers', 'AnswerController@store');
                 $router->post('answers/{answer}/pin', 'AnswerController@pin')->where('answer', '[0-9]+');
                 $router->post('comments', 'CommentController@store');
+
+                $router->get('users/{user}/follow/questions', 'UserController@followQuestions')->where('user', '[0-9]+');
+                $router->get('users/{user}/invite/{question}/follow/users', 'UserController@followUsers')->where('user', '[0-9]+')->where('question', '[0-9]+');
+                $router->get('users/{user}/invite/{question}/expert/users', 'UserController@expertUsers')->where('user', '[0-9]+')->where('question', '[0-9]+');
 
             });
 
