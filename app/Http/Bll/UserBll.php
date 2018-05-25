@@ -140,26 +140,40 @@ class UserBll extends BaseBll
     }
 
     //获取专家用户列表
-    public function getExpertUsers(User $user)
+    public function getExpertUsers(User $user, Question $question)
     {
+        (new AnswerBll)->checkQuestion($question->id);
         $tag = Tag::findTagByName('专家');
         $search['tags'] = [array_get($tag, 'id')];
         $users = User::search($search)->select('id', 'avatar_url', 'username', 'answer_count', 'follower_count')->expert()->paginate(15);
         foreach ($users as $user) {
-            $user['invited'] = 0;
+            $user['invited'] = $this->getInvitedStatus($user, $question);
         }
 
         return $users;
     }
 
     //获取关注用户列表(关注时间倒序)
-    public function getFollowUsers(User $user)
+    public function getFollowUsers(User $user, Question $question)
     {
+        (new AnswerBll)->checkQuestion($question->id);
         $users = $user->followUsers()->paginate(15);
         foreach ($users as $user) {
-            $user['invited'] = 0;
+            $user['invited'] = $this->getInvitedStatus($user, $question);
         }
         return $users;
+    }
+
+    //判断是否回答过该问题，是否被邀请回答该问题
+    public function getInvitedStatus(User $toUser, Question $question)
+    {
+        if ($toUser->hasAnswerQuestion($question)) {
+            return User::ANSWERED;
+        }
+        if ($toUser->hasBeenInvited($question)) {
+            return User::INVITED;
+        }
+        return User::TO_INVITE;
     }
 
 }

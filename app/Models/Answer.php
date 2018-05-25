@@ -100,6 +100,11 @@ class Answer extends BaseModel
         return $query->whereIn('status', [static::VISIBLE, static::DELETED]);
     }
 
+    public function scopeOfQuestion($query, $question)
+    {
+        return $query->where('question_id', $question->id);
+    }
+
     //回答对应的问题
     public function question()
     {

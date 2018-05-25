@@ -36,6 +36,11 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
 
     // Enable soft delete
 
+    //邀请回答状态
+    const ANSWERED = 2;
+    const INVITED = 1;
+    const TO_INVITE = 0;
+
     protected $dates = ['deleted_at', 'last_op_time'];
 
     /**
@@ -476,14 +481,19 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         return $this->follows()->ofType(Question::class)->ofId($question->id)->count() > 0;
     }
 
-    public function hasInviteUser(User $user, Question $question)
+    public function hasAnswerQuestion(Question $question)
     {
-        return $this->invites($question->id)->where('id', $user->id)->count() > 0;
+        return $this->answers()->ofQuestion($question)->count() > 0;
+    }
+
+    public function hasBeenInvited(Question $question)
+    {
+        return Invite::question($question)->where('to_user_id', $this->id)->count() > 0;
     }
 
     public function invites(Question $question)
     {
-        return $this->belongsToMany(User::class, 'from_user_id', 'to_user_id')->wherePivot('question_id', $question->id);
+        return $this->belongsToMany(User::class, 'invites', 'from_user_id', 'to_user_id')->wherePivot('question_id', $question->id);
     }
 
     public function likes()

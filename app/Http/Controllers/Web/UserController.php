@@ -10,6 +10,7 @@ use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\FollowBll;
 use Hifone\Http\Bll\PhicommBll;
 use Hifone\Http\Bll\UserBll;
+use Hifone\Models\Question;
 use Hifone\Models\User;
 use Hifone\Services\Guzzle\Score;
 use Illuminate\Http\JsonResponse;
@@ -125,15 +126,15 @@ class UserController extends WebController
     }
 
     //邀请专家用户列表
-    public function expertUsers(User $user, UserBll $userBll)
+    public function expertUsers(User $user, Question $question, UserBll $userBll)
     {
-        return $userBll->getExpertUsers($user);
+        return $userBll->getExpertUsers($user, $question);
     }
 
     //邀请关注用户列表
-    public function followUsers(User $user, UserBll $userBll)
+    public function followUsers(User $user, Question $question, UserBll $userBll)
     {
-        return $userBll->getFollowUsers($user);
+        return $userBll->getFollowUsers($user, $question);
     }
 
     public function credit(UserBll $userBll, CommonBll $commonBll)
