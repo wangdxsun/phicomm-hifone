@@ -14,12 +14,14 @@ use Hifone\Http\Bll\CommentBll;
 use Hifone\Http\Controllers\App\AppController;
 use Auth;
 use Hifone\Models\Answer;
+use Hifone\Models\Question;
+use Hifone\Models\User;
 
 class AnswerController extends AppController
 {
     public function store(AnswerBll $answerBll)
     {
-        $answerBll->checkPermission();
+        $answerBll->checkPermission(Auth::user());
         $answerBll->checkQuestion(request('question_id'));
         //App图文混排
         $bodies = json_decode(request('body'), true);

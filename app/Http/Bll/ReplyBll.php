@@ -16,6 +16,7 @@ use Hifone\Exceptions\HifoneException;
 use Hifone\Models\Node;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
+use Hifone\Models\User;
 use Hifone\Services\Filter\WordsFilter;
 use DB;
 use Input;
@@ -26,7 +27,7 @@ class ReplyBll extends BaseBll
 {
     public function createReply()
     {
-        $this->checkPermission();
+        $this->checkPermission(Auth::user());
         $this->checkThread(request('reply.thread_id'));
         $this->replyIsVisible(request('reply.reply_id'));
         $replyData = request('reply');
@@ -51,7 +52,7 @@ class ReplyBll extends BaseBll
 
     public function createReplyApp()
     {
-        $this->checkPermission();
+        $this->checkPermission(Auth::user());
         $this->checkThread(request('reply.thread_id'));
         $this->replyIsVisible(request('reply.reply_id'));
         $replyData = request('reply');
@@ -77,7 +78,7 @@ class ReplyBll extends BaseBll
     //用户反馈回帖逻辑
     public function createFeedbackApp()
     {
-        $this->checkPermission();
+        $this->checkPermission(Auth::user());
         $feedback_thread_id = Node::find(request('reply.node_id'))->feedback_thread_id;
         $this->checkThread($feedback_thread_id);
         $replyData = request('reply');
@@ -210,11 +211,11 @@ class ReplyBll extends BaseBll
         }
     }
 
-    public function checkPermission()
+    public function checkPermission(User $user)
     {
-        if (Auth::user()->hasRole('NoComment')) {
+        if ($user->hasRole('NoComment')) {
             throw new HifoneException('对不起，你已被管理员禁止发言');
-        } elseif (!Auth::user()->can('manage_threads') && Auth::user()->score < 0) {
+        } elseif (!$user->can('manage_threads') && $user->score < 0) {
             throw new HifoneException('对不起，你所在的用户组无法发言');
         }
     }

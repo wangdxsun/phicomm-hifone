@@ -47,7 +47,7 @@ class QuestionController extends WebController
 
     public function store(QuestionBll $questionBll)
     {
-        $questionBll->checkPermission();
+        $questionBll->checkPermission(Auth::user());
         $this->validate(request(), [
             'title' => 'required|min:5|max:40',
             'score'=> 'required|int|min:5'
