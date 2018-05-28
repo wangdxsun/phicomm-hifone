@@ -37,6 +37,7 @@ class AnswerBll extends BaseBll
         $this->checkQuestion($answer->question_id);
         $answer = $answer->load(['user', 'question']);
         $answer->user['followed'] = User::hasFollowUser($answer->user);
+        $answer['liked'] = Auth::check() ? Auth::user()->hasLikeAnswer($answer) : false;
         $answer['reported'] = Auth::check() ? Auth::user()->hasReportAnswer($answer) : false;
 
         return $answer;
