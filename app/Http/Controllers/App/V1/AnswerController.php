@@ -8,6 +8,7 @@
 
 namespace Hifone\Http\Controllers\App\V1;
 
+use Hifone\Exceptions\Consts\AnswerEx;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Http\Bll\AnswerBll;
 use Hifone\Http\Bll\CommentBll;
@@ -52,6 +53,24 @@ class AnswerController extends AppController
         $commentBll->checkAnswer($answer->id);
 
         return $answerBll->sortComments($answer);
+    }
+
+    //邀请回答
+    public function invite(User $user, Question $question, AnswerBll $answerBll)
+    {
+        $answerBll->checkQuestion($question->id);
+        //todo 24小时内最多邀请15人
+
+        //被邀请用户已被禁言
+        $answerBll->checkPermission($user);
+        //被邀请用户已回答
+        if ($user->hasAnswerQuestion($question)) {
+            throw new HifoneException('已回答', AnswerEx::HAS_ANSWERED);
+        }
+        //用户已被邀请（唯一索引异常cover）
+        $answerBll->createInvite($user, $question);
+
+        return success('已邀请');
     }
 
 }

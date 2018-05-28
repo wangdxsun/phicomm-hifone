@@ -10,14 +10,17 @@ namespace Hifone\Http\Bll;
 
 use Carbon\Carbon;
 use Hifone\Commands\Answer\AddAnswerCommand;
+use Hifone\Commands\Invite\AddInviteCommand;
 use Hifone\Events\Answer\AnswerWasAuditedEvent;
+use Hifone\Exceptions\Consts\AnswerEx;
 use Hifone\Exceptions\Consts\QuestionEx;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Models\Answer;
 use Hifone\Models\Question;
 use Hifone\Models\User;
-use Illuminate\Support\Facades\DB;
 use Auth;
+use DB;
+use Illuminate\Database\QueryException;
 
 class AnswerBll extends BaseBll
 {
@@ -103,6 +106,21 @@ class AnswerBll extends BaseBll
             throw new HifoneException('问答不存在', QuestionEx::NOT_EXISTED);
         } elseif ($question->status <> Question::VISIBLE) {
             throw new HifoneException('该问答已被删除', QuestionEx::DELETED);
+        }
+    }
+
+    public function createInvite(User $toUser, $question)
+    {
+        DB::beginTransaction();
+        try {
+            dispatch(new AddInviteCommand(Auth::user(), $toUser, $question));
+            DB::commit();
+        } catch (QueryException $exception) {
+            DB::rollBack();
+            throw new HifoneException('已邀请', AnswerEx::INVITED);
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            throw $exception;
         }
     }
 
