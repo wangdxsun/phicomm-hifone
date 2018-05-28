@@ -15,7 +15,7 @@ class AddInviteCommandHandler
 {
     public function handle(AddInviteCommand $command)
     {
-        $command->to_user->invites()->create([
+        $command->to->invites()->create([
             'from_user_id' => $command->from->id,
             'question_id' => $command->question->id,
         ]);
