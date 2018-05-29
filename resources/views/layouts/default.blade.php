@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="{{ $user_locale or $site_locale }}">
+<html lang="zh_cn">
 	<head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, user-scalable=no" />
-        <title>@yield('title') {{ config('site_name') }}@if($site_about) - {{ $site_about }}@endif</title>
+        <title>@yield('title') {{ config('site_name') }}</title>
         <meta name="keywords" content="@if(Config::get('setting.meta_keywords')){{ Config::get('setting.meta_keywords') }}@else{{ 'Hifone,BBS,Forum,PHP,Laravel' }}@endif" />
         <meta name="author" content="@if(Config::get('setting.meta_author')){{ Config::get('setting.meta_author') }}@else{{ 'The Hifone Team' }}@endif" />
         <meta name="description" content="@section('description')" />
@@ -18,7 +18,6 @@
         <script src="{{ elixir('dist/js/all.js') }}"></script>
         <script type="text/javascript">
             Hifone.Config = {
-                'locale' : '{{ $user_locale or $site_locale }}',
                 'current_user_id' : '{{ Auth::user() ? Auth::user()->id : 0 }}',
                 'role' : '{{ Auth::user() ? Auth::user()->role : '未登录'}}',
                 'token' : '{{ csrf_token() }}',
@@ -39,11 +38,6 @@
                 'dislike' : '{{ trans('hifone.unlike') }}'
             };
         </script>
-        @if($stylesheet)
-		<style type="text/css">
-		{!! $stylesheet !!}
-		</style>
-		@endif
     </head>
     <body class="forum" data-page="forum">
         @include('partials.errors')
