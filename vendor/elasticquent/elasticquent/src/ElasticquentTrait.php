@@ -415,7 +415,7 @@ trait ElasticquentTrait
         return static::hydrateElasticsearchResult($result);
     }
 
-    public static function searchAnswer($term)
+    public static function searchQuestionTitle($term)
     {
         $instance = new static;
 
@@ -426,10 +426,8 @@ trait ElasticquentTrait
             'query' => [
                 'filtered' => [
                     'query' => [
-                        'multi_match' => [
-                            'query' => $term,
-                            'type' => 'cross_fields',
-                            'fields' => ['question.title^2', 'body']
+                        'match' => [
+                            'title' => $term,
                         ],
                     ],
                     'filter' => [
@@ -447,7 +445,53 @@ trait ElasticquentTrait
             ],
             'highlight' => [
                 'fields' => [
-                    'question.title' => ["number_of_fragments" => 1],
+                    'title' => ["number_of_fragments" => 1],
+                ]
+            ],
+            'sort' => [
+                '_score' => ['order' => 'desc'],
+                'created_at' => ['order' => 'desc']
+            ]
+        ];
+
+        $result = $instance->getElasticSearchClient()->search($params);
+
+        return static::hydrateElasticsearchResult($result);
+    }
+
+    public static function searchAnswer($term, $questionId)
+    {
+        $instance = new static;
+        $params = $instance->getBasicEsParams(true, true, true, 1);
+
+        $params['body'] = [
+            'query' => [
+                'filtered' => [
+                    'query' => [
+                        'match' => [
+                            'body' => $term
+                        ]
+                    ],
+                    'filter' => [
+                        'bool' => [
+                            'must' => [
+                                [
+                                    'term' => [
+                                        'status' => 0
+                                    ],
+                                ],
+                                [
+                                    'term' => [
+                                        'question_id' => $questionId
+                                    ]
+                                ]
+                            ],
+                        ]
+                    ]
+                ]
+            ],
+            'highlight' => [
+                'fields' => [
                     'body' => ["number_of_fragments" => 1, "fragment_size" => 55],
                 ]
             ],
@@ -473,11 +517,8 @@ trait ElasticquentTrait
         if (!$this->exists) {
             throw new Exception('Document does not exist.');
         }
-        if ($this instanceof Thread || $this instanceof Question) {
+        if ($this instanceof Thread || $this instanceof Question || $this instanceof Answer) {
             $this->body = strip_tags($this->body);
-        } elseif ($this instanceof Answer) {
-            $this->body = strip_tags($this->body);
-            $this->question->body = strip_tags($this->question->body);
         }
 
         $params = $this->getBasicEsParams();
@@ -510,7 +551,7 @@ trait ElasticquentTrait
      */
     public function updateIndex()
     {
-        if ($this instanceof Thread) {
+        if ($this instanceof Thread || $this instanceof Question || $this instanceof Answer) {
             $this->body = strip_tags($this->body);
         }
         $params = $this->getBasicEsParams();

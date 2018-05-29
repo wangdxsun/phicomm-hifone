@@ -28,8 +28,6 @@ class Answer extends BaseModel
     protected $hidden = [
         'body_original',
         'bad_word',
-        'user_id',
-        'question_id',
         'device',
         'ip',
         'last_op_user_id',
@@ -40,10 +38,6 @@ class Answer extends BaseModel
     ];
 
     protected $mappingProperties = [
-        'title' => [
-            'type' => 'string',
-            'analyzer' => 'ik_max_word',
-        ],
         'body' => [
             'type' => 'string',
             'analyzer' => 'ik_max_word',
