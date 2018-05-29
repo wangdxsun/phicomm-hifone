@@ -139,7 +139,7 @@ class AnswerBll extends BaseBll
 
     public function adoptAnswer(Answer $answer)
     {
-        (new CommentBll)->checkAnswer($answer);
+        (new CommentBll)->checkAnswer($answer->id);
         //只可以采纳唯一回答，question answer_id，和answer adopted
         if ($answer->question->answer_id == null) {
             $answer->question->update(['answer_id' => $answer->id]);
@@ -149,10 +149,9 @@ class AnswerBll extends BaseBll
         $answer->update(['adopted' => 1]);
 
         //通知被采纳人
-        event(new AnswerWasAdoptedEvent($answer->user(), $answer));
+        event(new AnswerWasAdoptedEvent($answer->user, $answer));
         //给被采纳人加悬赏值
-        dispatch(new RewardScore($answer->user(), $answer->question->score));
-
+        dispatch(new RewardScore($answer->user, $answer->question->score));
     }
 
 }

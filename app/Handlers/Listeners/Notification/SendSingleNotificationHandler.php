@@ -115,7 +115,7 @@ class SendSingleNotificationHandler
 
     protected function adopted($user, $answer)
     {
-        app('notifier')->notify('answer_adopted', $user, $answer);
+        app('notifier')->notify('answer_adopted', Auth::user(), $user, $answer);
     }
 
 }

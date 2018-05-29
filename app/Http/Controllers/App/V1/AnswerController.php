@@ -88,7 +88,7 @@ class AnswerController extends AppController
     {
         if (Auth::id() <> $answer->question->user_id) {
             throw new HifoneException('非问题作者不能采纳');
-        } elseif (Auth::id() <> $answer->user_id) {
+        } elseif (Auth::id() == $answer->user_id) {
             throw new HifoneException('不能采纳自己的回答');
         }
         //按照时间执行自己、管理员采纳操作和系统自动采纳、提醒用户采纳
