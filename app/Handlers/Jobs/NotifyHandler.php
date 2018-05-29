@@ -25,14 +25,16 @@ class NotifyHandler
         }
 
         //web和H5 红点逻辑
-        if (in_array($notify->type, ['reply_like', 'thread_like', 'user_follow', 'thread_favorite', 'thread_pin', 'thread_mark_excellent', 'reply_pin', 'user_invited'])) {
+        if (in_array($notify->type, ['reply_like', 'thread_like', 'user_follow', 'thread_favorite', 'thread_pin', 'thread_mark_excellent', 'reply_pin', 'adopt_asap'])) {
             $notify->user->increment('notification_system_count', 1);
-        } elseif (in_array($notify->type, ['reply_reply', 'reply_mention', 'thread_mention'])) {
+        } elseif (in_array($notify->type, ['reply_reply', 'reply_mention', 'thread_mention', 'question_mention', 'answer_mention', 'comment_mention'])) {
             $notify->user->increment('notification_at_count', 1);
         } elseif ($notify->type == 'thread_new_reply') {
             $notify->user->increment('notification_reply_count', 1);
         } elseif (in_array($notify->type, ['followed_user_new_thread', 'followed_user_new_question'])) {
             $notify->user->increment('notification_follow_count');
+        } elseif (in_array($notify->type, ['user_invited', 'answer_adopted', 'question_new_answer', 'answer_new_comment', 'comment_new_comment', ''])) {
+            $notify->user->increment('notification_qa_count');
         }
 
         $data = [
@@ -44,7 +46,9 @@ class NotifyHandler
         $notify->object->notifications()->create($data);
 
         //消息推送
-        if ($notify->type <> 'followed_user_new_thread' && $notify->type <> 'followed_user_new_question') {
+        if ($notify->type == 'user_invited' || $notify->type == 'adopt_asap') {//邀请回答、尽快采纳 非静默方式
+            $this->pushNotify($notify->author, $notify->user, $notify->type, $notify->object, '0');
+        } elseif ($notify->type <> 'followed_user_new_thread' && $notify->type <> 'followed_user_new_question') {
             $this->pushNotify($notify->author, $notify->user, $notify->type, $notify->object);
         }
     }
@@ -60,10 +64,11 @@ class NotifyHandler
     /**
      * @param $from
      * @param $to
-     * @param $type 类型映射
+     * @param $type string 类型映射
      * @param $object reply
+     * @param $msg_type string 推送消息类型 0.通知，1.消息（默认）
      */
-    protected function pushNotify($from, $to, $type, $object)
+    protected function pushNotify($from, $to, $type, $object, $msg_type = '1')
     {
         $message = $this->makeMessage($type, $object);
         $avatar = $this->makeAvatar($from, $type);
@@ -90,7 +95,7 @@ class NotifyHandler
         }
         $outline = $this->makeOutline($from, $object);
 
-        app('push')->push($to->phicomm_id, $data, $outline);
+        app('push')->push($to->phicomm_id, $data, $outline, $msg_type);
     }
 
     protected function makeAvatar($operator, $typeStr)
@@ -130,6 +135,7 @@ class NotifyHandler
                 return "【管理员】置顶你的评论";
             case 'thread_mark_excellent'://加精华
                 return "【管理员】加精了你的帖子";
+
             case 'question_mention'://提问中@我
                 return "【" . $operator->username . "】提问中提到了你";
             case 'answer_mention'://回答中@我
@@ -146,6 +152,12 @@ class NotifyHandler
                 return "【" . $operator->username . "】赞了你的回答";
             case 'comment_like'://点赞回复
                 return "【" . $operator->username . "】赞了你的回复";
+            case 'user_invited'://邀请回答
+                return "【" . $operator->username . "】邀请你来回答";
+            case 'adopt_asap'://尽快采纳
+                return "【系统】提醒你尽快采纳回答";
+            case 'answer_adopted'://回答被采纳
+                return "【" . $operator->username . "】采纳了你的回答";
             default :
                 throw new HifoneException("推送类型 $typeStr 不支持");
         }
@@ -238,6 +250,12 @@ class NotifyHandler
                 return '1015';
             case 'comment_like':
                 return '1016';
+            case 'user_invited':
+                return '1017';
+            case 'adopt_asap':
+                return '1017';
+            case 'answer_adopted':
+                return '1017';
             default :
                 throw new HifoneException("推送类型 $typeStr 不支持");
         }

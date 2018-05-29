@@ -11,10 +11,13 @@ namespace Hifone\Http\Bll;
 use Carbon\Carbon;
 use Hifone\Commands\Answer\AddAnswerCommand;
 use Hifone\Commands\Invite\AddInviteCommand;
+use Hifone\Events\Adopt\AnswerWasAdoptedEvent;
 use Hifone\Events\Answer\AnswerWasAuditedEvent;
+use Hifone\Events\Invite\InviteWasAddedEvent;
 use Hifone\Exceptions\Consts\AnswerEx;
 use Hifone\Exceptions\Consts\QuestionEx;
 use Hifone\Exceptions\HifoneException;
+use Hifone\Jobs\RewardScore;
 use Hifone\Models\Answer;
 use Hifone\Models\Question;
 use Hifone\Models\User;
@@ -26,9 +29,12 @@ class AnswerBll extends BaseBll
 {
     public function search($keyword)
     {
-        $answers = Answer::searchAnswer($keyword)->load(['user', 'question'])->paginate(15);
+        $questions = Question::searchQuestionTitle($keyword)->load(['user', 'tags'])->paginate(15);
+        foreach ($questions as $question) {
+            $question->answer = Answer::searchAnswer($keyword, $question->id)->first();
+        }
 
-        return $answers;
+        return $questions;
     }
 
     public function showAnswer(Answer $answer)
@@ -114,7 +120,10 @@ class AnswerBll extends BaseBll
     {
         DB::beginTransaction();
         try {
-            dispatch(new AddInviteCommand(Auth::user(), $toUser, $question));
+            $toUser->invites()->create([
+                'from_user_id' => Auth::user()->id,
+                'question_id' => $question->id,
+            ]);
             DB::commit();
         } catch (QueryException $exception) {
             DB::rollBack();
@@ -123,6 +132,26 @@ class AnswerBll extends BaseBll
             DB::rollBack();
             throw $exception;
         }
+
+        //邀请发通知
+        event(new InviteWasAddedEvent(Auth::user(), $toUser, $question));
+    }
+
+    public function adoptAnswer(Answer $answer)
+    {
+        (new CommentBll)->checkAnswer($answer->id);
+        //只可以采纳唯一回答，question answer_id，和answer adopted
+        if ($answer->question->answer_id == null) {
+            $answer->question->update(['answer_id' => $answer->id]);
+        } else {
+            throw new HifoneException('问题已采纳，请勿重复采纳', QuestionEx::HAS_ADOPTED);
+        }
+        $answer->update(['adopted' => 1]);
+
+        //通知被采纳人
+        event(new AnswerWasAdoptedEvent($answer->user, $answer));
+        //给被采纳人加悬赏值
+        dispatch(new RewardScore($answer->user, $answer->question->score));
     }
 
 }

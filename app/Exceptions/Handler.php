@@ -73,7 +73,7 @@ class Handler extends ExceptionHandler
         if ($request->ajax() || $request->wantsJson() || $request->isApi()) {
             return new JsonResponse([
                 'msg' => $e->getMessage(),
-                'code' => $e->getCode()
+                'code' => $e->getCode() ?: 400 //有的异常没有状态码
             ], $e->getCode() <= 599 && $e->getCode() >= 200 ? $e->getCode() : 400);
         } elseif ($this->isHttpException($e)) {
             return $this->toIlluminateResponse($this->renderHttpException($e), $e);

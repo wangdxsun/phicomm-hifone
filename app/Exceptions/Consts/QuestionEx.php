@@ -12,4 +12,5 @@ final class QuestionEx
 {
     const DELETED = 3000;//问题已删除
     const NOT_EXISTED = 3001;//问题不存在
+    const HAS_ADOPTED = 3002;//问题已采纳回答
 }

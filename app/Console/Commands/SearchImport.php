@@ -220,7 +220,7 @@ class SearchImport extends Command
             $answer->addToIndex();
             $this->info("Import answer $id into ElasticSearch Successfully");
         } else {
-            Answer::with('question')->chunk(100, function ($answers) {
+            Answer::chunk(100, function ($answers) {
                 foreach ($answers as $answer) {
                     try {
                         $answer->removeFromIndex();
@@ -228,7 +228,6 @@ class SearchImport extends Command
                         $this->error($exception->getMessage());
                     }
                     $answer->body = strip_tags($answer->body);
-                    $answer->question->body = strip_tags($answer->question->body);
                 }
                 $answers->addToIndex();
             });

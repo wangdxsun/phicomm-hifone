@@ -12,6 +12,7 @@
 namespace Hifone\Handlers\Listeners\Notification;
 
 use Auth;
+use Hifone\Events\Adopt\AnswerWasAdoptedEvent;
 use Hifone\Events\EventInterface;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Events\Follow\FollowedWasAddedEvent;
@@ -46,6 +47,8 @@ class SendSingleNotificationHandler
             $this->pin($event->object);
         } elseif ($event instanceof InviteWasAddedEvent) {
             $this->invite($event->from, $event->to, $event->question);
+        } elseif ($event instanceof AnswerWasAdoptedEvent) {
+            $this->adopted($event->user, $event->answer);
         }
     }
 
@@ -112,6 +115,11 @@ class SendSingleNotificationHandler
     protected function invite($from, $to, $question)
     {
         app('notifier')->notify('user_invited', $from, $to, $question);
+    }
+
+    protected function adopted($user, $answer)
+    {
+        app('notifier')->notify('answer_adopted', Auth::user(), $user, $answer);
     }
 
 }

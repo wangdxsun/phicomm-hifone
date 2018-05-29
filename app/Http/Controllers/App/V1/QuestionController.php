@@ -31,7 +31,7 @@ class QuestionController extends AppController
     //悬赏问答（最新的5个提问）
     public function recent()
     {
-        $questions = Question::with(['user', 'tags'])->recent()->limit(5)->get();
+        $questions = Question::select('id', 'title', 'thumbnails')->recent()->limit(5)->get();
 
         return $questions;
     }
@@ -66,6 +66,7 @@ class QuestionController extends AppController
         } elseif (count($tagIds) > 4) {
             throw new HifoneException('最多选择4个标签哦~');
         }
+        //TODO 管理员发表提问，因为管理员没有phicommId无法获取智慧果
         $questionBll->checkScore(Auth::user()->phicomm_id);
 
         $questionData = [

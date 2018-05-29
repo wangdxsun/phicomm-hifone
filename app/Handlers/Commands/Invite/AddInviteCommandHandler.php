@@ -11,6 +11,10 @@ namespace Hifone\Handlers\Commands\Invite;
 use Hifone\Commands\Invite\AddInviteCommand;
 use Hifone\Events\Invite\InviteWasAddedEvent;
 
+
+/**
+ * @deprecated
+ */
 class AddInviteCommandHandler
 {
     public function handle(AddInviteCommand $command)
@@ -20,7 +24,6 @@ class AddInviteCommandHandler
             'question_id' => $command->question->id,
         ]);
 
-        //TODO 邀请发通知
         event(new InviteWasAddedEvent($command->from, $command->to, $command->question));
     }
 
