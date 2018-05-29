@@ -15,6 +15,7 @@ use Auth;
 use Hifone\Events\EventInterface;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Events\Follow\FollowedWasAddedEvent;
+use Hifone\Events\Invite\InviteWasAddedEvent;
 use Hifone\Events\Like\LikedWasAddedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Favorite\FavoritedWasAddedEvent;
@@ -43,6 +44,8 @@ class SendSingleNotificationHandler
             $this->markedExcellent($event->object);
         } elseif ($event instanceof PinWasAddedEvent){
             $this->pin($event->object);
+        } elseif ($event instanceof InviteWasAddedEvent) {
+            $this->invite($event->from, $event->to, $event->question);
         }
     }
 
@@ -95,11 +98,16 @@ class SendSingleNotificationHandler
 
     protected function pin($object)
     {
-        if( $object instanceof Reply) {
+        if ($object instanceof Reply) {
             app('notifier')->notify('reply_pin', Auth::user(), $object->user, $object);
         } elseif ($object instanceof Thread) {
             app('notifier')->notify('thread_pin', Auth::user(), $object->user, $object);
         }
+    }
+
+    protected function invite($from, $to, $question)
+    {
+        app('notifier')->notify('user_invited', $from, $to, $question);
     }
 
 }

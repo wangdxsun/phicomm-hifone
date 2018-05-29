@@ -20,7 +20,7 @@ class CreateInvitesTable extends Migration
             $table->timestamps();
 
             //唯一索引
-            $table->unique('question_id', 'to_user_id', 'from_user_id');
+            $table->unique(['to_user_id', 'question_id'], 'invited_once');
         });
     }
 

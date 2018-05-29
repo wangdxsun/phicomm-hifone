@@ -10,14 +10,17 @@ namespace Hifone\Http\Bll;
 
 use Carbon\Carbon;
 use Hifone\Commands\Answer\AddAnswerCommand;
+use Hifone\Commands\Invite\AddInviteCommand;
 use Hifone\Events\Answer\AnswerWasAuditedEvent;
+use Hifone\Exceptions\Consts\AnswerEx;
 use Hifone\Exceptions\Consts\QuestionEx;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Models\Answer;
 use Hifone\Models\Question;
 use Hifone\Models\User;
-use Illuminate\Support\Facades\DB;
 use Auth;
+use DB;
+use Illuminate\Database\QueryException;
 
 class AnswerBll extends BaseBll
 {
@@ -34,6 +37,7 @@ class AnswerBll extends BaseBll
         $this->checkQuestion($answer->question_id);
         $answer = $answer->load(['user', 'question']);
         $answer->user['followed'] = User::hasFollowUser($answer->user);
+        $answer['liked'] = Auth::check() ? Auth::user()->hasLikeAnswer($answer) : false;
         $answer['reported'] = Auth::check() ? Auth::user()->hasReportAnswer($answer) : false;
 
         return $answer;
@@ -72,7 +76,7 @@ class AnswerBll extends BaseBll
             DB::rollBack();
             throw $exception;
         }
-        $answer = Answer::find($answer->id)->load(['user', 'question.user', 'question.tags']);
+        $answer = Answer::find($answer->id)->load(['user']);
 
         return $answer;
     }
@@ -103,6 +107,21 @@ class AnswerBll extends BaseBll
             throw new HifoneException('问答不存在', QuestionEx::NOT_EXISTED);
         } elseif ($question->status <> Question::VISIBLE) {
             throw new HifoneException('该问答已被删除', QuestionEx::DELETED);
+        }
+    }
+
+    public function createInvite(User $toUser, $question)
+    {
+        DB::beginTransaction();
+        try {
+            dispatch(new AddInviteCommand(Auth::user(), $toUser, $question));
+            DB::commit();
+        } catch (QueryException $exception) {
+            DB::rollBack();
+            throw new HifoneException('已邀请', AnswerEx::INVITED);
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            throw $exception;
         }
     }
 

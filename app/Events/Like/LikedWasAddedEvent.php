@@ -26,7 +26,7 @@ final class LikedWasAddedEvent implements LikeEventInterface
      * Create a new thread has reported event instance.
      */
 
-    public function __construct($user, $object=null)
+    public function __construct($user, $object = null)
     {
         $this->user = $user;
         $this->object = $object;

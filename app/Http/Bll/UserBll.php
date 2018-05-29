@@ -13,6 +13,8 @@ use Config;
 use GuzzleHttp\Client;
 use Hifone\Events\User\UserWasActiveEvent;
 use Hifone\Exceptions\HifoneException;
+use Hifone\Models\Question;
+use Hifone\Models\Tag;
 use Hifone\Models\User;
 use Hifone\Services\Guzzle\Score;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -56,6 +58,22 @@ class UserBll extends BaseBll
         }
 
         return $drafts;
+    }
+
+    public function getQuestions(User $user)
+    {
+        $questions = $user->questions()->visibleAndDeleted()->with(['user','tags'])->recent()->paginate();
+
+        return $questions;
+    }
+
+    public function getAnswers(User $user)
+    {
+        $answers = $user->answers()->visibleAndDeleted()->whereHas('question', function ($query) {
+            $query->visibleAndDeleted();
+        })->with(['user', 'question'])->recent()->paginate();
+
+        return $answers;
     }
 
     //全局搜索用户
@@ -114,6 +132,48 @@ class UserBll extends BaseBll
             $replyFeedbacks = [];
         }
         return $replyFeedbacks;
+    }
+
+    public function getFollowNewAnswerCount(User $user)
+    {
+        return $user->follows()->ofType(Question::class)->sum('answer_count');
+    }
+
+    //获取专家用户列表
+    public function getExpertUsers(User $user, Question $question)
+    {
+        (new AnswerBll)->checkQuestion($question->id);
+        $tag = Tag::findTagByName('专家');
+        $search['tags'] = [array_get($tag, 'id')];
+        $users = User::search($search)->select('id', 'avatar_url', 'username', 'answer_count', 'follower_count', 'role')->expert()->paginate(15);
+        foreach ($users as $user) {
+            $user['invited'] = $this->getInvitedStatus($user, $question);
+        }
+
+        return $users;
+    }
+
+    //获取关注用户列表(关注时间倒序)
+    public function getFollowUsers(User $user, Question $question)
+    {
+        (new AnswerBll)->checkQuestion($question->id);
+        $users = $user->followUsers()->paginate(15);
+        foreach ($users as $user) {
+            $user['invited'] = $this->getInvitedStatus($user, $question);
+        }
+        return $users;
+    }
+
+    //判断是否回答过该问题，是否被邀请回答该问题
+    public function getInvitedStatus(User $toUser, Question $question)
+    {
+        if ($toUser->hasAnswerQuestion($question)) {
+            return User::ANSWERED;
+        }
+        if ($toUser->hasBeenInvited($question)) {
+            return User::INVITED;
+        }
+        return User::TO_INVITE;
     }
 
 }

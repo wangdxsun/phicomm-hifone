@@ -6,16 +6,33 @@ use Hifone\Models\Question;
 use Agent;
 use Auth;
 use Carbon\Carbon;
+use Hifone\Services\Filter\WordsFilter;
 use Redirect;
 
 class UpdateQuestionCommandHandler
 {
+    private $filter;
+
+    public function __construct(WordsFilter $filter)
+    {
+        $this->filter = $filter;
+    }
     public function handle(UpdateQuestionCommand $command)
     {
         $question = $command->question;
+        if ($command->data['questionTags'] == '') {
+            return Redirect::route('dashboard.questions.edit', $question->id)
+                ->withErrors('请选择问题类型');
+        } else {
+            $tagData = explode(',', $command->data['questionTags']);
+            $question->tags()->sync($tagData);
+            unset($command->data['questionTags']);
+        }
+
         if (isset($command->data['body']) && $command->data['body']) {
             $command->data['body_original'] = $command->data['body'];
-            //$command->data['excerpt'] = Question::makeExcerpt($command->data['body']);
+            $command->data['excerpt'] = app('parser.emotion')->makeExcerpt($command->data['body']);
+            $command->data['bad_word'] = $this->filter->filterWord($command->data['title'] . $command->data['body']);
             $command->data['body'] = app('parser.at')->parse($command->data['body']);
             $command->data['body'] = app('parser.emotion')->parse($command->data['body']);
             //只有H5和app发帖需要自动转义链接，web端不需要
@@ -34,13 +51,7 @@ class UpdateQuestionCommandHandler
         }
 
         $question->update($this->filter($command->data));
-        if ($command->data['questionTags'] == '') {
-            return Redirect::route('dashboard.questions.edit', $question->id)
-                ->withErrors('请选择问题类型');
-        } else {
-            $tagData = explode(',', $command->data['questionTags']);
-            $question->tags()->sync($tagData);
-        }
+
         return $question;
     }
 

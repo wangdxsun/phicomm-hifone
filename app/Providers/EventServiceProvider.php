@@ -280,6 +280,11 @@ class EventServiceProvider extends ServiceProvider
         \Hifone\Events\Answer\AnswerWasDeletedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
+
+        //邀请回答，通知被邀请人
+        \Hifone\Events\Invite\InviteWasAddedEvent::class => [
+            \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
+        ],
     ];
 
     /**

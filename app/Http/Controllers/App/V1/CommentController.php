@@ -8,9 +8,9 @@
 
 namespace Hifone\Http\Controllers\App\V1;
 
-use Hifone\Http\Bll\AnswerBll;
 use Hifone\Http\Bll\CommentBll;
 use Hifone\Http\Controllers\App\AppController;
+use Auth;
 
 class CommentController extends AppController
 {
@@ -21,7 +21,7 @@ class CommentController extends AppController
 
     public function store(CommentBll $commentBll)
     {
-        $commentBll->checkPermission();
+        $commentBll->checkPermission(Auth::user());
         $commentBll->checkComment(request('comment_id'));
         $commentBll->checkAnswer(request('answer_id'));
 

@@ -25,6 +25,8 @@ class AppRoutes
             $router->get('users/{user}/threads', 'UserController@threads')->where('user', '[0-9]+');
             $router->get('users/{user}/replies', 'UserController@replies')->where('user', '[0-9]+');
             $router->get('users/{user}/favorites', 'UserController@favorites')->where('user', '[0-9]+');
+            $router->get('users/{user}/questions', 'UserController@questions')->where('user', '[0-9]+');
+            $router->get('users/{user}/answers', 'UserController@answers')->where('user', '[0-9]+');
             $router->get('ranks', 'RankController@ranks');
 
             //内容相关
@@ -109,7 +111,13 @@ class AppRoutes
 
                 $router->post('questions', 'QuestionController@store');
                 $router->post('answers', 'AnswerController@store');
+                $router->post('answers/invite/users/{user}/questions/{question}', 'AnswerController@invite')->where('user', '[0-9]+')->where('question', '[0-9]+');
+                $router->post('answers/adopt/answers/{answer}', 'AnswerController@invite')->where('answer', '[0-9]+');
                 $router->post('comments', 'CommentController@store');
+
+                $router->get('users/{user}/follow/questions', 'UserController@followQuestions')->where('user', '[0-9]+');
+                $router->get('users/{user}/invite/{question}/follow/users', 'UserController@followUsers')->where('user', '[0-9]+')->where('question', '[0-9]+');
+                $router->get('users/{user}/invite/{question}/expert/users', 'UserController@expertUsers')->where('user', '[0-9]+')->where('question', '[0-9]+');
             });
         });
     }

@@ -10,6 +10,7 @@ use Hifone\Http\Bll\CommonBll;
 use Hifone\Http\Bll\FollowBll;
 use Hifone\Http\Bll\PhicommBll;
 use Hifone\Http\Bll\UserBll;
+use Hifone\Models\Question;
 use Hifone\Models\User;
 use Hifone\Services\Guzzle\Score;
 use Illuminate\Http\JsonResponse;
@@ -82,6 +83,13 @@ class UserController extends WebController
         return $followers;
     }
 
+    public function followQuestions(User $user, FollowBll $followBll)
+    {
+        $questions = $followBll->followQuestions($user);
+
+        return $questions;
+    }
+
     public function threads(User $user, UserBll $userBll)
     {
         $threads = $userBll->getThreads($user);
@@ -101,6 +109,32 @@ class UserController extends WebController
         $drafts = $userBll->getDrafts($user);
 
         return $drafts;
+    }
+
+    public function questions(User $user, UserBll $userBll)
+    {
+        $replies = $userBll->getQuestions($user);
+
+        return $replies;
+    }
+
+    public function answers(User $user, UserBll $userBll)
+    {
+        $replies = $userBll->getAnswers($user);
+
+        return $replies;
+    }
+
+    //邀请专家用户列表
+    public function expertUsers(User $user, Question $question, UserBll $userBll)
+    {
+        return $userBll->getExpertUsers($user, $question);
+    }
+
+    //邀请关注用户列表
+    public function followUsers(User $user, Question $question, UserBll $userBll)
+    {
+        return $userBll->getFollowUsers($user, $question);
     }
 
     public function credit(UserBll $userBll, CommonBll $commonBll)

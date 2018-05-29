@@ -25,7 +25,7 @@ class AnswerController extends WebController
 
     public function store(AnswerBll $answerBll)
     {
-        $answerBll->checkPermission();
+        $answerBll->checkPermission(Auth::user());
         $answerBll->checkQuestion(request('question_id'));
 
         $wordCount = mb_strlen(strip_tags(request('body')));

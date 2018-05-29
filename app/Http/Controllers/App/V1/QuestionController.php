@@ -16,6 +16,7 @@ use Hifone\Http\Bll\QuestionBll;
 use Hifone\Http\Controllers\App\AppController;
 use Hifone\Models\Question;
 use Auth;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class QuestionController extends AppController
 {
@@ -35,9 +36,20 @@ class QuestionController extends AppController
         return $questions;
     }
 
+    public function search($keyword, QuestionBll $questionBll)
+    {
+        if (empty($keyword)) {
+            $questions = new LengthAwarePaginator([], 0, 15);
+        } else {
+            $questions = $questionBll->search($keyword);
+        }
+
+        return $questions;
+    }
+
     public function store(QuestionBll $questionBll)
     {
-        $questionBll->checkPermission();
+        $questionBll->checkPermission(Auth::user());
         $this->validate(request(), [
             'title' => 'required|min:5|max:40',
             'score'=> 'required|int'

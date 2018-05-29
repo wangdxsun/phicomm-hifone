@@ -18,6 +18,7 @@ use Hifone\Http\Bll\PhicommBll;
 use Hifone\Http\Bll\UserBll;
 use Hifone\Http\Controllers\App\AppController;
 use Hifone\Models\Node;
+use Hifone\Models\Question;
 use Hifone\Models\Section;
 use Hifone\Models\User;
 use Hifone\Services\Filter\WordsFilter;
@@ -26,7 +27,7 @@ use Auth;
 class UserController extends AppController
 {
     //获取当前用户信息
-    public function me(PhicommBll $phicommBll)
+    public function me(PhicommBll $phicommBll, UserBll $userBll)
     {
         if (empty(Auth::phicommId())) {
             throw new HifoneException('缺少token');
@@ -47,6 +48,7 @@ class UserController extends AppController
             }
         }
         $user['isAdmin'] = ($user->role =='管理员' || $user->role =='创始人');
+        $user['follow_new_answer_count'] = $userBll->getFollowNewAnswerCount($user);
 
         return $user;
     }
@@ -71,6 +73,7 @@ class UserController extends AppController
         return $user;
     }
 
+    //我关注的人
     public function follows(User $user, FollowBll $followBll)
     {
         $follows = $followBll->follows($user);
@@ -81,6 +84,7 @@ class UserController extends AppController
         return $follows;
     }
 
+    //我的粉丝
     public function followers(User $user, FollowBll $followBll)
     {
         $followers = $followBll->followers($user);
@@ -93,6 +97,15 @@ class UserController extends AppController
         return $followers;
     }
 
+    //我关注的问题
+    public function followQuestions(User $user, FollowBll $followBll)
+    {
+        $questions = $followBll->followQuestions($user);
+
+        return $questions;
+    }
+
+    //我发出的帖子
     public function threads(User $user, UserBll $userBll)
     {
         $threads = $userBll->getThreads($user);
@@ -100,11 +113,40 @@ class UserController extends AppController
         return $threads;
     }
 
+    //我发出的评论
     public function replies(User $user, UserBll $userBll)
     {
         $replies = $userBll->getReplies($user);
 
         return $replies;
+    }
+
+    //我发出的提问
+    public function questions(User $user, UserBll $userBll)
+    {
+        $replies = $userBll->getQuestions($user);
+
+        return $replies;
+    }
+
+    //我发出的回答
+    public function answers(User $user, UserBll $userBll)
+    {
+        $replies = $userBll->getAnswers($user);
+
+        return $replies;
+    }
+
+    //邀请专家用户列表
+    public function expertUsers(User $user, Question $question, UserBll $userBll)
+    {
+        return $userBll->getExpertUsers($user, $question);
+    }
+
+    //邀请关注用户列表
+    public function followUsers(User $user, Question $question, UserBll $userBll)
+    {
+        return $userBll->getFollowUsers($user, $question);
     }
 
     public function credit(UserBll $userBll, CommonBll $commonBll)

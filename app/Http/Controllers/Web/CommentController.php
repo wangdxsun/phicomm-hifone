@@ -9,12 +9,13 @@
 namespace Hifone\Http\Controllers\Web;
 
 use Hifone\Http\Bll\CommentBll;
+use Auth;
 
 class CommentController extends WebController
 {
     public function store(CommentBll $commentBll)
     {
-        $commentBll->checkPermission();
+        $commentBll->checkPermission(Auth::user());
         $commentBll->checkComment(request('comment_id'));
         $commentBll->checkAnswer(request('answer_id'));
 

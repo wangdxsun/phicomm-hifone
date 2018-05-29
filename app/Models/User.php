@@ -36,6 +36,11 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
 
     // Enable soft delete
 
+    //邀请回答状态
+    const ANSWERED = 2;
+    const INVITED = 1;
+    const TO_INVITE = 0;
+
     protected $dates = ['deleted_at', 'last_op_time'];
 
     /**
@@ -181,6 +186,16 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
     public function follows()
     {
         return $this->hasMany(Follow::class);
+    }
+
+    public function followUsers()
+    {
+        return $this->morphedByMany(User::class, 'followable', 'follows')->orderBy('created_at', 'desc');
+    }
+
+    public function followQuestions()
+    {
+        return $this->morphedByMany(Question::class, 'followable', 'follows')->withPivot('answer_count');
     }
 
     public function identities()
@@ -466,14 +481,19 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         return $this->follows()->ofType(Question::class)->ofId($question->id)->count() > 0;
     }
 
-    public function hasInviteUser(User $user, Question $question)
+    public function hasAnswerQuestion(Question $question)
     {
-        return $this->invites($question->id)->where('id', $user->id)->count() > 0;
+        return $this->answers()->ofQuestion($question)->count() > 0;
     }
 
-    public function invites(Question $question)
+    public function hasBeenInvited(Question $question)
     {
-        return $this->belongsToMany(User::class, 'from_user_id', 'to_user_id')->wherePivot('question_id', $question->id);
+        return Invite::question($question)->where('to_user_id', $this->id)->count() > 0;
+    }
+
+    public function inviteUsers(Question $question)
+    {
+        return $this->belongsToMany(User::class, 'invites', 'from_user_id', 'to_user_id')->wherePivot('question_id', $question->id);
     }
 
     public function likes()
@@ -484,6 +504,12 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
     public function reports()
     {
         return $this->hasMany(Report::class);
+    }
+
+    //被邀请的记录
+    public function invites()
+    {
+        return $this->hasMany(Invite::class, 'to_user_id');
     }
 
     public function getNotificationCountAttribute()
@@ -526,6 +552,11 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function scopeExpert($query)
+    {
+        return $query->orderBy('answer_count', 'desc')->orderBy('score', 'desc');
     }
 
 }

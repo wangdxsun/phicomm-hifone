@@ -148,6 +148,11 @@ class Question extends BaseModel implements TaggableInterface
         return $query->whereIn('status', [static::VISIBLE, static::DELETED]);
     }
 
+    public function scopeLastAnswer($query)
+    {
+        return $query->orderBy('last_answer_time', 'desc');
+    }
+
     public function getUrlAttribute()
     {
         return route('question.show', $this->id);
@@ -215,7 +220,5 @@ class Question extends BaseModel implements TaggableInterface
     {
         return $this->title;
     }
-
-
 
 }

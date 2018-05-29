@@ -9,11 +9,12 @@
 namespace Hifone\Http\Bll;
 
 use Carbon\Carbon;
-use Hifone\Events\User\UserWasActiveEvent;
 use Hifone\Exceptions\Consts\CommonEx;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Models\BaseModel;
 use Auth;
+use Hifone\Models\User;
+
 
 class BaseBll
 {
@@ -58,10 +59,11 @@ class BaseBll
         $model->logs()->create($logData);
     }
 
-    public function checkPermission()
+    public function checkPermission(User $user)
     {
-        if (Auth::user()->hasRole('NoComment') || Auth::user()->score < 0) {
+        if ($user->hasRole('NoComment') || $user->score < 0) {
             throw new HifoneException('你已被禁言', CommonEx::NO_COMMENT);
         }
     }
+
 }
