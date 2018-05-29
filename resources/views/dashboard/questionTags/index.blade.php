@@ -16,15 +16,13 @@
         </div>
         <div class="row">
             <div class="col-sm-12 striped-list" id="item-list" data-item-name="tag">
-                <table>
-                    <tr class="head">
-                        <td >排序</td>
-                        <td class="col-xs-3">问题分类id</td>
-                        <td class="col-xs-3">分类名称</td>
-                        <td class="col-xs-3">已有子类</td>
-                        <td class="col-xs-2">操作</td>
-                    </tr>
-                </table>
+                <div class="row striped-list-item">
+                    <div class="col-xs-1"><span>排序</span></div>
+                    <div class="col-xs-3"><span>编号</span></div>
+                    <div class="col-xs-3"><span>子类名</span></div>
+                    <div class="col-xs-3"><span>所属分类</span></div>
+                    <div class="col-xs-2"><span>操作</span></div>
+                </div>
                 @foreach($tags as $tag)
                     <div class="row striped-list-item" data-item-id="{{ $tag->id }}">
                         <div class="col-xs-1">

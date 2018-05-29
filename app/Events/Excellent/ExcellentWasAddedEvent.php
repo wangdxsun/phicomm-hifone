@@ -11,7 +11,6 @@
 
 namespace Hifone\Events\Excellent;
 
-
 final class ExcellentWasAddedEvent implements ExcellentEventInterface
 {
     /**

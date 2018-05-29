@@ -85,15 +85,15 @@ class Report extends BaseModel
     {
         switch ($this->reportable_type) {
             case Thread::class:
-                return '帖子';
+                return '举报帖子';
             case Reply::class:
-                return '回帖';
+                return '举报回帖';
             case Question::class:
-                return '提问';
+                return '举报提问';
             case Answer::class:
-                return '回答';
+                return '举报回答';
             case Comment::class:
-                return '回复';
+                return '举报回复';
             default:
                 return '未知';
         }

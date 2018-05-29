@@ -41,7 +41,6 @@ class SubNode extends BaseModel
     ];
 
     public $rules = [
-        'name'      => 'required|string',
         'order'     => 'int',
         'status'    => 'int',
         'prompt'    => 'string|min:10|max:40',
@@ -49,7 +48,6 @@ class SubNode extends BaseModel
     ];
 
     public $validationMessages = [
-        'name.required' => '子版块名称是必填字段',
         'name.min' => '子版块名称最少2个字符',
         'name.max' => '子版块名称最多50个字符',
         'prompt.min' => '提示语最少10个字符',

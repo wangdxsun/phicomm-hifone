@@ -83,7 +83,11 @@ class SendSingleNotificationHandler
 
     protected function markedExcellent($target)
     {
-        app('notifier')->notify('thread_mark_excellent', Auth::user(), $target->user, $target);
+        if($target instanceof Thread) {
+            app('notifier')->notify('thread_mark_excellent', Auth::user(), $target->user, $target);
+        } else {
+            return ;
+        }
     }
 
     protected function movedThread($target)

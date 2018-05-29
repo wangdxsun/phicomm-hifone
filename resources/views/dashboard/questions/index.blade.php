@@ -22,7 +22,7 @@
                     <div class="toolbar">
                         <form class="form-inline">
                             <div class="form-group">
-                                <input type="text" name="question[id]" class="form-control" placeholder="问题编号" style="width: 100px;"
+                                <input type="text" name="question[id]" class="form-control" placeholder="问题ID" style="width: 100px;"
                                        @if (isset($search['id']))
                                        value="{{ $search['id'] }}"
                                         @endif >
@@ -55,8 +55,8 @@
                             <el-date-picker type="datetime" placeholder="结束时间" v-model="date_end"></el-date-picker>
 
                             <button class="btn btn-default">搜索</button>
-                            <el-input :value="date_end_str" placeholder="请输入内容"  type="hidden" resize="both"  style="width: 60px; height: 10px;" name="question[date_end]"></el-input>
-                            <el-input :value="date_start_str" placeholder="请输入内容"  type="hidden" resize="both"  style="width: 60px; height: 10px;" name="question[date_start]"></el-input>
+                            <el-input :value="date_end_str" type="hidden" resize="both"  style="width: 60px; height: 10px;" name="question[date_end]"></el-input>
+                            <el-input :value="date_start_str" type="hidden" resize="both"  style="width: 60px; height: 10px;" name="question[date_start]"></el-input>
                         </form>
                     </div>
                     <form method="POST">
@@ -80,7 +80,7 @@
                             @foreach($questions as $question)
                                 <tr>
                                     <td>{{ $question->id }}</td>
-                                    <td>{{ $question->title }}</td>
+                                    <td><a target="_blank" href="{{ $question->url }}">{{ $question->title }}</a></td>
                                     <td>
                                         @foreach($question->tags as $tag)
                                             {{$tag->name}}<br>

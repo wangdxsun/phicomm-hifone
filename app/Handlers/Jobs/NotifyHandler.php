@@ -137,11 +137,11 @@ class NotifyHandler
             case 'comment_mention'://回复中@我
                 return "【" . $operator->username . "】回复中提到了你";
             case 'question_new_answer'://回答提问
-                return "【" . $operator->username . "】回答了你的提问";
+                return "【" . $operator->username . "】回答了你的问题";
             case 'answer_new_comment':
-                return "【" . $operator->username . "】评论了你的回答";
+                return "【" . $operator->username . "】回复了你";
             case 'comment_new_comment':
-                return "【" . $operator->username . "】回复了你评论";
+                return "【" . $operator->username . "】回复了你";
             case 'answer_like'://点赞回答
                 return "【" . $operator->username . "】赞了你的回答";
             case 'comment_like'://点赞回复

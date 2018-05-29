@@ -13,13 +13,13 @@
         </div>
         <div class="row">
             <div class="col-sm-12 striped-list" id="item-list" data-item-name="tagType">
-
-                <div class="col-xs-1"><span class="drag-handle">排序</span></div>
-                <div class="col-xs-3 drag-handle">问题分类id</div>
-                <div class="col-xs-3 drag-handle">分类名称</div>
-                <div class="col-xs-3 drag-handle">已有子类</div>
-                <div class="col-xs-2 drag-handle">操作</div>
-
+                <div class="row striped-list-item">
+                    <div class="col-xs-1"><span>排序</span></div>
+                    <div class="col-xs-3">编号</div>
+                    <div class="col-xs-3">分类名</div>
+                    <div class="col-xs-3">已有子类</div>
+                    <div class="col-xs-2">操作</div>
+                </div>
                 @foreach($tagTypes as $tagType)
                     <div class="row striped-list-item" data-item-id="{{ $tagType->id }}">
                         <div class="col-xs-1">
@@ -33,7 +33,7 @@
                         </div>
                         <div class="col-xs-3 drag-handle">
                             @foreach($tagType->tags as $tag)
-                                {{ $tag->name . '， ' }}
+                                {{ $tag->name}}<br>
                             @endforeach
                         </div>
                         <div class="col-xs-2 drag-handle">

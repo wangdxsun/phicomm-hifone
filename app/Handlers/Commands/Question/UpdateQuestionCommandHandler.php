@@ -2,6 +2,7 @@
 namespace Hifone\Handlers\Commands\Question;
 
 use Hifone\Commands\Question\UpdateQuestionCommand;
+use Hifone\Exceptions\HifoneException;
 use Hifone\Models\Question;
 use Agent;
 use Auth;
@@ -21,10 +22,13 @@ class UpdateQuestionCommandHandler
     {
         $question = $command->question;
         if ($command->data['questionTags'] == '') {
-            return Redirect::route('dashboard.questions.edit', $question->id)
-                ->withErrors('请选择问题类型');
+            throw new HifoneException('类型选择需在1-4个');
+
         } else {
             $tagData = explode(',', $command->data['questionTags']);
+            if(count($tagData) > 4) {
+                throw new HifoneException('类型选择需在1-4个');
+            }
             $question->tags()->sync($tagData);
             unset($command->data['questionTags']);
         }

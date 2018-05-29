@@ -99,7 +99,7 @@ class ReportBll
         if (Auth::id() === $comment->user->id) {
             throw new HifoneException('自己不能举报自己哦');
         }
-        if (Auth::user()->hasReportAnswer($comment)) {
+        if (Auth::user()->hasReportComment($comment)) {
             throw new HifoneException('已举报');
         }
         $reportData = Input::get('report');

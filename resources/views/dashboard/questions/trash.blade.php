@@ -21,7 +21,7 @@
             <div class="toolbar">
                 <form class="form-inline">
                     <div class="form-group">
-                        <input type="text" name="question[id]" class="form-control" placeholder="问题编号" style="width: 100px;"
+                        <input type="text" name="question[id]" class="form-control" placeholder="问题ID" style="width: 100px;"
                                @if (isset($search['id']))
                                value="{{ $search['id'] }}"
                                 @endif >

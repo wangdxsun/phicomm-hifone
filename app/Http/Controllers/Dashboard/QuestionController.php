@@ -85,10 +85,11 @@ class QuestionController extends Controller
             $question->update(['order' => 0]);
             $this->updateOpLog($question, '取消下沉问题');
         } else {
-            $question->update(['order' => 1]);
+            $question->update(['order' => -1]);
             $this->updateOpLog($question, '下沉问题');
             event(new SinkWasAddedEvent($question->user, $question));
         }
+        return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
     //加精问题
@@ -103,6 +104,7 @@ class QuestionController extends Controller
             $this->updateOpLog($question, '加精问题');
             event(new ExcellentWasAddedEvent($question->user, $question));
         }
+        return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
     //编辑问题(区分审核通过和审核中)
@@ -125,6 +127,14 @@ class QuestionController extends Controller
     public function update(Question $question)
     {
         //修改问题标题，标签和内容
+        $this->validate(request(),[
+            'question.title'  =>     'min:5|max:40',
+            'question.body'   =>     'max:800',
+        ],[
+            'question.title.min' => '标题5'. '-'.'40个字符',
+            'question.title.max' => '标题5'. '-'.'40个字符',
+            'question.body.max'  => '内容0'. '-'.'800个字符',
+        ]);
         $questionData = Input::get('question');
         $questionData['body_original'] = $questionData['body'];
         try {
