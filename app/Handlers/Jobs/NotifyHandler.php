@@ -45,10 +45,8 @@ class NotifyHandler
         ];
         $notify->object->notifications()->create($data);
 
-        //todo user_invited类型的消息处理，pusher方法调用第四个参数$msg_type传0表示通知
-
         //消息推送
-        if ($notify->type == 'answer_adopted' || $notify->type == 'adopt_asap') {
+        if ($notify->type == 'user_invited' || $notify->type == 'adopt_asap') {//邀请回答、尽快采纳 非静默方式
             $this->pushNotify($notify->author, $notify->user, $notify->type, $notify->object, '0');
         } elseif ($notify->type <> 'followed_user_new_thread' && $notify->type <> 'followed_user_new_question') {
             $this->pushNotify($notify->author, $notify->user, $notify->type, $notify->object);
@@ -154,7 +152,11 @@ class NotifyHandler
                 return "【" . $operator->username . "】赞了你的回答";
             case 'comment_like'://点赞回复
                 return "【" . $operator->username . "】赞了你的回复";
-            case 'answer_adopted'://点赞回复
+            case 'user_invited'://邀请回答
+                return "【" . $operator->username . "】邀请你来回答";
+            case 'adopt_asap'://尽快采纳
+                return "【系统】提醒你尽快采纳回答";
+            case 'answer_adopted'://回答被采纳
                 return "【" . $operator->username . "】采纳了你的回答";
             default :
                 throw new HifoneException("推送类型 $typeStr 不支持");
@@ -248,6 +250,10 @@ class NotifyHandler
                 return '1015';
             case 'comment_like':
                 return '1016';
+            case 'user_invited':
+                return '1017';
+            case 'adopt_asap':
+                return '1017';
             case 'answer_adopted':
                 return '1017';
             default :

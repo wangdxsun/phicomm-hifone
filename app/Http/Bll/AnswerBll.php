@@ -133,7 +133,7 @@ class AnswerBll extends BaseBll
             throw $exception;
         }
 
-        //TODO 邀请发通知
+        //邀请发通知
         event(new InviteWasAddedEvent(Auth::user(), $toUser, $question));
     }
 
