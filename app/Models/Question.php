@@ -37,7 +37,8 @@ class Question extends BaseModel implements TaggableInterface
         'last_op_time',
         'last_op_reason',
         'deleted_at',
-        'updated_at'
+        'updated_at',
+        'like_count'
     ];
 
     protected $mappingProperties = [

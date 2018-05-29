@@ -23,6 +23,8 @@ class Notification extends BaseModel implements HasPresenter
      */
     protected $fillable = ['author_id', 'user_id', 'object_id', 'object_type', 'type', 'body'];
 
+    protected $hidden = ['id', 'author_id', 'user_id', 'object_id', 'object_type', 'body', 'updated_at'];
+
     /**
      * The validation rules.
      *
@@ -80,6 +82,11 @@ class Notification extends BaseModel implements HasPresenter
         return $query->where('type', 'followed_user_new_thread');
     }
 
+    public function scopeMoment($query)
+    {
+        return $query->whereIn('type', ['followed_user_new_thread', 'followed_user_new_question']);
+    }
+
     public function scopeReply($query)
     {
         return $query->where('type', 'thread_new_reply');
@@ -113,6 +120,11 @@ class Notification extends BaseModel implements HasPresenter
     public function reply()
     {
         return $this->belongsTo(Reply::class, 'object_id');
+    }
+
+    public function question()
+    {
+        return $this->belongsTo(Question::class, 'object_id');
     }
 
     /**
