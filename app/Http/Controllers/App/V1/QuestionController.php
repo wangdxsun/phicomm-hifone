@@ -66,6 +66,7 @@ class QuestionController extends AppController
         } elseif (count($tagIds) > 4) {
             throw new HifoneException('最多选择4个标签哦~');
         }
+        //TODO 管理员发表提问，因为管理员没有phicommId无法获取智慧果
         $questionBll->checkScore(Auth::user()->phicomm_id);
 
         $questionData = [

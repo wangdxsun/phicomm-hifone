@@ -63,7 +63,7 @@ class Answer extends BaseModel
 
     public function user()
     {
-        return $this->belongsTo(User::class)->select(['id', 'username', 'avatar_url', 'role', 'score']);
+        return $this->belongsTo(User::class)->select(['id', 'username', 'avatar_url', 'role', 'score', 'phicomm_id']);
     }
 
     public function comments()

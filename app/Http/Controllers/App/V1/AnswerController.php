@@ -73,4 +73,29 @@ class AnswerController extends AppController
         return success('已邀请');
     }
 
+    //采纳回答
+    /**
+     * 提问者，在第一个回答者回答算起的5天内可以采纳任意一个回答，采纳后，悬赏的分值会给到该回答用户；
+     * 若5天后，用户没有操作，以此为时间算起，10天后管理员未处理含管理员选不出最佳答案，系统将悬赏分值给到点赞数最高的用户，
+     * 同等的点赞数给到第一个回答用户（主要也是为了兼顾以后不用干预的处理，同时也是刺激用户参与回答）；
+     * @param Answer $answer
+     * @param AnswerBll $answerBll
+     * @param CommentBll $commentBll
+     * @throws HifoneException
+     * @return String
+     */
+    public function adopt(Answer $answer, AnswerBll $answerBll)
+    {
+        if (Auth::id() <> $answer->question->user_id) {
+            throw new HifoneException('非问题作者不能采纳');
+        } elseif (Auth::id() <> $answer->user_id) {
+            throw new HifoneException('不能采纳自己的回答');
+        }
+        //按照时间执行自己、管理员采纳操作和系统自动采纳、提醒用户采纳
+        //todo 计时起点如何处理
+        $answerBll->adoptAnswer($answer);
+
+        return success('已采纳');
+    }
+
 }

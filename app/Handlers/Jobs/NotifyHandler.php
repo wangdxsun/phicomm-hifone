@@ -25,14 +25,16 @@ class NotifyHandler
         }
 
         //web和H5 红点逻辑
-        if (in_array($notify->type, ['reply_like', 'thread_like', 'user_follow', 'thread_favorite', 'thread_pin', 'thread_mark_excellent', 'reply_pin', 'user_invited'])) {
+        if (in_array($notify->type, ['reply_like', 'thread_like', 'user_follow', 'thread_favorite', 'thread_pin', 'thread_mark_excellent', 'reply_pin', 'adopt_asap'])) {
             $notify->user->increment('notification_system_count', 1);
-        } elseif (in_array($notify->type, ['reply_reply', 'reply_mention', 'thread_mention'])) {
+        } elseif (in_array($notify->type, ['reply_reply', 'reply_mention', 'thread_mention', 'question_mention', 'answer_mention', 'comment_mention'])) {
             $notify->user->increment('notification_at_count', 1);
         } elseif ($notify->type == 'thread_new_reply') {
             $notify->user->increment('notification_reply_count', 1);
         } elseif (in_array($notify->type, ['followed_user_new_thread', 'followed_user_new_question'])) {
             $notify->user->increment('notification_follow_count');
+        } elseif (in_array($notify->type, ['user_invited', 'answer_adopted', 'question_new_answer', 'answer_new_comment', 'comment_new_comment', ''])) {
+            $notify->user->increment('notification_qa_count');
         }
 
         $data = [

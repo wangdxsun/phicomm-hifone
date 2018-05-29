@@ -11,6 +11,10 @@
 
 namespace Hifone\Commands\Invite;
 
+
+/**
+ * @deprecated
+ */
 final class AddInviteCommand
 {
     public $from;

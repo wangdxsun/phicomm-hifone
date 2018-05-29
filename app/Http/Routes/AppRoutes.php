@@ -113,7 +113,7 @@ class AppRoutes
                 $router->post('questions', 'QuestionController@store');
                 $router->post('answers', 'AnswerController@store');
                 $router->post('answers/invite/users/{user}/questions/{question}', 'AnswerController@invite')->where('user', '[0-9]+')->where('question', '[0-9]+');
-                $router->post('answers/adopt/answers/{answer}', 'AnswerController@invite')->where('answer', '[0-9]+');
+                $router->post('answers/adopt/answers/{answer}', 'AnswerController@adopt')->where('answer', '[0-9]+');
                 $router->post('comments', 'CommentController@store');
 
                 $router->get('users/{user}/follow/questions', 'UserController@followQuestions')->where('user', '[0-9]+');
