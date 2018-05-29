@@ -43,6 +43,8 @@ class NotifyHandler
         ];
         $notify->object->notifications()->create($data);
 
+        //todo user_invited类型的消息处理，pusher方法调用第四个参数$msg_type传0表示通知
+
         //消息推送
         if ($notify->type <> 'followed_user_new_thread' && $notify->type <> 'followed_user_new_question') {
             $this->pushNotify($notify->author, $notify->user, $notify->type, $notify->object);
