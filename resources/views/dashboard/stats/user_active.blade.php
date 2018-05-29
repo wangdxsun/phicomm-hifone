@@ -18,12 +18,12 @@
                         <td>每日登陆新用户数</td>
                         <td>每日登陆老用户数</td>
                     </tr>
-                    @foreach ($statArr as $key => $value)
+                    @foreach ($userStat as $value)
                         <tr>
-                            <td>{{ $value['date'] }}</td>
-                            <td>{{ $value['active_user_cnt'] }}</td>
-                            <td>{{ $value['new_user_cnt'] }}</td>
-                            <td>{{ $value['old_user_cnt'] }}</td>
+                            <td>{{ $value->date }}</td>
+                            <td>{{ $value->active_user_cnt }}</td>
+                            <td>{{ $value->new_user_cnt }}</td>
+                            <td>{{ $value->old_user_cnt }}</td>
                         </tr>
                     @endforeach
                 </table>

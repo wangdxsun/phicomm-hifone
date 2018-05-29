@@ -58,7 +58,7 @@
                                 </td>
                                 <td><a href="{{ route('user.show', ['id'=>$answer->user->id]) }}" target="_blank">{{ $answer->user->username }}</a></td>
                                 <td>{{ $answer->ip }}</td>
-                                <td>{{ $answer->created_time }}</td>
+                                <td>{{ $answer->created_at }}</td>
                                 <td>{{ $answer->question->score }}</td>
                                 <td>
                                     <a data-url="/dashboard/answers/{{$answer->id}}/audit" data-method="post"><i class="fa fa-check"></i></a>

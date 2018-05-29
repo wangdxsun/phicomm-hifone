@@ -25,15 +25,18 @@
                         <td>每日新增提问数</td>
                         <td>每日新增回答数</td>
                     </tr>
-                    @foreach($statsArr as $key => $value)
+                    @foreach($stats as $value)
                         <tr>
-                            <td>{{ $value['date'] }}</td>
-                            <td>{{ $value['question_count'] }}</td>
-                            <td>{{ $value['answer_count'] }}</td>
+                            <td>{{ $value->date }}</td>
+                            <td>{{ $value->question_cnt }}</td>
+                            <td>{{ $value->answer_cnt }}</td>
                         </tr>
                         @endforeach
                 </table>
             </div>
+        </div>
+        <div class="text-right">
+            {!! $stats->appends(Request::except('page', '_pjax'))->render() !!}
         </div>
     </div>
 @stop

@@ -9,16 +9,14 @@
 namespace Hifone\Http\Controllers\Dashboard;
 
 use Hifone\Http\Controllers\Controller;
-use Hifone\Models\Answer;
 use Hifone\Models\Carousel;
 use Hifone\Models\Node;
-use Hifone\Models\Question;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
-use Hifone\Models\User;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 use Input;
 use DB;
-use Carbon\Carbon;
 
 class StatController extends Controller
 {
@@ -49,20 +47,10 @@ class StatController extends Controller
                                         ) as stat
                                         group by stat.date
                                         order by stat.date desc limit 30');
-        $statsArr = array();
-        foreach ($userStat as $userCount) {
-            $statsArr[$userCount->date] = [
-                'date' => $userCount->date,
-                'user_count' => $userCount->user_cnt,
-                'thread_user_count' => $userCount->thread_user_cnt,
-                'reply_user_count' => $userCount->reply_user_cnt,
-                'contribute_user_count' => $userCount->contribute_user_cnt,
-            ];
-        }
 
         return view('dashboard.stats.user')
             ->withCurrentMenu('user')
-            ->with('statArr', $statsArr)
+            ->with('userStat', $userStat)
             ->withCurrentNav('basic');
     }
     //用户统计之App活跃用户
@@ -86,17 +74,8 @@ class StatController extends Controller
                                         where substr(u.last_visit_time_app,1,10) > SUBSTR(u.created_at,1,10)) as stat
                                         group by stat.date
                                         order by stat.date desc limit 30');
-        $statsArr = array();
-        foreach ($userStat as $userCount) {
-            $statsArr[$userCount->date] = [
-                'date' => $userCount->date,
-                'active_user_cnt' => $userCount->active_user_cnt,
-                'new_user_cnt' => $userCount->new_user_cnt,
-                'old_user_cnt' => $userCount->old_user_cnt,
-            ];
-        }
         return view('dashboard.stats.user_active')
-            ->with('statArr', $statsArr)
+            ->with('userStat', $userStat)
             ->withCurrentNav('app')
             ->withCurrentMenu('user');
     }
@@ -121,17 +100,8 @@ class StatController extends Controller
                                         where substr(u.last_visit_time_web,1,10) > SUBSTR(u.created_at,1,10)) as stat
                                         group by stat.date
                                         order by stat.date desc limit 30');
-        $statsArr = array();
-        foreach ($userStat as $userCount) {
-            $statsArr[$userCount->date] = [
-                'date' => $userCount->date,
-                'active_user_cnt' => $userCount->active_user_cnt,
-                'new_user_cnt' => $userCount->new_user_cnt,
-                'old_user_cnt' => $userCount->old_user_cnt,
-            ];
-        }
         return view('dashboard.stats.user_active')
-            ->with('statArr', $statsArr)
+            ->with('userStat', $userStat)
             ->withCurrentNav('web')
             ->withCurrentMenu('user');
     }
@@ -156,17 +126,9 @@ class StatController extends Controller
                                         where substr(u.last_visit_time,1,10) > SUBSTR(u.created_at,1,10)) as stat
                                         group by stat.date
                                         order by stat.date desc limit 30');
-        $statsArr = array();
-        foreach ($userStat as $userCount) {
-            $statsArr[$userCount->date] = [
-                'date' => $userCount->date,
-                'active_user_cnt' => $userCount->active_user_cnt,
-                'new_user_cnt' => $userCount->new_user_cnt,
-                'old_user_cnt' => $userCount->old_user_cnt,
-            ];
-        }
+
         return view('dashboard.stats.user_active')
-            ->with('statArr', $statsArr)
+            ->with('userStat', $userStat)
             ->withCurrentNav('h5')
             ->withCurrentMenu('user');
 
@@ -190,17 +152,8 @@ class StatController extends Controller
                                         where ff.`followable_type`= ?) as stat
                                         group by stat.date
                                         order by stat.date desc limit 30",['Hifone\Models\User']);
-        $statsArr = array();
-        foreach ($userStat as $userCount) {
-            $statsArr[$userCount->date] = [
-                'date' => $userCount->date,
-                'favorite_count' => $userCount->favorite_cnt,
-                'like_count' => $userCount->like_cnt,
-                'follow_count' => $userCount->follow_cnt,
-            ];
-        }
         return view('dashboard.stats.user_interaction')
-            ->with('statArr', $statsArr)
+            ->with('userStat', $userStat)
             ->withCurrentMenu('userInteraction');
     }
     //数据统计之每日新增发帖统计
@@ -234,6 +187,8 @@ class StatController extends Controller
 
     public function dailyQuestionsAndAnswersCount()
     {
+        $currentPage = Paginator::resolveCurrentPage() ?: 1;
+        $skip = ($currentPage - 1) * 30;
         $dailyCount = DB::select("select stat.date, count(stat.qid) as question_cnt, count(stat.aid) as answer_cnt from 
                                                 (select q.id as qid, null as aid, substr(q.created_at, 1, 10) as date
                                                 from questions as q
@@ -245,26 +200,19 @@ class StatController extends Controller
                                                 on a.question_id = q.id
                                                 where a.`status` = 0) as stat
                                                 group by stat.date
-                                                order by stat.date desc limit 30");
+                                                order by stat.date desc limit 30 offset  ? ", [$skip]);
 
-        $statsArr = array();
-        foreach ($dailyCount as $count) {
-            $statsArr[$count->date] = [
-                'date' => $count->date,
-                'question_count' => $count->question_cnt,
-                'answer_count' => $count->answer_cnt
-            ];
-        }
+        $stats = new LengthAwarePaginator($dailyCount, 360, 30, $currentPage, ['path' => Paginator::resolveCurrentPath()]);
         $questionsCount = 0;
         $answersCount = 0;
-        foreach ($statsArr as $key => $value) {
-            $questionsCount += $value['question_count'];
-            $answersCount += $value['answer_count'];
+        foreach (array_get($stats->toArray(), 'data') as  $value) {
+            $questionsCount += $value->question_cnt;
+            $answersCount += $value->answer_cnt;
         }
         return view('dashboard.stats.questions')
-            ->with('statsArr', $statsArr)
-            ->with('questionsCount', $answersCount)
-            ->with('answersCount', $answersCount)
+            ->with('stats', $stats)
+            ->with('questionsCount', $questionsCount)
+           ->with('answersCount', $answersCount)
             ->withCurrentMenu('question_answer');
     }
 
@@ -299,7 +247,6 @@ class StatController extends Controller
     //版块统计之详情
     public function node_detail(Node $node)
     {
-
         $search = $this->filterEmptyValue(Input::get('node'));
         $search['date_start'] = isset($search['date_start']) ? $search['date_start'] : substr(Thread::visible()->where('node_id',$node->id)->orderBy('id')->first()->created_at, 0,10);
         $search['date_end'] = isset($search['date_end']) ? $search['date_end'] :  substr(Thread::visible()->where('node_id',$node->id)->orderBy('id','desc')->first()->created_at, 0,10);
@@ -359,15 +306,9 @@ class StatController extends Controller
                                         from search_words
                                         group by date
                                         order by date desc limit 30");
-        $statsArr = array();
-        foreach ($userStat as $userCount) {
-            $statsArr[$userCount->date] = [
-                'date' => $userCount->date,
-                'daily_count' => $userCount->cnt,
-            ];
-        }
+
         return view('dashboard.stats.search_words')
-            ->with('statArr', $statsArr)
+            ->with('userStat', $userStat)
             ->withCurrentMenu('search_words');
 
     }
@@ -375,20 +316,14 @@ class StatController extends Controller
     //搜索词详情
     public function userSearchDate($date)
     {
-        $dailyStat = DB::select("select word,`count` as daliy_cnt,`stat_count` as stat_cnt
+        $dailyStat = DB::select("select word,`count` as daily_cnt,`stat_count` as stat_cnt
                                         from search_words
                                         where substr(created_at,1,10) = ?
-                                        order by daliy_cnt desc limit 30",[$date]);
-        $statsArr = array();
-        foreach ($dailyStat as $dailyCount) {
-            $statsArr[] = [
-                'word' => $dailyCount->word,
-                'daily_count' => $dailyCount->daliy_cnt,
-                'stat_count'  =>  $dailyCount->stat_cnt
-            ];
-        }
+                                        order by daily_cnt desc limit 30",[$date]);
+
         return view('dashboard.stats.search_detail')
-            ->with('statArr', $statsArr)
+            ->with('dailyStat', $dailyStat)
             ->withCurrentMenu('search_detail');
     }
+
 }

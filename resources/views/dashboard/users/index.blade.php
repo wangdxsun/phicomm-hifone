@@ -70,6 +70,7 @@
                     <td>注册IP</td>
                     <td>操作人</td>
                     <td>操作时间</td>
+                    <td>自动标签</td>
                     <td>标签</td>
                     <td>操作</td>
                 </tr>
@@ -91,8 +92,13 @@
                         <td>{{ $user->lastOpUser->username }}</td>
                         <td>{{ $user->last_op_time }}</td>
                         <td>
-                            @foreach($user->tags as $tag)
-                                {{ $tag->name . '， ' }}
+                            @foreach($user->tags()->ofChannel(Hifone\Models\Tag::AUTO)->get() as $tag)
+                                {{ $tag->name }}<br>
+                            @endforeach
+                        </td>
+                        <td>
+                            @foreach($user->tags()->ofNotAuto()->get() as $tag)
+                                {{ $tag->name }}<br>
                             @endforeach
                         </td>
                         <td>
@@ -124,7 +130,7 @@
                                     <div class="col-sm-12">
                                         <div>
                                             <label>{{ '用户标签' }}</label>
-                                            <el-select v-model="userTags" id="user-tags" multiple placeholder="选择标签">
+                                            <el-select v-model="userTags" multiple placeholder="选择标签">
                                                 <el-option-group
                                                         v-for="userTagType in userTagTypes"
                                                         :key="userTagType.id"
@@ -137,7 +143,7 @@
                                                     </el-option>
                                                 </el-option-group>
                                             </el-select>
-                                            <input type="hidden" class="form-control" :value="editUserTags" name="user[tags]">
+                                            <input type="hidden" class="form-control" :value="userTags" name="userTags">
                                         </div>
                                         <div class="row">
                                             <div class="col-xs-12">
@@ -170,7 +176,6 @@
             data: function () {
                 return {
                     allUserTags:[],
-                    editUserTags: {!! $userTags or json_encode([]) !!},
                     userTagTypes: {!! $userTagTypes !!},
                     userTags: '',
                     userId: null,

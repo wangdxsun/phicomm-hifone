@@ -39,7 +39,7 @@
                             <tr>
                                 <td><input class="checkAll" type="checkbox" name="batch[]" value="{{ $question->id }}"></td>
                                 <td>{{ $question->id }}</td>
-                                <td>{{ $question->title }}</td>
+                                <td><a target="_blank" href="{{ $question->url }}">{{ $question->title }}</a></td>
                                 <td>
                                     <div class="replyContent">
                                         {!! $question->body !!}

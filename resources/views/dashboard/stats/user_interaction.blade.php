@@ -15,12 +15,12 @@
                         <td>每日点赞数</td>
                         <td>每日累计关注(粉丝)数</td>
                     </tr>
-                    @foreach ($statArr as $key => $value)
+                    @foreach ($userStat as $value)
                         <tr>
-                            <td>{{ $value['date'] }}</td>
-                            <td>{{ $value['favorite_count'] }}</td>
-                            <td>{{ $value['like_count'] }}</td>
-                            <td>{{ $value['follow_count'] }}</td>
+                            <td>{{ $value->date }}</td>
+                            <td>{{ $value->favorite_cnt }}</td>
+                            <td>{{ $value->like_cnt }}</td>
+                            <td>{{ $value->follow_cnt }}</td>
                         </tr>
                     @endforeach
                 </table>
