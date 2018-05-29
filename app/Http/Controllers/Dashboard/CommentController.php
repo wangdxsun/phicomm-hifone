@@ -5,6 +5,7 @@ use Carbon\Carbon;
 use Hifone\Commands\Comment\UpdateCommentCommand;
 use DB;
 use Hifone\Events\Comment\CommentedWasAddedEvent;
+use Hifone\Events\Comment\CommentWasAuditedEvent;
 use Hifone\Models\TagType;
 use View;
 use Input;
@@ -100,6 +101,9 @@ class CommentController extends Controller
             DB::rollBack();
             return Redirect::back()->withErrors($e->getMessage());
         }
+        //回复被审核通过
+        event(new CommentWasAuditedEvent($comment->user, $comment));
+        //回答被回复
         event(new CommentedWasAddedEvent($comment->user, $comment->answer));
 
         return Redirect::back()->withSuccess('恭喜，操作成功！');

@@ -14,14 +14,25 @@ class SendCommentNotificationHandler
 
     public function newCommentNotify(Comment $comment)
     {
-        //通知被回复的人
-        app('notifier')->notify(
-            'comment',
-            $comment->user,
-            $comment->comment->user or $comment->answer->user,
-            $comment,
-            $comment->body
-        );
+        if (null ==  $comment->comment_id) {
+            //回答被评论
+            app('notifier')->notify(
+                'answer_new_comment',
+                $comment->user,
+                $comment->answer->user,
+                $comment,
+                $comment->body
+            );
+        } else {
+            //评论被回复
+            app('notifier')->notify(
+                'comment_new_comment',
+                $comment->user,
+                $comment->comment->user,
+                $comment,
+                $comment->body
+            );
+        }
 
         //通知@的人
         $parserAt = app('parser.at');

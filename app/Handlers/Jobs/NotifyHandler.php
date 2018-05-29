@@ -136,10 +136,14 @@ class NotifyHandler
                 return "【" . $operator->username . "】提问中提到了你";
             case 'answer_mention'://回答中@我
                 return "【" . $operator->username . "】回答中提到了你";
+            case 'comment_mention'://回复中@我
+                return "【" . $operator->username . "】回复中提到了你";
             case 'question_new_answer'://回答提问
-                return "【" . $operator->username . "】回答了你";
-            case 'comment':
-                return "【" . $operator->username . "】回复了你";
+                return "【" . $operator->username . "】回答了你的提问";
+            case 'answer_new_comment':
+                return "【" . $operator->username . "】评论了你的回答";
+            case 'comment_new_comment':
+                return "【" . $operator->username . "】回复了你评论";
             case 'answer_like'://点赞回答
                 return "【" . $operator->username . "】赞了你的回答";
             case 'comment_like'://点赞回复
@@ -228,12 +232,14 @@ class NotifyHandler
                 return '1011';
             case 'question_new_answer'://回答提问
                 return '1012';
-            case 'comment'://回复
+            case 'answer_new_comment'://评论回答
                 return '1013';
-            case 'answer_like':
+            case 'comment_new_comment'://回复评论
                 return '1014';
-            case 'comment_like':
+            case 'answer_like':
                 return '1015';
+            case 'comment_like':
+                return '1016';
             default :
                 throw new HifoneException("推送类型 $typeStr 不支持");
         }
