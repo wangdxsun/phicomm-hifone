@@ -24,18 +24,16 @@ class NotifyHandler
             return;
         }
 
-
-        if ($notify->type == 'reply_like' || $notify->type == 'thread_like' || $notify->type == 'user_follow'
-            || $notify->type == 'thread_favorite' || $notify->type == 'thread_pin' || $notify->type == 'thread_mark_excellent' || $notify->type == 'reply_pin') {
+        //web和H5 红点逻辑
+        if (in_array($notify->type, ['reply_like', 'thread_like', 'user_follow', 'thread_favorite', 'thread_pin', 'thread_mark_excellent', 'reply_pin', 'user_invited'])) {
             $notify->user->increment('notification_system_count', 1);
-        } elseif ($notify->type == 'reply_reply' || $notify->type == 'reply_mention' || $notify->type == 'thread_mention') {
+        } elseif (in_array($notify->type, ['reply_reply', 'reply_mention', 'thread_mention'])) {
             $notify->user->increment('notification_at_count', 1);
         } elseif ($notify->type == 'thread_new_reply') {
             $notify->user->increment('notification_reply_count', 1);
-        } elseif ($notify->type == 'followed_user_new_thread') {
+        } elseif (in_array($notify->type, ['followed_user_new_thread', 'followed_user_new_question'])) {
             $notify->user->increment('notification_follow_count');
         }
-        //todo user_invited类型的消息处理，pusher方法调用第四个参数$msg_type传0表示通知
 
         $data = [
             'author_id'     => $notify->author->id,

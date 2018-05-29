@@ -108,6 +108,7 @@ class AppRoutes
                 $router->get('notification/at', 'NotificationController@at');
                 $router->get('notification/system', 'NotificationController@system');
                 $router->get('notification/watch', 'NotificationController@watch');
+                $router->get('notification/moment', 'NotificationController@moment');
 
                 $router->post('questions', 'QuestionController@store');
                 $router->post('answers', 'AnswerController@store');
