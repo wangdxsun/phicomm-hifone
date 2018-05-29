@@ -63,10 +63,4 @@ class TagType extends BaseModel
         return $query->where('type', $id);
     }
 
-    //排除自动标签（用户标签中手动添加的标签）
-    public function scopeNotAuto($query)
-    {
-        return $query->whereNull('channel');
-    }
-
 }

@@ -15,12 +15,12 @@
                         <td>每日搜索词总数</td>
                         <td>详情</td>
                     </tr>
-                    @foreach ($statArr as $key => $value)
+                    @foreach ($userStat as $value)
                         <tr>
-                            <td>{{ $value['date'] }}</td>
-                            <td>{{ $value['daily_count'] }}</td>
+                            <td>{{ $value->date }}</td>
+                            <td>{{ $value->cnt }}</td>
                             <td>
-                                <a href="/dashboard/stat/search/{{ $value['date'] }}">详情</a>
+                                <a href="/dashboard/stat/search/{{ $value->date }}">详情</a>
                             </td>
                         </tr>
                     @endforeach

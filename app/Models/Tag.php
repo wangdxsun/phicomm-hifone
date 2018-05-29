@@ -54,9 +54,10 @@ class Tag extends Model
         return $query->where('channel', $channel);
     }
 
+    //非自动标签
     public function scopeOfNotAuto($query)
     {
-        return $query->where('channel', '<>',0);
+        return $query->whereNull('channel');
     }
 
     public static function findTagByName($name)

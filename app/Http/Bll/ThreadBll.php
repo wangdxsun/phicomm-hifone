@@ -29,7 +29,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Input;
 use Auth;
-use Config;
 use Illuminate\Support\Facades\Redis;
 use Carbon\Carbon;
 use Agent;

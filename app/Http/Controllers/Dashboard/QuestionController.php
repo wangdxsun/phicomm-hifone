@@ -37,6 +37,7 @@ class QuestionController extends Controller
     //待审核列表
     public function audit()
     {
+        //待审核列表，按发表时间倒序排序
         $questions = Question::audit()->with(['user', 'tags'])->orderBy('created_at', 'desc')->paginate(20);
         $questionsCount = Question::audit()->count();
         return View::make('dashboard.questions.audit')
@@ -127,7 +128,6 @@ class QuestionController extends Controller
         $questionData = Input::get('question');
         $questionData['body_original'] = $questionData['body'];
         try {
-            //TODO 编辑问题后续的标签相关计数等
             $question = dispatch( new UpdateQuestionCommand($question, $questionData));
 
         } catch (\Exception $e) {

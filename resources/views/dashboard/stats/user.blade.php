@@ -20,13 +20,13 @@
                         <td>每日回帖用户</td>
                         <td>每日贡献内容用户</td>
                     </tr>
-                    @foreach ($statArr as $key => $value)
+                    @foreach ($userStat as $value)
                         <tr>
-                            <td>{{ $value['date'] }}</td>
-                            <td>{{ $value['user_count'] }}</td>
-                            <td>{{ $value['thread_user_count'] }}</td>
-                            <td>{{ $value['reply_user_count'] }}</td>
-                            <td>{{ $value['contribute_user_count'] }}</td>
+                            <td>{{ $value->date }}</td>
+                            <td>{{ $value->user_cnt }}</td>
+                            <td>{{ $value->thread_user_cnt }}</td>
+                            <td>{{ $value->reply_user_cnt }}</td>
+                            <td>{{ $value->contribute_user_cnt }}</td>
                         </tr>
                     @endforeach
                 </table>

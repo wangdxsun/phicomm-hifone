@@ -36,7 +36,8 @@ class AnswerController extends Controller
 
     public function audit()
     {
-        $answers = Answer::audit()->with(['user' ,'question.tags'])->orderBy('last_op_time', 'desc')->paginate(20);
+        //待审核列表，按发表时间倒序排序
+        $answers = Answer::audit()->with(['user' ,'question.tags'])->orderBy('created_at', 'desc')->paginate(20);
         $answersCount = Answer::audit()->count();
         return View::make('dashboard.answers.audit')
             ->with('answers', $answers)

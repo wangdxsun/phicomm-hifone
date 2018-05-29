@@ -14,11 +14,11 @@
                         <td>今日出现次数</td>
                         <td>截止当前总次数</td>
                     </tr>
-                    @foreach ($statArr as $key => $value)
+                    @foreach ($dailyStat as $value)
                         <tr>
-                            <td>{{ $value['word'] }}</td>
-                            <td>{{ $value['daily_count'] }}</td>
-                            <td>{{ $value['stat_count'] }}</td>
+                            <td>{{ $value->word }}</td>
+                            <td>{{ $value->daily_cnt }}</td>
+                            <td>{{ $value->stat_cnt }}</td>
                         </tr>
                     @endforeach
                 </table>

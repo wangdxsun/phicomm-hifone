@@ -9,16 +9,12 @@
 namespace Hifone\Http\Bll;
 
 use Carbon\Carbon;
-use Hifone\Events\User\UserWasActiveEvent;
-use Hifone\Exceptions\Consts\AnswerEx;
-use Hifone\Exceptions\Consts\CommentEx;
 use Hifone\Exceptions\Consts\CommonEx;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Models\BaseModel;
 use Auth;
-use Hifone\Models\Question;
-use Hifone\Models\Thread;
 use Hifone\Models\User;
+
 
 class BaseBll
 {

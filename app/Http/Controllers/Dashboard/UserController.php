@@ -60,7 +60,7 @@ class UserController extends Controller
             $users = User::search($search)->with(['roles', 'lastOpUser', 'tags'])->paginate(20);
         }
         $orderTypes = User::$orderTypes;
-        //传入所有用户标签类
+        //传入所有用户标签类,排除自动标签
         $userTagTypes = TagType::ofType([TagType::USER])->with('tags')->get();
         //传入标签个数的数组
 
@@ -216,15 +216,12 @@ class UserController extends Controller
         return $this->hasher->make($password, ['salt' => $salt]);
     }
 
-    //编辑标签
+    //编辑用户标签
     public function tagUpdate(User $user)
     {
         $tagData = Input::get('userTags');
-        if (null == $tagData) {
-            $user->tags()->detach();
-        } else {
-            $user->tags()->sync($tagData);
-        }
+        $autoTags = $user->tags()->ofChannel(TAG::AUTO)->get()->pluck('id')->toArray();
+        $user->tags()->sync(array_merge($tagData, $autoTags));
     }
 
 }

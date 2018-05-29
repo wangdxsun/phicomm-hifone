@@ -39,7 +39,7 @@
                             <tr>
                                 <td><input class="checkAll" type="checkbox" name="batch[]" value="{{ $question->id }}"></td>
                                 <td>{{ $question->id }}</td>
-                                <td>{{ $question->title }}</td>
+                                <td><a target="_blank" href="{{ $question->url }}">{{ $question->title }}</a></td>
                                 <td>
                                     <div class="replyContent">
                                         {!! $question->body !!}
@@ -59,9 +59,9 @@
                                 <td>{{ $question->created_time }}</td>
                                 <td>{{ $question->score }}</td>
                                 <td>
-                                    <a data-url="/dashboard/questions/{{$question->id}}/audit" data-method="post"><i class="fa fa-check"></i></a>
-                                    <a href="/dashboard/question/{{$question->id}}/edit"><i class="fa fa-pencil"></i></a>
-                                    <a data-url="/dashboard/questions/{{ $question->id }}/audit/to/trash" data-method="post" class="need-reason"><i class="fa fa-trash"></i></a>
+                                    <a data-url="/dashboard/questions/{{$question->id}}/audit" data-method="post" title="审核通过"><i class="fa fa-check"></i></a>
+                                    <a href="/dashboard/question/{{$question->id}}/edit"><i class="fa fa-pencil" title="编辑"></i></a>
+                                    <a data-url="/dashboard/questions/{{ $question->id }}/audit/to/trash" data-method="post" class="need-reason" title="删除"><i class="fa fa-trash"></i></a>
                                 </td>
                             </tr>
                         @endforeach

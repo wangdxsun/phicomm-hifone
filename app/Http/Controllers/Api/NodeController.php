@@ -57,9 +57,6 @@ class NodeController extends ApiController
     public function show(Node $node)
     {
         $node = $this->nodeBll->show($node);
-        $node['moderators'] = [];
-        $node['praModerators'] = [];
-
         return $node;
     }
 

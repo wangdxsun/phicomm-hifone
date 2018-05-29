@@ -155,7 +155,7 @@ class Question extends BaseModel implements TaggableInterface
 
     public function getUrlAttribute()
     {
-        return ;
+        return route('question.show', $this->id);
     }
 
     public function lastOpUser()
