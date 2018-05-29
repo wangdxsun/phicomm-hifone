@@ -26,9 +26,15 @@ class AnswerBll extends BaseBll
 {
     public function search($keyword)
     {
-        $answers = Answer::searchAnswer($keyword)->load(['user', 'question'])->paginate(15);
+//        $answer = Answer::searchAnswer($keyword, 2);
+//
+//        return $answer;
+        $questions = Question::searchQuestion($keyword)->load(['user', 'tags'])->paginate(15);
+        foreach ($questions as $question) {
+            $question->answer = Answer::searchAnswer($keyword, $question->id)->first();
+        }
 
-        return $answers;
+        return $questions;
     }
 
     public function showAnswer(Answer $answer)

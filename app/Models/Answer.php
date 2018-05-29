@@ -38,10 +38,6 @@ class Answer extends BaseModel
     ];
 
     protected $mappingProperties = [
-        'title' => [
-            'type' => 'string',
-            'analyzer' => 'ik_max_word',
-        ],
         'body' => [
             'type' => 'string',
             'analyzer' => 'ik_max_word',

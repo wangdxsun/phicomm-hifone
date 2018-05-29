@@ -34,8 +34,10 @@ class ForumRoutes
             $router->get('/feed', 'HomeController@feed')->name('feed');
             $router->get('/captcha', 'CaptchaController@index')->name('captcha');
             $router->get('/go/{slug}', 'NodeController@showBySlug')->name('go');
-            $router->get('/test', 'TestController@test')->name('test');
-            $router->post('/test', 'TestController@testPost')->name('testPost');
+            $router->get('/test', 'TestController@test');
+            $router->post('/test', 'TestController@testPost');
+            $router->put('/test', 'TestController@testPut');
+
 
             // 兼容老社区
             $router->get('forum.php', 'ThreadController@index');

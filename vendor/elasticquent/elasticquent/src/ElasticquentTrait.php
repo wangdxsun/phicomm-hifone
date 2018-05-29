@@ -415,22 +415,18 @@ trait ElasticquentTrait
         return static::hydrateElasticsearchResult($result);
     }
 
-    public static function searchAnswer($term)
+    public static function searchAnswer($term, $questionId)
     {
         $instance = new static;
-
-        $offset = (request('page', 1) - 1) * 15;
-        $params = $instance->getBasicEsParams(true, true, true, 15, $offset);
+        $params = $instance->getBasicEsParams(true, true, true, 1);
 
         $params['body'] = [
             'query' => [
                 'filtered' => [
                     'query' => [
-                        'multi_match' => [
-                            'query' => $term,
-                            'type' => 'cross_fields',
-                            'fields' => ['question.title^2', 'body']
-                        ],
+                        'match' => [
+                            'body' => $term
+                        ]
                     ],
                     'filter' => [
                         'bool' => [
@@ -438,6 +434,11 @@ trait ElasticquentTrait
                                 [
                                     'term' => [
                                         'status' => 0
+                                    ],
+                                ],
+                                [
+                                    'term' => [
+                                        'question_id' => $questionId
                                     ]
                                 ]
                             ],
@@ -447,7 +448,6 @@ trait ElasticquentTrait
             ],
             'highlight' => [
                 'fields' => [
-                    'question.title' => ["number_of_fragments" => 1],
                     'body' => ["number_of_fragments" => 1, "fragment_size" => 55],
                 ]
             ],
@@ -473,11 +473,8 @@ trait ElasticquentTrait
         if (!$this->exists) {
             throw new Exception('Document does not exist.');
         }
-        if ($this instanceof Thread || $this instanceof Question) {
+        if ($this instanceof Thread || $this instanceof Question || $this instanceof Answer) {
             $this->body = strip_tags($this->body);
-        } elseif ($this instanceof Answer) {
-            $this->body = strip_tags($this->body);
-            $this->question->body = strip_tags($this->question->body);
         }
 
         $params = $this->getBasicEsParams();
@@ -510,7 +507,7 @@ trait ElasticquentTrait
      */
     public function updateIndex()
     {
-        if ($this instanceof Thread) {
+        if ($this instanceof Thread || $this instanceof Question || $this instanceof Answer) {
             $this->body = strip_tags($this->body);
         }
         $params = $this->getBasicEsParams();
