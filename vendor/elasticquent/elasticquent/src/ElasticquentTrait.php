@@ -415,6 +415,50 @@ trait ElasticquentTrait
         return static::hydrateElasticsearchResult($result);
     }
 
+    public static function searchQuestionTitle($term)
+    {
+        $instance = new static;
+
+        $offset = (request('page', 1) - 1) * 15;
+        $params = $instance->getBasicEsParams(true, true, true, 15, $offset);
+
+        $params['body'] = [
+            'query' => [
+                'filtered' => [
+                    'query' => [
+                        'match' => [
+                            'title' => $term,
+                        ],
+                    ],
+                    'filter' => [
+                        'bool' => [
+                            'must' => [
+                                [
+                                    'term' => [
+                                        'status' => 0
+                                    ]
+                                ]
+                            ],
+                        ]
+                    ]
+                ]
+            ],
+            'highlight' => [
+                'fields' => [
+                    'title' => ["number_of_fragments" => 1],
+                ]
+            ],
+            'sort' => [
+                '_score' => ['order' => 'desc'],
+                'created_at' => ['order' => 'desc']
+            ]
+        ];
+
+        $result = $instance->getElasticSearchClient()->search($params);
+
+        return static::hydrateElasticsearchResult($result);
+    }
+
     public static function searchAnswer($term, $questionId)
     {
         $instance = new static;
