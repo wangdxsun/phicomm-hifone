@@ -11,7 +11,6 @@
 
 namespace Hifone\Handlers\Commands\Image;
 
-use Auth;
 use Hifone\Commands\Image\UploadImageCommand;
 use Hifone\Events\Image\ImageWasUploadedEvent;
 use Hifone\Exceptions\HifoneException;

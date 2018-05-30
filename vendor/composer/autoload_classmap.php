@@ -621,6 +621,7 @@ return array(
     'UpdateCreditTable' => $baseDir . '/database/migrations/2018_05_16_170449_update_credit_table.php',
     'UpdateQaModulesTable' => $baseDir . '/database/migrations/2018_04_28_144428_update_qa_modules_table.php',
     'UpdateTagTable' => $baseDir . '/database/migrations/2018_05_03_142032_update_tag_table.php',
+    'UpdateTagType' => $baseDir . '/database/migrations/2018_05_30_150306_update_tag_type.php',
     'Whoops\\Module' => $vendorDir . '/filp/whoops/src/deprecated/Zend/Module.php',
     'Whoops\\Provider\\Zend\\ExceptionStrategy' => $vendorDir . '/filp/whoops/src/deprecated/Zend/ExceptionStrategy.php',
     'Whoops\\Provider\\Zend\\RouteNotFoundStrategy' => $vendorDir . '/filp/whoops/src/deprecated/Zend/RouteNotFoundStrategy.php',

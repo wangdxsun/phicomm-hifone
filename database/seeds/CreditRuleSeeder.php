@@ -98,6 +98,8 @@ class CreditRuleSeeder extends Seeder
         DB::table('credit_rules')->where('slug', 'favorite_removed')->update(['slug' => 'favorited_removed']);
         DB::table('credit_rules')->where('slug', 'thread_favorite_removed')->update(['slug' => 'favorite_removed']);
 
+        DB::table('tag_types')->where('display_name', '自动标签')->update(['type' => '3']);
+
         DB::table('credit_rules')->insert([
             'name'   => '问题被关注',
             'slug'   => 'question_followed',

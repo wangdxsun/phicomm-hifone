@@ -9,11 +9,11 @@ use Input;
 
 class TagTypeController extends Controller
 {
-    //标签分类（不含自动标签）
+    //标签分类
     public function tagType($system)
     {
         if ($system == 'user') {
-            $tagTypes = TagType::ofType([TagType::USER])->with('tags')->get();
+            $tagTypes = TagType::ofType([TagType::USER, TagType::AUTO])->with('tags')->get();
             return View::make('dashboard.tagTypes.index')
                 ->with('tagTypes', $tagTypes)
                 ->withCurrentMenu('userTagType');

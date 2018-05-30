@@ -29,7 +29,9 @@ class VerifyCsrfToken
      *
      * @var array
      */
-    protected $except = [];
+    protected $except = [
+        'upload_image'
+    ];
 
     /**
      * Create a new middleware instance.

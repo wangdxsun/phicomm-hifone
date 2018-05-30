@@ -61,7 +61,7 @@ class UserController extends Controller
         }
         $orderTypes = User::$orderTypes;
         //传入所有用户标签类,排除自动标签
-        $userTagTypes = TagType::ofType([TagType::USER])->with('tags')->get();
+        $userTagTypes = TagType::ofType([TagType::USER, TagType::AUTO])->with('tags')->get();
         //传入标签个数的数组
 
         $tagCounts = range(1, Tag::whereIn('tag_type_id', $userTagTypes->pluck('id')->toArray())->count());

@@ -44,6 +44,7 @@
                             <td style="width: 50px;">编号</td>
                             <td style="width: 180px;">问题标题</td>
                             <td style="width: 180px;">问题类型</td>
+                            <td style="width: 180px;">问题内容</td>
                             <td style="width: 70px;">提问者</td>
                             <td style="width: 100px;">IP地址</td>
                             <td style="width: 80px;">提问时间</td>
@@ -61,6 +62,15 @@
                                     @foreach($question->tags as $tag)
                                         {{$tag->name}}<br>
                                     @endforeach
+                                </td>
+                                <td>
+                                    <div class="replyContent">
+                                        {!! $question->body !!}
+                                    </div>
+                                    @if(Str::length($question->body) > 26 || Str::contains($question->body,['<img']))
+                                        <a  data-toggle="collapse" href="#question{{ $question->id }}" aria-expanded="false">查看更多</a>
+                                        <div  class="collapse well" id="question{{ $question->id }}">{!! $question->body !!}</div>
+                                    @endif
                                 </td>
                                 <td><a href="{{ route('user.show', ['id'=>$question->user->id]) }}" target="_blank">{{ $question->user->username }}</a></td>
                                 <td>{{ $question->ip }}</td>
