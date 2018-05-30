@@ -20,7 +20,7 @@
                         <td>每日回帖用户</td>
                         <td>每日贡献内容用户</td>
                     </tr>
-                    @foreach ($userStat as $value)
+                    @foreach ($stats as $value)
                         <tr>
                             <td>{{ $value->date }}</td>
                             <td>{{ $value->user_cnt }}</td>
@@ -30,9 +30,10 @@
                         </tr>
                     @endforeach
                 </table>
-
-
             </div>
+        </div>
+        <div class="text-right">
+            {!! $stats->appends(Request::except('page', '_pjax'))->render() !!}
         </div>
     </div>
 @stop

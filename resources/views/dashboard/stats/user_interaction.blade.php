@@ -15,7 +15,7 @@
                         <td>每日点赞数</td>
                         <td>每日累计关注(粉丝)数</td>
                     </tr>
-                    @foreach ($userStat as $value)
+                    @foreach ($stats as $value)
                         <tr>
                             <td>{{ $value->date }}</td>
                             <td>{{ $value->favorite_cnt }}</td>
@@ -24,9 +24,10 @@
                         </tr>
                     @endforeach
                 </table>
-
-
             </div>
+        </div>
+        <div class="text-right">
+            {!! $stats->appends(Request::except('page', '_pjax'))->render() !!}
         </div>
     </div>
 @stop
