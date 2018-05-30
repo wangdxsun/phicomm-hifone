@@ -51,6 +51,12 @@ class SubNodeController extends Controller
 
     public function update(SubNode $subNode)
     {
+        $this->validate(request(),[
+            'subNode.name'                => 'required|max:6'
+        ], [
+            'subNode.name.max'            => '板块名称需1-6个字符',
+            'subNode.name.required'       => '板块名称需1-6个字符',
+        ]);
         $threads = $subNode->threads;
         $subNodeData = Request::get('subNode');
         try {

@@ -164,6 +164,12 @@ class CommentController extends Controller
     public function update(Comment $comment)
     {
         //修改回复内容
+        $this->validate(request(),[
+            'comment.body'   =>     'min:5|max:800',
+        ],[
+            'comment.body.min' => '内容需5'. '-'.'800个字符',
+            'comment.body.max' => '内容需5'. '-'.'800个字符',
+        ]);
         $commentData = Input::get('comment');
         $commentData['body_original'] = $commentData['body'];
         try {

@@ -10,9 +10,9 @@
                 <table class="table table-bordered table-striped table-condensed">
                     <tbody>
                     <tr class="head">
-                        <td style="width: 50px;">#</td>
+                        <td style="width: 50px;">编号</td>
                         <td style="width: 100px;">举报类型</td>
-                        <td style="width: 250px;">帖子标题或回帖内容</td>
+                        <td style="width: 250px;">举报内容</td>
                         <td style="width: 100px;">举报人</td>
                         <td style="width: 100px;">举报原因</td>
                         <td style="width: 150px;">举报时间</td>

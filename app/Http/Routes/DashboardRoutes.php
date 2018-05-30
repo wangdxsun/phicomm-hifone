@@ -70,6 +70,7 @@ class DashboardRoutes
             $router->post('questions/batchMove', 'QuestionController@batchMoveQuestion')->name('question.move');
             $router->post('questions/batchAudit', 'QuestionController@postBatchAudit');//batch audit thread
             $router->post('questions/{question}/audit', 'QuestionController@postAudit');
+            $router->get('questions/{question}/edit', 'QuestionController@edit')->name('questions.edit');
             $router->post('questions/{question}/index/to/trash', 'QuestionController@indexToTrash');
             $router->post('questions/{question}/audit/to/trash', 'QuestionController@auditToTrash');
 

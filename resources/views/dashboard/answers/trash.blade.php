@@ -44,15 +44,15 @@
                         <td style="width: 70px;">编号</td>
                         <td style="width: 180px;">回答内容</td>
                         <td style="width: 180px;">问题标题</td>
-                        <td style="width: 180px;">问题类型</td>
+                        <td style="width: 150px;">问题类型</td>
                         <td style="width: 80px;">回答人</td>
                         <td style="width: 90px;">悬赏</td>
-                        <td style="width: 90px;">IP地址</td>
+                        <td style="width: 120px;">IP地址</td>
                         <td style="width: 90px;">回答时间</td>
-                        <td style="width: 80px;">操作人</td>
+                        <td style="width: 120px;">操作人</td>
                         <td style="width: 90px;">操作时间</td>
                         <td style="width: 90px;">操作原因</td>
-                        <td style="width: 120px;">操作</td>
+                        <td style="width: 60px;">操作</td>
                     </tr>
                     @foreach($answers as $answer)
                         <tr>
@@ -66,7 +66,7 @@
                                     <div  class="collapse well" id="answer{{ $answer->id }}">{!! $answer->body !!}</div>
                                 @endif
                             </td>
-                            <td>{{ $answer->question->title }}</td>
+                            <td><a target="_blank" href="{{ $answer->question->url }}">{{ $answer->question->title }}</a></td>
                             <td>
                                 @foreach($answer->question->tags as $tag)
                                     {{$tag->name}}<br>

@@ -146,6 +146,7 @@ class AddCreditHandler
             } elseif ($event->object instanceof Question) {
                 $action = 'question_down';
             }
+            $object = $event->object;
             $user = $event->user;
         } elseif ($event instanceof FollowWasAddedEvent) {
             if ($event->target instanceof Thread) {

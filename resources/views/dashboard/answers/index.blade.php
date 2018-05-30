@@ -89,7 +89,7 @@
                                         <div  class="collapse well" id="answer{{ $answer->id }}">{!! $answer->body !!}</div>
                                     @endif
                                 </td>
-                                <td>{{ $answer->question->title }}</td>
+                                <td><a target="_blank" href="{{ $answer->question->url }}">{{ $answer->question->title }}</a></td>
                                 <td>
                                     @foreach($answer->question->tags as $tag)
                                         {{$tag->name}}<br>

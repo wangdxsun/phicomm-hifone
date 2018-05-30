@@ -50,7 +50,7 @@
                                     @endif
                                 </td>
                                 <td>{{ $answer->bad_word }}</td>
-                                <td>{{ $answer->question->title }}</td>
+                                <td><a target="_blank" href="{{ $answer->question->url }}">{{ $answer->question->title }}</a></td>
                                 <td>
                                     @foreach($answer->question->tags as $tag)
                                         {{$tag->name}}<br>

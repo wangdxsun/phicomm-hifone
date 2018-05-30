@@ -33,6 +33,23 @@ class StatController extends Controller
     //数据统计之用户统计基本情况
     public function userCount()
     {
+        $currentPage = Paginator::resolveCurrentPage() ?: 1;
+        $skip = ($currentPage - 1) * 30;
+
+        $dateStat = DB::select("select count(stat.date) as date_cnt from 
+                                        (select substr(t.created_at, 1, 10) as date
+                                        from threads as t
+                                        where t.`status` = 0
+                                        union 
+                                        select substr(r.created_at, 1, 10) as date
+                                        from replies as r
+                                        where r.`status` = 0
+                                        union 
+                                        select substr(u.created_at, 1, 10) as date
+                                        from users as u
+                                        ) as stat");
+        $total = array_get($dateStat,0)->date_cnt;
+
         $userStat = DB::select('select stat.date, count(DISTINCT stat.tid) as thread_user_cnt, count(DISTINCT stat.rid) as reply_user_cnt,count(DISTINCT all_id) as  contribute_user_cnt,count(DISTINCT uid) as user_cnt from 
                                         (select t.user_id as tid, null as rid, t.user_id as all_id, null as uid, substr(t.created_at, 1, 10) as date
                                         from threads as t
@@ -46,16 +63,34 @@ class StatController extends Controller
                                         from users as u
                                         ) as stat
                                         group by stat.date
-                                        order by stat.date desc limit 30');
+                                        order by stat.date desc limit 30 offset ?', [$skip]);
+
+        $stats = new LengthAwarePaginator($userStat, $total, 30, $currentPage, ['path' => Paginator::resolveCurrentPath()]);
 
         return view('dashboard.stats.user')
             ->withCurrentMenu('user')
-            ->with('userStat', $userStat)
+            ->with('stats', $stats)
             ->withCurrentNav('basic');
     }
     //用户统计之App活跃用户
     public function userCountApp()
     {
+        $currentPage = Paginator::resolveCurrentPage() ?: 1;
+        $skip = ($currentPage - 1) * 30;
+
+        $dateStat = DB::select("select count(stat.date) as date_cnt from (
+                                        select substr(u.last_active_time_app,1,10) as date
+                                        from users as u 
+                                        where u.last_active_time_app is not null
+                                        union  
+                                        select substr(u.last_visit_time_app,1,10) as date
+                                        from users as u 
+                                        where substr(u.last_visit_time_app,1,10) = SUBSTR(u.created_at,1,10)
+                                        union 
+                                        select substr(u.last_visit_time_app,1,10) as date
+                                        from users as u 
+                                        where substr(u.last_visit_time_app,1,10) > SUBSTR(u.created_at,1,10)) as stat");
+        $total = array_get($dateStat,0)->date_cnt;
         $userStat = DB::select('select stat.date,
                                         count(DISTINCT uid) as active_user_cnt, 
                                         count(DISTINCT new_id) as new_user_cnt,
@@ -73,15 +108,32 @@ class StatController extends Controller
                                         from users as u 
                                         where substr(u.last_visit_time_app,1,10) > SUBSTR(u.created_at,1,10)) as stat
                                         group by stat.date
-                                        order by stat.date desc limit 30');
+                                        order by stat.date desc limit 30 offset ?', [$skip]);
+        $stats = new LengthAwarePaginator($userStat, $total, 30, $currentPage, ['path' => Paginator::resolveCurrentPath()]);
         return view('dashboard.stats.user_active')
-            ->with('userStat', $userStat)
+            ->with('stats', $stats)
             ->withCurrentNav('app')
             ->withCurrentMenu('user');
     }
     //用户统计之Web活跃用户
     public function userCountWeb()
     {
+        $currentPage = Paginator::resolveCurrentPage() ?: 1;
+        $skip = ($currentPage - 1) * 30;
+
+        $dateStat = DB::select("select count(stat.date) as date_cnt from (
+                                        select substr(u.last_active_time_app,1,10) as date
+                                        from users as u 
+                                        where u.last_visit_time_web is not null
+                                        union  
+                                        select substr(u.last_visit_time_web,1,10) as date
+                                        from users as u 
+                                        where substr(u.last_visit_time_web,1,10) = SUBSTR(u.created_at,1,10)
+                                        union 
+                                        select substr(u.last_visit_time_web,1,10) as date
+                                        from users as u 
+                                        where substr(u.last_visit_time_web,1,10) > SUBSTR(u.created_at,1,10)) as stat");
+        $total = array_get($dateStat,0)->date_cnt;
         $userStat = DB::select('select stat.date,
                                         count(DISTINCT uid) as active_user_cnt, 
                                         count(DISTINCT new_id) as new_user_cnt,
@@ -99,15 +151,34 @@ class StatController extends Controller
                                         from users as u 
                                         where substr(u.last_visit_time_web,1,10) > SUBSTR(u.created_at,1,10)) as stat
                                         group by stat.date
-                                        order by stat.date desc limit 30');
+                                        order by stat.date desc limit 30 offset ?', [$skip]);
+
+        $stats = new LengthAwarePaginator($userStat, $total, 30, $currentPage, ['path' => Paginator::resolveCurrentPath()]);
+
         return view('dashboard.stats.user_active')
-            ->with('userStat', $userStat)
+            ->with('stats', $stats)
             ->withCurrentNav('web')
             ->withCurrentMenu('user');
     }
     //用户统计之H5活跃用户
     public function userCountH5()
     {
+        $currentPage = Paginator::resolveCurrentPage() ?: 1;
+        $skip = ($currentPage - 1) * 30;
+
+        $dateStat = DB::select("select count(stat.date) as date_cnt from (
+                                        select substr(u.last_active_time,1,10) as date
+                                        from users as u 
+                                        where u.last_active_time is not null
+                                        union  
+                                        select substr(u.last_active_time,1,10) as date
+                                        from users as u 
+                                        where substr(u.last_active_time,1,10) = SUBSTR(u.created_at,1,10)
+                                        union 
+                                        select substr(u.last_active_time,1,10) as date
+                                        from users as u 
+                                        where substr(u.last_visit_time_web,1,10) > SUBSTR(u.created_at,1,10)) as stat");
+        $total = array_get($dateStat,0)->date_cnt;
         $userStat = DB::select('select stat.date,
                                         count(DISTINCT uid) as active_user_cnt, 
                                         count(DISTINCT new_id) as new_user_cnt,
@@ -125,10 +196,10 @@ class StatController extends Controller
                                         from users as u 
                                         where substr(u.last_visit_time,1,10) > SUBSTR(u.created_at,1,10)) as stat
                                         group by stat.date
-                                        order by stat.date desc limit 30');
-
+                                        order by stat.date desc limit 30 offset ?', [$skip]);
+        $stats = new LengthAwarePaginator($userStat, $total, 30, $currentPage, ['path' => Paginator::resolveCurrentPath()]);
         return view('dashboard.stats.user_active')
-            ->with('userStat', $userStat)
+            ->with('stats', $stats)
             ->withCurrentNav('h5')
             ->withCurrentMenu('user');
 
@@ -137,6 +208,20 @@ class StatController extends Controller
     //用户互动
     public function userInteraction()
     {
+        $currentPage = Paginator::resolveCurrentPage() ?: 1;
+        $skip = ($currentPage - 1) * 30;
+        $dateStat = DB::select("select count(stat.date) as date_cnt from 
+                                            (select substr(f.created_at,1,10) as date
+                                            from favorites as f 
+                                            union  
+                                            select substr(l.created_at,1,10) as date
+                                            from likes as l
+                                            union  
+                                            select substr(ff.created_at,1,10) as date
+                                            from follows as ff 
+                                            where ff.`followable_type`= ?) as stat",['Hifone\Models\User']);
+        $total = array_get($dateStat,0)->date_cnt;
+
         $userStat = DB::select("select stat.date, 
                                         count(DISTINCT stat.favorite_id) as favorite_cnt,
                                         count(DISTINCT stat.like_id) as like_cnt,
@@ -151,44 +236,64 @@ class StatController extends Controller
                                         from follows as ff 
                                         where ff.`followable_type`= ?) as stat
                                         group by stat.date
-                                        order by stat.date desc limit 30",['Hifone\Models\User']);
+                                        order by stat.date desc limit 30 offset ?",['Hifone\Models\User', $skip]);
+        $stats = new LengthAwarePaginator($userStat, $total, 30, $currentPage, ['path' => Paginator::resolveCurrentPath()]);
         return view('dashboard.stats.user_interaction')
-            ->with('userStat', $userStat)
+            ->with('stats', $stats)
             ->withCurrentMenu('userInteraction');
     }
-    //数据统计之每日新增发帖统计
+    //新增发帖
     public function dailyThreadCount()
     {
+        $currentPage = Paginator::resolveCurrentPage() ?: 1;
+        $skip = ($currentPage - 1) * 30;
+        $threadCount = Thread::selectRaw('substr(created_at, 1, 10) as date, count(*) as total, sum(abs(channel)) as feedback,sum(if(channel = 0, 1, 0)) as forum')
+            ->visible()->groupBy('date')->recent()->get();
+        $total = count($threadCount);
         $dailyThreadCount = Thread::selectRaw('substr(created_at, 1, 10) as date, count(*) as total, sum(abs(channel)) as feedback,sum(if(channel = 0, 1, 0)) as forum')
-            ->visible()->groupBy('date')->recent()->take(30)->get();
-        $statsArr = array();
-        foreach ($dailyThreadCount as $threadCount) {
-            $statsArr[$threadCount['date']] = $threadCount->toArray();
-        }
+            ->visible()->groupBy('date')->recent()->skip($skip)->take(30)->get();
+        $stats = new LengthAwarePaginator($dailyThreadCount, $total, 30, $currentPage, ['path' => Paginator::resolveCurrentPath()]);
 
         return view('dashboard.stats.thread')
             ->withCurrentMenu('thread')
-            ->with('statsArr', $statsArr);
+            ->with('stats', $stats);
     }
-    //数据统计之新增发帖统计
+    //新增回帖
     public function dailyReplyCount()
     {
+        $currentPage = Paginator::resolveCurrentPage() ?: 1;
+        $skip = ($currentPage - 1) * 30;
+        $replyCount = Reply::selectRaw('substr(created_at, 1, 10) as date,count(*) as reply,  sum(abs(channel)) as feedback,sum(if(channel = 0, 1, 0)) as forum')
+            ->visible()->groupBy('date')->recent()->get();
+        $total = count($replyCount);
         $dailyReplyCount = Reply::selectRaw('substr(created_at, 1, 10) as date,count(*) as reply,  sum(abs(channel)) as feedback,sum(if(channel = 0, 1, 0)) as forum')
-            ->visible()->groupBy('date')->recent()->take(30)->get();
-        $statsArr = array();
-        foreach ($dailyReplyCount as $replyCount) {
-            $statsArr[$replyCount['date']] = $replyCount->toArray();
-        }
+            ->visible()->groupBy('date')->recent()->skip($skip)->take(30)->get();
+
+        $stats = new LengthAwarePaginator($dailyReplyCount, $total, 30, $currentPage, ['path' => Paginator::resolveCurrentPath()]);
 
         return view('dashboard.stats.reply')
             ->withCurrentMenu('reply')
-            ->with('statsArr', $statsArr);
+            ->with('stats', $stats);
     }
 
+    //新增回答和提问
     public function dailyQuestionsAndAnswersCount()
     {
         $currentPage = Paginator::resolveCurrentPage() ?: 1;
         $skip = ($currentPage - 1) * 30;
+        $dateStat = DB::select("select count(stat.date) as date_cnt from 
+                                                (select substr(q.created_at, 1, 10) as date
+                                                from questions as q
+                                                where q.`status` = 0
+                                                union 
+                                                select substr(a.created_at, 1, 10) as date
+                                                from answers as a
+                                                join questions as q
+                                                on a.question_id = q.id
+                                                where a.`status` = 0) as stat 
+                                            ");
+        $total = array_get($dateStat,0)->date_cnt;
+
         $dailyCount = DB::select("select stat.date, count(stat.qid) as question_cnt, count(stat.aid) as answer_cnt from 
                                                 (select q.id as qid, null as aid, substr(q.created_at, 1, 10) as date
                                                 from questions as q
@@ -202,7 +307,7 @@ class StatController extends Controller
                                                 group by stat.date
                                                 order by stat.date desc limit 30 offset  ? ", [$skip]);
 
-        $stats = new LengthAwarePaginator($dailyCount, 360, 30, $currentPage, ['path' => Paginator::resolveCurrentPath()]);
+        $stats = new LengthAwarePaginator($dailyCount, $total, 30, $currentPage, ['path' => Paginator::resolveCurrentPath()]);
         $questionsCount = 0;
         $answersCount = 0;
         foreach (array_get($stats->toArray(), 'data') as  $value) {
@@ -216,13 +321,20 @@ class StatController extends Controller
             ->withCurrentMenu('question_answer');
     }
 
-    //数据统计之零回复统计
+    //零回复统计
     public function zeroReplyCount()
     {
-        $dailyZeroThreadCount = Thread::selectRaw('substr(created_at, 1, 10) as date, count(*) as total, sum(abs(channel)) as feedback,sum(if(channel = 0, 1, 0)) as forum')
-            ->visible()->where('reply_count', 0)->groupBy('date')->recent()->take(30)->get();
+        $currentPage = Paginator::resolveCurrentPage() ?: 1;
+        $skip = ($currentPage - 1) * 30;
+        $zeroThreadCount = Thread::selectRaw('substr(created_at, 1, 10) as date, count(*) as total, sum(abs(channel)) as feedback,sum(if(channel = 0, 1, 0)) as forum')
+            ->visible()->where('reply_count', 0)->groupBy('date')->recent()->get();
+        $total = count($zeroThreadCount) > 360 ? 360 : count($zeroThreadCount);
 
-        $statsArr = array();
+        $dailyZeroThreadCount = Thread::selectRaw('substr(created_at, 1, 10) as date, count(*) as total, sum(abs(channel)) as feedback,sum(if(channel = 0, 1, 0)) as forum')
+            ->visible()->where('reply_count', 0)->groupBy('date')->recent()->skip($skip)->take(30)->get();
+
+        $stats = new LengthAwarePaginator($dailyZeroThreadCount, $total, 30, $currentPage, ['path' => Paginator::resolveCurrentPath()]);
+
         $recentZeroReplyThreadCount = 0;
         foreach ($dailyZeroThreadCount as $threadCount) {
             $statsArr[$threadCount['date']] = $threadCount->toArray();
@@ -235,7 +347,7 @@ class StatController extends Controller
             ->withCurrentMenu('zeroReply')
             ->with('allZeroReplyThreadCount', $allZeroReplyThreadCount)
             ->with('recentZeroReplyThreadCount', $recentZeroReplyThreadCount)
-            ->with('statsArr', $statsArr);
+            ->with('stats', $stats);
     }
 
    //数据统计之版块统计
@@ -302,13 +414,20 @@ class StatController extends Controller
     //用户搜索词统计
     public function userSearch()
     {
+        $currentPage = Paginator::resolveCurrentPage() ?: 1;
+        $skip = ($currentPage - 1) * 30;
+        $dateStat = DB::select("select count(DISTINCT substr(created_at,1,10)) as date_cnt from search_words ");
+        $total = array_get($dateStat,0)->date_cnt;
+
         $userStat = DB::select("select substr(created_at,1,10) as date,sum(`count`) as cnt
                                         from search_words
                                         group by date
-                                        order by date desc limit 30");
+                                        order by date desc limit 30 offset ?", [$skip]);
+
+        $stats = new LengthAwarePaginator($userStat, $total, 30, $currentPage, ['path' => Paginator::resolveCurrentPath()]);
 
         return view('dashboard.stats.search_words')
-            ->with('userStat', $userStat)
+            ->with('stats', $stats)
             ->withCurrentMenu('search_words');
 
     }
@@ -316,13 +435,21 @@ class StatController extends Controller
     //搜索词详情
     public function userSearchDate($date)
     {
+        $currentPage = Paginator::resolveCurrentPage() ?: 1;
+        $skip = ($currentPage - 1) * 30;
+        $dateStat = DB::select("select count(word) as stat_cnt
+                                        from search_words
+                                        where substr(created_at,1,10) = ? ", [$date]);
+        $total = array_get($dateStat,0)->stat_cnt;
+
         $dailyStat = DB::select("select word,`count` as daily_cnt,`stat_count` as stat_cnt
                                         from search_words
                                         where substr(created_at,1,10) = ?
-                                        order by daily_cnt desc limit 30",[$date]);
+                                        order by daily_cnt desc limit 30 offset ?",[$date, $skip]);
+        $stats = new LengthAwarePaginator($dailyStat, $total, 30, $currentPage, ['path' => Paginator::resolveCurrentPath()]);
 
         return view('dashboard.stats.search_detail')
-            ->with('dailyStat', $dailyStat)
+            ->with('stats', $stats)
             ->withCurrentMenu('search_detail');
     }
 

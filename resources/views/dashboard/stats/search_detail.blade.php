@@ -14,7 +14,7 @@
                         <td>今日出现次数</td>
                         <td>截止当前总次数</td>
                     </tr>
-                    @foreach ($dailyStat as $value)
+                    @foreach ($stats as $value)
                         <tr>
                             <td>{{ $value->word }}</td>
                             <td>{{ $value->daily_cnt }}</td>
@@ -23,6 +23,9 @@
                     @endforeach
                 </table>
             </div>
+        </div>
+        <div class="text-right">
+            {!! $stats->appends(Request::except('page', '_pjax'))->render() !!}
         </div>
     </div>
 @stop

@@ -28,13 +28,13 @@
                                 <td style="width: 30px;"><input id="selectAll" type="checkbox"></td>
                                 <td style="width: 70px;">编号</td>
                                 <td style="width: 180px;">回复内容</td>
-                                <td style="width: 180px;">敏感词</td>
-                                <td style="width: 80px;">问题标题</td>
+                                <td style="width: 80px;">敏感词</td>
+                                <td style="width: 180px;">问题标题</td>
                                 <td style="width: 90px;">问题类型</td>
-                                <td style="width: 50px;">回复人</td>
-                                <td style="width: 50px;">IP地址</td>
-                                <td style="width: 90px;">回复时间</td>
-                                <td style="width: 120px;">操作</td>
+                                <td style="width: 80px;">回复人</td>
+                                <td style="width: 100px;">IP地址</td>
+                                <td style="width: 80px;">回复时间</td>
+                                <td style="width: 90px;">操作</td>
                             </tr>
                             @foreach($comments as $comment)
                                 <tr>
@@ -50,7 +50,7 @@
                                         @endif
                                     </td>
                                     <td>{{ $comment->bad_word }}</td>
-                                    <td>{{ $comment->answer->question->title }}</td>
+                                    <td><a target="_blank" href="{{ $comment->answer->question->url }}">{{ $comment->answer->question->title }}</a></td>
                                     <td>
                                         @foreach($comment->answer->question->tags as $tag)
                                             {{ $tag->name }}<br>

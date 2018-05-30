@@ -20,16 +20,19 @@
                         <td>每日路由App反馈回复数</td>
                         <td>每日斐讯社区回帖数</td>
                     </tr>
-                    @foreach ($statsArr as $key => $value)
+                    @foreach ($stats as $value)
                         <tr>
-                            <td>{{ $key }}</td>
-                            <td>{{ $value['reply'] }}</td>
-                            <td>{{ $value['feedback']}}</td>
-                            <td>{{ $value['forum']}}</td>
+                            <td>{{ $value->date }}</td>
+                            <td>{{ $value->reply }}</td>
+                            <td>{{ $value->feedback }}</td>
+                            <td>{{ $value->forum }}</td>
                         </tr>
                     @endforeach
                 </table>
             </div>
+        </div>
+        <div class="text-right">
+            {!! $stats->appends(Request::except('page', '_pjax'))->render() !!}
         </div>
     </div>
 @stop

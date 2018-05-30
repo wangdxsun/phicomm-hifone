@@ -72,12 +72,16 @@ class AnswerController extends Controller
     public function update(Answer $answer)
     {
         //修改回答内容
+        $this->validate(request(),[
+            'answer.body'   =>     'min:5|max:800',
+        ],[
+            'answer.body.min' => '内容需5'. '-'.'800个字符',
+            'answer.body.max' => '内容需5'. '-'.'800个字符',
+        ]);
         $answerData = Input::get('answer');
         $answerData['body_original'] = $answerData['body'];
         try {
-            //TODO 编辑问题后续的标签相关计数等
             $answer = dispatch( new UpdateAnswerCommand($answer, $answerData));
-
         } catch (\Exception $e) {
             return Redirect::route('dashboard.answer.edit', $answer->id)
                 ->withInput($answerData)

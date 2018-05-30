@@ -130,6 +130,13 @@ class CreditRuleSeeder extends Seeder
             'reward' => -2
         ]);
 
+        DB::table('credit_rules')->insert([
+            'name'   => '问题被下沉',
+            'slug'   => 'question_down',
+            'type'   => 1,
+            'times'  => 40,
+            'reward' => -2
+        ]);
 
     }
 }

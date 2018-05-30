@@ -18,7 +18,7 @@
                         <td>每日登陆新用户数</td>
                         <td>每日登陆老用户数</td>
                     </tr>
-                    @foreach ($userStat as $value)
+                    @foreach ($stats as $value)
                         <tr>
                             <td>{{ $value->date }}</td>
                             <td>{{ $value->active_user_cnt }}</td>
@@ -27,9 +27,10 @@
                         </tr>
                     @endforeach
                 </table>
-
-
             </div>
         </div>
+            <div class="text-right">
+                {!! $stats->appends(Request::except('page', '_pjax'))->render() !!}
+            </div>
     </div>
 @stop
