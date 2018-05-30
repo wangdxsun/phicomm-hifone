@@ -1,18 +1,18 @@
 {
   "name": "Hifone",
   "devDependencies": {
-    "gulp": "~3.9.1",
+    "gulp": "^3.9.1",
     "gulp-coffee": "~2.3.2",
-    "notify-send": "~0.1.2",
     "gulp-notify": "~2.2.0",
-    "gulp-util": "~3.0.7"
+    "gulp-util": "~3.0.7",
+    "notify-send": "~0.1.2"
   },
   "dependencies": {
     "bootstrap-sass": "^3.3.6",
     "bower": "~1.7.9",
     "fs": "0.0.1-security",
     "ioredis": "^1.15.1",
-    "laravel-elixir": "~5.0.0",
+    "laravel-elixir": "^5.0.0",
     "socket.io": "^2.0.0",
     "vue": "^2.3.3"
   },
