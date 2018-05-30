@@ -10,6 +10,7 @@ namespace Hifone\Http\Bll;
 
 use Auth;
 use Hifone\Commands\Follow\AddFollowCommand;
+use Hifone\Exceptions\Consts\QuestionEx;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Models\Question;
 use Hifone\Models\Thread;
@@ -44,7 +45,7 @@ class FollowBll extends BaseBll
     public function followQuestion(Question $question)
     {
         if ($question->status <> Question::VISIBLE) {
-            throw new HifoneException('该问题已被删除', 410);
+            throw new HifoneException('该问题已被删除', QuestionEx::DELETED);
         }
 
         dispatch(new AddFollowCommand($question));
