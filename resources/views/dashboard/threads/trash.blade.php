@@ -66,6 +66,7 @@
                     <tr class="head">
                         <td style="width: 70px;">#</td>
                         <td style="width: 250px;">标题</td>
+                        <td style="width: 250px;">内容</td>
                         <td style="width: 80px;">版块</td>
                         <td style="width: 80px;">发帖人</td>
                         <td style="width: 60px;">来源</td>
@@ -81,6 +82,15 @@
                         <tr>
                             <td>{{ $thread->id }}</td>
                             <td><a href="{{ $thread->url }}" target="_blank" ><i class="{{ $thread->icon }}"></i> {{ $thread->title }}</a></td>
+                            <td>
+                                <div class="replyContent">
+                                    {!! $thread->body !!}
+                                </div>
+                                @if(Str::length($thread->body) > 26 || Str::contains($thread->body,['<img']))
+                                    <a  data-toggle="collapse" href="#thread{{ $thread->id }}" aria-expanded="false">查看更多</a>
+                                    <div  class="collapse well" id="thread{{ $thread->id }}">{!! $thread->body !!}</div>
+                                @endif
+                            </td>
                             <td><a href="{{ $thread->node->url }}" target="_blank">{{ $thread->node->name }}</a></td>
                             <td><a href="{{ route('user.show', ['id'=>$thread->user->id]) }}" target="_blank">{{  $thread->user->username  }}</a></td>
                             <td>{{ $thread->channel == 0 ? "社区" : "意见反馈" }}</td>

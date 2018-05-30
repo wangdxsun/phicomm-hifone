@@ -115,7 +115,7 @@ class QuestionBll extends BaseBll
     public function getValidTagIds($rawTagIds)
     {
         $tagIds = explode(',', $rawTagIds);
-        $tagTypeIds = TagType::ofType(TagType::QUESTION)->pluck('id')->toArray();
+        $tagTypeIds = TagType::ofType([TagType::QUESTION])->pluck('id')->toArray();
         $tagIds = Tag::whereIn('id', $tagIds)->whereIn('tag_type_id', $tagTypeIds)->pluck('id')->toArray();
 
         return $tagIds;

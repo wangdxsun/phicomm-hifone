@@ -27,7 +27,7 @@
                             <td>{{ $tagType->display_name }}</td>
                             <td>
                                 @foreach($tagType->tags as $tag)
-                                    {{ $tag->name . '， ' }}
+                                    {{ $tag->name }}<br>
                                 @endforeach
                             </td>
                             @if ($tagType->display_name != '自动标签')

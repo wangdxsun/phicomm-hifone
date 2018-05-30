@@ -16,7 +16,7 @@ class TagController extends WebController
     //问题标签列表
     public function tags()
     {
-        $tagTypes = TagType::ofType(TagType::QUESTION)->get();
+        $tagTypes = TagType::ofType([TagType::QUESTION])->get();
         $tags = Tag::whereIn('tag_type_id', array_pluck($tagTypes, 'id'))->orderBy('order')->limit(5)->get();
 
         return $tags;
@@ -25,7 +25,7 @@ class TagController extends WebController
     //问题标签列表（含分类）
     public function tagTypes()
     {
-        $tagTypes = TagType::ofType(TagType::QUESTION)->with(['tags'])->get();
+        $tagTypes = TagType::ofType([TagType::QUESTION])->with(['tags'])->get();
 
         return $tagTypes;
     }
