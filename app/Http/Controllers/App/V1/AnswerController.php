@@ -8,6 +8,7 @@
 
 namespace Hifone\Http\Controllers\App\V1;
 
+use Carbon\Carbon;
 use Hifone\Exceptions\Consts\AnswerEx;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Http\Bll\AnswerBll;
@@ -81,7 +82,6 @@ class AnswerController extends AppController
      * 同等的点赞数给到第一个回答用户（主要也是为了兼顾以后不用干预的处理，同时也是刺激用户参与回答）；
      * @param Answer $answer
      * @param AnswerBll $answerBll
-     * @param CommentBll $commentBll
      * @throws HifoneException
      * @return String
      */
@@ -93,7 +93,9 @@ class AnswerController extends AppController
             throw new HifoneException('不能采纳自己的回答');
         }
         //按照时间执行自己、管理员采纳操作和系统自动采纳、提醒用户采纳
-        //todo 计时起点如何处理
+        if (Carbon::now()->subHours(24*5)->format('Y-m-d H:i') > $answer->question->first_answer_time) {
+            throw new HifoneException('采纳有效期已过');
+        }
         $answerBll->adoptAnswer($answer);
 
         return success('已采纳');

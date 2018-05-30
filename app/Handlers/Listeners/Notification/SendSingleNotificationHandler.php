@@ -12,6 +12,7 @@
 namespace Hifone\Handlers\Listeners\Notification;
 
 use Auth;
+use Hifone\Events\Adopt\AdopeAsSoonAsPossibleEvent;
 use Hifone\Events\Adopt\AnswerWasAdoptedEvent;
 use Hifone\Events\EventInterface;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
@@ -49,7 +50,10 @@ class SendSingleNotificationHandler
             $this->invite($event->from, $event->to, $event->question);
         } elseif ($event instanceof AnswerWasAdoptedEvent) {
             $this->adopted($event->user, $event->answer);
+        } elseif ($event instanceof AdopeAsSoonAsPossibleEvent) {
+            $this->adoptAsap($event->question);
         }
+
     }
 
     protected function follow($target)
@@ -122,4 +126,8 @@ class SendSingleNotificationHandler
         app('notifier')->notify('answer_adopted', Auth::user(), $user, $answer);
     }
 
+    protected function adoptAsap($question)
+    {
+        app('notifier')->notify('adopt_asap', Auth::user(), $user, $answer);
+    }
 }
