@@ -144,6 +144,14 @@ class AnswerController extends Controller
                 'answer_count' => $answer->question->answers()->visibleAndDeleted()->count(),
                 'last_answer_time' => Carbon::now()->toDateTimeString()
             ]);
+            //首次回答时间写入question->first_answer_time
+            if ($answer->question->first_answer_time == null) {
+                $answer->question->update([
+                    'first_answer_time' => Carbon::now()->toDateTimeString()
+                ]);
+                //触发队列延时任务提醒作者三天后采纳 定时任务去做
+            }
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
@@ -153,6 +161,7 @@ class AnswerController extends Controller
         event(new AnswerWasAuditedEvent($answer->user, $answer));
         //提问被回答
         event(new AnsweredWasAddedEvent($answer->user, $answer->question));
+
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
 
