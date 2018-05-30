@@ -36,6 +36,7 @@ class CreateQuestionsTable extends Migration
             $table->timestamp('last_op_time')->comment('后台最后操作时间')->nullable();
             $table->string('last_op_reason')->comment('操作原因')->nullable();
             $table->timestamp('edit_time')->comment('最新编辑时间')->nullable();
+            $table->timestamp('first_answer_time')->comment('第一回答时间')->nullable();
             $table->timestamp('last_answer_time')->comment('最新回答时间')->nullable();
 
             $table->timestamps();
