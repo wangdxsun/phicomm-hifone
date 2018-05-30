@@ -22,7 +22,7 @@ class UpdateQaModulesTable extends Migration
 
         //tags表 type改为tag_type_id,count明确意义增加备注
         Schema::table('tags', function (Blueprint $table) {
-            $table->renameColumn('type', 'tag_type_id')->comment('标签类型id');
+            $table->renameColumn('type', 'tag_type_id')->comment('标签类型id')->change();
             $table->string('count')->comment('该标签下的对象数')->change();
         });
         //follows表追加answer_count 新回答
