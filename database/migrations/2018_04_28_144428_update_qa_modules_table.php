@@ -14,8 +14,12 @@ class UpdateQaModulesTable extends Migration
     {
         //taggables表追加时间戳
         Schema::table('taggables', function (Blueprint $table) {
+            $table->increments('id');
             $table->timestamps();
         });
+
+
+
         //tags表 type改为tag_type_id,count明确意义增加备注
         Schema::table('tags', function (Blueprint $table) {
             $table->renameColumn('type', 'tag_type_id')->comment('标签类型id');
