@@ -27,7 +27,7 @@ class UpdateQaModulesTable extends Migration
         });
         //users表追加is_expert 追加question_count 追加answer_count 追加comment_count 追加notification_qa_count
         Schema::table('users', function ($table) {
-            $table->unsignedInteger('question_count')->comment('提问数')->after('is_expert');
+            $table->unsignedInteger('question_count')->comment('提问数')->after('score');
             $table->unsignedInteger('answer_count')->comment('回答数')->after('question_count');
             $table->unsignedInteger('comment_count')->comment('回答的评论数')->after('answer_count');
             $table->unsignedInteger('notification_qa_count')->comment('问答的通知数')->after('notification_follow_count');
@@ -52,7 +52,7 @@ class UpdateQaModulesTable extends Migration
             $table->dropColumn('answer_count');
         });
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['is_expert', 'question_count', 'answer_count', 'comment_count']);
+            $table->dropColumn(['question_count', 'answer_count', 'comment_count']);
         });
     }
 }
