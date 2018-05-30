@@ -520,6 +520,11 @@ trait ElasticquentTrait
         if ($this instanceof Thread || $this instanceof Question || $this instanceof Answer) {
             $this->body = strip_tags($this->body);
         }
+        if ($this instanceof Answer) {
+            unset($this->question);
+            unset($this->user);
+            unset($this->comment);
+        }
 
         $params = $this->getBasicEsParams();
 
@@ -553,6 +558,11 @@ trait ElasticquentTrait
     {
         if ($this instanceof Thread || $this instanceof Question || $this instanceof Answer) {
             $this->body = strip_tags($this->body);
+        }
+        if ($this instanceof Answer) {
+            unset($this->question);
+            unset($this->user);
+            unset($this->comment);
         }
         $params = $this->getBasicEsParams();
 
