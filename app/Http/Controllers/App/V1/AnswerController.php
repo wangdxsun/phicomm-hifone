@@ -17,6 +17,7 @@ use Auth;
 use Hifone\Models\Answer;
 use Hifone\Models\Question;
 use Hifone\Models\User;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class AnswerController extends AppController
 {
@@ -98,4 +99,14 @@ class AnswerController extends AppController
         return success('已采纳');
     }
 
+    public function search($keyword, AnswerBll $answerBll)
+    {
+        if (empty($keyword)) {
+            $answers = new LengthAwarePaginator([], 0, 15);
+        } else {
+            $answers = $answerBll->search($keyword);
+        }
+
+        return $answers;
+    }
 }
