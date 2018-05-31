@@ -56,7 +56,7 @@ class UpdateQaModulesTable extends Migration
             $table->dropColumn('answer_count');
         });
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['question_count', 'answer_count', 'comment_count']);
+            $table->dropColumn(['question_count', 'answer_count', 'comment_count','notification_qa_count']);
         });
     }
 }
