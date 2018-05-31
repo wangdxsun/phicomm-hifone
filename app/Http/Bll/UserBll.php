@@ -139,7 +139,7 @@ class UserBll extends BaseBll
      * @return int
      * @deprecated
      */
-    public function getFollowNwAnswerCount(User $user)
+    public function getFollowNewAnswerCount(User $user)
     {
         return (int) $user->follows()->ofType(Question::class)->sum('answer_count');
     }
@@ -175,6 +175,7 @@ class UserBll extends BaseBll
         if (empty($keyword) || empty($question)) {
             $users = new LengthAwarePaginator([], 0, 15);
         } else {
+            (new AnswerBll)->checkQuestion($question->id);
             $users = User::searchUser($keyword)->paginate(15);
             foreach ($users as $user) {
                 $user['followed'] = User::hasFollowUser($user);
