@@ -31,10 +31,12 @@
                                 @endforeach
                             </td>
                             @if ($tagType->display_name != '自动标签')
-                            <td>
-                                <a href="/dashboard/tag/type/{{ $tagType->id }}/edit/user" title="编辑"><i class="fa fa-pencil"></i></a>
-                                <a data-url="{{ route('dashboard.tag.type.destroy',['id'=>$tagType->id, 'user']) }}" data-method="delete" class="confirm-action" data-title="是否删除该分类？"><i class="fa fa-trash"></i></a>
-                            </td>
+                                <td>
+                                    <a href="/dashboard/tag/type/{{ $tagType->id }}/edit/user" title="编辑"><i class="fa fa-pencil"></i></a>
+                                    <a data-url="{{ route('dashboard.tag.type.destroy',['id'=>$tagType->id, 'user']) }}" data-method="delete" class="confirm-action" data-title="是否删除该分类？"><i class="fa fa-trash"></i></a>
+                                </td>
+                            @else
+                                <td></td>
                             @endif
                         </tr>
                     @endforeach
