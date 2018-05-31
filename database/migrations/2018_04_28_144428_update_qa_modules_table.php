@@ -46,8 +46,7 @@ class UpdateQaModulesTable extends Migration
     public function down()
     {
         Schema::table('taggables', function (Blueprint $table) {
-            $table->dropTimestamps();
-            $table->dropColumn('id');
+            $table->dropColumn(['id', 'created_at', 'updated_at']);
         });
         Schema::table('tags', function (Blueprint $table) {
             $table->renameColumn('tag_type_id', 'type')->comment('');
