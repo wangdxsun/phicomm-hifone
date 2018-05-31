@@ -136,6 +136,7 @@ class WebRoutes
                 $router->get('notification/at', 'NotificationController@at');
                 $router->get('notification/system', 'NotificationController@system');
                 $router->get('notification/watch', 'NotificationController@watch');
+                $router->get('notification/at/qa', 'NotificationController@atWithQA');
 
                 $router->post('logout', 'PhicommController@logout');
 

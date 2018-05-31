@@ -9,6 +9,8 @@
 namespace Hifone\Http\Bll;
 
 use Auth;
+use Hifone\Models\Answer;
+use Hifone\Models\Comment;
 use Hifone\Models\Notification;
 use Hifone\Models\Question;
 use Hifone\Models\Reply;
@@ -65,6 +67,26 @@ class NotificationBll extends BaseBll
         })->whereHas('reply.thread', function ($query) {
             $query->visibleAndDeleted();
         })->with(['reply.thread', 'reply.user', 'reply.reply.user'])->recent()->paginate();
+        Auth::user()->notification_at_count = 0;
+        Auth::user()->save();
+
+        return $notifications;
+    }
+
+    public function atWithQA()
+    {
+        $notifications = Notification::forUser(Auth::id())->atWithQA()->with('object')->recent()->paginate();
+        foreach ($notifications as $notification) {
+            if ($notification->object instanceof Reply) {
+                $notification->object->load(['reply.thread', 'reply.user', 'reply.reply.user']);
+            } elseif ($notification->object instanceof Question) {
+                $notification->object->load(['user', 'tags']);
+            } elseif ($notification->object instanceof Answer) {
+                $notification->object->load(['user', 'question']);
+            } elseif ($notification->object instanceof Comment) {
+                $notification->object->load(['user', 'answer']);
+            }
+        }
         Auth::user()->notification_at_count = 0;
         Auth::user()->save();
 
