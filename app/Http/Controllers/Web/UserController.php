@@ -137,6 +137,12 @@ class UserController extends WebController
         return $userBll->getFollowUsers($user, $question);
     }
 
+    //邀请搜索用户列表
+    public function searchUsers($keyword, Question $question, UserBll $userBll)
+    {
+        return $userBll->getSearchUsers($keyword, $question);
+    }
+
     public function credit(UserBll $userBll, CommonBll $commonBll)
     {
         $commonBll->loginWeb();
