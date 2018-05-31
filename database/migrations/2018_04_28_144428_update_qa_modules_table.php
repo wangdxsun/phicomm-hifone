@@ -49,7 +49,7 @@ class UpdateQaModulesTable extends Migration
             $table->dropColumn(['id', 'created_at', 'updated_at']);
         });
         Schema::table('tags', function (Blueprint $table) {
-            $table->renameColumn('tag_type_id', 'type')->comment('');
+            $table->renameColumn('tag_type_id', 'type')->comment('')->change();
             $table->string('count')->comment('')->change();
         });
         Schema::table('follows', function (Blueprint $table) {
