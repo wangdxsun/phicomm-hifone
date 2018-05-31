@@ -14,11 +14,15 @@ class UpdateQaModulesTable extends Migration
     {
         //taggables表追加时间戳
         Schema::table('taggables', function (Blueprint $table) {
+            $table->increments('id');
             $table->timestamps();
         });
+
+
+
         //tags表 type改为tag_type_id,count明确意义增加备注
         Schema::table('tags', function (Blueprint $table) {
-            $table->renameColumn('type', 'tag_type_id')->comment('标签类型id');
+            $table->renameColumn('type', 'tag_type_id')->comment('标签类型id')->change();
             $table->string('count')->comment('该标签下的对象数')->change();
         });
         //follows表追加answer_count 新回答
@@ -27,7 +31,7 @@ class UpdateQaModulesTable extends Migration
         });
         //users表追加is_expert 追加question_count 追加answer_count 追加comment_count 追加notification_qa_count
         Schema::table('users', function ($table) {
-            $table->unsignedInteger('question_count')->comment('提问数')->after('is_expert');
+            $table->unsignedInteger('question_count')->comment('提问数')->after('score');
             $table->unsignedInteger('answer_count')->comment('回答数')->after('question_count');
             $table->unsignedInteger('comment_count')->comment('回答的评论数')->after('answer_count');
             $table->unsignedInteger('notification_qa_count')->comment('问答的通知数')->after('notification_follow_count');
@@ -43,6 +47,7 @@ class UpdateQaModulesTable extends Migration
     {
         Schema::table('taggables', function (Blueprint $table) {
             $table->dropTimestamps();
+            $table->dropColumn('id');
         });
         Schema::table('tags', function (Blueprint $table) {
             $table->renameColumn('tag_type_id', 'type')->comment('');
@@ -52,7 +57,7 @@ class UpdateQaModulesTable extends Migration
             $table->dropColumn('answer_count');
         });
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['is_expert', 'question_count', 'answer_count', 'comment_count']);
+            $table->dropColumn(['question_count', 'answer_count', 'comment_count']);
         });
     }
 }
