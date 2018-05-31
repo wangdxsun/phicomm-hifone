@@ -18,6 +18,7 @@ use Hifone\Events\Report\ReportWasPassedEvent;
 use Hifone\Events\Thread\ThreadWasTrashedEvent;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Answer;
+use Hifone\Models\Comment;
 use Hifone\Models\Question;
 use Hifone\Models\Reply;
 use Hifone\Models\Report;
@@ -80,21 +81,18 @@ class ReportController extends Controller
         if ($target instanceof Thread) {
             $operation = '删除帖子';
             $target->node->update(['thread_count' => $target->node->threads()->visible()->count()]);
-            $target->user->update(['thread_count' => $target->user->threads()->visibleAndDeleted()->count()]);
             event(new ThreadWasTrashedEvent($target));
         } elseif ($target instanceof Reply) {
-            $operation = '删除回复';
-            $target->thread->update(['reply_count' => $target->thread->replies()->visibleAndDeleted()->count()]);
-            $target->user->update(['reply_count' => $target->user->replies()->visibleAndDeleted()->count()]);
+            $operation = '删除评论';
             event(new ReplyWasTrashedEvent($target));
         } elseif ($target instanceof Question) {
             $operation = '删除提问';
-            $target->user->update(['question_count' => $target->user->questions()->visibleAndDeleted()->count()]);
             event(new QuestionWasDeletedEvent($target->user, $target));
         } elseif ($target instanceof Answer) {
-            $operation = '删除回复';
-            $target->user->update(['answer_count' => $target->user->answers()->visibleAndDeleted()->count()]);
+            $operation = '删除回答';
             event(new AnswerWasDeletedEvent($target->user, $target));
+        } elseif ($target instanceof Comment) {
+            $operation = '删除回复';
         }
         $this->updateOpLog($target, $operation, trim(request('reason')));
         $reports = Report::where('reportable_id', $report->reportable_id)->where('reportable_type', $report->reportable_type)->get();
