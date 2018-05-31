@@ -10,7 +10,6 @@ namespace Hifone\Http\Bll;
 
 use Carbon\Carbon;
 use Hifone\Commands\Answer\AddAnswerCommand;
-use Hifone\Commands\Invite\AddInviteCommand;
 use Hifone\Events\Adopt\AnswerWasAdoptedEvent;
 use Hifone\Events\Answer\AnswerWasAuditedEvent;
 use Hifone\Events\Invite\InviteWasAddedEvent;
@@ -39,8 +38,11 @@ class AnswerBll extends BaseBll
 
     public function showAnswer(Answer $answer)
     {
-        //判断问题状态后再显示回答详情
+        if (!$answer->isVisible()) {
+            throw new HifoneException('该回答已被删除', AnswerEx::DELETED);
+        }
         $this->checkQuestion($answer->question_id);
+
         $answer = $answer->load(['user', 'question']);
         $answer->user['followed'] = User::hasFollowUser($answer->user);
         $answer['liked'] = Auth::check() ? Auth::user()->hasLikeAnswer($answer) : false;
@@ -156,7 +158,7 @@ class AnswerBll extends BaseBll
         $answer->update(['adopted' => 1]);
 
         //通知被采纳人
-        event(new AnswerWasAdoptedEvent($answer->user, $answer));
+        event(new AnswerWasAdoptedEvent(Auth::user(), $answer->user, $answer));
         //给被采纳人加悬赏值
         dispatch(new RewardScore($answer->user, $answer->question->score));
     }

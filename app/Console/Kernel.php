@@ -12,10 +12,12 @@
 namespace Hifone\Console;
 
 use Hifone\Console\Commands\AddAutoTag;
+use Hifone\Console\Commands\AutoAdopt;
 use Hifone\Console\Commands\GetRank;
 use Hifone\Console\Commands\InitNodesThreadAndReplyCount;
 use Hifone\Console\Commands\GetThumbnails;
 use Hifone\Console\Commands\InitSubNode;
+use Hifone\Console\Commands\RemindAdopt;
 use Hifone\Console\Commands\SearchImport;
 use Hifone\Console\Commands\UpdateHeat;
 use Illuminate\Console\Scheduling\Schedule;
@@ -37,7 +39,9 @@ class Kernel extends ConsoleKernel
         SearchImport::class,
         InitSubNode::class,
         GetThumbnails::class,
-        InitNodesThreadAndReplyCount::class
+        InitNodesThreadAndReplyCount::class,
+        RemindAdopt::class,
+        AutoAdopt::class
     ];
 
     /**
@@ -53,5 +57,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('heat:update')->everyFiveMinutes();
         $schedule->command('get:rank')->weekly()->mondays()->at('0:0');
         $schedule->command('add:autoTag')->daily()->at('2:0');
+        $schedule->command('remind:adopt')->everyThirtyMinutes();
+        $schedule->command('auto:adopt')->daily()->at('2:0');
     }
 }

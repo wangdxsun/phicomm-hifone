@@ -559,4 +559,9 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         return $query->orderBy('answer_count', 'desc')->orderBy('score', 'desc');
     }
 
+    public function isAdmin()
+    {
+        return $this->hasRole(['Admin', 'Founder']);
+    }
+
 }

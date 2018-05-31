@@ -9,6 +9,7 @@
 namespace Hifone\Models;
 
 use AltThree\Validator\ValidatingTrait;
+use Carbon\Carbon;
 use Elasticquent\ElasticquentTrait;
 use Hifone\Models\Scopes\CommonTrait;
 use Hifone\Models\Traits\Taggable;
@@ -220,6 +221,18 @@ class Question extends BaseModel implements TaggableInterface
     public function getReportAttribute()
     {
         return $this->title;
+    }
+
+    //需要提醒采纳的,还剩48h到期~12h，防止服务因异常中断
+    public function scopeRemindAdopt($query)
+    {
+        return $query->where('answer_id', null)->whereBetween('first_answer_time', [Carbon::now()->subHours(48), Carbon::now()->subHours(12)]);
+    }
+
+    //尚未采纳且需要自动采纳的
+    public function scopeAutoAdopted($query)
+    {
+        return $query->where('answer_id', null)->whereBetween('first_answer_time', [Carbon::now()->subHours(24*15), Carbon::now()->subHours(24*15 - 1)]);
     }
 
 }

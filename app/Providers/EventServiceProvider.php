@@ -281,13 +281,18 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
 
-        //邀请回答，通知被邀请人
+        //被邀请回答，通知被邀请人
         \Hifone\Events\Invite\InviteWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
 
-        //采纳回答，通知被采纳人并给他加智慧果
+        //回答被采纳，通知被采纳人并给他加智慧果
         \Hifone\Events\Adopt\AnswerWasAdoptedEvent::class => [
+            \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
+        ],
+
+        //系统通知尽快去采纳
+        \Hifone\Events\Adopt\AdopeAsSoonAsPossibleEvent::class => [
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
     ];

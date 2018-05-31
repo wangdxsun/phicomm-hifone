@@ -61,7 +61,7 @@ class Handler extends ExceptionHandler
         if ($e instanceof HttpResponseException) {
             return $e->getResponse();
         } elseif ($e instanceof ModelNotFoundException) {
-            $e = new NotFoundHttpException($e->getMessage(), $e);
+            $e = new NotFoundHttpException('id不存在', $e);
         } elseif ($e instanceof AuthenticationException) {
             return $this->unauthenticated($request, $e);
         } elseif ($e instanceof AuthorizationException) {

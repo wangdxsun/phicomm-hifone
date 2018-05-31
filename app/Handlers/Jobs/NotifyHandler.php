@@ -70,9 +70,10 @@ class NotifyHandler
      */
     protected function pushNotify($from, $to, $type, $object, $msg_type = '1')
     {
-        $message = $this->makeMessage($type, $object);
+        //构造头像、标题、消息内容
         $avatar = $this->makeAvatar($from, $type);
         $title = $this->makeTitle($from, $type);
+        $message = $this->makeMessage($type, $object);
 
         $typeNum = $this->getType($type);
         $data = [
@@ -104,7 +105,12 @@ class NotifyHandler
             case 'thread_pin'://置顶帖子
             case 'reply_pin'://置顶评论回复
             case 'thread_mark_excellent'://加精华
+            case 'adopt_asap'://尽快采纳
                 return env('APP_URL').'/images/admin_avatar.png';
+            case 'answer_adopted'://系统自动采纳
+                if ($operator->isAdmin() || $operator->id == 0) {
+                    return env('APP_URL').'/images/admin_avatar.png';
+                }
             default :
                 return $operator->avatar_url;
         }
@@ -156,7 +162,7 @@ class NotifyHandler
                 return "【" . $operator->username . "】邀请你来回答";
             case 'adopt_asap'://尽快采纳
                 return "【系统】提醒你尽快采纳回答";
-            case 'answer_adopted'://回答被采纳
+            case 'answer_adopted'://回答被采纳（区分用户、管理员、系统）
                 return "【" . $operator->username . "】采纳了你的回答";
             default :
                 throw new HifoneException("推送类型 $typeStr 不支持");
@@ -234,28 +240,29 @@ class NotifyHandler
                 return '1007';
             case 'thread_mark_excellent'://加精华 跳帖子详情
                 return '1008';
-            case 'question_mention'://提问中@我
-                return '1009';
-            case 'answer_mention'://回答中@我
-                return '1010';
-            case 'comment_mention'://回复中@我
-                return '1011';
-            case 'question_new_answer'://回答提问
-                return '1012';
-            case 'answer_new_comment'://评论回答
-                return '1013';
-            case 'comment_new_comment'://回复评论
-                return '1014';
-            case 'answer_like':
-                return '1015';
-            case 'comment_like':
-                return '1016';
-            case 'user_invited':
-                return '1017';
-            case 'adopt_asap':
-                return '1017';
-            case 'answer_adopted':
-                return '1017';
+
+            case 'question_mention'://提问中@我 跳问题详情
+                return '2001';
+            case 'answer_mention'://回答中@我 跳回答详情
+                return '2002';
+            case 'comment_mention'://回复中@我 跳？？？
+                return '2003';
+            case 'question_new_answer'://回答提问 跳回答详情
+                return '2004';
+            case 'answer_new_comment'://评论回答 跳当前评论？？？
+                return '2005';
+            case 'comment_new_comment'://回复评论 跳当前评论？？？
+                return '2006';
+            case 'answer_like'://赞回答 跳回答详情
+                return '2007';
+            case 'comment_like'://赞回复 跳回复详情
+                return '2008';
+            case 'user_invited'://邀请回答 跳问题详情
+                return '2009';
+            case 'adopt_asap'://尽快采纳 跳问题详情
+                return '2010';
+            case 'answer_adopted'://采纳回答 跳回答详情
+                return '2011';
             default :
                 throw new HifoneException("推送类型 $typeStr 不支持");
         }

@@ -12,6 +12,7 @@ use AltThree\Validator\ValidatingTrait;
 use Elasticquent\ElasticquentTrait;
 use Hifone\Models\Scopes\CommonTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Auth;
 
 class Answer extends BaseModel
 {
@@ -99,6 +100,16 @@ class Answer extends BaseModel
         return $query->where('question_id', $question->id);
     }
 
+    public function scopeNotAdopted($query)
+    {
+        return $query->where('adopted', 0);
+    }
+
+    public function scopeLike($query)
+    {
+        return $query->orderBy('like_count', 'desc');
+    }
+
     //回答对应的问题
     public function question()
     {
@@ -162,6 +173,25 @@ class Answer extends BaseModel
     public function getReportAttribute()
     {
         return $this->body;
+    }
+
+    //回答详情是否可见
+    public function isVisible()
+    {
+        //正常和已删除状态、用户登录态、是否自己的回答
+        if ($this->status == Answer::VISIBLE) {
+            return true;
+        }
+        if ($this->status == Answer::DELETED) {
+            if (Auth::guest()) {
+                return false;
+            } else {
+                return Auth::id() == $this->user->id;
+            }
+        }
+        if ($this->status == Answer::TRASH || $this->status == Answer::AUDIT) {
+            return false;
+        }
     }
 
 }

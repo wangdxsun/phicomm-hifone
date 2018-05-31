@@ -1,26 +1,33 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: daoxin.wang
+ * Date: 2018/5/30
+ * Time: 10:40
+ */
 
 namespace Hifone\Console\Commands;
 
+use Hifone\Events\Adopt\AdopeAsSoonAsPossibleEvent;
 use Hifone\Exceptions\Handler;
-use Hifone\Models\Thread;
+use Hifone\Models\Question;
 use Illuminate\Console\Command;
 
-class UpdateHeat extends Command
+class RemindAdopt extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'heat:update';
+    protected $signature = 'remind:adopt';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'update heat value of threads timely';
+    protected $description = 'remind user to adopt answer as soon as possible.';
 
     /**
      * Create a new command instance.
@@ -34,13 +41,12 @@ class UpdateHeat extends Command
 
     public function handle(Handler $handler)
     {
-        Thread::visible()->heat()->chunk(200, function ($threads) use ($handler) {
-            foreach ($threads as $thread) {
+        Question::visible()->remindAdopt()->chunk(100, function ($questions) use ($handler) {
+            foreach ($questions as $question) {
                 try {
-                    $thread->heat = $thread->heat_compute;
-                    $thread->save();
+                    event(new AdopeAsSoonAsPossibleEvent($question));
                 } catch (\Exception $e) {
-                    \Log::info('UpdateHeat:thread', $thread->toArray());
+                    \Log::info('RemindAdopt:question', $question->toArray());
                     $handler->report($e);
                 }
             }

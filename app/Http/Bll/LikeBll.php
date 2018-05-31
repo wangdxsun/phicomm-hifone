@@ -10,6 +10,9 @@ namespace Hifone\Http\Bll;
 
 use Hifone\Commands\Like\AddLikeCommand;
 use Auth;
+use Hifone\Exceptions\Consts\AnswerEx;
+use Hifone\Exceptions\Consts\CommentEx;
+use Hifone\Exceptions\Consts\QuestionEx;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Models\Answer;
 use Hifone\Models\Comment;
@@ -39,10 +42,13 @@ class LikeBll extends BaseBll
         return ['liked' => Auth::user()->hasLikeReply($reply)];
     }
 
+    /**
+     * @deprecated
+     */
     public function likeQuestion($question)
     {
         if ($question->status <> Question::VISIBLE) {
-            throw new HifoneException('该提问已被删除');
+            throw new HifoneException('该问答已被删除', QuestionEx::DELETED);
         }
         dispatch(new AddLikeCommand($question));
 
@@ -52,7 +58,7 @@ class LikeBll extends BaseBll
     public function likeAnswer($answer)
     {
         if ($answer->status <> Answer::VISIBLE) {
-            throw new HifoneException('该回答已被删除');
+            throw new HifoneException('该回答已被删除', AnswerEx::DELETED);
         }
         dispatch(new AddLikeCommand($answer));
 
@@ -62,7 +68,7 @@ class LikeBll extends BaseBll
     public function likeComment($comment)
     {
         if ($comment->status <> Comment::VISIBLE) {
-            throw new HifoneException('该回复已被删除');
+            throw new HifoneException('该回复已被删除', CommentEx::DELETED);
         }
         dispatch(new AddLikeCommand($comment));
 

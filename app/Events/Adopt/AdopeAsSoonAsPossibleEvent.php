@@ -12,18 +12,12 @@
 namespace Hifone\Events\Adopt;
 
 
-final class AnswerWasAdoptedEvent implements AdoptEventInterface
+final class AdopeAsSoonAsPossibleEvent implements AdoptEventInterface
 {
-    public $from;
+    public $question;
 
-    public $to;
-
-    public $answer;
-
-    public function __construct($from, $to, $answer)
+    public function __construct($question)
     {
-        $this->from = $from;
-        $this->to = $to;
-        $this->answer = $answer;
+        $this->question = $question;
     }
 }

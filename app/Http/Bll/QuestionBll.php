@@ -13,6 +13,7 @@ use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Question\QuestionWasAuditedEvent;
 use Hifone\Events\Question\QuestionWasViewedEvent;
+use Hifone\Exceptions\Consts\QuestionEx;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Jobs\RewardScore;
 use Hifone\Models\Question;
@@ -39,7 +40,7 @@ class QuestionBll extends BaseBll
     public function showQuestion(Question $question)
     {
         if (!$question->isVisible()) {
-            throw new HifoneException('该问答已被删除', 410);
+            throw new HifoneException('该问答已被删除', QuestionEx::DELETED);
         }
         //清除关注该问题的新增回答数
         event(new QuestionWasViewedEvent(clone $question));
@@ -55,7 +56,7 @@ class QuestionBll extends BaseBll
     public function sortAnswers(Question $question)
     {
         if (!$question->isVisible()) {
-            throw new HifoneException('该问答已被删除', 410);
+            throw new HifoneException('该问答已被删除', QuestionEx::DELETED);
         }
         //置顶、采纳、时间倒序
         $answers = $question->answers()->visibleAndDeleted()->with('user')
