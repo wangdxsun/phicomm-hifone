@@ -12,9 +12,10 @@ class UpdateTagTable extends Migration
      */
     public function up()
     {
-        //tags表，明确channel字段的备注
-        Schema::table('tags', function (Blueprint $table) {
-            $table->unsignedInteger('channel')->comment('channel标志是否为自动标签：0代表自动标签，其他代表不是自动标签')->nullable()->change();
+
+        //tag_types表,增加order字段
+        Schema::table('tag_types', function (Blueprint $table) {
+            $table->unsignedInteger('order')->comment('标签分类的排序')->nullable();
         });
 
         Schema::table('tag_types', function (Blueprint $table) {
@@ -29,8 +30,9 @@ class UpdateTagTable extends Migration
      */
     public function down()
     {
-        Schema::table('tags', function (Blueprint $table) {
-            $table->unsignedInteger('channel')->comment('')->nullable()->change();
+
+        Schema::table('tag_types', function (Blueprint $table) {
+            $table->dropColumn('order');
         });
 
         Schema::table('tag_types', function (Blueprint $table) {
