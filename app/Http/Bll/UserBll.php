@@ -136,7 +136,7 @@ class UserBll extends BaseBll
 
     public function getFollowNewAnswerCount(User $user)
     {
-        return $user->follows()->ofType(Question::class)->sum('answer_count');
+        return (int) $user->follows()->ofType(Question::class)->sum('answer_count');
     }
 
     //获取专家用户列表
