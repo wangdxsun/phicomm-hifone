@@ -18,6 +18,7 @@ class UpdateUserTable extends Migration
             $table->unsignedInteger('answer_count')->comment('回答数')->after('question_count');
             $table->unsignedInteger('comment_count')->comment('回答的评论数')->after('answer_count');
             $table->unsignedInteger('notification_qa_count')->comment('问答的通知数')->after('notification_follow_count');
+            $table->unsignedInteger('follow_new_answer_count')->comment('关注问题新回答数')->after('notification_qa_count');
         });
     }
 
@@ -29,7 +30,7 @@ class UpdateUserTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['question_count', 'answer_count', 'comment_count','notification_qa_count']);
+            $table->dropColumn(['question_count', 'answer_count', 'comment_count','notification_qa_count', 'follow_new_answer_count']);
         });
     }
 }
