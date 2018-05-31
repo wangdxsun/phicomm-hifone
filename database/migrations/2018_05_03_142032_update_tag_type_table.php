@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateTagTable extends Migration
+class UpdateTagTypeTable extends Migration
 {
     /**
      * Run the migrations.

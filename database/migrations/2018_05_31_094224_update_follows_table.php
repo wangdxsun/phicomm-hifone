@@ -3,9 +3,9 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateOllowsTable extends Migration
+class UpdateFollowsTable extends Migration
 {
-    /**
+    /**o
      * Run the migrations.
      *
      * @return void
