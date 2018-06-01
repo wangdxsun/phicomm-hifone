@@ -56,4 +56,12 @@ class NotificationController extends WebController
 
         return $systems;
     }
+
+    public function qa(NotificationBll $notificationBll)
+    {
+        $systems = $notificationBll->qa();
+
+        return $systems;
+    }
+
 }
