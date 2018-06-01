@@ -100,6 +100,7 @@ class AddAutoTag extends Command
                 }
 
                 $user->tags()->sync($tagData);
+                $tagData = [];
             }
         });
         \Log::debug('自动标签脚本运行完毕');
