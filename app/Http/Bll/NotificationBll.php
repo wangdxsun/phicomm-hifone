@@ -78,7 +78,7 @@ class NotificationBll extends BaseBll
         $notifications = Notification::forUser(Auth::id())->atWithQA()->with('object')->recent()->paginate();
         foreach ($notifications as $notification) {
             if ($notification->object instanceof Reply) {
-                $notification->object->load(['reply.thread', 'reply.user', 'reply.reply.user']);
+                $notification->object->load(['thread', 'user', 'reply.user']);
             } elseif ($notification->object instanceof Question) {
                 $notification->object->load(['user', 'tags']);
             } elseif ($notification->object instanceof Answer) {
