@@ -192,6 +192,7 @@ class Thread extends BaseModel implements TaggableInterface
         return $query->where('sub_node_id', $subNode->id);
     }
 
+    //消息推送用phicomm_id
     public function user()
     {
         return $this->belongsTo(User::class)->select(['id', 'phicomm_id', 'username', 'avatar_url', 'role', 'thread_count', 'score']);

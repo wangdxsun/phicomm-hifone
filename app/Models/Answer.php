@@ -56,6 +56,7 @@ class Answer extends BaseModel
         return $this->dates;
     }
 
+    //消息推送用phicomm_id
     public function user()
     {
         return $this->belongsTo(User::class)->select(['id', 'username', 'avatar_url', 'role', 'score', 'phicomm_id']);

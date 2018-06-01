@@ -92,10 +92,10 @@ class Reply extends BaseModel
         return $this->morphMany(Notification::class, 'object');
     }
 
+    //消息推送用phicomm_id
     public function user()
     {
-        return $this->belongsTo(User::class)
-            ->select(['id', 'phicomm_id', 'username', 'avatar_url', 'score']);
+        return $this->belongsTo(User::class)->select(['id', 'phicomm_id', 'username', 'avatar_url', 'score']);
     }
 
     public function lastOpUser()

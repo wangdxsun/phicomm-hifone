@@ -28,7 +28,7 @@ class Notifier
         foreach ($users as $user) {
             $user = $user instanceof User ? $user : $user->user;
 //            dispatch((new Notify($type, $author, $user, $object))->onQueue('low'));
-            dispatch((new Notify($type, $author, $user, $object)));
+            dispatch(new Notify($type, $author, $user, $object));
         }
     }
 }

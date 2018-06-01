@@ -4,6 +4,9 @@ namespace Hifone\Handlers\Jobs;
 
 use Hifone\Exceptions\HifoneException;
 use Hifone\Jobs\Notify;
+use Hifone\Models\Answer;
+use Hifone\Models\Comment;
+use Hifone\Models\Question;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
 use Hifone\Models\User;
@@ -93,7 +96,16 @@ class NotifyHandler
         } elseif ($object instanceof Reply) {
             $data['threadId'] = $object->thread_id;
             $data['replyId'] = $object->id;
+        } elseif ($object instanceof Question || $object instanceof Answer) {
+            $data['objectId'] = $object->id;
+        } elseif ($object instanceof Comment) {
+            $data['objectId'] = $object->answer_id;
         }
+        //系统提醒尽快采纳user_id传0，管理员、系统采纳回答传0
+        if ($type == 'answer_adopted' && $from->isAdmin()) {
+            $data['userId'] = 0;
+        }
+
         $outline = $this->makeOutline($from, $object);
 
         app('push')->push($to->phicomm_id, $data, $outline, $msg_type);
@@ -124,9 +136,9 @@ class NotifyHandler
             case 'reply_reply'://回复
                 return "【" . $operator->username . "】回复了你";
             case 'reply_mention'://回复@我
-                return "【" . $operator->username . "】回复中提到了你";
+                return "【" . $operator->username . "】回复中提及了你";
             case 'thread_mention'://帖子@我
-                return "【" . $operator->username . "】帖子中提到了你";
+                return "【" . $operator->username . "】帖子中提及了你";
             case 'user_follow'://关注用户
                 return "【" . $operator->username . "】关注了你";
             case 'thread_like'://赞帖子
@@ -143,27 +155,31 @@ class NotifyHandler
                 return "【管理员】加精了你的帖子";
 
             case 'question_mention'://提问中@我
-                return "【" . $operator->username . "】提问中提到了你";
+                return "【" . $operator->username . "】问题中提及了你";
             case 'answer_mention'://回答中@我
-                return "【" . $operator->username . "】回答中提到了你";
+                return "【" . $operator->username . "】回答中提及了你";
             case 'comment_mention'://回复中@我
-                return "【" . $operator->username . "】回复中提到了你";
+                return "【" . $operator->username . "】回复中提及了你";
             case 'question_new_answer'://回答提问
                 return "【" . $operator->username . "】回答了你的问题";
             case 'answer_new_comment':
-                return "【" . $operator->username . "】回复了你";
+                return "【" . $operator->username . "】评论了你的回答";
             case 'comment_new_comment':
-                return "【" . $operator->username . "】回复了你";
+                return "【" . $operator->username . "】回复了你的评论";
             case 'answer_like'://点赞回答
                 return "【" . $operator->username . "】赞了你的回答";
             case 'comment_like'://点赞回复
-                return "【" . $operator->username . "】赞了你的回复";
+                return "【" . $operator->username . "】赞了你的评论";
             case 'user_invited'://邀请回答
-                return "【" . $operator->username . "】邀请你来回答";
+                return "【" . $operator->username . "】邀请你回答问题";
             case 'adopt_asap'://尽快采纳
-                return "【系统】提醒你尽快采纳回答";
+                return "【系统】提醒你尽快采纳";
             case 'answer_adopted'://回答被采纳（区分用户、管理员、系统）
-                return "【" . $operator->username . "】采纳了你的回答";
+                if ($operator->isAdmin() || $operator->id == 0) {
+                    return "【系统】采纳了你的回答";
+                } else {
+                    return "【" . $operator->username . "】采纳了你的回答";
+                }
             default :
                 throw new HifoneException("推送类型 $typeStr 不支持");
         }
@@ -178,6 +194,12 @@ class NotifyHandler
             $message = $object->body;
         } elseif ($object instanceof User) {
             $message = "查看详情";
+        } elseif ($object instanceof Question) {
+            $message = $object->title;
+        } elseif ($object instanceof Answer) {
+            $message = $object->body;
+        } elseif ($object instanceof Comment) {
+            $message = $object->answer->body;
         }
         $message = app('parser.emotion')->reverseParseEmotionAndImage($message);
         $message = strip_tags($message);
@@ -194,6 +216,12 @@ class NotifyHandler
             $outline = $object->body;
         } elseif ($object instanceof User) {
             $outline = "【" . $from->username . "】关注了你";
+        } elseif ($object instanceof Question) {
+            $outline = $object->title;
+        } elseif ($object instanceof Answer) {
+            $outline = $object->body;
+        } elseif ($object instanceof Comment) {
+            $outline = $object->answer->body;
         }
         $outline = app('parser.emotion')->reverseParseEmotionAndImage($outline);
         $outline = strip_tags($outline);
