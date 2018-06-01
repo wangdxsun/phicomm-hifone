@@ -12,7 +12,7 @@ class TagSeeder extends Seeder
      */
     public function run()
     {
-        $tag_type_id = \Hifone\Models\TagType::where('display_name', '自动标签')->get()->id;
+        $tag_type_id = \Hifone\Models\TagType::where('display_name', '自动标签')->first()->id;
         DB::table('tags')->insert([
             'name'   => '盒子',
             'channel' => 0,
