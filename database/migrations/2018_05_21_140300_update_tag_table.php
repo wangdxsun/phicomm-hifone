@@ -15,7 +15,7 @@ class UpdateTagTable extends Migration
         //tags表 type改为tag_type_id,count明确意义增加备注
         Schema::table('tags', function (Blueprint $table) {
             $table->renameColumn('type', 'tag_type_id')->comment('标签类型id')->change();
-            $table->string('count')->comment('该标签下的对象数')->change();
+            $table->unsignedInteger('count')->comment('该标签下的对象数')->change();
         });
         //tags表,增加order字段
         Schema::table('tags', function (Blueprint $table) {
@@ -37,7 +37,7 @@ class UpdateTagTable extends Migration
     {
         Schema::table('tags', function (Blueprint $table) {
             $table->renameColumn('tag_type_id', 'type')->comment('')->change();
-            $table->string('count')->comment('')->change();
+            $table->unsignedInteger('count')->comment('')->change();
         });
         Schema::table('tags', function (Blueprint $table) {
             $table->dropColumn('order');
