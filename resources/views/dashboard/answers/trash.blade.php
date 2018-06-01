@@ -82,7 +82,7 @@
                             <td>{{ $answer->last_op_time }}</td>
                             <td>{{ $answer->last_op_reason }}</td>
                             <td>
-                                <a data-url="/dashboard/answers/{{$answer->id}}/audit" data-method="post"><i class="fa fa-check"></i></a>
+                                <a data-url="/dashboard/answers/{{$answer->id}}/recycle" data-method="post"><i class="fa fa-check"></i></a>
                             </td>
                         </tr>
                     @endforeach

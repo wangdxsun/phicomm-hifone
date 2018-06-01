@@ -56,7 +56,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('queue:work --sleep=3 --tries=3')->everyMinute();
         $schedule->command('heat:update')->everyFiveMinutes();
         $schedule->command('get:rank')->weekly()->mondays()->at('0:0');
-        $schedule->command('add:autoTag')->daily()->at('2:0');
+        $schedule->command('add:autoTag')->daily()->at('1:0');
         $schedule->command('remind:adopt')->everyThirtyMinutes();
         $schedule->command('auto:adopt')->daily()->at('2:0');
     }

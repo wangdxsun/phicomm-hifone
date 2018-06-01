@@ -84,6 +84,12 @@ class CommentController extends Controller
         return $this->passAudit($comment);
     }
 
+    //从回收站审核通过回复
+    public function recycle(Comment $comment)
+    {
+        return $this->passAudit($comment);
+    }
+
     //将回复状态修改为审核通过,需要将回复数加1
     public function passAudit(Comment $comment)
     {

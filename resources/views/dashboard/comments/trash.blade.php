@@ -82,7 +82,7 @@
                                     <td>{{ $comment->last_op_time }}</td>
                                     <td>{{ $comment->last_op_reason }}</td>
                                     <td>
-                                        <a data-url="/dashboard/comments/{{ $comment->id }}/audit" data-method="post" title="审核通过"><i class="fa fa-check"></i></a>
+                                        <a data-url="/dashboard/comments/{{ $comment->id }}/recycle" data-method="post" title="审核通过"><i class="fa fa-check"></i></a>
                                     </td>
                                 </tr>
                             @endforeach

@@ -70,6 +70,7 @@ class DashboardRoutes
             $router->post('questions/batchMove', 'QuestionController@batchMoveQuestion')->name('question.move');
             $router->post('questions/batchAudit', 'QuestionController@postBatchAudit');//batch audit thread
             $router->post('questions/{question}/audit', 'QuestionController@postAudit');
+            $router->post('questions/{question}/recycle', 'QuestionController@recycle');
             $router->get('questions/{question}/edit', 'QuestionController@edit')->name('questions.edit');
             $router->post('questions/{question}/index/to/trash', 'QuestionController@indexToTrash');
             $router->post('questions/{question}/audit/to/trash', 'QuestionController@auditToTrash');
@@ -82,6 +83,7 @@ class DashboardRoutes
             $router->post('answers/batchMove', 'AnswerController@batchMoveAnswer');
             $router->post('answers/batchAudit', 'AnswerController@postBatchAudit');//batch audit thread
             $router->post('answers/{answer}/audit', 'AnswerController@postAudit');
+            $router->post('answers/{answer}/recycle', 'AnswerController@recycle');
             $router->post('answers/{answer}/index/to/trash', 'AnswerController@indexToTrash');
             $router->post('answers/{answer}/audit/to/trash', 'AnswerController@auditToTrash');
 
@@ -91,6 +93,7 @@ class DashboardRoutes
             $router->post('comments/{comment}/pin', 'CommentController@pin');
             $router->post('comments/batchAudit', 'CommentController@postBatchAudit');//batch audit thread
             $router->post('comments/{comment}/audit', 'CommentController@postAudit');
+            $router->post('comments/{comment}/recycle', 'CommentController@recycle');
             $router->post('comments/{comment}/index/to/trash', 'CommentController@indexToTrash');
             $router->post('comments/{comment}/audit/to/trash', 'CommentController@auditToTrash');
 

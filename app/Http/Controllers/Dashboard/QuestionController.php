@@ -181,6 +181,11 @@ class QuestionController extends Controller
         return $this->passAudit($question);
     }
 
+    //从回收站审核通过问题
+    public function recycle(Question $question)
+    {
+        return $this->passAudit($question);
+    }
     //将问题状态修改为审核通过,需要将问题数加1
     public function passAudit(Question $question)
     {

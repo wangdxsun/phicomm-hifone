@@ -136,6 +136,12 @@ class AnswerController extends Controller
         return $this->passAudit($answer);
     }
 
+    //从回收站审核通过回答
+    public function recycle(Answer $answer)
+    {
+        return $this->passAudit($answer);
+    }
+
     //将回答状态修改为审核通过,需要将回答数加1
     public function passAudit(Answer $answer)
     {
