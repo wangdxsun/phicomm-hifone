@@ -40,6 +40,7 @@ class UserController extends WebController
         $user['isAdmin'] = $user->isAdmin();
         $user['draft_count'] = $user->threads()->draft()->count();
         $user['smart_score'] = app(Score::class)->getScore($user->phicomm_id);
+        $user->token = encryptToken(Auth::token());
 
         return $user;
     }

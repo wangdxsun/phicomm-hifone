@@ -416,3 +416,20 @@ function getChars($utf8_str)
     }
     return $chars;
 }
+
+function encryptToken($token)
+{
+    if (empty($token)) {
+        return null;
+    }
+    $token = time() . ',' . $token;
+    $cert = file_get_contents(base_path(). '/ssl/certificate.pem');
+
+    $pk1 = openssl_get_publickey($cert);
+
+    openssl_seal($token, $sealed, $ekeys, [$pk1]);
+
+    openssl_free_key($pk1);
+
+    return urlencode(base64_encode($ekeys[0]) . ',' . base64_encode($sealed));
+}

@@ -35,6 +35,7 @@ class UserController extends ApiController
             }
         }
         $user['isAdmin'] = ($user->role =='管理员' || $user->role =='创始人');
+        $user->token = encryptToken(Auth::token());
 
         return $user;
     }
