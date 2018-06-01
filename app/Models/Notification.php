@@ -77,11 +77,6 @@ class Notification extends BaseModel implements HasPresenter
         return $query->whereIn('type', ['reply_mention', 'reply_reply']);
     }
 
-    public function scopeAtWithQA($query)
-    {
-        return $query->whereIn('type', ['reply_mention', 'reply_reply', 'thread_mention', 'question_mention', 'answer_mention', 'comment_mention']);
-    }
-
     public function scopeWatch($query)
     {
         return $query->where('type', 'followed_user_new_thread');
@@ -100,12 +95,6 @@ class Notification extends BaseModel implements HasPresenter
     public function scopeSystem($query)
     {
         //thread_follow 关注帖子
-        //reply_like 点赞回复
-        //thread_like 点赞帖子
-        //user_follow 用户关注
-        //thread_favorite 收藏帖子
-        //thread_pin 帖子被置顶
-        //thread_mark_excellent 帖子被置为精华
         return $query->whereIn('type', [
             'reply_like',
             'thread_like',
@@ -115,6 +104,18 @@ class Notification extends BaseModel implements HasPresenter
             'reply_pin',
             'thread_mark_excellent'
         ]);
+    }
+
+    //含问答消息的回复/@我
+    public function scopeAtWithQA($query)
+    {
+        return $query->whereIn('type', ['reply_mention', 'reply_reply', 'thread_mention', 'question_mention', 'answer_mention', 'comment_mention']);
+    }
+
+    //问答消息
+    public function scopeQa($query)
+    {
+        return $query->whereIn('type', ['user_invited', 'answer_adopted', 'question_new_answer', 'answer_new_comment', 'comment_new_comment']);
     }
 
     public function thread()

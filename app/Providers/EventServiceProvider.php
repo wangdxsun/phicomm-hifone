@@ -286,7 +286,7 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],
 
-        //回答被采纳，通知被采纳人并给他加智慧果
+        //回答被采纳，通知被采纳人
         \Hifone\Events\Adopt\AnswerWasAdoptedEvent::class => [
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
         ],

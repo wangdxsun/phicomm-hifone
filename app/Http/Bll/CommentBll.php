@@ -11,6 +11,7 @@ namespace Hifone\Http\Bll;
 use Carbon\Carbon;
 use Hifone\Commands\Comment\AddCommentCommand;
 use Hifone\Events\Comment\CommentedWasAddedEvent;
+use Hifone\Events\Comment\CommentWasAuditedEvent;
 use Hifone\Exceptions\Consts\AnswerEx;
 use Hifone\Exceptions\Consts\CommentEx;
 use Hifone\Exceptions\HifoneException;
@@ -56,6 +57,9 @@ class CommentBll extends BaseBll
             'last_comment_time' => Carbon::now()->toDateTimeString()
         ]);
 
+        //回复被审核通过
+        event(new CommentWasAuditedEvent($comment->user, $comment));
+        //回答被回复
         event(new CommentedWasAddedEvent($comment->user, $comment->answer));
     }
 

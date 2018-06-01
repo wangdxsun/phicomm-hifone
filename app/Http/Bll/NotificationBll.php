@@ -111,4 +111,22 @@ class NotificationBll extends BaseBll
         return $notifications;
     }
 
+    public function qa()
+    {
+        $notifications = Notification::forUser(Auth::id())->qa()->with('object')->recent()->paginate();
+        foreach ($notifications as $notification) {
+            if ($notification->object instanceof Question) {//user_invited
+                $notification->object->load(['user', 'tags']);
+            } elseif ($notification->object instanceof Answer) {//answer_adopted question_new_answer
+                $notification->object->load(['user', 'question']);
+            } elseif ($notification->object instanceof Comment) {//answer_new_comment comment_new_comment
+                $notification->object->load(['user', 'answer']);
+            }
+        }
+        Auth::user()->notification_qa_count = 0;
+        Auth::user()->save();
+
+        return $notifications;
+    }
+
 }

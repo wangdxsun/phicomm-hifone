@@ -32,9 +32,9 @@ class NotifyHandler
         } elseif ($notify->type == 'thread_new_reply') {
             $notify->user->increment('notification_reply_count', 1);
         } elseif (in_array($notify->type, ['followed_user_new_thread', 'followed_user_new_question'])) {
-            $notify->user->increment('notification_follow_count');
-        } elseif (in_array($notify->type, ['user_invited', 'answer_adopted', 'question_new_answer', 'answer_new_comment', 'comment_new_comment', ''])) {
-            $notify->user->increment('notification_qa_count');
+            $notify->user->increment('notification_follow_count', 1);
+        } elseif (in_array($notify->type, ['user_invited', 'answer_adopted', 'question_new_answer', 'answer_new_comment', 'comment_new_comment'])) {
+            $notify->user->increment('notification_qa_count', 1);
         }
 
         $data = [

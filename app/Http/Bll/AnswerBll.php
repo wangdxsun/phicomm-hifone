@@ -11,6 +11,7 @@ namespace Hifone\Http\Bll;
 use Carbon\Carbon;
 use Hifone\Commands\Answer\AddAnswerCommand;
 use Hifone\Events\Adopt\AnswerWasAdoptedEvent;
+use Hifone\Events\Answer\AnsweredWasAddedEvent;
 use Hifone\Events\Answer\AnswerWasAuditedEvent;
 use Hifone\Events\Invite\InviteWasAddedEvent;
 use Hifone\Exceptions\Consts\AnswerEx;
@@ -108,6 +109,8 @@ class AnswerBll extends BaseBll
 
         //回答审核通过，加经验值，更新关注人新通知数
         event(new AnswerWasAuditedEvent($answer->user, $answer));
+        //提问被回答
+        event(new AnsweredWasAddedEvent($answer->user, $answer->question));
     }
 
     public function needNoAudit(Answer $answer)
