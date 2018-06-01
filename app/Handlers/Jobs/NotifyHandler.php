@@ -245,13 +245,13 @@ class NotifyHandler
                 return '2001';
             case 'answer_mention'://回答中@我 跳回答详情
                 return '2002';
-            case 'comment_mention'://回复中@我 跳？？？
+            case 'comment_mention'://回复中@我 跳回答详情
                 return '2003';
             case 'question_new_answer'://回答提问 跳回答详情
                 return '2004';
-            case 'answer_new_comment'://评论回答 跳当前评论？？？
+            case 'answer_new_comment'://评论回答 跳回答详情
                 return '2005';
-            case 'comment_new_comment'://回复评论 跳当前评论？？？
+            case 'comment_new_comment'://回复评论 跳回答详情
                 return '2006';
             case 'answer_like'://赞回答 跳回答详情
                 return '2007';

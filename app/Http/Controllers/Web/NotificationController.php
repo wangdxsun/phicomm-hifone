@@ -43,6 +43,13 @@ class NotificationController extends WebController
         return $ats;
     }
 
+    public function atWithQA(NotificationBll $notificationBll)
+    {
+        $ats = $notificationBll->atWithQA();
+
+        return $ats;
+    }
+
     public function system(NotificationBll $notificationBll)
     {
         $systems = $notificationBll->system();

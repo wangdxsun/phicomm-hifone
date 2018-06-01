@@ -72,6 +72,7 @@ class FollowBll extends BaseBll
 
     public function followQuestions(User $user)
     {
+        $user->update(['follow_new_answer_count' => 0]);
         return $user->followQuestions()->with('user', 'tags')->lastAnswer()->paginate(15);
     }
 

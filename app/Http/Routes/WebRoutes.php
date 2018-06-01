@@ -136,6 +136,7 @@ class WebRoutes
                 $router->get('notification/at', 'NotificationController@at');
                 $router->get('notification/system', 'NotificationController@system');
                 $router->get('notification/watch', 'NotificationController@watch');
+                $router->get('notification/at/qa', 'NotificationController@atWithQA');
 
                 $router->post('logout', 'PhicommController@logout');
 
@@ -149,6 +150,7 @@ class WebRoutes
                 $router->get('users/{user}/follow/questions', 'UserController@followQuestions')->where('user', '[0-9]+');
                 $router->get('users/{user}/invite/{question}/follow/users', 'UserController@followUsers')->where('user', '[0-9]+')->where('question', '[0-9]+');
                 $router->get('users/{user}/invite/{question}/expert/users', 'UserController@expertUsers')->where('user', '[0-9]+')->where('question', '[0-9]+');
+                $router->get('users/invite/search/{keyword}/{question}', 'UserController@searchUsers')->where('question', '[0-9]+');
 
             });
 

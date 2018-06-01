@@ -134,6 +134,11 @@ class UserBll extends BaseBll
         return $replyFeedbacks;
     }
 
+    /**
+     * @param User $user
+     * @return int
+     * @deprecated
+     */
     public function getFollowNewAnswerCount(User $user)
     {
         return (int) $user->follows()->ofType(Question::class)->sum('answer_count');
@@ -161,6 +166,23 @@ class UserBll extends BaseBll
         foreach ($users as $user) {
             $user['invited'] = $this->getInvitedStatus($user, $question);
         }
+        return $users;
+    }
+
+    //获取搜索用户列表
+    public function getSearchUsers($keyword, $question)
+    {
+        if (empty($keyword) || empty($question)) {
+            $users = new LengthAwarePaginator([], 0, 15);
+        } else {
+            (new AnswerBll)->checkQuestion($question->id);
+            $users = User::searchUser($keyword)->paginate(15);
+            foreach ($users as $user) {
+                $user['followed'] = User::hasFollowUser($user);
+                $user['invited'] = $this->getInvitedStatus($user, $question);
+            }
+        }
+
         return $users;
     }
 

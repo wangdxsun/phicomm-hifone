@@ -48,7 +48,6 @@ class UserController extends AppController
             }
         }
         $user['isAdmin'] = ($user->role =='管理员' || $user->role =='创始人');
-        $user['follow_new_answer_count'] = $userBll->getFollowNewAnswerCount($user);
 
         return $user;
     }
@@ -147,6 +146,12 @@ class UserController extends AppController
     public function followUsers(User $user, Question $question, UserBll $userBll)
     {
         return $userBll->getFollowUsers($user, $question);
+    }
+
+    //邀请搜索用户列表
+    public function searchUsers($keyword, Question $question, UserBll $userBll)
+    {
+        return $userBll->getSearchUsers($keyword, $question);
     }
 
     public function credit(UserBll $userBll, CommonBll $commonBll)
