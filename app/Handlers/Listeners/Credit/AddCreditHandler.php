@@ -69,19 +69,19 @@ class AddCreditHandler
             $user = $event->thread->user;
         } elseif ($event instanceof ReplyWasAuditedEvent) {
             if ($event->reply->user_id == $event->reply->thread->user_id) {
-                return false;
+                return ;
             }
             $action = 'reply_new';
             $user = $event->reply->user;
         } elseif ($event instanceof ReplyWasTrashedEvent) {
             if ($event->reply->user_id == $event->reply->thread->user_id) {
-                return false;
+                return ;
             }
             $action = 'reply_removed';
             $user = $event->reply->user;
         } elseif ($event instanceof RepliedWasAddedEvent) {
             if (empty($event->replyUser) || $event->threadUser->id == $event->replyUser->id) {
-                return false;
+                return ;
             }
             $action = 'replied';
             $user = $event->threadUser;
@@ -99,7 +99,7 @@ class AddCreditHandler
             $user = $event->object->user;
             if (Auth::id() == $user->id) {
                 //帖子被收藏，需要加积分，自己的帖子被自己收藏不加分
-                return false;
+                return ;
             } else {
                 $action = 'favorited';
             }
@@ -107,14 +107,14 @@ class AddCreditHandler
             $user = $event->user;
             if (Auth::id() == $event->object->user->id) {
                 //帖子被收藏，需要加积分，自己收藏自己的帖子不加分
-                return false;
+                return ;
             }
             $action = 'favorite';
         } elseif ($event instanceof FavoritedWasRemovedEvent) {
             $user = $event->user;
             if (Auth::id() == $user->id) {
                 //帖子被取消收藏，需要减积分，对自己操作无效
-                return false;
+                return ;
             } else {
                 $action = 'favorited_removed';
             }
@@ -122,7 +122,7 @@ class AddCreditHandler
             $user = $event->user;
             if (Auth::id() == $event->object->user->id) {
                 //取消收藏扣分，对自己的操作无效
-                return false;
+                return ;
             }
             $action = 'favorite_removed';
         } elseif ($event instanceof PinWasAddedEvent) {
@@ -190,7 +190,7 @@ class AddCreditHandler
             }
         } elseif ($event instanceof ExcellentWasAddedEvent) {
             if (Auth::id() == $event->object->user_id) {
-                return false;//操作者和被操作者相同
+                return ;//操作者和被操作者相同
             }
             if ($event->object instanceof Thread) {
                 $action = 'thread_excellent';
@@ -201,14 +201,14 @@ class AddCreditHandler
             $user = $event->user;
         } elseif ($event instanceof LikeWasAddedEvent) {
             if (Auth::id() == $event->object->user_id) {
-                return false;//操作者和被操作者相同
+                return ;//操作者和被操作者相同
             } else {
                 $action = 'like';
             }
             $user = $event->user;
         } elseif ($event instanceof LikeWasRemovedEvent) {
             if (Auth::id() == $event->object->user_id) {
-                return false;//操作者和被操作者相同
+                return ;//操作者和被操作者相同
             } else {
                 $action = 'like_removed';
             }
@@ -216,14 +216,14 @@ class AddCreditHandler
         } elseif ($event instanceof LikedWasAddedEvent) {
             $user = $event->user;
             if (Auth::id() == $user->id) {
-                return false;//操作者和被操作者相同
+                return ;//操作者和被操作者相同
             } else {
                 $action = 'liked';
             }
         } elseif ($event instanceof LikedWasRemovedEvent) {
             $user = $event->user;
             if (Auth::id() == $user->id) {
-                return false;//操作者和被操作者相同
+                return ;//操作者和被操作者相同
             } else{
                 $action = 'liked_removed';
             }
@@ -244,28 +244,28 @@ class AddCreditHandler
         } elseif ($event instanceof AnswerWasAuditedEvent) {
             //回答审核通过
             if($event->answer->user_id == $event->answer->question->user_id) {
-                return false;
+                return ;
             }
             $action = 'answer_audited';
             $user = $event->user;
         } elseif ($event instanceof AnsweredWasAddedEvent) {
             //提问被回答
             if($event->question->user_id == $event->user->id) {
-                return false;
+                return ;
             }
             $action = 'question_answered';
             $user = $event->question->user;
         } elseif ($event instanceof AnswerWasDeletedEvent) {
             //审核通过的回答被删除
             if($event->answer->user_id == $event->answer->question->user_id) {
-                return false;
+                return ;
             }
             $action = 'answer_deleted';
             $user = $event->user;
         } elseif ($event instanceof CommentedWasAddedEvent) {
             //回答被回复
             if($event->answer->user_id == $event->user->id) {
-                return false;
+                return ;
             }
             $action = 'answer_commented';
             $user = $event->answer->user;
