@@ -32,25 +32,22 @@ class UserWasActive
             return $next($request);
         }
         if ($device == 'api') {
-            $this->updateActiveTime('user_active_date','last_active_time',1);
+            $this->updateActiveTime('user_active_date','last_active_time');
         } elseif ($device == 'web') {
-            $this->updateActiveTime('web_user_active_date','last_active_time_web',2);
+            $this->updateActiveTime('web_user_active_date','last_active_time_web');
         } else {
-            $this->updateActiveTime('app_user_active_date','last_active_time_app',3);
+            $this->updateActiveTime('app_user_active_date','last_active_time_app');
         }
         return $next($request);
     }
 
-    public function updateActiveTime($session_name, $column_name, $device)
+    public function updateActiveTime($session_name, $column_name)
     {
         if (Auth::check()) {
             $activeDate = app('session')->get($session_name);
             if (!$activeDate || $activeDate != date('Ymd')) {
                 $user = Auth::user();
-                $user->update([
-                    $column_name => Carbon::now()->toDateTimeString(),
-                    'device' => $device,
-                ]);
+                $user->update([$column_name => Carbon::now()->toDateTimeString()]);
                 app('session')->put($session_name, date('Ymd'));
             }
         }
