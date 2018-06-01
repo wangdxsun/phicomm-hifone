@@ -57,6 +57,14 @@ class NotificationController extends WebController
         return $systems;
     }
 
+    //好友圈（新关注动态）
+    public function moment(NotificationBll $notificationBll)
+    {
+        $moments = $notificationBll->moment();
+
+        return $moments;
+    }
+
     public function qa(NotificationBll $notificationBll)
     {
         $systems = $notificationBll->qa();
