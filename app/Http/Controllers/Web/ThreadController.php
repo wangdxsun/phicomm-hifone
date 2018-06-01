@@ -6,6 +6,7 @@ use Auth;
 use Carbon\Carbon;
 use Hifone\Commands\Thread\UpdateThreadCommand;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
+use Hifone\Events\Pin\NodePinWasAddedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Pin\SinkWasAddedEvent;
 use Hifone\Exceptions\HifoneException;
@@ -284,6 +285,27 @@ class ThreadController extends WebController
             event(new PinWasAddedEvent($thread->user, $thread));
         }
         return ['pin' => $thread->order > 0 ? true : false];
+    }
+
+    //板块置顶帖子
+    public function nodePin(Thread $thread)
+    {
+        if ($thread->node_order == 1) {
+            //已经是版块置顶需要取消板块置顶
+            $thread->update(['order' => 0]);
+            $thread->update(['node_order' => 0]);
+        } else {
+            //不是版块置顶，是全局置顶
+            if ($thread->order == 1) {
+                $thread->update(['order' => 0]);
+                $thread->update(['node_order' => 1]);
+            } else {
+                //不是版块置顶也不是全局置顶
+                $thread->update(['node_order' => 1]);
+            }
+            event(new NodePinWasAddedEvent($thread->user, $thread));
+        }
+        return ['nodePin' => $thread->node_order > 0 ? true : false];
     }
 
     public function sink(Thread $thread)
