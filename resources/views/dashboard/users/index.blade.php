@@ -87,7 +87,11 @@
                         <td>{{ $user->follower_count }}</td>
                         <td>{{ $user->score }}</td>
                         <td>{{ $user->created_at }}</td>
-                        <td>{{ $user->last_visit_time }}</td>
+                        <td>
+                            {{ ($user->last_visit_time_app > $user->last_visit_time_web ?
+                               ($user->last_visit_time_app > $user->last_visit_time ? $user->last_visit_time_app : $user->last_visit_time) :
+                                ($user->last_visit_time_web > $user->last_visit_time ? $user->last_visit_time_web : $user->last_visit_time)) }}
+                        </td>
                         <td>{{ $user->regip }}</td>
                         <td>{{ $user->lastOpUser->username }}</td>
                         <td>{{ $user->last_op_time }}</td>
