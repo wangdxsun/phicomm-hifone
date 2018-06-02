@@ -6,8 +6,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-//class Notify extends Job implements ShouldQueue
-class Notify extends Job
+class Notify extends Job implements ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 
