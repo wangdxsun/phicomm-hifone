@@ -53,7 +53,7 @@ class TagType extends BaseModel
     //type字段表征标签类型
     public function tags()
     {
-        return $this->hasMany(Tag::class,'tag_type_id','id');
+        return $this->hasMany(Tag::class,'tag_type_id','id')->orderBy('order');
     }
 
     //

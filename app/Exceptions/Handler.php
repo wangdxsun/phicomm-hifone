@@ -7,6 +7,7 @@ use GuzzleHttp\Client;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Session\TokenMismatchException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -27,6 +28,7 @@ class Handler extends ExceptionHandler
         ModelNotFoundException::class,
         ValidationException::class,
         HifoneException::class,
+        TokenMismatchException::class
     ];
 
     /**
@@ -68,6 +70,8 @@ class Handler extends ExceptionHandler
             $e = new HttpException(403, $e->getMessage());
         } elseif ($e instanceof ValidationException && $e->getResponse()) {
             return $e->getResponse();
+        } elseif ($e instanceof TokenMismatchException) {
+            $e = new HifoneException('缺少CSRF-TOKEN');
         }
 
         if ($request->ajax() || $request->wantsJson() || $request->isApi()) {

@@ -25,7 +25,7 @@ class TagController extends WebController
     //问题标签列表（含分类）
     public function tagTypes()
     {
-        $tagTypes = TagType::ofType([TagType::QUESTION])->with(['tags'])->get();
+        $tagTypes = TagType::ofType([TagType::QUESTION])->orderBy('order')->with(['tags'])->get();
 
         return $tagTypes;
     }

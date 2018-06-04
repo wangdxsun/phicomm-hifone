@@ -96,14 +96,21 @@ class NotifyHandler
         } elseif ($object instanceof Reply) {
             $data['threadId'] = $object->thread_id;
             $data['replyId'] = $object->id;
-        } elseif ($object instanceof Question || $object instanceof Answer) {
-            $data['objectId'] = $object->id;
+        } elseif ($object instanceof Question) {
+            $data['questionId'] = $object->id;
+        } elseif ($object instanceof Answer) {
+            $data['answerId'] = $object->id;
         } elseif ($object instanceof Comment) {
-            $data['objectId'] = $object->answer_id;
+            $data['answerId'] = $object->answer_id;
         }
-        //系统提醒尽快采纳user_id传0，管理员、系统采纳回答传0
-        if ($type == 'answer_adopted' && $from->isAdmin()) {
-            $data['userId'] = 0;
+        //系统提醒尽快采纳user_id传0，管理员、系统采纳回答传0，其中系统操作userId本身即为0
+        if ($type == 'answer_adopted') {
+            //采纳回答消息传悬赏值
+            $data['score'] = $object->question->score;
+            //管理员采纳回答userId置为0
+            if ($from->isAdmin()) {
+                $data['userId'] = 0;
+            }
         }
 
         $outline = $this->makeOutline($from, $object);
