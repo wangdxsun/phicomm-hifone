@@ -141,4 +141,9 @@ class Comment extends BaseModel
         }
     }
 
+    public function getReportAttribute()
+    {
+        return $this->body;
+    }
+
 }
