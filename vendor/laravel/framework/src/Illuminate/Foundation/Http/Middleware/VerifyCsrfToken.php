@@ -58,6 +58,7 @@ class VerifyCsrfToken
     public function handle($request, Closure $next)
     {
         if (
+            $this->isNotProd() ||
             $this->isReading($request) ||
             $this->runningUnitTests() ||
             $this->shouldPassThrough($request) ||
@@ -153,5 +154,10 @@ class VerifyCsrfToken
     protected function isReading($request)
     {
         return in_array($request->method(), ['HEAD', 'GET', 'OPTIONS']);
+    }
+
+    protected function isNotProd()
+    {
+        return env('APP_ENV') !== 'production';
     }
 }
