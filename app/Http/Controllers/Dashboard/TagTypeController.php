@@ -57,6 +57,13 @@ class TagTypeController extends Controller
 
     public function update(TagType $tagType, $system)
     {
+        $this->validate(request(),[
+            'tagType.display_name'         => 'required|max:5',
+        ], [
+            'tagType.display_name.required'     => '需填入1-5个字符',
+            'tagType.display_name.max'     => '需填入1-5个字符',
+
+        ]);
         $tagTypeData = Input::get('tagType');
         if ($system == 'user') {
             if ($tagType->display_name != array_get($tagTypeData, 'display_name') && null != TagType::where('display_name', array_get($tagTypeData, 'display_name'))->first()) {
@@ -81,6 +88,13 @@ class TagTypeController extends Controller
 
     public function store($system)
     {
+        $this->validate(request(),[
+            'tagType.display_name'         => 'required|max:5',
+        ], [
+            'tagType.display_name.required'     => '需填入1-5个字符',
+            'tagType.display_name.max'     => '需填入1-5个字符',
+
+        ]);
         $tagTypeData = Input::get('tagType');
         if ($system == 'user') {
             if (null != TagType::where('display_name', array_get($tagTypeData, 'display_name'))->first()) {

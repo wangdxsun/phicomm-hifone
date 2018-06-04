@@ -25,7 +25,7 @@
                     <div>
                         <div class="form-group">
                             <label>{{ trans('dashboard.nodes.name') }}</label>
-                            {!! Form::text('node[name]', isset($node) ? $node->name : null, ['class' => 'form-control', 'required']) !!}
+                            {!! Form::text('node[name]', isset($node) ? $node->name : null, ['class' => 'form-control']) !!}
                         </div>
 
                         @if($sections->count() > 0)

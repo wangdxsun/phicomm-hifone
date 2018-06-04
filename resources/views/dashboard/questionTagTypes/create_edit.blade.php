@@ -19,7 +19,7 @@
                 <fieldset>
                     <div class="form-group">
                         <label>{{ '问题分类名' }}</label>
-                        {!! Form::text('tagType[display_name]', isset($tagType) ? $tagType->display_name : null, ['class' => 'form-control', 'required']) !!}
+                        {!! Form::text('tagType[display_name]', isset($tagType) ? $tagType->display_name : null, ['class' => 'form-control']) !!}
                     </div>
                 </fieldset>
 
@@ -27,7 +27,7 @@
                         <div class="col-xs-12">
                             <div class="form-group">
                                 <button type="submit" class="btn btn-success">{{ trans('forms.save') }}</button>
-                                <a class="btn btn-default" href="{{ back_url('dashboard.tag.type.index') }}">{{ trans('forms.cancel') }}</a>
+                                <a class="btn btn-default" href="{{ back_url('dashboard.tag.type', ['question']) }}">{{ trans('forms.cancel') }}</a>
                             </div>
                         </div>
                     </div>

@@ -102,6 +102,7 @@ class NodeController extends Controller
             'node.web_icon_detail'     => 'required',
             'node.web_icon_list'       => 'required',
             'node.feedback_thread_id'  => 'numeric',
+            'node.name'                => 'required|max:6'
         ], [
             'node.icon.required'               => 'H5首页热门版块图片是必填字段',
             'node.icon_list.required'          => 'H5版块列表图片是必填字段',
@@ -115,6 +116,8 @@ class NodeController extends Controller
             'node.web_icon_list.required'      => 'WEB右侧列表图片是必填字段',
             'node.web_icon_detail.required'    => 'WEB版块详情页是必填字段',
             'node.feedback_thread_id.numeric'  => '帖子id是数字类型',
+            'node.name.max'                    => '板块名称需1-6个字符',
+            'node.name.required'               => '板块名称需1-6个字符',
         ]);
         $nodeData = Request::get('node');
 

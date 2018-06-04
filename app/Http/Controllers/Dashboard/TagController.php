@@ -74,7 +74,15 @@ class TagController extends Controller
     //更新标签
     public function update(Tag $tag, $system)
     {
+        $this->validate(request(),[
+            'tag.name'         => 'required|max:5',
+        ], [
+            'tag.name.required'     => '需填入1-5个字符',
+            'tag.name.max'     => '需填入1-5个字符',
+
+        ]);
         $tagData = Input::get('tag');
+
         if ($tag->name != array_get($tagData, 'name') && null != Tag::where('name', array_get($tagData, 'name'))->first()) {
             if ($system == 'user') {
                 return Redirect::back()
@@ -100,7 +108,15 @@ class TagController extends Controller
     //保存标签
     public function store($system)
     {
+        $this->validate(request(),[
+            'tag.name'         => 'required|max:5',
+        ], [
+            'tag.name.required'     => '需填入1-5个字符',
+            'tag.name.max'     => '需填入1-5个字符',
+
+        ]);
         $tagData = Input::get('tag');
+
         if (null != Tag::where('name', array_get($tagData, 'name'))->first()) {
             if ($system == 'user') {
                 return Redirect::back()

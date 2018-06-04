@@ -29,7 +29,7 @@
                     @endif
                     <div class="form-group">
                         <label>{{ '子类名称' }}</label>
-                        {!! Form::text('tag[name]', isset($tag) ? $tag->name : null, ['class' => 'form-control', 'required']) !!}
+                        {!! Form::text('tag[name]', isset($tag) ? $tag->name : null, ['class' => 'form-control']) !!}
                     </div>
                 </fieldset>
 
