@@ -27,7 +27,7 @@ class TagController extends Controller
                 ->with('tags', $tags)
                 ->withCurrentMenu('userTag');
         } elseif ($system == 'question') {
-            $tags = Tag::whereIn('tag_type_id', TagType::ofType([TagType::QUESTION])->pluck('id'))->with('tagType')->get();
+            $tags = Tag::whereIn('tag_type_id', TagType::ofType([TagType::QUESTION])->pluck('id'))->with('tagType')->orderBy('order')->get();
             return View::make('dashboard.questionTags.index')
                 ->with('tags', $tags)
                 ->withCurrentMenu('questionTag');
