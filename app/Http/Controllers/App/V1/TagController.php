@@ -16,7 +16,7 @@ class TagController extends AppController
 {
     public function tagTypes()
     {
-        $tagTypes = TagType::ofType([TagType::QUESTION])->with(['tags'])->get();
+        $tagTypes = TagType::ofType([TagType::QUESTION])->orderBy('order')->with(['tags'])->get();
 
         return $tagTypes;
     }
