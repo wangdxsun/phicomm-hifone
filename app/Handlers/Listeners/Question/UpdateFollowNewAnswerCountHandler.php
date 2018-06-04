@@ -32,8 +32,8 @@ class UpdateFollowNewAnswerCountHandler
             }
         } elseif ($event instanceof AnswerWasAuditedEvent) {
             $event->answer->question->follows()->increment('answer_count', 1);
-//            $event->answer->question->followerUsers()->increment('follow_new_answer_count', 1);
-            $users = $event->answer->question->followerUsers()->get();
+//            $event->answer->question->followedUsers()->increment('follow_new_answer_count', 1);
+            $users = $event->answer->question->followedUsers()->get();
             foreach ($users as $user) {
                 $user->increment('follow_new_answer_count', 1);
             }

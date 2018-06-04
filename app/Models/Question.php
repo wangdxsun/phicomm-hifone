@@ -85,7 +85,7 @@ class Question extends BaseModel implements TaggableInterface
         return $this->morphMany(Follow::class, 'followable');
     }
 
-    public function followerUsers()
+    public function followedUsers()
     {
         return $this->morphToMany(User::class, 'followable', 'follows');
     }
@@ -95,10 +95,10 @@ class Question extends BaseModel implements TaggableInterface
         return $this->morphMany(Notification::class, 'object');
     }
 
-    //待弃用
+    //关注问题的记录AddFollowCommandHandler
     public function followers()
     {
-        return $this->morphToMany(User::class, 'followable', 'follows');
+        return $this->morphMany(Follow::class, 'followable');
     }
 
     //问题详情是否可见
