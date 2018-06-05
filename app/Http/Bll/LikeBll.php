@@ -60,6 +60,9 @@ class LikeBll extends BaseBll
         if ($answer->status <> Answer::VISIBLE) {
             throw new HifoneException('该回答已被删除', AnswerEx::DELETED);
         }
+        if ($answer->question->status <> Question::VISIBLE) {
+            throw new HifoneException('该问答已被删除', QuestionEx::DELETED);
+        }
         dispatch(new AddLikeCommand($answer));
 
         return ['liked' => Auth::user()->hasLikeAnswer($answer)];
@@ -69,6 +72,12 @@ class LikeBll extends BaseBll
     {
         if ($comment->status <> Comment::VISIBLE) {
             throw new HifoneException('该回复已被删除', CommentEx::DELETED);
+        }
+        if ($comment->answer->status <> Answer::VISIBLE) {
+            throw new HifoneException('该回答已被删除', AnswerEx::DELETED);
+        }
+        if ($comment->answer->question->status <> Question::VISIBLE) {
+            throw new HifoneException('该问答已被删除', QuestionEx::DELETED);
         }
         dispatch(new AddLikeCommand($comment));
 

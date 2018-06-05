@@ -79,6 +79,9 @@ class ReportBll
         if ($answer->status <> Answer::VISIBLE) {
             throw new HifoneException('该回答已被删除', AnswerEx::DELETED);
         }
+        if ($answer->question->status <> Question::VISIBLE) {
+            throw new HifoneException('该问答已被删除', QuestionEx::DELETED);
+        }
         if (Auth::id() === $answer->user->id) {
             throw new HifoneException('自己不能举报自己哦');
         }
@@ -95,6 +98,12 @@ class ReportBll
     {
         if ($comment->status <> Comment::VISIBLE) {
             throw new HifoneException('该回复已被删除', CommentEx::DELETED);
+        }
+        if ($comment->answer->status <> Answer::VISIBLE) {
+            throw new HifoneException('该回答已被删除', AnswerEx::DELETED);
+        }
+        if ($comment->answer->question->status <> Question::VISIBLE) {
+            throw new HifoneException('该问答已被删除', QuestionEx::DELETED);
         }
         if (Auth::id() === $comment->user->id) {
             throw new HifoneException('自己不能举报自己哦');
