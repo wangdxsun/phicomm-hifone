@@ -109,10 +109,12 @@ class TagController extends Controller
     public function store($system)
     {
         $this->validate(request(),[
-            'tag.name'         => 'required|max:5',
+            'tag.name'                => 'required|max:5',
+            'tag.tag_type_id'         => 'required',
         ], [
-            'tag.name.required'     => '需填入1-5个字符',
-            'tag.name.max'     => '需填入1-5个字符',
+            'tag.name.required'         => '需填入1-5个字符',
+            'tag.name.max'              => '需填入1-5个字符',
+            'tag.tag_type_id.required'  => '暂无问题分类，请新建问题分类后添加问题子类',
 
         ]);
         $tagData = Input::get('tag');

@@ -3,7 +3,6 @@ namespace Hifone\Handlers\Commands\Comment;
 
 use Agent;
 use Auth;
-use Carbon\Carbon;
 use Hifone\Commands\Comment\UpdateCommentCommand;
 use Hifone\Models\Answer;
 
@@ -22,8 +21,6 @@ class UpdateCommentCommandHandler
             }
             $command->data['thumbnails'] = getFirstImageUrl($command->data['body_original']);
         }
-        //更新编辑时间 if (created_at != edit_time) 回复被修改过
-        $command->data['edit_time'] = Carbon::now()->toDateTimeString();
 
         //用户编辑状态回退、精华失效
         if (!Auth::user()->hasRole(['Admin', 'Founder'])) {
