@@ -129,12 +129,14 @@ class QuestionController extends Controller
         //修改问题标题，标签和内容
         $this->validate(request(),[
             'question.title'  =>     'min:5|max:40',
-            'question.body'   =>     'max:800',
         ],[
             'question.title.min' => '标题5'. '-'.'40个字符',
             'question.title.max' => '标题5'. '-'.'40个字符',
-            'question.body.max'  => '内容0'. '-'.'800个字符',
         ]);
+        $bodyLength = mb_strlen(strip_tags(array_get(request('question'), 'body')));
+        if ($bodyLength > 800 ) {
+            return Redirect::back()->withErrors('内容需0-800个字符');
+        }
         $questionData = Input::get('question');
         $questionData['body_original'] = $questionData['body'];
         try {

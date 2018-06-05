@@ -73,9 +73,9 @@ class AddAutoTag extends Command
 
                 //发帖质量高
                 $statCount = 0;
-                $threads = $user->threads()->visible()->where('is_excellent', '<>',1)->withCount('likes')->withCount('replies')->withCount('followers')->get();
+                $threads = $user->threads()->visible()->where('is_excellent', '<>',1)->get();
                 foreach ($threads as $thread) {
-                    $thread['stats_count'] = $thread->likes_count + $thread->replies_count + $thread->followers_count;
+                    $thread['stats_count'] = $thread->like_count + $thread->reply_count + $thread->favorite_count;
                     if ($thread['stats_count'] >= 30) {
                         $statCount += 1;
                     }

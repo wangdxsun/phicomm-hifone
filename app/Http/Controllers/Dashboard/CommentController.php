@@ -6,6 +6,7 @@ use Hifone\Commands\Comment\UpdateCommentCommand;
 use DB;
 use Hifone\Events\Comment\CommentedWasAddedEvent;
 use Hifone\Events\Comment\CommentWasAuditedEvent;
+use Hifone\Exceptions\HifoneException;
 use Hifone\Models\TagType;
 use View;
 use Input;
@@ -170,12 +171,10 @@ class CommentController extends Controller
     public function update(Comment $comment)
     {
         //修改回复内容
-        $this->validate(request(),[
-            'comment.body'   =>     'min:5|max:800',
-        ],[
-            'comment.body.min' => '内容需5'. '-'.'800个字符',
-            'comment.body.max' => '内容需5'. '-'.'800个字符',
-        ]);
+        $bodyLength = mb_strlen(strip_tags(array_get(request('comment'), 'body')));
+        if ($bodyLength > 800 || $bodyLength < 5) {
+            return Redirect::back()->withErrors('内容需5-800个字符');
+        }
         $commentData = Input::get('comment');
         $commentData['body_original'] = $commentData['body'];
         try {

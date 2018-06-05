@@ -72,12 +72,10 @@ class AnswerController extends Controller
     public function update(Answer $answer)
     {
         //修改回答内容
-        $this->validate(request(),[
-            'answer.body'   =>     'min:5|max:800',
-        ],[
-            'answer.body.min' => '内容需5'. '-'.'800个字符',
-            'answer.body.max' => '内容需5'. '-'.'800个字符',
-        ]);
+        $bodyLength = mb_strlen(strip_tags(array_get(request('answer'), 'body')));
+        if ($bodyLength > 800 || $bodyLength < 5) {
+            return Redirect::back()->withErrors('内容需5-800个字符');
+        }
         $answerData = Input::get('answer');
         $answerData['body_original'] = $answerData['body'];
         try {
