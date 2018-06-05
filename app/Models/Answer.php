@@ -195,4 +195,9 @@ class Answer extends BaseModel
         }
     }
 
+    public function getUrlAttribute()
+    {
+        return $this->question->url;
+    }
+
 }

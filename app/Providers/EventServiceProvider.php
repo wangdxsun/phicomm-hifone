@@ -289,6 +289,7 @@ class EventServiceProvider extends ServiceProvider
         //回答被采纳，通知被采纳人
         \Hifone\Events\Adopt\AnswerWasAdoptedEvent::class => [
             \Hifone\Handlers\Listeners\Notification\SendSingleNotificationHandler::class,
+            \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
 
         //系统通知尽快去采纳

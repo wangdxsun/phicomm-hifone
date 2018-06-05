@@ -121,14 +121,24 @@ class TagTypeController extends Controller
     //删除标签分类，同时删除分类下的所有标签
     public function destroy(TagType $tagType, $system)
     {
-        $tags = $tagType->tags;
-        foreach ($tags as $tag) {
-            $tag->delete();
-        }
-        $tagType->delete();
+        $tags = $tagType->tags()->withCount('questions')->get();
+
         if($system == 'user') {
+            foreach ($tags as $tag) {
+                $tag->delete();
+            }
+            $tagType->delete();
             return Redirect::back()->withSuccess('已删除该标签分类及分类下所有标签！');
         } elseif ($system == 'question') {
+            foreach ($tags as $tag) {
+                if ($tag->questions_count > 0) {
+                    return Redirect::back()->withErrors('该分类下有子分类，不可删除！');
+                }
+            }
+            foreach ($tags as $tag) {
+                $tag->delete();
+            }
+            $tagType->delete();
             return Redirect::back()->withSuccess('已删除该问题分类及分类下所有子类！');
         }
 

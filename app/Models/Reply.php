@@ -187,7 +187,7 @@ class Reply extends BaseModel
 
     public function getUrlAttribute()
     {
-        return $this->thread->url . '#reply' . $this->id;
+        return $this->thread->url;
     }
 
     public function getHighlightAttribute()

@@ -140,5 +140,13 @@ class CreditRuleSeeder extends Seeder
             'reward' => -2
         ]);
 
+        DB::table('credit_rules')->insert([
+            'name'   => '回答被采纳',
+            'slug'   => 'answer_adopted',
+            'type'   => 1,
+            'times'  => 40,
+            'reward' => 2
+        ]);
+
     }
 }

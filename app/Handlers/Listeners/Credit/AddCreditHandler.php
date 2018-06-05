@@ -13,6 +13,7 @@ namespace Hifone\Handlers\Listeners\Credit;
 
 use Auth;
 use Hifone\Commands\Credit\AddCreditCommand;
+use Hifone\Events\Adopt\AnswerWasAdoptedEvent;
 use Hifone\Events\Answer\AnsweredWasAddedEvent;
 use Hifone\Events\Answer\AnswerWasAuditedEvent;
 use Hifone\Events\Answer\AnswerWasDeletedEvent;
@@ -269,6 +270,10 @@ class AddCreditHandler
             }
             $action = 'answer_commented';
             $user = $event->answer->user;
+        } elseif ($event instanceof AnswerWasAdoptedEvent) {
+            //回答被采纳
+            $user = $event->to;
+            $action = 'answer_adopted';
         }
 
         $this->apply($object, $action, $user);
