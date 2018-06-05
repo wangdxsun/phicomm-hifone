@@ -73,26 +73,6 @@ class NotificationBll extends BaseBll
         return $notifications;
     }
 
-    public function atWithQA()
-    {
-        $notifications = Notification::forUser(Auth::id())->atWithQA()->with('object')->recent()->paginate();
-        foreach ($notifications as $notification) {
-            if ($notification->object instanceof Reply) {
-                $notification->object->load(['thread', 'user', 'reply.user']);
-            } elseif ($notification->object instanceof Question) {
-                $notification->object->load(['user', 'tags']);
-            } elseif ($notification->object instanceof Answer) {
-                $notification->object->load(['user', 'question']);
-            } elseif ($notification->object instanceof Comment) {
-                $notification->object->load(['user', 'answer']);
-            }
-        }
-        Auth::user()->notification_at_count = 0;
-        Auth::user()->save();
-
-        return $notifications;
-    }
-
     public function system()
     {
         $notifications = Notification::forUser(Auth::id())->system()->recent()->with(['object', 'author'])->paginate();
@@ -111,16 +91,76 @@ class NotificationBll extends BaseBll
         return $notifications;
     }
 
+    public function replyWithQA()
+    {
+        $notifications = Notification::forUser(Auth::id())->replyWithQA()->with('object')->recent()->paginate();
+        foreach ($notifications as $notification) {
+            if ($notification->object instanceof Reply) {//thread_new_reply
+                $notification->object->load(['thread', 'user', 'reply.user']);
+            } elseif ($notification->object instanceof Comment) {//answer_new_comment
+                $notification->object->load(['user', 'answer.user']);
+            }
+        }
+
+        Auth::user()->notification_reply_count = 0;
+        Auth::user()->save();
+
+        return $notifications;
+    }
+
+    public function atWithQA()
+    {
+        $notifications = Notification::forUser(Auth::id())->atWithQA()->with('object')->recent()->paginate();
+        foreach ($notifications as $notification) {
+            if ($notification->object instanceof Thread) {//thread_mention
+                $notification->object->load(['user', 'node']);
+            } elseif ($notification->object instanceof Reply) {//reply_reply reply_mention
+                $notification->object->load(['thread', 'user', 'reply.user']);
+            } elseif ($notification->object instanceof Question) {//question_mention
+                $notification->object->load(['user', 'tags']);
+            } elseif ($notification->object instanceof Answer) {//answer_mention
+                $notification->object->load(['user', 'question']);
+            } elseif ($notification->object instanceof Comment) {//comment_new_comment comment_mention
+                $notification->object->load(['user', 'answer']);
+            }
+        }
+        Auth::user()->notification_at_count = 0;
+        Auth::user()->save();
+
+        return $notifications;
+    }
+
+    //web 通知消息
+    public function systemWithQA()
+    {
+        $notifications = Notification::forUser(Auth::id())->systemWithQA()->recent()->with(['object', 'author'])->paginate();
+        foreach ($notifications as $notification) {
+            if ($notification->object instanceof Reply) {
+                $notification->object->thread;
+                $notification->object->user;
+                if ($notification->object->reply) {
+                    $notification->object->reply->user;
+                }
+            } elseif ($notification->object instanceof Question) {//adopt_asap user_invited
+                $notification->object->load(['user', 'tags']);
+            } elseif ($notification->object instanceof Answer) {//answer_like answer_adopted
+                $notification->object->load(['user', 'question']);
+            } elseif ($notification->object instanceof Comment) {//comment_like
+                $notification->object->load(['user', 'answer']);
+            }
+        }
+        Auth::user()->notification_system_count = 0;
+        Auth::user()->save();
+
+        return $notifications;
+    }
+
     public function qa()
     {
         $notifications = Notification::forUser(Auth::id())->qa()->with('object')->recent()->paginate();
         foreach ($notifications as $notification) {
-            if ($notification->object instanceof Question) {//user_invited
-                $notification->object->load(['user', 'tags']);
-            } elseif ($notification->object instanceof Answer) {//answer_adopted question_new_answer
+            if ($notification->object instanceof Answer) {//question_new_answer
                 $notification->object->load(['user', 'question']);
-            } elseif ($notification->object instanceof Comment) {//answer_new_comment comment_new_comment
-                $notification->object->load(['user', 'answer']);
             }
         }
         Auth::user()->notification_qa_count = 0;

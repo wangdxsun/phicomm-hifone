@@ -22,6 +22,9 @@ class NotificationController extends WebController
         return $notifications;
     }
 
+    /**
+     * @deprecated
+     */
     public function watch(NotificationBll $notificationBll)
     {
         $watches = $notificationBll->watch();
@@ -31,19 +34,12 @@ class NotificationController extends WebController
 
     public function reply(NotificationBll $notificationBll)
     {
-        $replies = $notificationBll->reply();
+        $replies = $notificationBll->replyWithQA();
 
         return $replies;
     }
 
     public function at(NotificationBll $notificationBll)
-    {
-        $ats = $notificationBll->at();
-
-        return $ats;
-    }
-
-    public function atWithQA(NotificationBll $notificationBll)
     {
         $ats = $notificationBll->atWithQA();
 
@@ -52,7 +48,7 @@ class NotificationController extends WebController
 
     public function system(NotificationBll $notificationBll)
     {
-        $systems = $notificationBll->system();
+        $systems = $notificationBll->systemWithQA();
 
         return $systems;
     }
