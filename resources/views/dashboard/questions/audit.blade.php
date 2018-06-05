@@ -68,6 +68,9 @@
                     </table>
                 </form>
             </div>
+            <div class="text-right">
+                {!! $questions->appends(Request::except('page', '_pjax'))->render() !!}
+            </div>
         </div>
     </div>
 @stop

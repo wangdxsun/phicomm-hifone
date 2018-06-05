@@ -116,6 +116,7 @@
                 </form>
             </div>
             <div class="text-right">
+                {!! $answers->appends(Request::except('page', '_pjax'))->render() !!}
             </div>
         </div>
     </div>

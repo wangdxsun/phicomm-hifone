@@ -74,6 +74,7 @@
                     </form>
                 </div>
                 <div class="text-right">
+                    {!! $comments->appends(Request::except('page', '_pjax'))->render() !!}
                 </div>
             </div>
     </div>
