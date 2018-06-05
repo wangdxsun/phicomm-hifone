@@ -62,7 +62,13 @@ class UserBll extends BaseBll
 
     public function getQuestions(User $user)
     {
-        $questions = $user->questions()->visibleAndDeleted()->with(['user','tags'])->recent()->paginate();
+        //自己查看问题，接口信息包括所有问题;管理员和其他用户，只包括审核通过和审核通过被删除的问题
+        //按照问题发表时间倒序排列
+        if (Auth::check() && $user->id == Auth::id()) {
+            $questions = $user->questions()->with(['user','tags'])->recent()->paginate();
+        } else {
+            $questions = $user->questions()->visibleAndDeleted()->with(['user','tags'])->recent()->paginate();
+        }
 
         return $questions;
     }
