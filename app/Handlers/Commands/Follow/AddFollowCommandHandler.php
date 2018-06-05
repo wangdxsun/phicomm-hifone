@@ -18,6 +18,7 @@ use Hifone\Events\Follow\FollowedWasAddedEvent;
 use Hifone\Events\Follow\FollowedWasRemovedEvent;
 use Hifone\Events\Follow\FollowWasRemovedEvent;
 use Hifone\Models\Node;
+use Hifone\Models\Question;
 use Hifone\Models\User;
 use DB;
 
@@ -35,7 +36,7 @@ class AddFollowCommandHandler
             if ($target->followers()->forUser(Auth::id())->sharedLock()->count()) {
                 $target->followers()->forUser(Auth::id())->delete();
                 $target->decrement('follower_count', 1);
-                if (!($target instanceof Node)) {
+                if ($target instanceof User || $target instanceof Question) {
                     if ($target instanceOf User) {
                         Auth::user()->decrement('follow_count', 1);
                     }
