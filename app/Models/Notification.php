@@ -106,16 +106,49 @@ class Notification extends BaseModel implements HasPresenter
         ]);
     }
 
+    //含问答消息的评论
+    public function scopeReplyWithQA($query)
+    {
+        return $query->whereIn('type', ['thread_new_reply', 'answer_new_comment']);
+    }
+
     //含问答消息的回复/@我
     public function scopeAtWithQA($query)
     {
-        return $query->whereIn('type', ['reply_mention', 'reply_reply', 'thread_mention', 'question_mention', 'answer_mention', 'comment_mention']);
+        return $query->whereIn('type', [
+            'reply_reply',
+            'reply_mention',
+            'thread_mention',
+            'question_mention',
+            'answer_mention',
+            'comment_mention',
+            'comment_new_comment'
+        ]);
+    }
+
+    //含问答消息的通知
+    public function scopeSystemWithQA($query)
+    {
+        return $query->whereIn('type', [
+            'reply_like',
+            'thread_like',
+            'user_follow',
+            'thread_favorite',
+            'thread_pin',
+            'thread_mark_excellent',
+            'reply_pin',
+            'answer_like',
+            'comment_like',
+            'adopt_asap',
+            'user_invited',
+            'answer_adopted'
+        ]);
     }
 
     //问答消息
     public function scopeQa($query)
     {
-        return $query->whereIn('type', ['user_invited', 'answer_adopted', 'question_new_answer', 'answer_new_comment', 'comment_new_comment']);
+        return $query->where('type', 'question_new_answer');
     }
 
     public function thread()

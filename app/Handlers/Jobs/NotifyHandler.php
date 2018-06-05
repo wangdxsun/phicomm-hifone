@@ -27,16 +27,26 @@ class NotifyHandler
             return;
         }
 
-        //web和H5 红点逻辑
-        if (in_array($notify->type, ['reply_like', 'thread_like', 'user_follow', 'thread_favorite', 'thread_pin', 'thread_mark_excellent', 'reply_pin', 'adopt_asap'])) {
+        /**
+         * web和H5 红点逻辑
+         * 评论	评论一个帖子、评论一个回答
+         * 回复/@我	回复一个评论、回复@、帖子@、回复一个回复、提问被@、回答被@、回复被@
+         * 问答	问题被回答、
+         * 通知	赞了回答、赞了回复、提醒采纳、邀请回答、回答被采纳
+         */
+        if (in_array($notify->type, ['reply_like', 'thread_like', 'user_follow', 'thread_favorite', 'thread_pin', 'thread_mark_excellent', 'reply_pin', 'answer_like', 'comment_like', 'adopt_asap', 'user_invited', 'answer_adopted'])) {
             $notify->user->increment('notification_system_count', 1);
-        } elseif (in_array($notify->type, ['reply_reply', 'reply_mention', 'thread_mention', 'question_mention', 'answer_mention', 'comment_mention'])) {
+
+        } elseif (in_array($notify->type, ['reply_reply', 'reply_mention', 'thread_mention', 'question_mention', 'answer_mention', 'comment_mention', 'comment_new_comment'])) {
             $notify->user->increment('notification_at_count', 1);
-        } elseif ($notify->type == 'thread_new_reply') {
+
+        } elseif (in_array($notify->type, ['thread_new_reply', 'answer_new_comment'])) {
             $notify->user->increment('notification_reply_count', 1);
+
         } elseif (in_array($notify->type, ['followed_user_new_thread', 'followed_user_new_question'])) {
             $notify->user->increment('notification_follow_count', 1);
-        } elseif (in_array($notify->type, ['user_invited', 'answer_adopted', 'question_new_answer', 'answer_new_comment', 'comment_new_comment'])) {
+
+        } elseif (in_array($notify->type, [ 'question_new_answer'])) {
             $notify->user->increment('notification_qa_count', 1);
         }
 
