@@ -14,6 +14,7 @@ use Hifone\Events\Adopt\AnswerWasAdoptedEvent;
 use Hifone\Events\Answer\AnsweredWasAddedEvent;
 use Hifone\Events\Answer\AnswerWasAuditedEvent;
 use Hifone\Events\Invite\InviteWasAddedEvent;
+use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Exceptions\Consts\AnswerEx;
 use Hifone\Exceptions\Consts\QuestionEx;
 use Hifone\Exceptions\HifoneException;
@@ -164,6 +165,23 @@ class AnswerBll extends BaseBll
         event(new AnswerWasAdoptedEvent(Auth::user(), $answer->user, $answer));
         //给被采纳人加悬赏值
         dispatch(new RewardScore($answer->user, $answer->question->score));
+    }
+
+    public function pin(Answer $answer)
+    {
+        if ($answer->status <> Answer::VISIBLE) {
+            throw new HifoneException('该回答已被删除', AnswerEx::DELETED);
+        }
+        //取消置顶
+        if (1 == $answer->order) {
+            $answer->update(['order' => 0]);
+            $this->updateOpLog($answer, '取消置顶回答');
+        } else {
+            $answer->update(['order' => 1]);
+            $this->updateOpLog($answer, '置顶回答');
+            event(new PinWasAddedEvent($answer->user, $answer));
+        }
+        return ['pin' => $answer->order > 0 ? true : false];
     }
 
 }

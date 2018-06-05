@@ -8,8 +8,6 @@
 
 namespace Hifone\Http\Controllers\Web;
 
-use Hifone\Events\Excellent\ExcellentWasAddedEvent;
-use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Http\Bll\AnswerBll;
 use Hifone\Http\Bll\QuestionBll;
@@ -95,12 +93,12 @@ class QuestionController extends WebController
         return ['rewards' => $rewards];
     }
 
-    public function pin(QuestionBll $questionBll, Question $question)
+    public function pin(Question $question, QuestionBll $questionBll)
     {
         return $questionBll->pin($question);
     }
 
-    public function setExcellent(QuestionBll $questionBll, Question $question)
+    public function setExcellent(Question $question, QuestionBll $questionBll)
     {
         return $questionBll->setExcellent($question);
     }

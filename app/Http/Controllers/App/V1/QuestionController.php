@@ -102,8 +102,4 @@ class QuestionController extends AppController
         return ['rewards' => $rewards];
     }
 
-    public function setExcellent(QuestionBll $questionBll, Question $question)
-    {
-        return $questionBll->setExcellent($question);
-    }
 }
