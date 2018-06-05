@@ -18,7 +18,7 @@ class TagTypeController extends Controller
                 ->with('tagTypes', $tagTypes)
                 ->withCurrentMenu('userTagType');
         } elseif ($system == 'question') {
-            $tagTypes = TagType::ofType([TagType::QUESTION])->with('tags')->orderBy('order')->get();
+            $tagTypes = TagType::ofType([TagType::QUESTION])->with('tags')->orderBy('order')->orderBy('id', 'desc')->get();
             return View::make('dashboard.questionTagTypes.index')
                 ->with('tagTypes', $tagTypes)
                 ->withCurrentMenu('questionTagType');
