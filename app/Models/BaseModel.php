@@ -28,6 +28,11 @@ class BaseModel extends Model
         return substr($value, 0, 16);
     }
 
+    public function getLastAnswerTimeAttribute($value)
+    {
+        return substr($value, 0, 16);
+    }
+
     public function getCreatedTimeAttribute()
     {
         return $this->attributes['created_at'];
