@@ -146,4 +146,9 @@ class Comment extends BaseModel
         return $this->body;
     }
 
+    public function getUrlAttribute()
+    {
+        return $this->answer->question->url;
+    }
+
 }

@@ -15,7 +15,7 @@
             @endif
         </div>
         <div class="row">
-            <div class="col-sm-12 striped-list" id="item-list" data-item-name="tag">
+            <div class="col-sm-12">
                 <div class="row striped-list-item">
                     <div class="col-xs-1"><span>排序</span></div>
                     <div class="col-xs-3"><span>编号</span></div>
@@ -23,6 +23,10 @@
                     <div class="col-xs-3"><span>所属分类</span></div>
                     <div class="col-xs-2"><span>操作</span></div>
                 </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 striped-list" id="item-list" data-item-name="tag">
                 @foreach($tags as $tag)
                     <div class="row striped-list-item" data-item-id="{{ $tag->id }}">
                         <div class="col-xs-1">
@@ -39,7 +43,7 @@
                         </div>
                         <div class="col-xs-2 drag-handle">
                             <a href="/dashboard/question/tag/{{ $tag->id }}/edit/question" title="编辑"><i class="fa fa-pencil"></i></a>
-                            <a href="/dashboard/question/tag/{{ $tag->id }}/destroy/question" title="删除"><i class="fa fa-trash"></i></a>
+                            <a href="/dashboard/question/tag/{{ $tag->id }}/destroy/question" data-method="delete" class="confirm-action" data-title="是否删除该子类？"><i class="fa fa-trash"></i></a>
                         </div>
                     </div>
                 @endforeach

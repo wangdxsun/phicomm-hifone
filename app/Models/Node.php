@@ -84,7 +84,6 @@ class Node extends BaseModel implements HasPresenter
      * @var string[]
      */
     public $rules = [
-        'name'                => 'required|string|min:2|max:50',
         'order'               => 'int',
         'status'              => 'int',
         'description'         => 'required|string|min:2|max:100',
@@ -92,9 +91,6 @@ class Node extends BaseModel implements HasPresenter
     ];
 
     public $validationMessages = [
-        'name.required'               => '主版块名称是必填字段',
-        'name.min'                    => '主版块名称最少2个字符',
-        'name.max'                    => '主版块名称最多50个字符',
         'prompt.required'             => '提示语是必填字段',
         'prompt.min'                  => '提示语最少10个字符',
         'prompt.max'                  => '提示语最多40个字符',

@@ -12,14 +12,18 @@
             @endif
         </div>
         <div class="row">
-            <div class="col-sm-12 striped-list" id="item-list" data-item-name="tagType">
-                <div class="row striped-list-item">
+            <div class="col-sm-12">
+                <div class="row">
                     <div class="col-xs-1"><span>排序</span></div>
                     <div class="col-xs-3">编号</div>
                     <div class="col-xs-3">分类名</div>
                     <div class="col-xs-3">已有子类</div>
                     <div class="col-xs-2">操作</div>
                 </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 striped-list" id="item-list" data-item-name="tagType">
                 @foreach($tagTypes as $tagType)
                     <div class="row striped-list-item" data-item-id="{{ $tagType->id }}">
                         <div class="col-xs-1">

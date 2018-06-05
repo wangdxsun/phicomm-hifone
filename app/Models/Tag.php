@@ -36,6 +36,11 @@ class Tag extends Model
         return $this->morphedByMany(User::class, 'taggable');
     }
 
+    public function questions()
+    {
+        return $this->morphedByMany(Question::class, 'taggable');
+    }
+
     //根据标签类别查询标签
     public function scopeOfTagType($query, TagType $tagType)
     {
