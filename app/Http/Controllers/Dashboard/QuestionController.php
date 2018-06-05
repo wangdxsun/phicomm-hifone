@@ -138,6 +138,11 @@ class QuestionController extends Controller
             return Redirect::back()->withErrors('内容需0-800个字符');
         }
         $questionData = Input::get('question');
+        $body = app('parser.emotion')->reverseParseEmotionAndImage($questionData['body']);
+        if (substr_count($body, '[图片]') > 4 ) {
+            return Redirect::back()->withErrors('最多只能选择4张图片');
+        }
+
         $questionData['body_original'] = $questionData['body'];
         try {
             $question = dispatch( new UpdateQuestionCommand($question, $questionData));

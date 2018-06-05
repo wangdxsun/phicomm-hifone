@@ -72,11 +72,15 @@ class AnswerController extends Controller
     public function update(Answer $answer)
     {
         //修改回答内容
+        $answerData = Input::get('answer');
         $bodyLength = mb_strlen(strip_tags(array_get(request('answer'), 'body')));
         if ($bodyLength > 800 || $bodyLength < 5) {
             return Redirect::back()->withErrors('内容需5-800个字符');
         }
-        $answerData = Input::get('answer');
+        $body = app('parser.emotion')->reverseParseEmotionAndImage($answerData['body']);
+        if (substr_count($body, '[图片]') > 4 ) {
+            return Redirect::back()->withErrors('最多只能选择4张图片');
+        }
         $answerData['body_original'] = $answerData['body'];
         try {
             $answer = dispatch( new UpdateAnswerCommand($answer, $answerData));
