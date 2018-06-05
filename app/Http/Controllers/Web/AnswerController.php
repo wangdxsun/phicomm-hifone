@@ -66,17 +66,8 @@ class AnswerController extends WebController
         return $answers;
     }
 
-    public function pin(Answer $answer)
+    public function pin(Answer $answer, AnswerBll $answerBll)
     {
-        //取消置顶
-        if (1 == $answer->order) {
-            $answer->update(['order' => 0]);
-            $this->updateOpLog($answer, '取消置顶回答');
-        } else {
-            $answer->update(['order' => 1]);
-            $this->updateOpLog($answer, '置顶回答');
-            event(new PinWasAddedEvent($answer->user, $answer));
-        }
-        return ['pin' => $answer->order > 0 ? true : false];
+        return $answerBll->pin($answer);
     }
 }

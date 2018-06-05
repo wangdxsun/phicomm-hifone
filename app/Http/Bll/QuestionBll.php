@@ -145,6 +145,9 @@ class QuestionBll extends BaseBll
     //加精问题
     public function setExcellent(Question $question)
     {
+        if ($question->status <> Question::VISIBLE) {
+            throw new HifoneException('该问答已被删除', QuestionEx::DELETED);
+        }
         //取消加精
         if ($question->is_excellent == 1) {
             $question->update(['is_excellent' => 0]);
@@ -160,6 +163,9 @@ class QuestionBll extends BaseBll
     //置顶问题
     public function pin(Question $question)
     {
+        if ($question->status <> Question::VISIBLE) {
+            throw new HifoneException('该问答已被删除', QuestionEx::DELETED);
+        }
         //取消置顶
         if (1 == $question->order) {
             $question->update(['order' => 0]);
