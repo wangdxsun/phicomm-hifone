@@ -8,6 +8,7 @@ use Hifone\Events\Comment\CommentedWasAddedEvent;
 use Hifone\Events\Comment\CommentWasAuditedEvent;
 use Hifone\Exceptions\HifoneException;
 use Hifone\Models\TagType;
+use Symfony\Component\VarDumper\Dumper\DataDumperInterface;
 use View;
 use Input;
 use Redirect;

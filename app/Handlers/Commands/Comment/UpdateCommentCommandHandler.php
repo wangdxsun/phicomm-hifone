@@ -19,7 +19,6 @@ class UpdateCommentCommandHandler
             if (Agent::match('iPhone') || Agent::match('Android')) {
                 $command->data['body'] = app('parser.link')->parse($command->data['body']);
             }
-            $command->data['thumbnails'] = getFirstImageUrl($command->data['body_original']);
         }
 
         //用户编辑状态回退、精华失效
