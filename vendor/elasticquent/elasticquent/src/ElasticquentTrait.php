@@ -297,10 +297,19 @@ trait ElasticquentTrait
             'query' => [
                 'filtered' => [
                     'query' => [
-                        'multi_match' => [
-                            'query' => $term,
-                            'type' => 'cross_fields',
-                            'fields' => ['title^2', 'body']
+                        'function_score' => [
+                            'query' => [
+                                'multi_match' => [
+                                    'query' => $term,
+                                    'type' => 'cross_fields',
+                                    'fields' => ['title', 'body']
+                                ]
+                            ],
+                            'field_value_factor' => [
+                                'field' => 'reply_count',
+                                'modifier' => 'log1p',
+                                'factor' => 2
+                            ]
                         ],
                     ],
                     'filter' => [
@@ -379,11 +388,20 @@ trait ElasticquentTrait
             'query' => [
                 'filtered' => [
                     'query' => [
-                        'multi_match' => [
-                            'query' => $term,
-                            'type' => 'cross_fields',
-                            'fields' => ['title^2', 'body']
-                        ],
+                        'function_score' => [
+                            'query' => [
+                                'multi_match' => [
+                                    'query' => $term,
+                                    'type' => 'cross_fields',
+                                    'fields' => ['title', 'body']
+                                ],
+                            ],
+                            'field_value_factor' => [
+                                'field' => 'answer_count',
+                                'modifier' => 'log1p',
+                                'factor' => 2
+                            ]
+                        ]
                     ],
                     'filter' => [
                         'bool' => [
@@ -426,9 +444,18 @@ trait ElasticquentTrait
             'query' => [
                 'filtered' => [
                     'query' => [
-                        'match' => [
-                            'title' => $term,
-                        ],
+                        'function_score' => [
+                            'query' => [
+                                'match' => [
+                                    'title' => $term,
+                                ]
+                            ],
+                            'field_value_factor' => [
+                                'field' => 'answer_count',
+                                'modifier' => 'log1p',
+                                'factor' => 2
+                            ]
+                        ]
                     ],
                     'filter' => [
                         'bool' => [
@@ -468,8 +495,17 @@ trait ElasticquentTrait
             'query' => [
                 'filtered' => [
                     'query' => [
-                        'match' => [
-                            'body' => $term
+                        'function_score' => [
+                            'query' => [
+                                'match' => [
+                                    'body' => $term
+                                ]
+                            ],
+                            'field_value_factor' => [
+                                'field' => 'comment_count',
+                                'modifier' => 'log1p',
+                                'factor' => 2
+                            ]
                         ]
                     ],
                     'filter' => [
