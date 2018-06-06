@@ -84,7 +84,7 @@ class QuestionController extends AppController
     public function show(Question $question, QuestionBll $questionBll)
     {
         $question = $questionBll->showQuestion($question);
-        $question['in_adopt_period'] = $question->first_answer_time < Carbon::now() && Carbon::now() < $question->first_answer_time->addDays(5);
+        $question['in_adopt_period'] = $question->first_answer_time == null ? false : $question->first_answer_time < Carbon::now() && Carbon::now() < $question->first_answer_time->addDays(5);
 
         return $question;
     }
