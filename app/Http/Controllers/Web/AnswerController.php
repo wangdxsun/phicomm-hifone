@@ -13,6 +13,7 @@ use Hifone\Exceptions\HifoneException;
 use Hifone\Http\Bll\AnswerBll;
 use Hifone\Http\Bll\CommentBll;
 use Hifone\Models\Answer;
+use Hifone\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Auth;
 
@@ -53,6 +54,56 @@ class AnswerController extends WebController
         $commentBll->checkAnswer($answer->id);
 
         return $answerBll->sortComments($answer);
+    }
+
+    //邀请回答
+    public function invite(User $user, Question $question, AnswerBll $answerBll)
+    {
+        $answerBll->checkQuestion($question->id);
+        //24小时内最多邀请15人
+        $answerBll->checkInviteTimes($user);
+        //被邀请用户已被禁言
+        $answerBll->checkPermission($user);
+        //被邀请用户已回答
+        if ($user->hasAnswerQuestion($question)) {
+            throw new HifoneException('已回答', AnswerEx::HAS_ANSWERED);
+        }
+        //用户已被邀请（唯一索引异常cover）
+        $answerBll->createInvite($user, $question);
+
+        return success('已邀请');
+    }
+
+    /**
+     * 采纳回答
+     * 提问者，在第一个回答者回答算起的5天内可以采纳任意一个回答，采纳后，悬赏的分值会给到该回答用户；
+     * 若5天后，用户没有操作，以此为时间算起，10天后管理员未处理含管理员选不出最佳答案，系统将悬赏分值给到点赞数最高的用户，
+     * 同等的点赞数给到第一个回答用户（主要也是为了兼顾以后不用干预的处理，同时也是刺激用户参与回答）；
+     * @param Answer $answer
+     * @param AnswerBll $answerBll
+     * @throws HifoneException
+     * @return String
+     */
+    public function adopt(Answer $answer, AnswerBll $answerBll)
+    {
+        if (Auth::id() <> $answer->question->user_id) {
+            throw new HifoneException('非问题作者不能采纳');
+        } elseif (Auth::id() == $answer->user_id) {
+            throw new HifoneException('不能采纳自己的回答');
+        }
+        //用户采纳 now - 5 < first_answer_time < now; 管理员采纳 now - 15 < first_answer_time < now - 5
+        if (Auth::id() == $answer->question->user_id
+            && Carbon::now()->subHours(24*5)->format('Y-m-d H:i:s') < $answer->question->first_answer_time
+            && $answer->question->first_answer_time < Carbon::now()->format('Y-m-d H:i:s')) {
+            throw new HifoneException('用户采纳有效期已过');
+        } elseif (Auth::user()->hasRole(['Admin', 'Founder'])
+            && Carbon::now()->subHours(24*15)->format('Y-m-d H:i:s') < $answer->question->first_answer_time
+            && $answer->question->first_answer_time < Carbon::now()->subHours(24*5)->format('Y-m-d H:i:s')) {
+            throw new HifoneException('管理员采纳有效期已过');
+        }
+        $answerBll->adoptAnswer($answer);
+
+        return success('已采纳');
     }
 
     public function search($keyword, AnswerBll $answerBll)
