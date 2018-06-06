@@ -20,7 +20,7 @@
                 <fieldset>
                     <div class="form-group">
                         <label>内容</label>
-                        <script id="container" name="comment[body]" type="text/plain">{!!  isset($comment) ? $comment->body : null !!}</script>
+                        <script id="container" name="comment[body]" type="text/plain">{!! old('comment.body') ? : (isset($comment) ? $comment->body : null) !!}</script>
                     </div>
                 </fieldset>
 

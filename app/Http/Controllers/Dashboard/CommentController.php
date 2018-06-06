@@ -174,7 +174,7 @@ class CommentController extends Controller
         //修改回复内容
         $bodyLength = mb_strlen(strip_tags(array_get(request('comment'), 'body')));
         if ($bodyLength > 800 || $bodyLength < 5) {
-            return Redirect::back()->withErrors('内容需5-800个字符');
+            return Redirect::back()->withErrors('内容需5-800个字符')->withInput();
         }
         $commentData = Input::get('comment');
         $commentData['body_original'] = $commentData['body'];

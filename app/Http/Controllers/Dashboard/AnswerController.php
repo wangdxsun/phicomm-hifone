@@ -75,11 +75,11 @@ class AnswerController extends Controller
         $answerData = Input::get('answer');
         $bodyLength = mb_strlen(strip_tags(array_get(request('answer'), 'body')));
         if ($bodyLength > 800 || $bodyLength < 5) {
-            return Redirect::back()->withErrors('内容需5-800个字符');
+            return Redirect::back()->withErrors('内容需5-800个字符')->withInput();
         }
         $body = app('parser.emotion')->reverseParseEmotionAndImage($answerData['body']);
         if (substr_count($body, '[图片]') > 4 ) {
-            return Redirect::back()->withErrors('最多只能选择4张图片');
+            return Redirect::back()->withErrors('最多只能选择4张图片')->withInput();
         }
         $answerData['body_original'] = $answerData['body'];
         try {

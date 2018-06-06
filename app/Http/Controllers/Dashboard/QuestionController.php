@@ -135,12 +135,12 @@ class QuestionController extends Controller
         ]);
         $bodyLength = mb_strlen(strip_tags(array_get(request('question'), 'body')));
         if ($bodyLength > 800 ) {
-            return Redirect::back()->withErrors('内容需0-800个字符');
+            return Redirect::back()->withErrors('内容需0-800个字符')->withInput();
         }
         $questionData = Input::get('question');
         $body = app('parser.emotion')->reverseParseEmotionAndImage($questionData['body']);
         if (substr_count($body, '[图片]') > 4 ) {
-            return Redirect::back()->withErrors('最多只能选择4张图片');
+            return Redirect::back()->withErrors('最多只能选择4张图片')->withInput();
         }
 
         $questionData['body_original'] = $questionData['body'];

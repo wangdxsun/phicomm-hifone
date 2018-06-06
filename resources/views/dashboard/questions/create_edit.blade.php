@@ -45,7 +45,7 @@
 
                     <div class="form-group">
                         <label>问题内容</label>
-                        <script id="container" name="question[body]" type="text/plain">{!!  isset($question) ? $question->body : null !!}</script>
+                        <script id="container" name="question[body]" type="text/plain">{!!  old('question.body') ?: (isset($question) ? $question->body : null) !!}</script>
                     </div>
                 </fieldset>
 
