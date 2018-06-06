@@ -305,7 +305,7 @@ class StatController extends Controller
                                                 on a.question_id = q.id
                                                 where a.`status` = 0
                                                 union all
-                                                select null as qid, null as aid, c.id as cid, substr(a.created_at, 1, 10) as date
+                                                select null as qid, null as aid, c.id as cid, substr(c.created_at, 1, 10) as date
                                                 from comments as c
                                                 join answers as a
                                                 on c.answer_id = a.id
