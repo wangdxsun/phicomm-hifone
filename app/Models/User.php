@@ -190,7 +190,7 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
 
     public function followUsers()
     {
-        return $this->morphedByMany(User::class, 'followable', 'follows')->orderBy('created_at', 'desc');
+        return $this->morphedByMany(User::class, 'followable', 'follows')->orderBy('follows.created_at', 'desc');
     }
 
     public function followQuestions()

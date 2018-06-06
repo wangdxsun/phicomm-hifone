@@ -31,7 +31,6 @@ class AuthController extends WebController
 
     public function login()
     {
-
         //3分钟内密码连续输错5次账号锁定15分钟
         $username = request('username');
         $ip = getClientIp();
