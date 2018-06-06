@@ -51,7 +51,7 @@ class BannerController extends AppController
         if ($carousel->start_version == '全部版本') {
             return true;
         }
-        return (version_compare($carousel->start_version, $version) == -1) && (version_compare($version, $carousel->end_version) == -1);
+        return (version_compare($carousel->start_version, $version) <= 0) && (version_compare($version, $carousel->end_version) <= 0);
     }
 
 }
