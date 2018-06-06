@@ -491,11 +491,6 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         return Invite::question($question)->where('to_user_id', $this->id)->count() > 0;
     }
 
-    public function inviteUsers(Question $question)
-    {
-        return $this->belongsToMany(User::class, 'invites', 'from_user_id', 'to_user_id')->wherePivot('question_id', $question->id);
-    }
-
     public function likes()
     {
         return $this->hasMany(Like::class);
@@ -506,10 +501,21 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         return $this->hasMany(Report::class);
     }
 
-    //被邀请的记录
+    //邀请别人的记录
     public function invites()
     {
+        return $this->hasMany(Invite::class, 'from_user_id');
+    }
+
+    //被邀请的记录
+    public function inviters()
+    {
         return $this->hasMany(Invite::class, 'to_user_id');
+    }
+
+    public function inviteUsers(Question $question)
+    {
+        return $this->belongsToMany(User::class, 'invites', 'from_user_id', 'to_user_id')->wherePivot('question_id', $question->id);
     }
 
     public function getNotificationCountAttribute()

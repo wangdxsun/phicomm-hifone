@@ -129,11 +129,18 @@ class AnswerBll extends BaseBll
         }
     }
 
+    public function checkInviteTimes(User $user)
+    {
+        if ($user->invites()->whereBetween('created_at', [Carbon::now()->subDay(1), Carbon::now()])->count() >= 15) {
+            throw new HifoneException('24小时内最多邀请15人');
+        }
+    }
+
     public function createInvite(User $toUser, $question)
     {
         DB::beginTransaction();
         try {
-            $toUser->invites()->create([
+            $toUser->inviters()->create([
                 'from_user_id' => Auth::user()->id,
                 'question_id' => $question->id,
             ]);
