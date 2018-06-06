@@ -29,7 +29,7 @@
                                @if (isset($search['title']))
                                value="{{ $search['title'] }}"
                                 @endif >
-                        <input type="text" name="question[user_id]" class="form-control" placeholder="提问者" style="width: 100px;"
+                        <input type="text" name="question[user_name]" class="form-control" placeholder="提问者" style="width: 100px;"
                                @if (isset($search['user_name']))
                                value="{{ $search['user_name'] }}"
                                 @endif >
