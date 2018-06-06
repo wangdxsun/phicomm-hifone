@@ -88,8 +88,8 @@ class AnswerController extends WebController
      */
     public function adopt(Answer $answer, AnswerBll $answerBll)
     {
-        if (Auth::id() <> $answer->question->user_id) {
-            throw new HifoneException('非问题作者不能采纳');
+        if (Auth::id() <> $answer->question->user_id && !Auth::user()->hasRole(['Admin', 'Founder'])) {
+            throw new HifoneException('非问题作者又非管理员不能采纳');
         } elseif (Auth::id() == $answer->user_id) {
             throw new HifoneException('不能采纳自己的回答');
         }
