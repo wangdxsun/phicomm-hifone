@@ -100,8 +100,8 @@ class AddAutoTag extends Command
                         array_push($tagData, Tag::where('name', 'R1')->first()->id);
                     }
                 }
-
-                $user->tags()->sync($tagData);
+                $oldTagData =  $user->tags()->ofNotAuto()->get()->pluck('id')->toArray();
+                $user->tags()->sync(array_merge($tagData, $oldTagData));
                 $tagData = [];
             }
         });

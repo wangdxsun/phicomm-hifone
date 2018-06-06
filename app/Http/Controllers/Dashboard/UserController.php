@@ -60,8 +60,10 @@ class UserController extends Controller
             $users = User::search($search)->with(['roles', 'lastOpUser', 'tags'])->paginate(20);
         }
         $orderTypes = User::$orderTypes;
-        //传入所有用户标签类,排除自动标签
+        //传入所有用户标签类
         $userTagTypes = TagType::ofType([TagType::USER, TagType::AUTO])->with('tags')->get();
+        //传入所有用户标签类，排除自动标签
+        $userTagTypesExceptAuto = TagType::ofType([TagType::USER])->with('tags')->get();
         //传入标签个数的数组
 
         $tagCounts = range(1, Tag::whereIn('tag_type_id', $userTagTypes->pluck('id')->toArray())->count());
@@ -71,6 +73,7 @@ class UserController extends Controller
             ->withUsers($users)
             ->with('orderTypes',$orderTypes)
             ->with('userTagTypes', $userTagTypes)
+            ->with('userTagTypesExceptAuto', $userTagTypesExceptAuto)
             ->withSearch($search)
             ->with('tagCounts', $tagCounts)
             ->withAllUsers([]);

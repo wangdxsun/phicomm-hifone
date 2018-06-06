@@ -136,7 +136,7 @@
                                             <label>{{ '用户标签' }}</label>
                                             <el-select v-model="userTags" multiple placeholder="选择标签">
                                                 <el-option-group
-                                                        v-for="userTagType in userTagTypes"
+                                                        v-for="userTagType in userTagTypesExceptAuto"
                                                         :key="userTagType.id"
                                                         :label="userTagType.display_name">
                                                     <el-option
@@ -181,6 +181,7 @@
                 return {
                     allUserTags:[],
                     userTagTypes: {!! $userTagTypes !!},
+                    userTagTypesExceptAuto: {!! $userTagTypesExceptAuto !!},
                     userTags: '',
                     userId: null,
                 };
