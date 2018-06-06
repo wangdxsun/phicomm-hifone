@@ -19,7 +19,6 @@ use Hifone\Models\Answer;
 use Hifone\Models\Question;
 use Hifone\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Redis;
 
 class AnswerController extends AppController
 {
