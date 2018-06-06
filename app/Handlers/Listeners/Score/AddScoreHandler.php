@@ -41,7 +41,7 @@ class AddScoreHandler
         } elseif ($event instanceof RepliedWasAddedEvent) {
             //帖子被回复
             if (Auth::id() == $event->threadUser->id) {
-                return false;//操作者和被操作者相同，不加智慧果
+                return;//操作者和被操作者相同，不加智慧果
             }
             $action = Config::get('setting.thread_replied', null);
             $user = $event->threadUser;
@@ -53,7 +53,7 @@ class AddScoreHandler
         } elseif ($event instanceof PinWasAddedEvent) {
             //帖子和回复被置顶，增加智慧果
             if (Auth::id() == $event->object->user->id) {
-                return false;//操作者和被操作者相同，不加智慧果
+                return ;//操作者和被操作者相同，不加智慧果
             } elseif($event->object instanceof Thread){
                 $action = Config::get('setting.thread_pin', null);
                 $object = $event->object->id;
@@ -69,7 +69,7 @@ class AddScoreHandler
             //帖子或回复被赞，增加智慧果
             $user = $event->user;
             if (Auth::id() == $user->id) {
-                return false;//操作者和被操作者相同，不加智慧果
+                return ;//操作者和被操作者相同，不加智慧果
             } elseif ($event->object instanceof Thread) {
                 $action = Config::get('setting.thread_liked', null);
                 //帖子id
@@ -83,7 +83,7 @@ class AddScoreHandler
         } elseif ($event instanceof ExcellentWasAddedEvent) {
             //帖子被加精
             if (Auth::id() == $event->user->id) {
-                return false;//操作者和被操作者相同，不加智慧果
+                return ;//操作者和被操作者相同，不加智慧果
             } else {
                 $action = Config::get('setting.thread_excellent', null);
                 $user = $event->user;
@@ -95,14 +95,14 @@ class AddScoreHandler
             //用户被关注
             $user = $event->target;
             if (Auth::id() == $user->id) {
-                return false;//操作者和被操作者相同，不加智慧果
+                return;//操作者和被操作者相同，不加智慧果
             }
             $action = Config::get('setting.user_followed', null);
         } elseif ($event instanceof FavoritedWasAddedEvent) {
             $user = $event->object->user;
             if (Auth::id() == $user->id) {
                 //帖子被收藏，需要加智慧果，自己收藏自己的帖子不加
-                return false;
+                return;
             } else {
                 $action = Config::get('setting.thread_favorited', null);
                 $object = $event->object->id;
@@ -118,7 +118,7 @@ class AddScoreHandler
             } elseif ($event->user->score >= Role::where('name', 'Vip5')->first()->credit_low && $event->credit <= Role::where('name', 'Vip4')->first()->credit_high) {
                 $action = Config::get('setting.level_up_5', null);
             } else {
-                return false;
+                return;
             }
             $user = $event->user;
             $from = '';
@@ -126,7 +126,7 @@ class AddScoreHandler
         } elseif ($event instanceof ThreadWasUppedEvent) {
             if (Auth::id() == $event->thread->user_id) {
                 //帖子被提升，需要加智慧果，自己提升自己的帖子不加
-                return false;
+                return;
             }
             $action = Config::get('setting.thread_upped', null);
             $user = $event->thread->user;
