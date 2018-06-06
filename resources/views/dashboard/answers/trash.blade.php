@@ -82,7 +82,7 @@
                             <td>{{ $answer->last_op_time }}</td>
                             <td>{{ $answer->last_op_reason }}</td>
                             <td>
-                                <a data-url="/dashboard/answers/{{$answer->id}}/recycle" data-method="post"><i class="fa fa-check"></i></a>
+                                <a data-url="/dashboard/answers/{{$answer->id}}/recycle" data-method="post" title="审核通过" class="confirm-action" data-title="是否确认恢复"><i class="fa fa-check"></i></a>
                             </td>
                         </tr>
                     @endforeach
