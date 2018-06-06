@@ -35,7 +35,7 @@ class CommentController extends Controller
 
     public function audit()
     {
-        $comments = Comment::audit()->with(['user', 'answer', 'answer.question.tags'])->orderBy('last_op_time', 'desc')->paginate(20);
+        $comments = Comment::audit()->with(['user', 'answer', 'answer.question.tags'])->orderBy('created_at', 'desc')->paginate(20);
         $commentsCount = Comment::audit()->count();
         return View::make('dashboard.comments.audit')
             ->with('comments', $comments)

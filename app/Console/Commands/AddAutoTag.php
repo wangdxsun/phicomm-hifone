@@ -67,7 +67,7 @@ class AddAutoTag extends Command
                 }
 
                 //回帖质量高
-                if ($user->replies()->visible()->where('order', 1)->count() + $user->replies()->visible()->where('order', '><',1)->has('likes', '>=', 3)->count() ) {
+                if ($user->replies()->visible()->where('order', 1)->count() + $user->replies()->visible()->where('order', '><',1)->where('like_count', '>=', 3)->count() ) {
                     array_push($tagData, Tag::where('name', '回帖质量高')->first()->id);
                 }
 
