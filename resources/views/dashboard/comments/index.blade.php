@@ -55,8 +55,8 @@
                             <el-date-picker type="datetime" placeholder="结束时间" v-model="date_end"></el-date-picker>
 
                             <button class="btn btn-default">搜索</button>
-                            <el-input :value="date_end_str" placeholder="请输入内容"  type="hidden" resize="both"  style="width: 60px; height: 10px;" name="question[date_end]"></el-input>
-                            <el-input :value="date_start_str" placeholder="请输入内容"  type="hidden" resize="both"  style="width: 60px; height: 10px;" name="question[date_start]"></el-input>
+                            <el-input :value="date_end_str" placeholder="请输入内容"  type="hidden" resize="both"  style="width: 60px; height: 10px;" name="comment[date_end]"></el-input>
+                            <el-input :value="date_start_str" placeholder="请输入内容"  type="hidden" resize="both"  style="width: 60px; height: 10px;" name="comment[date_start]"></el-input>
                         </form>
                     </div>
                     <form method="POST">
