@@ -8,6 +8,7 @@
 
 namespace Hifone\Http\Controllers\App\V1;
 
+use Carbon\Carbon;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Exceptions\HifoneException;
@@ -83,6 +84,7 @@ class QuestionController extends AppController
     public function show(Question $question, QuestionBll $questionBll)
     {
         $question = $questionBll->showQuestion($question);
+        $question['in_adopt_period'] = $question->first_answer_time < Carbon::now() && Carbon::now() < $question->first_answer_time->addDays(5);
 
         return $question;
     }
