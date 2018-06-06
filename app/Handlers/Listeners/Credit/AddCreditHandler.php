@@ -155,6 +155,9 @@ class AddCreditHandler
             } elseif ($event->target instanceof User) {
                 $action = 'follow_user';
             } elseif ($event->target instanceof Question) {
+                if ($event->target->user_id == Auth::user()->id) {
+                    return;
+                }
                 $action = 'follow_question';
             }
             $user = Auth::user();
@@ -164,6 +167,9 @@ class AddCreditHandler
             } elseif ($event->target instanceof User) {
                 $action = 'follow_user_removed';
             } elseif ($event->target instanceof Question) {
+                if ($event->target->user_id == Auth::user()->id) {
+                    return;
+                }
                 $action = 'follow_question_removed';
             }
             $user = Auth::user();
@@ -175,6 +181,9 @@ class AddCreditHandler
                 $action = 'followed_user';
                 $user = $event->target;
             } elseif ($event->target instanceof Question) {
+                if ($event->target->user_id == Auth::user()->id) {
+                    return;
+                }
                 $action = 'question_followed';
                 $user = $event->target->user;
             }
@@ -186,6 +195,9 @@ class AddCreditHandler
                 $action = 'followed_user_removed';
                 $user = $event->target;
             }  elseif ($event->target instanceof Question) {
+                if ($event->target->user_id == Auth::user()->id) {
+                    return;
+                }
                 $action = 'question_followed_removed';
                 $user = $event->target->user;
             }
