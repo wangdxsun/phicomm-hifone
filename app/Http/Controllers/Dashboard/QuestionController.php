@@ -51,7 +51,7 @@ class QuestionController extends Controller
     public function trashView()
     {
         $search = $this->filterEmptyValue(Input::get('question'));
-        $questions = Question::trash()->search($search)->orderBy('last_op_time', 'desc')->paginate(20);
+        $questions = Question::trash()->with(['user', 'tags'])->search($search)->orderBy('last_op_time', 'desc')->paginate(20);
         $questionsCount = Question::trash()->count();
         return View::make('dashboard.questions.trash')
             ->with('current_menu', 'question')

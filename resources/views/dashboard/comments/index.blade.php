@@ -31,8 +31,8 @@
                                        value="{{ $search['title'] }}"
                                         @endif >
                                 <input type="text" name="comment[user_id]" class="form-control" placeholder="回复人" style="width: 100px;"
-                                       @if (isset($search['user_id']))
-                                       value="{{ $search['user_id'] }}"
+                                       @if (isset($search['user_name']))
+                                       value="{{ $search['user_name'] }}"
                                         @endif >
                                 {{--按标签筛选，提供所有的问题标签供选择--}}
                                 <el-select v-model="questionTags" placeholder="问题类型">

@@ -31,8 +31,8 @@
                                        value="{{ $search['title'] }}"
                                         @endif >
                                 <input type="text" name="comment[user_id]" class="form-control" placeholder="回复人" style="width: 100px;"
-                                       @if (isset($search['user_id']))
-                                       value="{{ $search['user_id'] }}"
+                                       @if (isset($search['user_name']))
+                                       value="{{ $search['user_name'] }}"
                                         @endif >
                             </div>
                             <button class="btn btn-default">搜索</button>
