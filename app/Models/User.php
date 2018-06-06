@@ -562,7 +562,7 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
 
     public function scopeExpertSort($query)
     {
-        return $query->orderBy('answer_count', 'desc')->orderBy('score', 'desc');
+        return $query->orderBy('answer_count', 'desc')->orderBy('score', 'desc')->orderBy('id');
     }
 
     public function isAdmin()
