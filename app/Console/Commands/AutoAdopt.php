@@ -53,7 +53,7 @@ class AutoAdopt extends Command
         Question::visible()->autoAdopted()->chunk(20, function ($questions) use ($handler) {
             foreach ($questions as $question) {
                 try {
-                    $answer = $question->answers()->visible()->notAdopted()->like()->first();
+                    $answer = $question->answers()->visible()->notSelf($question->user_id)->notAdopted()->likeMost()->first();
                     if ($answer <> null) {
                         $question->update(['answer_id', $answer->id]);
                         $answer->update(['adopted' => 1]);
