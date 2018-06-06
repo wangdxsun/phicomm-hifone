@@ -93,7 +93,6 @@ class AnswerController extends Controller
         if ($answer->status == Answer::VISIBLE) {
             return Redirect::route('dashboard.answers.index')->withSuccess('恭喜，操作成功！');
         }
-        return Redirect::route('dashboard.answers.audit')->withSuccess('恭喜，操作成功！');
     }
 
     public function pin(Answer $answer)

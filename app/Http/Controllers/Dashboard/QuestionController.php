@@ -156,8 +156,6 @@ class QuestionController extends Controller
         if ($question->status == Question::VISIBLE) {
             return Redirect::route('dashboard.questions.index')->withSuccess('恭喜，操作成功！');
         }
-        return Redirect::route('dashboard.questions.audit')->withSuccess('恭喜，操作成功！');
-
     }
 
     //批量审核通过问题
