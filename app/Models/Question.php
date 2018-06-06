@@ -57,7 +57,7 @@ class Question extends BaseModel implements TaggableInterface
         ]
     ];
 
-    protected $dates = ['deleted_at'];
+    protected $dates = ['deleted_at', 'first_answer_time'];
 
     public function getDates()
     {

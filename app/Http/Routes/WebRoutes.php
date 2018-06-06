@@ -146,6 +146,8 @@ class WebRoutes
                 $router->post('questions/{question}/excellent', 'QuestionController@setExcellent')->where('question', '[0-9]+');
                 $router->post('answers', 'AnswerController@store');
                 $router->post('answers/{answer}/pin', 'AnswerController@pin')->where('answer', '[0-9]+');
+                $router->post('answers/invite/users/{user}/questions/{question}', 'AnswerController@invite')->where('user', '[0-9]+')->where('question', '[0-9]+');
+                $router->post('answers/adopt/answers/{answer}', 'AnswerController@adopt')->where('answer', '[0-9]+');
                 $router->post('comments', 'CommentController@store');
 
                 $router->get('users/{user}/follow/questions', 'UserController@followQuestions')->where('user', '[0-9]+');
