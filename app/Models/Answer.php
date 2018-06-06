@@ -106,7 +106,12 @@ class Answer extends BaseModel
         return $query->where('adopted', 0);
     }
 
-    public function scopeLike($query)
+    public function scopeNotSelf($query, $userId)
+    {
+        return $query->where('user_id', '<>', $userId);
+    }
+
+    public function scopeLikeMost($query)
     {
         return $query->orderBy('like_count', 'desc');
     }

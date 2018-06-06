@@ -88,19 +88,19 @@ class AnswerController extends WebController
      */
     public function adopt(Answer $answer, AnswerBll $answerBll)
     {
-        if (Auth::id() <> $answer->question->user_id) {
-            throw new HifoneException('非问题作者不能采纳');
+        if (Auth::id() <> $answer->question->user_id && !Auth::user()->hasRole(['Admin', 'Founder'])) {
+            throw new HifoneException('非问题作者又非管理员不能采纳');
         } elseif (Auth::id() == $answer->user_id) {
             throw new HifoneException('不能采纳自己的回答');
         }
-        //用户采纳 now - 5 < first_answer_time < now; 管理员采纳 now - 15 < first_answer_time < now - 5
+        //用户采纳有效期 now - 5 < first_answer_time < now; 管理员采纳有效期 now - 15 < first_answer_time < now - 5
         if (Auth::id() == $answer->question->user_id
-            && Carbon::now()->subHours(24*5)->format('Y-m-d H:i:s') < $answer->question->first_answer_time
-            && $answer->question->first_answer_time < Carbon::now()->format('Y-m-d H:i:s')) {
+            && (Carbon::now()->subHours(24*5)->format('Y-m-d H:i:s') > $answer->question->first_answer_time
+                || $answer->question->first_answer_time > Carbon::now()->format('Y-m-d H:i:s'))) {
             throw new HifoneException('用户采纳有效期已过');
         } elseif (Auth::user()->hasRole(['Admin', 'Founder'])
-            && Carbon::now()->subHours(24*15)->format('Y-m-d H:i:s') < $answer->question->first_answer_time
-            && $answer->question->first_answer_time < Carbon::now()->subHours(24*5)->format('Y-m-d H:i:s')) {
+            && (Carbon::now()->subHours(24*15)->format('Y-m-d H:i:s') > $answer->question->first_answer_time
+                || $answer->question->first_answer_time > Carbon::now()->subHours(24*5)->format('Y-m-d H:i:s'))) {
             throw new HifoneException('管理员采纳有效期已过');
         }
         $answerBll->adoptAnswer($answer);
