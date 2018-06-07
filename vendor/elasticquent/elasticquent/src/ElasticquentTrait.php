@@ -302,14 +302,16 @@ trait ElasticquentTrait
                                 'multi_match' => [
                                     'query' => $term,
                                     'type' => 'cross_fields',
-                                    'fields' => ['title', 'body']
+                                    'fields' => ['title', 'body'],
+                                    'minimum_should_match' => '75%'
                                 ]
                             ],
                             'field_value_factor' => [
                                 'field' => 'reply_count',
                                 'modifier' => 'log1p',
-                                'factor' => 2
-                            ]
+                                'factor' => 10
+                            ],
+                            'boost_mode' => 'sum'
                         ],
                     ],
                     'filter' => [
@@ -393,14 +395,16 @@ trait ElasticquentTrait
                                 'multi_match' => [
                                     'query' => $term,
                                     'type' => 'cross_fields',
-                                    'fields' => ['title', 'body']
+                                    'fields' => ['title', 'body'],
+                                    'minimum_should_match' => '75%'
                                 ],
                             ],
                             'field_value_factor' => [
                                 'field' => 'answer_count',
                                 'modifier' => 'log1p',
-                                'factor' => 2
-                            ]
+                                'factor' => 10
+                            ],
+                            'boost_mode' => 'sum'
                         ]
                     ],
                     'filter' => [
@@ -448,13 +452,15 @@ trait ElasticquentTrait
                             'query' => [
                                 'match' => [
                                     'title' => $term,
+                                    'minimum_should_match' => '75%'
                                 ]
                             ],
                             'field_value_factor' => [
                                 'field' => 'answer_count',
                                 'modifier' => 'log1p',
-                                'factor' => 2
-                            ]
+                                'factor' => 10
+                            ],
+                            'boost_mode' => 'sum'
                         ]
                     ],
                     'filter' => [
@@ -498,14 +504,16 @@ trait ElasticquentTrait
                         'function_score' => [
                             'query' => [
                                 'match' => [
-                                    'body' => $term
+                                    'body' => $term,
+                                    'minimum_should_match' => '75%'
                                 ]
                             ],
                             'field_value_factor' => [
                                 'field' => 'comment_count',
                                 'modifier' => 'log1p',
-                                'factor' => 2
-                            ]
+                                'factor' => 10
+                            ],
+                            'boost_mode' => 'sum'
                         ]
                     ],
                     'filter' => [
@@ -555,6 +563,7 @@ trait ElasticquentTrait
         }
         if ($this instanceof Thread || $this instanceof Question || $this instanceof Answer) {
             $this->body = strip_tags($this->body);
+            $this->body = str_replace(["\n", "\r", "\r\n"], '', $this->body);
         }
         if ($this instanceof Answer) {
             unset($this->question);
@@ -594,6 +603,7 @@ trait ElasticquentTrait
     {
         if ($this instanceof Thread || $this instanceof Question || $this instanceof Answer) {
             $this->body = strip_tags($this->body);
+            $this->body = str_replace(["\n", "\r", "\r\n"], '', $this->body);
         }
         if ($this instanceof Answer) {
             unset($this->question);
