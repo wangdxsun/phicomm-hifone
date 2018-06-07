@@ -92,11 +92,14 @@ class AddAutoTag extends Command
                     //K2系列
                     if ($user->threads()->visible()->where('node_id', Node::where('name', 'K2系列')->first()->id)->where('created_at','>=', $previousThirtyDays)->where('created_at','<', $startDay)->count() / $allCount >= 0.45 ) {
                         array_push($tagData, Tag::where('name', 'K2系列')->first()->id);
-                    } elseif ($user->threads()->visible()->where('node_id', Node::where('name', 'K3系列')->first()->id)->where('created_at','>=', $previousThirtyDays)->where('created_at','<', $startDay)->count() / $allCount >= 0.45) {
+                    }
+                    if ($user->threads()->visible()->where('node_id', Node::where('name', 'K3系列')->first()->id)->where('created_at','>=', $previousThirtyDays)->where('created_at','<', $startDay)->count() / $allCount >= 0.45) {
                         array_push($tagData, Tag::where('name', 'K3系列')->first()->id);
-                    } elseif ($user->threads()->visible()->where('node_id', Node::where('name', '斐讯盒子')->first()->id)->where('created_at','>=', $previousThirtyDays)->where('created_at','<', $startDay)->count() / $allCount >= 0.45) {
+                    }
+                    if ($user->threads()->visible()->where('node_id', Node::where('name', '斐讯盒子')->first()->id)->where('created_at','>=', $previousThirtyDays)->where('created_at','<', $startDay)->count() / $allCount >= 0.45) {
                         array_push($tagData, Tag::where('name', '盒子')->first()->id);
-                    } elseif ($user->threads()->visible()->where('node_id', Node::where('name', '斐讯AI音箱')->first()->id)->where('created_at','>=', $previousThirtyDays)->where('created_at','<', $startDay)->count() / $allCount >= 0.45) {
+                    }
+                    if ($user->threads()->visible()->where('node_id', Node::where('name', '斐讯AI音箱')->first()->id)->where('created_at','>=', $previousThirtyDays)->where('created_at','<', $startDay)->count() / $allCount >= 0.45) {
                         array_push($tagData, Tag::where('name', 'R1')->first()->id);
                     }
                 }
