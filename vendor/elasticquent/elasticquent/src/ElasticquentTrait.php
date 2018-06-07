@@ -451,8 +451,10 @@ trait ElasticquentTrait
                         'function_score' => [
                             'query' => [
                                 'match' => [
-                                    'title' => $term,
-                                    'minimum_should_match' => '75%'
+                                    'title' => [
+                                        'query' => $term,
+                                        'minimum_should_match' => '75%'
+                                    ]
                                 ]
                             ],
                             'field_value_factor' => [
@@ -504,8 +506,10 @@ trait ElasticquentTrait
                         'function_score' => [
                             'query' => [
                                 'match' => [
-                                    'body' => $term,
-                                    'minimum_should_match' => '75%'
+                                    'body' => [
+                                        'query' => $term,
+                                        'minimum_should_match' => '75%'
+                                    ]
                                 ]
                             ],
                             'field_value_factor' => [
