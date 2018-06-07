@@ -98,7 +98,7 @@ class NotificationBll extends BaseBll
             if ($notification->object instanceof Reply) {//thread_new_reply
                 $notification->object->load(['thread', 'user', 'reply.user']);
             } elseif ($notification->object instanceof Comment) {//answer_new_comment
-                $notification->object->load(['user', 'answer.user', 'answer.question']);
+                $notification->object->load(['user', 'answer.user']);
             }
         }
 

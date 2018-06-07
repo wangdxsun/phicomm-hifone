@@ -93,17 +93,23 @@ class AnswerController extends WebController
         } elseif (Auth::id() == $answer->user_id) {
             throw new HifoneException('不能采纳自己的回答');
         }
-        //用户采纳有效期 now - 5 < first_answer_time < now; 管理员采纳有效期 now - 15 < first_answer_time < now - 5
-        if (Auth::id() == $answer->question->user_id
-            && (Carbon::now()->subHours(24*5)->format('Y-m-d H:i:s') > $answer->question->first_answer_time
-                || $answer->question->first_answer_time > Carbon::now()->format('Y-m-d H:i:s'))) {
-            throw new HifoneException('用户采纳有效期已过');
-        } elseif (Auth::user()->hasRole(['Admin', 'Founder'])
-            && (Carbon::now()->subHours(24*15)->format('Y-m-d H:i:s') > $answer->question->first_answer_time
-                || $answer->question->first_answer_time > Carbon::now()->subHours(24*5)->format('Y-m-d H:i:s'))) {
-            throw new HifoneException('管理员采纳有效期已过');
+        //用户采纳有效期 first_answer_time < now < first_answer_time + 5
+        //管理员采纳有效期 first_answer_time + 5 < now < first_answer_time + 15
+        if ($answer->question->first_answer_time < Carbon::now() && Carbon::now() < $answer->question->first_answer_time->addDays(5)) {
+            if (Auth::id() == $answer->question->user_id) {
+                $answerBll->adoptAnswer($answer);
+            } else {
+                throw new HifoneException('你不是问题的作者');
+            }
+        } elseif ($answer->question->first_answer_time->addDays(5) < Carbon::now() && Carbon::now() < $answer->question->first_answer_time->addDays(15)) {
+            if (Auth::user()->isAdmin()) {
+                $answerBll->adoptAnswer($answer);
+            } else {
+                throw new HifoneException('你不是管理员');
+            }
+        } else {
+            throw new HifoneException('当前时间不可采纳');
         }
-        $answerBll->adoptAnswer($answer);
 
         return success('已采纳');
     }

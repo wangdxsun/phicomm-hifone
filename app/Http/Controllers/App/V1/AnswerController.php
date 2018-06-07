@@ -92,12 +92,17 @@ class AnswerController extends AppController
         } elseif (Auth::id() == $answer->user_id) {
             throw new HifoneException('不能采纳自己的回答');
         }
-        //用户采纳有效期 now-5 < first_answer_time < now
-        if (Carbon::now()->subHours(24*5)->format('Y-m-d H:i:s') > $answer->question->first_answer_time
-        || $answer->question->first_answer_time > Carbon::now()->format('Y-m-d H:i:s')) {
-            throw new HifoneException('采纳有效期已过');
+
+        //用户采纳有效期 first_answer_time < now < first_answer_time + 5
+        if ($answer->question->first_answer_time < Carbon::now() && Carbon::now() < $answer->question->first_answer_time->addDays(5)) {
+            if (Auth::id() == $answer->question->user_id) {
+                $answerBll->adoptAnswer($answer);
+            } else {
+                throw new HifoneException('你不是问题的作者');
+            }
+        } else {
+            throw new HifoneException('当前时间不可采纳');
         }
-        $answerBll->adoptAnswer($answer);
 
         return success('已采纳');
     }
