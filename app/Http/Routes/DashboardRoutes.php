@@ -180,7 +180,7 @@ class DashboardRoutes
             $router->get('question/tag/{tag}/edit/{system}','TagController@edit')->name('question.tag.edit');
             $router->post('question/tag/store/{system}','TagController@store')->name('question.tag.store');
             $router->patch('question/tag/{tag}/update/{system}','TagController@update')->name('question.tag.update');
-            $router->get('question/tag/{tag}/destroy/{system}','TagController@destroy')->name('question.tag.destroy');
+            $router->delete('question/tag/{tag}/destroy/{system}','TagController@destroy')->name('question.tag.destroy');
 
             //用户标签分类
             $router->get('tag/type/{system}','TagTypeController@tagType')->name('tag.type');

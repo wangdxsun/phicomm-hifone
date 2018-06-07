@@ -32,7 +32,7 @@ class QuestionController extends AppController
     //悬赏问答（最新的5个提问）
     public function recent()
     {
-        $questions = Question::select('id', 'title', 'thumbnails')->recent()->limit(5)->get();
+        $questions = Question::select('id', 'title', 'thumbnails')->visible()->recent()->limit(5)->get();
 
         return $questions;
     }
