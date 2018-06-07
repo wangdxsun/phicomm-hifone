@@ -11,7 +11,7 @@
                 <label class="col-sm-1 control-label">用户选择：</label>
                 <div class="col-sm-6">
                     <el-radio-group v-model="usersType" name="chat[userType]">
-                        <div><el-radio :label="3">社区全体用户</el-radio></div>
+                        {{--<div><el-radio :label="3">社区全体用户</el-radio></div>--}}
                         <div>
                             <el-radio :label="6">具体帖子内的回复用户</el-radio>
                             <el-input name="chat[thread_id]" placeholder="请输入帖子ID" resize="both" style="width: 200px; height: 10px;" value="{{ Input::old('chat[thread_id]') }}"></el-input>
