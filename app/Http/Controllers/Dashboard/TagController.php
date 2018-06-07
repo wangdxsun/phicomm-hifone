@@ -142,7 +142,6 @@ class TagController extends Controller
     //删除标签
     public function destroy(Tag $tag, $system)
     {
-
         if ($system == 'user') {
             $tag->delete();
             return Redirect::back()->withSuccess('已删除该标签！');
@@ -150,6 +149,7 @@ class TagController extends Controller
             if ($tag->questions->count() > 0) {
                 return Redirect::back()->withErrors('该分类下有问答内容，不可删除！');
             } else {
+                $tag->delete();
                 return Redirect::back()->withSuccess('已删除该问题子类！');
             }
         }
