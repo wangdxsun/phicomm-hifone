@@ -190,6 +190,7 @@ class CommentController extends Controller
         if ($comment->status == Comment::VISIBLE) {
             return Redirect::route('dashboard.comments.index')->withSuccess('恭喜，操作成功！');
         }
+        return Redirect::route('dashboard.comments.audit')->withSuccess('恭喜，操作成功！');
     }
 
 }
