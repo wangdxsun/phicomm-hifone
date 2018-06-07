@@ -55,7 +55,7 @@ class AnswerController extends WebController
         $answerBll->checkQuestion($answer->question_id);
         $commentBll->checkAnswer($answer->id);
 
-        return $answerBll->sortComments($answer);
+        return $answerBll->sortComments($answer, 6);
     }
 
     //邀请回答
