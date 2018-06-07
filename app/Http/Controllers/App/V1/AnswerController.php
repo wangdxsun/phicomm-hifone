@@ -46,7 +46,11 @@ class AnswerController extends AppController
 
     public function show(Answer $answer, AnswerBll $answerBll)
     {
-        return $answerBll->showAnswer($answer);
+        $answer = $answerBll->showAnswer($answer);
+        $inPeriod = $answer->question->first_answer_time == null ? false : $answer->question->first_answer_time < Carbon::now() && Carbon::now() < $answer->question->first_answer_time->addDays(5);
+        $answer->question['in_adopt_period'] = $inPeriod;
+
+        return $answer;
     }
 
     public function comments(Answer $answer, AnswerBll $answerBll, CommentBll $commentBll)
