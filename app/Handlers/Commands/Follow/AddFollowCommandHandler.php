@@ -32,8 +32,9 @@ class AddFollowCommandHandler
     protected function followAction($target)
     {
         DB::transaction(function () use ($target) {
-            //取消关注
-            if ($target->followers()->forUser(Auth::id())->sharedLock()->count()) {
+            User::lockForUpdate()->find(Auth::id());
+            if ($target->followers()->forUser(Auth::id())->count()) {
+                //取消关注
                 $target->followers()->forUser(Auth::id())->delete();
                 $target->decrement('follower_count', 1);
                 if ($target instanceof User || $target instanceof Question) {
