@@ -11,7 +11,6 @@
 
 namespace Hifone\Http\Controllers\Web;
 
-use Hifone\Commands\Identity\AddIdentityCommand;
 use Hifone\Exceptions\HifoneException;
 use Auth;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
@@ -58,11 +57,6 @@ class AuthController extends WebController
         if (Auth::validate($loginData)) {
             // 登录并且「记住」用户
             Auth::attempt($loginData, request()->has('remember'));
-
-            if (Session::has('connect_data')) {
-                $connect_data = Session::get('connect_data');
-                dispatch(new AddIdentityCommand(Auth::user()->id, $connect_data));
-            }
 
             if (Auth::user()->hasRole('NoLogin')) {
                 Auth::logout();

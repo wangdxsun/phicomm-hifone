@@ -155,6 +155,9 @@ class UserBll extends BaseBll
     {
         (new AnswerBll)->checkQuestion($question->id);
         $tag = Tag::findTagByName('专家');
+        if ($tag == null) {
+            return new LengthAwarePaginator([], 0, 15);
+        }
         $users = $tag->users()->expertSort()->paginate(15);
         foreach ($users as $user) {
             $user['invited'] = $this->getInvitedStatus($user, $question);
