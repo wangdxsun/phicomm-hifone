@@ -44,8 +44,7 @@ class AddAutoTag extends Command
                 }
 
                 //2周活跃高
-                $isTwoWeekActive = $user->credits()->where('rule_id', CreditRule::where('slug', 'login')->first()->id)->where('created_at','>=', $previousTwoWeeks)->where('created_at','<', $startDay)->count();
-                if ($isTwoWeekActive >= 4) {
+                if ($isRecentLogin >= 4) {
                     array_push($tagData, Tag::where('name', '2周活跃高')->first()->id);
                 }
 
@@ -62,7 +61,7 @@ class AddAutoTag extends Command
                 }
 
                 //内容贡献量多
-                if ($user->threads()->visible()->count() + $user->replies()->visible()->count() >= 10) {
+                if ($user->thread_count + $user->reply_count >= 10) {
                     array_push($tagData, Tag::where('name', '内容贡献量多')->first()->id);
                 }
 
