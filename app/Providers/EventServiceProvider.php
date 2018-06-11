@@ -22,14 +22,6 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        // Advertisement
-        \Hifone\Events\Advertisement\AdvertisementWasUpdatedEvent::class => [
-            \Hifone\Handlers\Listeners\Advertisement\RemoveAdvertisementCacheHandler::class,
-        ],
-         // 增加备注
-        \Hifone\Events\Append\AppendWasAddedEvent::class => [
-            \Hifone\Handlers\Listeners\Notification\SendAppendNotificationHandler::class,
-        ],
 
         //帖子审核通过(加经验值、数据统计)
         \Hifone\Events\Thread\ThreadWasAuditedEvent::class => [
@@ -128,11 +120,6 @@ class EventServiceProvider extends ServiceProvider
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
 
-        // Links
-        \Hifone\Events\Link\LinkWasUpdatedEvent::class => [
-            \Hifone\Handlers\Listeners\Link\RemoveLinkCacheHandler::class,
-        ],
-
         //帖子被回复（经验值、智慧果）
         \Hifone\Events\Reply\RepliedWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
@@ -181,7 +168,6 @@ class EventServiceProvider extends ServiceProvider
         \Hifone\Events\User\UserWasAddedEvent::class => [
             \Hifone\Handlers\Listeners\Score\AddScoreHandler::class,
             \Hifone\Handlers\Listeners\Stats\UpdateStatsHandler::class,
-            \Hifone\Handlers\Listeners\Identity\ChangeUsernameHandler::class,
             \Hifone\Handlers\Listeners\Credit\AddCreditHandler::class,
         ],
 
