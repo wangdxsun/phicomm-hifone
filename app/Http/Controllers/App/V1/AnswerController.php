@@ -66,7 +66,7 @@ class AnswerController extends AppController
     {
         $answerBll->checkQuestion($question->id);
         //24小时内最多邀请15人
-        $answerBll->checkInviteTimes($user);
+        $answerBll->checkInviteTimes(Auth::user());
         //被邀请用户已被禁言
         $answerBll->checkPermission($user);
         //被邀请用户已回答
