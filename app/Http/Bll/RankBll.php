@@ -5,6 +5,7 @@ use Carbon\Carbon;
 use Hifone\Models\Rank;
 use Hifone\Models\User;
 use Auth;
+use Artisan;
 use Input;
 
 class RankBll extends BaseBll
@@ -13,6 +14,10 @@ class RankBll extends BaseBll
     {
         $lastMonday = Carbon::today()->previous(Carbon::SUNDAY)->subDay(6)->toDateTimeString();
         $ranks = Rank::where('start_date',$lastMonday)->orderBy('id')->get()->load('user');
+        if ($ranks == []) {
+            Artisan::call('get:rank');
+            $ranks = Rank::where('start_date',$lastMonday)->orderBy('id')->get()->load('user');
+        }
         foreach ($ranks as $rank) {
             $rank['followed'] = User::hasFollowUser(User::find($rank->user_id));
         }
