@@ -30,7 +30,7 @@ class BaseModel extends Model
 
     public function getLastAnswerTimeAttribute($value)
     {
-        return substr($value, 0, 16);
+        return !$value ? $value : substr($value, 0, 16);
     }
 
     public function getCreatedTimeAttribute()
