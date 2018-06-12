@@ -160,18 +160,25 @@ class AnswerBll extends BaseBll
     public function adoptAnswer(Answer $answer)
     {
         (new CommentBll)->checkAnswer($answer->id);
-        //只可以采纳唯一回答，question answer_id，和answer adopted
-        if ($answer->question->answer_id == null) {
-            $answer->question->update(['answer_id' => $answer->id]);
-        } else {
-            throw new HifoneException('问题已采纳，请勿重复采纳', QuestionEx::HAS_ADOPTED);
-        }
-        $answer->update(['adopted' => 1]);
+        DB::beginTransaction();
+        try {
+            //只可以采纳唯一回答，question answer_id，和answer adopted
+            if ($answer->question->answer_id == null) {
+                $answer->question->update(['answer_id' => $answer->id]);
+            } else {
+                throw new HifoneException('问题已采纳，请勿重复采纳', QuestionEx::HAS_ADOPTED);
+            }
+            $answer->update(['adopted' => 1]);
 
-        //通知被采纳人
-        event(new AnswerWasAdoptedEvent(Auth::user(), $answer->user, $answer));
-        //给被采纳人加悬赏值
-        dispatch(new RewardScore($answer->user, $answer->question->score));
+            //通知被采纳人
+            event(new AnswerWasAdoptedEvent(Auth::user(), $answer->user, $answer));
+            //给被采纳人加悬赏值
+            dispatch(new RewardScore($answer->user, $answer->question->score));
+            DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            throw $exception;
+        }
     }
 
     public function pin(Answer $answer)
