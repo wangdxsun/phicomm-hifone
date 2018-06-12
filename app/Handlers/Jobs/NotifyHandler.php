@@ -219,6 +219,7 @@ class NotifyHandler
             $message = $object->answer->body;
         }
         $message = app('parser.emotion')->reverseParseEmotionAndImage($message);
+        $message = str_replace(["\n", "\r", "\r\n"], '', $message);
         $message = strip_tags($message);
 
         return $message;
