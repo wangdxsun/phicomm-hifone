@@ -80,7 +80,7 @@ class QuestionController extends Controller
     //下沉问题
     public function sink(Question $question)
     {
-        //1.取消下沉
+        //取消下沉
         if ($question->order < 0) {
             $question->update(['order' => 0]);
             $this->updateOpLog($question, '取消下沉问题');
@@ -95,7 +95,7 @@ class QuestionController extends Controller
     //加精问题
     public function setExcellent(Question $question)
     {
-        //1.取消加精
+        //取消加精
         if ($question->is_excellent == 1) {
             $question->update(['is_excellent' => 0]);
             $this->updateOpLog($question, '取消问题加精');

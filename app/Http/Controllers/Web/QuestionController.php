@@ -98,6 +98,11 @@ class QuestionController extends WebController
         return $questionBll->pin($question);
     }
 
+    public function sink(Question $question, QuestionBll $questionBll)
+    {
+        return $questionBll->sink($question);
+    }
+
     public function setExcellent(Question $question, QuestionBll $questionBll)
     {
         return $questionBll->setExcellent($question);

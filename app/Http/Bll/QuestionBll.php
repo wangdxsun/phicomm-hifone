@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Hifone\Commands\Question\AddQuestionCommand;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
+use Hifone\Events\Pin\SinkWasAddedEvent;
 use Hifone\Events\Question\QuestionWasAuditedEvent;
 use Hifone\Events\Question\QuestionWasViewedEvent;
 use Hifone\Exceptions\Consts\QuestionEx;
@@ -177,5 +178,20 @@ class QuestionBll extends BaseBll
             event(new PinWasAddedEvent($question->user, $question));
         }
         return ['pin' => $question->order > 0 ? true : false];
+    }
+
+    //下沉问题
+    public function sink(Question $question)
+    {
+        //取消下沉
+        if ($question->order < 0) {
+            $question->update(['order' => 0]);
+            $this->updateOpLog($question, '取消下沉问题');
+        } else {
+            $question->update(['order' => -1]);
+            $this->updateOpLog($question, '下沉问题');
+            event(new SinkWasAddedEvent($question->user, $question));
+        }
+        return ['sink' => $question->order < 0 ? true : false];
     }
 }

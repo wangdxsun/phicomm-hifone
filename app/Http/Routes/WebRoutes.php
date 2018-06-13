@@ -142,10 +142,7 @@ class WebRoutes
                 $router->post('logout', 'PhicommController@logout');
 
                 $router->post('questions', 'QuestionController@store');
-                $router->post('questions/{question}/pin', 'QuestionController@pin')->where('question', '[0-9]+');
-                $router->post('questions/{question}/excellent', 'QuestionController@setExcellent')->where('question', '[0-9]+');
                 $router->post('answers', 'AnswerController@store');
-                $router->post('answers/{answer}/pin', 'AnswerController@pin')->where('answer', '[0-9]+');
                 $router->post('answers/invite/users/{user}/questions/{question}', 'AnswerController@invite')->where('user', '[0-9]+')->where('question', '[0-9]+');
                 $router->post('answers/adopt/answers/{answer}', 'AnswerController@adopt')->where('answer', '[0-9]+');
                 $router->post('comments', 'CommentController@store');
@@ -163,6 +160,10 @@ class WebRoutes
                 $router->post('threads/{thread}/pin', 'ThreadController@pin')->where('thread', '[0-9]+');
                 $router->post('threads/{thread}/sink', 'ThreadController@sink')->where('thread', '[0-9]+');
                 $router->get('threads/{thread}/vote/{option?}', 'ThreadController@viewVoteResult')->where('thread', '[0-9]+');
+                $router->post('questions/{question}/pin', 'QuestionController@pin')->where('question', '[0-9]+');
+                $router->post('questions/{question}/sink', 'QuestionController@sink')->where('question', '[0-9]+');
+                $router->post('questions/{question}/excellent', 'QuestionController@setExcellent')->where('question', '[0-9]+');
+                $router->post('answers/{answer}/pin', 'AnswerController@pin')->where('answer', '[0-9]+');
             });
         });
     }
