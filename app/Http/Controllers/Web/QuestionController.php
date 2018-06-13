@@ -27,7 +27,7 @@ class QuestionController extends WebController
 
     public function excellent()
     {
-        $questions = Question::with(['user', 'tags'])->orderBy('is_excellent', 'desc')->orderBy('order', 'desc')->recent()->limit(3)->get();
+        $questions = Question::visible()->with(['user', 'tags'])->orderBy('is_excellent', 'desc')->orderBy('order', 'desc')->recent()->limit(3)->get();
 
         return $questions;
     }
