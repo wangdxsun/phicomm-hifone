@@ -147,23 +147,28 @@ class NotifyHandler
 
     protected function makeTitle($operator, $typeStr)
     {
+        if (mb_strlen($operator->username) > 6) {
+            $username = mb_substr($operator->username, 0, 6) . '...';
+        } else {
+            $username = $operator->username;
+        }
         switch ($typeStr){
             case 'thread_new_reply'://评论帖子
-                return "【" . $operator->username . "】评论了你";
+                return "【" . $username . "】评论了你";
             case 'reply_reply'://回复
-                return "【" . $operator->username . "】回复了你";
+                return "【" . $username . "】回复了你";
             case 'reply_mention'://回复@我
-                return "【" . $operator->username . "】回复中提及了你";
+                return "【" . $username . "】回复中提及了你";
             case 'thread_mention'://帖子@我
-                return "【" . $operator->username . "】帖子中提及了你";
+                return "【" . $username . "】帖子中提及了你";
             case 'user_follow'://关注用户
-                return "【" . $operator->username . "】关注了你";
+                return "【" . $username . "】关注了你";
             case 'thread_like'://赞帖子
-                return "【" . $operator->username . "】赞了你的帖子";
+                return "【" . $username . "】赞了你的帖子";
             case 'reply_like'://赞回复
-                return "【" . $operator->username . "】赞了你的评论";
+                return "【" . $username . "】赞了你的评论";
             case 'thread_favorite'://收藏（帖子）
-                return "【" . $operator->username . "】收藏了你的帖子";
+                return "【" . $username . "】收藏了你的帖子";
             case 'thread_pin'://置顶帖子
                 return "【管理员】置顶了你的帖子";
             case 'reply_pin'://置顶评论回复
@@ -172,30 +177,30 @@ class NotifyHandler
                 return "【管理员】加精了你的帖子";
 
             case 'question_mention'://提问中@我
-                return "【" . $operator->username . "】问题中提及了你";
+                return "【" . $username . "】问题中提及了你";
             case 'answer_mention'://回答中@我
-                return "【" . $operator->username . "】回答中提及了你";
+                return "【" . $username . "】回答中提及了你";
             case 'comment_mention'://回复中@我
-                return "【" . $operator->username . "】回复中提及了你";
+                return "【" . $username . "】回复中提及了你";
             case 'question_new_answer'://回答提问
-                return "【" . $operator->username . "】回答了你的问题";
+                return "【" . $username . "】回答了你的问题";
             case 'answer_new_comment':
-                return "【" . $operator->username . "】评论了你的回答";
+                return "【" . $username . "】评论了你的回答";
             case 'comment_new_comment':
-                return "【" . $operator->username . "】回复了你的评论";
+                return "【" . $username . "】回复了你的评论";
             case 'answer_like'://点赞回答
-                return "【" . $operator->username . "】赞了你的回答";
+                return "【" . $username . "】赞了你的回答";
             case 'comment_like'://点赞回复
-                return "【" . $operator->username . "】赞了你的评论";
+                return "【" . $username . "】赞了你的评论";
             case 'user_invited'://邀请回答
-                return "【" . $operator->username . "】邀请你回答问题";
+                return "【" . $username . "】邀请你回答问题";
             case 'adopt_asap'://尽快采纳
                 return "【系统】提醒你尽快采纳";
             case 'answer_adopted'://回答被采纳（区分用户、管理员、系统）
                 if ($operator->isAdmin() || $operator->id == 0) {
                     return "【系统】采纳了你的回答";
                 } else {
-                    return "【" . $operator->username . "】采纳了你的回答";
+                    return "【" . $username . "】采纳了你的回答";
                 }
             default :
                 throw new HifoneException("推送类型 $typeStr 不支持");
