@@ -71,6 +71,37 @@ class QuestionController extends WebController
         return $question;
     }
 
+    public function update(Question $question, QuestionBll $questionBll)
+    {
+        //修改问题标题，标签和内容
+        $this->validate(request(),[
+            'title'  =>     'min:5|max:40',
+        ],[
+            'title.min' => '标题5'. '-'.'40个字符',
+            'title.max' => '标题5'. '-'.'40个字符',
+        ]);
+        $bodyLength = mb_strlen(strip_tags(request('body')));
+        if ($bodyLength > 800) {
+            throw new HifoneException('内容需0-800个字符');
+        }
+        $questionData = [
+            'title' => request('title'),
+            'body' => request('body'),
+            'questionTags' => request('tag_ids')
+        ];
+        $body = app('parser.emotion')->reverseParseEmotionAndImage($questionData['body']);
+        if (substr_count($body, '[图片]') > 4 ) {
+            throw new HifoneException('最多只能选择4张图片');
+        }
+        $questionData['body_original'] = $questionData['body'];
+        $question = $questionBll->updateQuestion($question, $questionData);
+
+        return [
+            'msg' => '编辑成功',
+            'question' => $question
+        ];
+    }
+
     public function show(Question $question, QuestionBll $questionBll)
     {
         $question = $questionBll->showQuestion($question);

@@ -10,6 +10,7 @@ namespace Hifone\Http\Bll;
 
 use Carbon\Carbon;
 use Hifone\Commands\Question\AddQuestionCommand;
+use Hifone\Commands\Question\UpdateQuestionCommand;
 use Hifone\Events\Excellent\ExcellentWasAddedEvent;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Pin\SinkWasAddedEvent;
@@ -90,6 +91,21 @@ class QuestionBll extends BaseBll
             if ($this->needNoAudit($question)) {
                 $this->autoAudit($question);
             }
+            DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            throw $exception;
+        }
+        $question = Question::find($question->id)->load(['user', 'tags']);
+
+        return $question;
+    }
+
+    public function updateQuestion($question, $questionData)
+    {
+        DB::beginTransaction();
+        try {
+            $question = dispatch(new UpdateQuestionCommand($question, $questionData));
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollBack();

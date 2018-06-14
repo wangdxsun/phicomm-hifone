@@ -23,7 +23,6 @@ class UpdateQuestionCommandHandler
         $question = $command->question;
         if ($command->data['questionTags'] == '') {
             throw new HifoneException('类型选择需在1-4个');
-
         } else {
             $tagData = explode(',', $command->data['questionTags']);
             if(count($tagData) > 4) {
@@ -47,12 +46,6 @@ class UpdateQuestionCommandHandler
         }
         //更新编辑时间 if (created_at != edit_time) 问题被修改过
         $command->data['edit_time'] = Carbon::now()->toDateTimeString();
-
-        //用户编辑状态回退、精华失效
-        if (!Auth::user()->hasRole(['Admin', 'Founder'])) {
-            $command->data['status'] = Question::AUDIT;
-            $command->data['is_excellent'] = 0;
-        }
 
         $question->update($this->filter($command->data));
 

@@ -164,6 +164,7 @@ class WebRoutes
                 $router->post('questions/{question}/pin', 'QuestionController@pin')->where('question', '[0-9]+');
                 $router->post('questions/{question}/sink', 'QuestionController@sink')->where('question', '[0-9]+');
                 $router->post('questions/{question}/excellent', 'QuestionController@setExcellent')->where('question', '[0-9]+');
+                $router->post('questions/{question}', 'QuestionController@update')->where('question', '[0-9]+');
                 $router->post('answers/{answer}/pin', 'AnswerController@pin')->where('answer', '[0-9]+');
             });
         });
