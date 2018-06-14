@@ -233,13 +233,15 @@ class Question extends BaseModel implements TaggableInterface
     //需要提醒采纳的,还剩48h到期~12h，防止服务因异常中断
     public function scopeRemindAdopt($query)
     {
-        return $query->where('answer_id', null)->whereBetween('first_answer_time', [Carbon::now()->subHours(5*24 - 12), Carbon::now()->subHours(5*24 - 48)]);
+        return $query->where('answer_id', null)->whereBetween('first_answer_time', [Carbon::now()->subMinutes(20 - 5), Carbon::now()->subMinutes(20 - 10)]);
+//        return $query->where('answer_id', null)->whereBetween('first_answer_time', [Carbon::now()->subHours(5*24 - 12), Carbon::now()->subHours(5*24 - 48)]);
     }
 
     //尚未采纳且需要自动采纳的,现在时间介于首答时间15天后和再多一个小时之内
     public function scopeAutoAdopted($query)
     {
         return $query->where('answer_id', null)->whereBetween('first_answer_time', [Carbon::now()->subMinutes(40), Carbon::now()->subMinutes(30)]);
+//        return $query->where('answer_id', null)->whereBetween('first_answer_time', [Carbon::now()->subHours(15*24 + 1), Carbon::now()->subHours(15*24)]);
     }
 
 }
