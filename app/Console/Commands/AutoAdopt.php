@@ -55,7 +55,7 @@ class AutoAdopt extends Command
                 try {
                     $answer = $question->answers()->visible()->notSelf($question->user_id)->notAdopted()->likeMost()->first();
                     if ($answer <> null) {
-                        $question->update(['answer_id', $answer->id]);
+                        $question->update(['answer_id' => $answer->id]);
                         $answer->update(['adopted' => 1]);
                         event(new AnswerWasAdoptedEvent(User::find(0), $answer->user, $answer));
                         \Log::info('auto adopt success questionId, answerId', [$question->id, $answer->id]);
