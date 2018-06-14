@@ -58,6 +58,7 @@ class AutoAdopt extends Command
                         $question->update(['answer_id', $answer->id]);
                         $answer->update(['adopted' => 1]);
                         event(new AnswerWasAdoptedEvent(User::find(0), $answer->user, $answer));
+                        \Log::info('auto adopt success questionId, answerId', [$question->id, $answer->id]);
                         //给被采纳人加悬赏值
                         dispatch(new RewardScore($answer->user, $answer->question->score));
                     } else {//自动采纳失败，则不再自动采纳该问题

@@ -28,6 +28,8 @@ class Pusher
      * uid	接收消息的斐讯云账户ID	string	等于all时 会进行广播
      * url	信息的URL 	string  私信类消息的对话页面链接   帖子类消息的帖子链接  系统提示类消息链接为空
      * after_open 点击"通知"的后续行为,安卓系统适用 0：go_app;1:go_custom ;2：go_url ；3：go_activity，默认0
+     * mi_activity Activity完整包路径 mipush为true时必填，如：com.umeng.message.example.MipushTestActivity
+     * mipush 小米（华为）推送开关 true:支持小米（华为）推送，false：反之不支持
      *
      * $data['type'] 消息类型 社区定义如下：
      *
@@ -60,6 +62,8 @@ class Pusher
         //系统通知定义点击后续行为1:go_custom
         if ($msg_type == '0') {
             $parameters['after_open'] = '1';
+            $parameters['mi_activity'] = 'com.phicomm.zlapp.activities.SplashActivity';
+            $parameters['mipush'] = true;
         }
         //测试环境 114.141.173.53外网 192.168.43.111内网
         $json = curlPost(env('PHIDELIVER'), $parameters);

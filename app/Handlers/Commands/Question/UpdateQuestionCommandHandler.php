@@ -45,7 +45,7 @@ class UpdateQuestionCommandHandler
             }
             $command->data['thumbnails'] = getFirstImageUrl($command->data['body_original']);
         }
-        //更新编辑时间 if (created_at != edit_time) 帖子被修改过
+        //更新编辑时间 if (created_at != edit_time) 问题被修改过
         $command->data['edit_time'] = Carbon::now()->toDateTimeString();
 
         //用户编辑状态回退、精华失效

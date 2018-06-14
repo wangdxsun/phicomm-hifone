@@ -145,7 +145,7 @@ class QuestionController extends Controller
 
         $questionData['body_original'] = $questionData['body'];
         try {
-            $question = dispatch( new UpdateQuestionCommand($question, $questionData));
+            $question = dispatch(new UpdateQuestionCommand($question, $questionData));
 
         } catch (\Exception $e) {
             return Redirect::route('dashboard.question.edit', $question->id)
