@@ -59,6 +59,6 @@ class Kernel extends ConsoleKernel
 //        $schedule->command('remind:adopt')->everyThirtyMinutes();
         $schedule->command('remind:adopt')->everyFiveMinutes();
 //        $schedule->command('auto:adopt')->hourly();
-        $schedule->command('auto:adopt')->everyTenMinutes();
+        $schedule->command('auto:adopt')->everyFiveMinutes();
     }
 }
