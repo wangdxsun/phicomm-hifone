@@ -158,6 +158,7 @@ class WebRoutes
             $router->group(['middleware' => ['auth', 'role:Admin|Founder|NodeMaster']], function ($router) {
                 $router->post('threads/{thread}/excellent', 'ThreadController@setExcellent')->where('thread', '[0-9]+');
                 $router->post('threads/{thread}/pin', 'ThreadController@pin')->where('thread', '[0-9]+');
+                $router->post('threads/{thread}/node/pin', 'ThreadController@nodePin')->where('thread', '[0-9]+');
                 $router->post('threads/{thread}/sink', 'ThreadController@sink')->where('thread', '[0-9]+');
                 $router->get('threads/{thread}/vote/{option?}', 'ThreadController@viewVoteResult')->where('thread', '[0-9]+');
                 $router->post('questions/{question}/pin', 'QuestionController@pin')->where('question', '[0-9]+');

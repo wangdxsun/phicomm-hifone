@@ -287,7 +287,7 @@ class ThreadController extends WebController
         return ['pin' => $thread->order > 0 ? true : false];
     }
 
-    //板块置顶帖子
+    //版块置顶帖子
     public function nodePin(Thread $thread)
     {
         if ($thread->node_order == 1) {
