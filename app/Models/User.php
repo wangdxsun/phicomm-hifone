@@ -525,6 +525,7 @@ class User extends BaseModel implements AuthenticatableContract, CanResetPasswor
         return $this->belongsToMany(User::class, 'invites', 'from_user_id', 'to_user_id')->wherePivot('question_id', $question->id);
     }
 
+    //V5.0.0版本后弃用，使用者自行组合各分项的count
     public function getNotificationCountAttribute()
     {
         return $this->attributes['notification_reply_count'] + $this->attributes['notification_at_count'] +
