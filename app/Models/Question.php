@@ -239,7 +239,7 @@ class Question extends BaseModel implements TaggableInterface
     //尚未采纳且需要自动采纳的,现在时间介于首答时间15天后和再多一个小时之内
     public function scopeAutoAdopted($query)
     {
-        return $query->where('answer_id', null)->whereBetween('first_answer_time', [Carbon::now()->subHours(15*24 + 1), Carbon::now()->subHours(15*24)]);
+        return $query->where('answer_id', null)->whereBetween('first_answer_time', [Carbon::now()->subMinutes(40), Carbon::now()->subMinutes(30)]);
     }
 
 }

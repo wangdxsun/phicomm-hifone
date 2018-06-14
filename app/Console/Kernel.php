@@ -57,6 +57,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('get:rank')->weekly()->mondays()->at('0:0');
         $schedule->command('add:autoTag')->daily()->at('1:0');
         $schedule->command('remind:adopt')->everyThirtyMinutes();
-        $schedule->command('auto:adopt')->hourly();
+        $schedule->command('auto:adopt')->everyTenMinutes();
     }
 }
