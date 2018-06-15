@@ -63,7 +63,7 @@ class Pusher
         if ($msg_type == '0') {
             $parameters['after_open'] = '1';
             $parameters['mi_activity'] = 'com.phicomm.zlapp.activities.SplashActivity';
-            $parameters['mipush'] = true;
+            $parameters['mipush'] = 'true';
         }
         //测试环境 114.141.173.53外网 192.168.43.111内网
         $json = curlPost(env('PHIDELIVER'), $parameters);
