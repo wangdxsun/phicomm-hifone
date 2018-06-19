@@ -244,7 +244,7 @@ class NotifyHandler
         } elseif ($object instanceof Answer) {
             $outline = $object->body;
         } elseif ($object instanceof Comment) {
-            $outline = $object->answer->body;
+            $outline = $object->body;
         }
         $outline = app('parser.emotion')->reverseParseEmotionAndImage($outline);
         $outline = strip_tags($outline);
