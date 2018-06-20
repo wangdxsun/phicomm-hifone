@@ -19,6 +19,7 @@ use Hifone\Console\Commands\GetThumbnails;
 use Hifone\Console\Commands\InitSubNode;
 use Hifone\Console\Commands\RemindAdopt;
 use Hifone\Console\Commands\SearchImport;
+use Hifone\Console\Commands\SearchMapping;
 use Hifone\Console\Commands\UpdateHeat;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -41,7 +42,8 @@ class Kernel extends ConsoleKernel
         GetThumbnails::class,
         InitNodesThreadAndReplyCount::class,
         RemindAdopt::class,
-        AutoAdopt::class
+        AutoAdopt::class,
+        SearchMapping::class
     ];
 
     /**
@@ -56,9 +58,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('heat:update')->everyFiveMinutes();
         $schedule->command('get:rank')->weekly()->mondays()->at('0:0');
         $schedule->command('add:autoTag')->daily()->at('1:0');
-//        $schedule->command('remind:adopt')->everyThirtyMinutes();
+        //        $schedule->command('remind:adopt')->everyThirtyMinutes();
         $schedule->command('remind:adopt')->everyFiveMinutes();
-//        $schedule->command('auto:adopt')->hourly();
+        //        $schedule->command('auto:adopt')->hourly();
         $schedule->command('auto:adopt')->everyFiveMinutes();
     }
 }
