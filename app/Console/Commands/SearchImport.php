@@ -77,9 +77,6 @@ class SearchImport extends Command
             $this->line('Import Threads...');
             $bar = $this->output->createProgressBar(ceil(Thread::count()/200));
             Thread::chunk(200, function ($threads) use ($bar) {
-                foreach ($threads as $thread) {
-                    $thread->body = strip_tags($thread->body);
-                }
                 $threads->addToIndex();
                 $bar->advance();
             });
@@ -88,9 +85,6 @@ class SearchImport extends Command
             $this->line('Import Questions...');
             $bar = $this->output->createProgressBar(ceil(Question::count()/200));
             Question::chunk(200, function ($questions) use ($bar) {
-                foreach ($questions as $question) {
-                    $question->body = strip_tags($question->body);
-                }
                 $questions->addToIndex();
                 $bar->advance();
             });
@@ -99,9 +93,6 @@ class SearchImport extends Command
             $this->line('Import Answers...');
             $bar = $this->output->createProgressBar(ceil(Answer::count()/200));
             Answer::chunk(200, function ($answers) use ($bar) {
-                foreach ($answers as $answer) {
-                    $answer->body = strip_tags($answer->body);
-                }
                 $answers->addToIndex();
                 $bar->advance();
             });
@@ -153,7 +144,6 @@ class SearchImport extends Command
             } catch (\Exception $exception) {
                 $this->error($exception->getMessage());
             }
-            $thread->body = strip_tags($thread->body);
             $thread->addToIndex();
             $this->info("Import thread $id into ElasticSearch Successfully");
         } else {
@@ -164,7 +154,6 @@ class SearchImport extends Command
                     } catch (\Exception $exception) {
                         $this->error($exception->getMessage());
                     }
-                    $thread->body = strip_tags($thread->body);
                 }
                 $threads->addToIndex();
             });
@@ -184,7 +173,6 @@ class SearchImport extends Command
             } catch (\Exception $exception) {
                 $this->error($exception->getMessage());
             }
-            $question->body = strip_tags($question->body);
             $question->addToIndex();
             $this->info("Import question $id into ElasticSearch Successfully");
         } else {
@@ -195,7 +183,6 @@ class SearchImport extends Command
                     } catch (\Exception $exception) {
                         $this->error($exception->getMessage());
                     }
-                    $question->body = strip_tags($question->body);
                 }
                 $questions->addToIndex();
             });
@@ -215,8 +202,6 @@ class SearchImport extends Command
             } catch (\Exception $exception) {
                 $this->error($exception->getMessage());
             }
-            $answer->body = strip_tags($answer->body);
-            $answer->question->body = strip_tags($answer->question->body);
             $answer->addToIndex();
             $this->info("Import answer $id into ElasticSearch Successfully");
         } else {
@@ -227,7 +212,6 @@ class SearchImport extends Command
                     } catch (\Exception $exception) {
                         $this->error($exception->getMessage());
                     }
-                    $answer->body = strip_tags($answer->body);
                 }
                 $answers->addToIndex();
             });
