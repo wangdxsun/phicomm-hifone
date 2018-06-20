@@ -37,7 +37,7 @@ class ParseAt
         foreach ($this->users as $user) {
             $search = '@'.$user->username;
             $replace = "<a href='/user/{$user->id}'>$search</a>$1";
-            $this->body = preg_replace("/$search([@<\s]+|$)/", $replace, $this->body);
+            $this->body = preg_replace("/(?<!>)$search([@<\s]+|$)/", $replace, $this->body);
         }
     }
 
@@ -46,7 +46,7 @@ class ParseAt
         preg_match_all("/@([^@<\s]*)/i", $this->body, $names);
         $userNames = [];
         foreach ($names[1] as $name) {
-            if (strlen($name) == 0 || strlen($name) > 25 ) {
+            if (strlen($name) == 0 || mb_strlen($name) > 13 ) {
                 continue;
             }
             $userNames[] = $name;
