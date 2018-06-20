@@ -221,7 +221,7 @@ class NotifyHandler
         } elseif ($object instanceof Answer) {
             $message = $object->body;
         } elseif ($object instanceof Comment) {
-            $message = $object->answer->body;
+            $message = $object->body;
         }
         $message = app('parser.emotion')->reverseParseEmotionAndImage($message);
         $message = str_replace(["\n", "\r", "\r\n"], '', $message);
