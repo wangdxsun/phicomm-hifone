@@ -36,8 +36,8 @@ class ParseAt
     {
         foreach ($this->users as $user) {
             $search = '@'.$user->username;
-            $replace = "<a href='/user/{$user->id}'>$search</a>$1";
-            $this->body = preg_replace("/(?<!>)$search([@<\s]+|$)/", $replace, $this->body);
+            $replace = "<a href='/user/{$user->id}'>$search</a> $1";//$1是为了把多替换的部分还原回去
+            $this->body = preg_replace("/(?<!>)$search([@<\s]+|$)/", $replace, $this->body);//([@<\s]+|$)是为了避免前缀相同的用户名被误替换
         }
     }
 
