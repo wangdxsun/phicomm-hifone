@@ -37,7 +37,8 @@ class AddQuestionCommandHandler
             'user_id' => $command->userId,
             'device' => $command->device,
             'ip' => $command->ip,
-            'status' => $command->status
+            'status' => $command->status,
+            'answer_count' => 0
         ];
         $command->body = app('parser.at')->parse($command->body);
         $command->body = app('parser.emotion')->parse($command->body);
