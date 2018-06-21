@@ -11,11 +11,8 @@
 
 namespace Hifone\Http\Controllers\Dashboard;
 
-use AltThree\Validator\ValidationException;
 use Hifone\Hashing\PasswordHasher;
 use Hifone\Http\Controllers\Controller;
-use Hifone\Models\Moderator;
-use Hifone\Models\PraModerator;
 use Hifone\Models\Role;
 use Hifone\Models\Tag;
 use Hifone\Models\TagType;
@@ -115,7 +112,7 @@ class UserController extends Controller
                 $user = User::create($userData);
                 $this->updateOpLog($user, '创建用户');
             });
-        } catch (ValidationException $e) {
+        } catch (\Exception $e) {
             return Redirect::back()
                 ->withInput($userData)
                 ->withTitle('用户添加失败')
@@ -171,7 +168,7 @@ class UserController extends Controller
                 $user->role_id = $roleId;
                 $this->updateOpLog($user, '修改用户信息');
             });
-        } catch (ValidationException $e) {
+        } catch (\Exception $e) {
             return Redirect::back()
                 ->withInput(Input::except('password'))
                 ->withTitle(sprintf('%s %s', trans('hifone.whoops'), '用户修改失败'))

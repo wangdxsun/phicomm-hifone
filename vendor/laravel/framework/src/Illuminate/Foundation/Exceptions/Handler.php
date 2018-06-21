@@ -3,7 +3,6 @@
 namespace Illuminate\Foundation\Exceptions;
 
 use Exception;
-use Hifone\Exceptions\HifoneException;
 use Illuminate\Http\JsonResponse;
 use Psr\Log\LoggerInterface;
 use Illuminate\Http\Response;

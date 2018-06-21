@@ -8,7 +8,6 @@
 
 namespace Hifone\Models;
 
-use AltThree\Validator\ValidatingTrait;
 use Elasticquent\ElasticquentTrait;
 use Hifone\Models\Scopes\CommonTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,7 +15,7 @@ use Auth;
 
 class Answer extends BaseModel
 {
-    use CommonTrait, ValidatingTrait, ElasticquentTrait, SoftDeletes;
+    use CommonTrait, ElasticquentTrait, SoftDeletes;
 
     //问题状态
     const VISIBLE = 0;//正常问题

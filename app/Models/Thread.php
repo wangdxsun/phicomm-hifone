@@ -11,7 +11,6 @@
 
 namespace Hifone\Models;
 
-use AltThree\Validator\ValidatingTrait;
 use Carbon\Carbon;
 use Config;
 use Auth;
@@ -21,13 +20,12 @@ use Hifone\Models\Traits\Taggable;
 use Hifone\Services\Dates\DateFactory;
 use Hifone\Services\Tag\TaggableInterface;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\DB;
 use Input;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 class Thread extends BaseModel implements TaggableInterface
 {
-    use ValidatingTrait, Taggable, Recent, RevisionableTrait, SoftDeletes, ElasticquentTrait;
+    use Taggable, Recent, RevisionableTrait, SoftDeletes, ElasticquentTrait;
 
     //帖子状态
     const VISIBLE = 0;//正常帖子
@@ -106,20 +104,6 @@ class Thread extends BaseModel implements TaggableInterface
         'dev_info',
         'contact',
         'last_reply_user_id'
-    ];
-
-    /**
-     * The validation rules.
-     *
-     * @var string[]
-     */
-    public $rules = [
-        'title'   => 'max:80',
-        'body'    => 'required',
-        'node_id' => 'int',
-        'sub_node_id' => 'int',
-        'user_id' => 'required|int',
-        'heat_offset' => 'int',
     ];
 
     protected $mappingProperties = [

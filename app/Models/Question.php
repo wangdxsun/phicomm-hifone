@@ -8,7 +8,6 @@
 
 namespace Hifone\Models;
 
-use AltThree\Validator\ValidatingTrait;
 use Carbon\Carbon;
 use Elasticquent\ElasticquentTrait;
 use Hifone\Models\Scopes\CommonTrait;
@@ -19,7 +18,7 @@ use Auth;
 
 class Question extends BaseModel implements TaggableInterface
 {
-    use CommonTrait, ValidatingTrait, Taggable, ElasticquentTrait, SoftDeletes;
+    use CommonTrait, Taggable, ElasticquentTrait, SoftDeletes;
 
     //问题状态
     const VISIBLE = 0;//正常问题
