@@ -221,7 +221,7 @@ class NotifyHandler
         } elseif ($object instanceof Answer) {
             $message = $object->body;
         } elseif ($object instanceof Comment) {
-            $message = $object->answer->body;
+            $message = $object->body;
         }
         $message = app('parser.emotion')->reverseParseEmotionAndImage($message);
         $message = str_replace(["\n", "\r", "\r\n"], '', $message);
@@ -244,7 +244,7 @@ class NotifyHandler
         } elseif ($object instanceof Answer) {
             $outline = $object->body;
         } elseif ($object instanceof Comment) {
-            $outline = $object->answer->body;
+            $outline = $object->body;
         }
         $outline = app('parser.emotion')->reverseParseEmotionAndImage($outline);
         $outline = strip_tags($outline);

@@ -45,6 +45,7 @@ class RemindAdopt extends Command
             foreach ($questions as $question) {
                 try {
                     event(new AdopeAsSoonAsPossibleEvent($question));
+                    \Log::info('remind adopt success when first notify userId, questionId', [$question->user_id, $question->id]);
                 } catch (\Exception $e) {
                     \Log::info('RemindAdopt:question', $question->toArray());
                     $handler->report($e);
