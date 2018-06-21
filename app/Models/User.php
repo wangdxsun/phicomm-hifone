@@ -12,7 +12,6 @@
 namespace Hifone\Models;
 
 use Auth;
-use AltThree\Validator\ValidatingTrait;
 use Cmgmyr\Messenger\Traits\Messagable;
 use Elasticquent\ElasticquentTrait;
 use Hifone\Models\Traits\SearchTrait;
@@ -29,7 +28,7 @@ use Hifone\Models\Traits\Taggable;
 
 class User extends BaseModel implements AuthenticatableContract, CanResetPasswordContract, HasPresenter, TaggableInterface
 {
-    use Authenticatable, CanResetPassword, EntrustUserTrait, ValidatingTrait, Messagable, SearchTrait, ElasticquentTrait, Taggable;
+    use Authenticatable, CanResetPassword, EntrustUserTrait, Messagable, SearchTrait, ElasticquentTrait, Taggable;
 
     // Enable hasRole( $name ), can( $permission ),
     //   and ability($roles, $permissions, $options)

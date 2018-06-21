@@ -11,12 +11,11 @@
 
 namespace Hifone\Models;
 
-use AltThree\Validator\ValidatingTrait;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 class Section extends BaseModel
 {
-    use ValidatingTrait, RevisionableTrait;
+    use RevisionableTrait;
 
     /**
      * The fillable properties.

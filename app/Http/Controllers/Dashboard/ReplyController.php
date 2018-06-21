@@ -11,11 +11,9 @@
 
 namespace Hifone\Http\Controllers\Dashboard;
 
-use AltThree\Validator\ValidationException;
 use Hifone\Commands\Reply\UpdateReplyCommand;
 use Hifone\Events\Pin\PinWasAddedEvent;
 use Hifone\Events\Reply\RepliedWasAddedEvent;
-use Hifone\Events\Reply\ReplyWasPinnedEvent;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Reply;
 use Hifone\Models\Thread;
@@ -127,7 +125,7 @@ class ReplyController extends Controller
         try {
             dispatch(new UpdateReplyCommand($reply, $replyData));
             $this->updateOpLog($reply, '修改回复');
-        } catch (ValidationException $e) {
+        } catch (\Exception $e) {
             return Redirect::route('dashboard.reply.edit', $reply->id)
                 ->withInput($replyData)
                 ->withErrors($e->getMessageBag());
@@ -180,7 +178,7 @@ class ReplyController extends Controller
                     }
                 }
                 DB::commit();
-            } catch (ValidationException $e) {
+            } catch (\Exception $e) {
                 DB::rollBack();
                 return Redirect::back()->withErrors($e->getMessageBag());
             }
@@ -234,7 +232,7 @@ class ReplyController extends Controller
             }
             event(new ReplyWasAuditedEvent($reply));
             DB::commit();
-        } catch (ValidationException $e) {
+        } catch (\Exception $e) {
             DB::rollback();
             return Redirect::back()->withErrors($e->getMessageBag());
         }
