@@ -77,11 +77,9 @@ class AnswerController extends Controller
         if ($bodyLength > 800 || $bodyLength < 5) {
             return Redirect::back()->withErrors('内容需5-800个字符')->withInput();
         }
-        $body = app('parser.emotion')->reverseParseEmotionAndImage($answerData['body'], $answer);
-        if (substr_count($body, '[动图]') > 0 ) {
-            return Redirect::back()->withErrors('不能上传动态图')->withInput();
-        } elseif (substr_count($body, '[图片]') > 4 ) {
-            return Redirect::back()->withErrors('最多只能选择4张图片')->withInput();
+        $body = app('parser.emotion')->reverseParseEmotionAndImage($answerData['body']);
+        if (substr_count($body, '[图片]') > 9 ) {
+            return Redirect::back()->withErrors('最多只能选择9张图片')->withInput();
         }
         $answerData['body_original'] = $answerData['body'];
         try {

@@ -56,7 +56,7 @@ class ParseEmotion
             $post = str_replace($search, $replace, $post);
         }
 
-        if($src instanceof Question || $src instanceof Answer || $src instanceof Comment) {
+        if($src instanceof Question) {
             //替换动图
             preg_match_all("/<img[^>]*src=[^>]*(\.gif)[^>]*>/i", $post, $images_temp);
             if (count($images_temp[0]) > 0) {

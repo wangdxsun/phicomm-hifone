@@ -37,7 +37,7 @@
         var ue = UE.getEditor('container',{
             toolbars: [
                 ['fontsize','forecolor','backcolor', 'bold', 'italic', 'underline', 'strikethrough', 'blockquote', 'insertunorderedlist',
-                    'insertorderedlist', 'justifyleft','justifycenter', 'justifyright',  'link', 'insertimage', 'attachment','insertvideo','fullscreen']
+                    'insertorderedlist', 'justifyleft','justifycenter', 'justifyright',  'link', 'attachment','insertvideo','fullscreen']
             ],
             elementPathEnabled: false,
             enableContextMenu: false,
