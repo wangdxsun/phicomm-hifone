@@ -38,7 +38,7 @@ class AnswerController extends WebController
 
         $answerData = [
             'body' => request('body'),
-            'question_id' => request('question_id')
+            'question_id' => intval(request('question_id'))
         ];
         $answer = $answerBll->createAnswer($answerData);
 
