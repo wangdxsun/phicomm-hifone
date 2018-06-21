@@ -1,7 +1,10 @@
 <?php
 namespace Hifone\Services\Parsers;
 
+use Hifone\Models\Answer;
+use Hifone\Models\Comment;
 use Hifone\Models\Emotion;
+use Hifone\Models\Question;
 
 
 class ParseEmotion
@@ -38,7 +41,7 @@ class ParseEmotion
         return array_unique($userEmotions);
     }
 
-    public function reverseParseEmotionAndImage($post)
+    public function reverseParseEmotionAndImage($post, $src = null)
     {
         $this->post= $post;
         preg_match_all("/<img\s+class=\"face\"\s+src=\"[^>]*(\/images\/emotion\/face-\w+\.png)\"[^>]*>/i", $post, $emotions_temp);
@@ -51,6 +54,18 @@ class ParseEmotion
             $wordOfEmotion = Emotion::where('url', $value)->first();
             $replace = $wordOfEmotion->emotion;
             $post = str_replace($search, $replace, $post);
+        }
+
+        if($src instanceof Question || $src instanceof Answer || $src instanceof Comment) {
+            //替换动图
+            preg_match_all("/<img[^>]*src=[^>]*(\.gif)[^>]*>/i", $post, $images_temp);
+            if (count($images_temp[0]) > 0) {
+                foreach ($images_temp[0] as $image) {
+                    $search = $image;
+                    $replace = '[动图]';
+                    $post = str_replace($search, $replace, $post);
+                }
+            }
         }
 
         //替换图片

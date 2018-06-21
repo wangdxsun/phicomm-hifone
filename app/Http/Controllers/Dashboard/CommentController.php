@@ -177,6 +177,13 @@ class CommentController extends Controller
             return Redirect::back()->withErrors('内容需5-800个字符')->withInput();
         }
         $commentData = Input::get('comment');
+        $body = app('parser.emotion')->reverseParseEmotionAndImage($commentData['body'], $comment);
+        if (substr_count($body, '[动图]') > 0 ) {
+            return Redirect::back()->withErrors('不能上传动态图')->withInput();
+        } elseif (substr_count($body, '[图片]') > 4 ) {
+            return Redirect::back()->withErrors('最多只能选择4张图片')->withInput();
+        }
+
         $commentData['body_original'] = $commentData['body'];
         try {
             $comment = dispatch( new UpdateCommentCommand($comment, $commentData));

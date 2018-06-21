@@ -138,9 +138,9 @@ class QuestionController extends Controller
             return Redirect::back()->withErrors('内容需0-800个字符')->withInput();
         }
         $questionData = Input::get('question');
-        $body = app('parser.emotion')->reverseParseEmotionAndImage($questionData['body']);
+        $body = app('parser.emotion')->reverseParseEmotionAndImage($questionData['body'], $question);
         if (substr_count($body, '[动图]') > 0 ) {
-            return Redirect::back()->withErrors('')->withInput();
+            return Redirect::back()->withErrors('不能上传动态图')->withInput();
         } elseif (substr_count($body, '[图片]') > 4 ) {
             return Redirect::back()->withErrors('最多只能选择4张图片')->withInput();
         }
