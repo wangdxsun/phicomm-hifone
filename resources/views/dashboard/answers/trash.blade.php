@@ -62,7 +62,7 @@
                                     {!! $answer->body !!}
                                 </div>
                                 @if(Str::length($answer->body) > 26 || Str::contains($answer->body,['<img']))
-                                    <a  data-toggle="collapse" href="#asnwer{{ $answer->id }}" aria-expanded="false">查看更多</a>
+                                    <a  data-toggle="collapse" href="#answer{{ $answer->id }}" aria-expanded="false">查看更多</a>
                                     <div  class="collapse well" id="answer{{ $answer->id }}">{!! $answer->body !!}</div>
                                 @endif
                             </td>

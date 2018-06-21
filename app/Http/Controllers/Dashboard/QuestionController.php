@@ -139,7 +139,9 @@ class QuestionController extends Controller
         }
         $questionData = Input::get('question');
         $body = app('parser.emotion')->reverseParseEmotionAndImage($questionData['body']);
-        if (substr_count($body, '[图片]') > 4 ) {
+        if (substr_count($body, '[动图]') > 0 ) {
+            return Redirect::back()->withErrors('')->withInput();
+        } elseif (substr_count($body, '[图片]') > 4 ) {
             return Redirect::back()->withErrors('最多只能选择4张图片')->withInput();
         }
 
