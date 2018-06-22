@@ -116,7 +116,7 @@ class UserController extends Controller
             return Redirect::back()
                 ->withInput($userData)
                 ->withTitle('用户添加失败')
-                ->withErrors($e->getMessageBag());
+                ->withErrors($e->getMessage());
         }
         return Redirect::route('dashboard.user.index')
             ->withSuccess('用户添加成功');
@@ -172,7 +172,7 @@ class UserController extends Controller
             return Redirect::back()
                 ->withInput(Input::except('password'))
                 ->withTitle(sprintf('%s %s', trans('hifone.whoops'), '用户修改失败'))
-                ->withErrors($e->getMessageBag());
+                ->withErrors($e->getMessage());
         }
         return Redirect::route('dashboard.user.index')
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.users.edit.success')));

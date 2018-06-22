@@ -9,10 +9,9 @@ namespace Hifone\Http\Controllers\Dashboard;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Node;
 use Hifone\Models\SubNode;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\View;
-use AltThree\Validator\ValidationException;
+use Redirect;
+use Request;
+use View;
 
 class SubNodeController extends Controller
 {
@@ -57,21 +56,23 @@ class SubNodeController extends Controller
             'subNode.name.max'            => '板块名称需1-6个字符',
             'subNode.name.required'       => '板块名称需1-6个字符',
         ]);
-        $threads = $subNode->threads;
         $subNodeData = Request::get('subNode');
         try {
-            $subNode->update($subNodeData);
-            foreach ($threads as $thread) {
-                if ($thread->node_id != $subNodeData['node_id']) {
-                    $thread->update(['node_id' => $subNodeData['node_id']]);
-                }
+            if ($subNode->node_id <> $subNodeData['node_id']) {
+                $oldNode = Node::find($subNode->node_id);
+                $newNode = Node::find($subNodeData['node_id']);
+                $subNode->threads()->update(['node_id' => $subNodeData['node_id']]);
+                $oldNode->update(['thread_count' => $oldNode->threads()->count()]);
+                $newNode->update(['thread_count' => $newNode->threads()->count()]);
             }
+            $subNode->update($subNodeData);
+
             $this->updateOpLog($subNode, '修改子版块');
-        } catch (ValidationException $e) {
+        } catch (\Exception $e) {
             return Redirect::route('dashboard.subNode.edit', ['id' => $subNode->id])
                 ->withInput(Request::all())
                 ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.nodes.edit.failure')))
-                ->withErrors($e->getMessageBag());
+                ->withErrors($e->getMessage());
         }
 
         return Redirect::route('dashboard.subNode.index')
@@ -85,11 +86,11 @@ class SubNodeController extends Controller
         try {
             $subNode = SubNode::create($subNodeData);
             $this->updateOpLog($subNode, '新增子版块');
-        } catch (ValidationException $e) {
+        } catch (\Exception $e) {
             return Redirect::route('dashboard.subNode.create')
                 ->withInput(Request::all())
                 ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.nodes.add.failure')))
-                ->withErrors($e->getMessageBag());
+                ->withErrors($e->getMessage());
         }
 
         return Redirect::route('dashboard.subNode.index')

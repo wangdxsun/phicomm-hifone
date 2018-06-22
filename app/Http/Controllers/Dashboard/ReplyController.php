@@ -128,7 +128,7 @@ class ReplyController extends Controller
         } catch (\Exception $e) {
             return Redirect::route('dashboard.reply.edit', $reply->id)
                 ->withInput($replyData)
-                ->withErrors($e->getMessageBag());
+                ->withErrors($e->getMessage());
         }
 
         return Redirect::route('dashboard.reply.edit', ['id' => $reply->id])
@@ -180,7 +180,7 @@ class ReplyController extends Controller
                 DB::commit();
             } catch (\Exception $e) {
                 DB::rollBack();
-                return Redirect::back()->withErrors($e->getMessageBag());
+                return Redirect::back()->withErrors($e->getMessage());
             }
             return Redirect::back()->withSuccess('恭喜，批量操作成功！'.'共'.$count.'条');
         } else {
@@ -234,7 +234,7 @@ class ReplyController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
-            return Redirect::back()->withErrors($e->getMessageBag());
+            return Redirect::back()->withErrors($e->getMessage());
         }
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }
@@ -252,7 +252,7 @@ class ReplyController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
-            return Redirect::back()->withErrors($e->getMessageBag());
+            return Redirect::back()->withErrors($e->getMessage());
         }
         return Redirect::back()->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
     }
@@ -263,7 +263,7 @@ class ReplyController extends Controller
         try {
             $this->trash($reply);
         } catch (\Exception $e) {
-            return Redirect::back()->withErrors($e->getMessageBag());
+            return Redirect::back()->withErrors($e->getMessage());
         }
         return Redirect::back()->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('hifone.success')));
     }

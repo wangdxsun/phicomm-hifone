@@ -45,7 +45,6 @@ return [
     */
 
     'displayers' => [
-        Hifone\Exceptions\Displayers\JsonValidationDisplayer::class,
         Hifone\Exceptions\Displayers\RedirectDisplayer::class,
         'GrahamCampbell\Exceptions\Displayers\DebugDisplayer',
         'GrahamCampbell\Exceptions\Displayers\HtmlDisplayer',

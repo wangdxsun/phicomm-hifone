@@ -11,7 +11,6 @@
 
 namespace Hifone\Http\Controllers\Dashboard;
 
-use AltThree\Validator\ValidationException;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Permission;
 use Hifone\Models\Role;
@@ -85,11 +84,11 @@ class RoleController extends Controller
                 $role = Role::create($roleData);
                 $role->permissions()->attach($permissions);
             });
-        } catch (ValidationException $e) {
+        } catch (\Exception $e) {
             return Redirect::route('dashboard.role.create')
                 ->withInput($roleData)
                 ->withTitle('角色添加失败')
-                ->withErrors($e->getMessageBag());
+                ->withErrors($e->getMessage());
         }
         return Redirect::route('dashboard.role.index')->withSuccess('角色添加成功');
     }
@@ -112,11 +111,11 @@ class RoleController extends Controller
                 $role->update($roleData);
                 $role->permissions()->sync($permissions);
             });
-        } catch (ValidationException $e) {
+        } catch (\Exception $e) {
             return Redirect::route('dashboard.role.edit')
                 ->withInput($roleData)
                 ->withTitle('角色修改失败')
-                ->withErrors($e->getMessageBag());
+                ->withErrors($e->getMessage());
         }
         return Redirect::route('dashboard.role.index')->withSuccess('角色修改成功');
     }

@@ -11,7 +11,6 @@
 
 namespace Hifone\Http\Controllers\Dashboard;
 
-use AltThree\Validator\ValidationException;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\CreditRule;
 use Redirect;
@@ -59,10 +58,10 @@ class CreditController extends Controller
         $creditRuleData = Input::get('creditRule');
         try {
             $creditRule->update($creditRuleData);
-        } catch (ValidationException $e) {
+        } catch (\Exception $e) {
             return Redirect::route('dashboard.creditRule.edit', ['id' => $creditRule->id])
                 ->withTitle('经验值规则修改失败')
-                ->withErrors($e->getMessageBag());
+                ->withErrors($e->getMessage());
         }
         return Redirect::back()
             ->withSuccess('经验值规则修改成功');

@@ -11,7 +11,6 @@
 
 namespace Hifone\Http\Controllers\Dashboard;
 
-use AltThree\Validator\ValidationException;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Moderator;
 use Hifone\Models\Node;
@@ -143,11 +142,11 @@ class NodeController extends Controller
                 }
             }
             $this->updateOpLog($node, '新增主版块');
-        } catch (ValidationException $e) {
+        } catch (\Exception $e) {
             return Redirect::route('dashboard.node.create')
                 ->withInput(Request::all())
                 ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.nodes.add.failure')))
-                ->withErrors($e->getMessageBag());
+                ->withErrors($e->getMessage());
         }
 
         return Redirect::route('dashboard.node.index')
@@ -230,11 +229,11 @@ class NodeController extends Controller
             $node->moderators()->sync($moderatorData);
             $node->praModerators()->sync($praModeratorData);
             $this->updateOpLog($node, '修改版块');
-        } catch (ValidationException $e) {
+        } catch (\Exception $e) {
             return Redirect::route('dashboard.node.edit', ['id' => $node->id])
                 ->withInput(Request::all())
                 ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.nodes.edit.failure')))
-                ->withErrors($e->getMessageBag());
+                ->withErrors($e->getMessage());
         }
 
         return Redirect::route('dashboard.node.index')
@@ -268,7 +267,7 @@ class NodeController extends Controller
             }
             $moderator->delete();
         } catch (\Exception $e) {
-            return Redirect::back()->withErrors($e->getMessageBag());
+            return Redirect::back()->withErrors($e->getMessage());
         }
         return Redirect::back()->withSuccess('恭喜，操作成功！');
     }

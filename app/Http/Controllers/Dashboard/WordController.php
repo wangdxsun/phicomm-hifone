@@ -11,14 +11,13 @@
 
 namespace Hifone\Http\Controllers\Dashboard;
 
-use AltThree\Validator\ValidationException;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Word;
 use Hifone\Services\Filter\Utils\TrieTree;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Request;
+use Cache;
+use Redirect;
+use View;
+use Request;
 use Input;
 use DB;
 
@@ -93,11 +92,11 @@ class WordController extends Controller
             $word = Word::create($wordData);
             $this->cacheInsert($this->trieTree, $word->word);
             $this->updateOpLog($word, "添加敏感词");
-        } catch (ValidationException $e) {
+        } catch (\Exception $e) {
             return Redirect::route('dashboard.word.create')
                 ->withInput(Request::all())
                 ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.words.add.failure')))
-                ->withErrors($e->getMessageBag());
+                ->withErrors($e->getMessage());
         }
         return Redirect::route('dashboard.word.index')
             ->withSuccess(sprintf('%s %s', trans('hifone.awesome'), trans('dashboard.words.add.success')));
@@ -150,9 +149,9 @@ class WordController extends Controller
                     }
                 }
                 DB::commit();
-            } catch (ValidationException $e) {
+            } catch (\Exception $e) {
                 DB::rollBack();
-                return Redirect::back()->withErrors($e->getMessageBag());
+                return Redirect::back()->withErrors($e->getMessage());
             }
             $this->cacheAll($this->trieTree);
             return Redirect::back()->withSuccess('恭喜，批量删除成功！'.'共'.$count.'条');

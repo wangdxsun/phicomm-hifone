@@ -11,7 +11,6 @@
 
 namespace Hifone\Http\Controllers\Dashboard;
 
-use AltThree\Validator\ValidationException;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Carousel;
 use Hifone\Models\Thread;
@@ -148,11 +147,11 @@ class CarouselController extends Controller
         try {
             $carousel = Carousel::create($carouselData);
             $this->updateOpLog($carousel, '添加banner');
-        } catch (ValidationException $e) {
+        } catch (\Exception $e) {
             return Redirect::route('dashboard.carousel.create')
                 ->withInput(Request::all())
                 ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.notices.add.failure')))
-                ->withErrors($e->getMessageBag());
+                ->withErrors($e->getMessage());
         }
 
         return Redirect::route('dashboard.carousel.web.show')
@@ -207,11 +206,11 @@ class CarouselController extends Controller
         try {
             $carousel = Carousel::create($carouselData);
             $this->updateOpLog($carousel, '添加banner');
-        } catch (ValidationException $e) {
+        } catch (\Exception $e) {
             return Redirect::route('dashboard.carousel.create.app')
                 ->withInput(Request::all())
                 ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.notices.add.failure')))
-                ->withErrors($e->getMessageBag());
+                ->withErrors($e->getMessage());
         }
 
         return Redirect::route('dashboard.carousel.index')
@@ -265,11 +264,11 @@ class CarouselController extends Controller
         try {
             $carousel->update($carouselData);
             $this->updateOpLog($carousel, '修改banner');
-        } catch (ValidationException $e) {
+        } catch (\Exception $e) {
             return Redirect::route('dashboard.carousel.edit', ['id' => $carousel->id])
                 ->withInput(Request::all())
                 ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.notices.edit.failure')))
-                ->withErrors($e->getMessageBag());
+                ->withErrors($e->getMessage());
         }
 
         return Redirect::route('dashboard.carousel.web.show')
@@ -317,11 +316,11 @@ class CarouselController extends Controller
         try {
             $carousel->update($carouselData);
             $this->updateOpLog($carousel, '修改banner');
-        } catch (ValidationException $e) {
+        } catch (\Exception $e) {
             return Redirect::route('dashboard.carousel.edit.app', ['id' => $carousel->id])
                 ->withInput(Request::all())
                 ->withTitle(sprintf('%s %s', trans('hifone.whoops'), trans('dashboard.notices.edit.failure')))
-                ->withErrors($e->getMessageBag());
+                ->withErrors($e->getMessage());
         }
 
         return Redirect::route('dashboard.carousel.index')

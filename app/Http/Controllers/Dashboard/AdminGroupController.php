@@ -11,7 +11,6 @@
 
 namespace Hifone\Http\Controllers\Dashboard;
 
-use AltThree\Validator\ValidationException;
 use Hifone\Http\Controllers\Controller;
 use Hifone\Models\Permission;
 use Hifone\Models\Role;
@@ -79,11 +78,11 @@ class AdminGroupController extends Controller
                 $role = Role::create($roleData);
                 $role->permissions()->attach($permissions);
             });
-        } catch (ValidationException $e) {
+        } catch (\Exception $e) {
             return Redirect::back()
                 ->withInput($roleData)
                 ->withTitle('管理组添加失败')
-                ->withErrors($e->getMessageBag());
+                ->withErrors($e->getMessage());
         }
         return Redirect::route('dashboard.group.admin.index')->withSuccess('管理组添加成功');
     }
@@ -109,11 +108,11 @@ class AdminGroupController extends Controller
                 $role->update($roleData);
                 $role->permissions()->sync($permissions);
             });
-        } catch (ValidationException $e) {
+        } catch (\Exception $e) {
             return Redirect::back()
                 ->withInput($roleData)
                 ->withTitle('管理组修改失败')
-                ->withErrors($e->getMessageBag());
+                ->withErrors($e->getMessage());
         }
         return Redirect::route('dashboard.group.admin.index')->withSuccess('管理组修改成功');
     }
