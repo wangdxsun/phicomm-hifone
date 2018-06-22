@@ -1,5 +1,9 @@
 <?php namespace Elasticquent;
 
+use Hifone\Models\Answer;
+use Hifone\Models\Question;
+use Hifone\Models\Thread;
+
 /**
  * Elasticquent Collection Trait
  *
@@ -26,6 +30,15 @@ trait ElasticquentCollectionTrait
         $params = array();
 
         foreach ($this->all() as $item) {
+            if ($item instanceof Thread || $item instanceof Question || $item instanceof Answer) {
+                $item->body = strip_tags($item->body);
+                $item->body = str_replace(["\n", "\r", "\r\n"], '', $item->body);
+            }
+            if ($this instanceof Answer) {
+                unset($this->question);
+                unset($this->user);
+                unset($this->comment);
+            }
             $params['body'][] = array(
                 'index' => array(
                     '_id' => $item->getKey(),

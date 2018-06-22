@@ -110,22 +110,10 @@ class SearchImport extends Command
             if (!$user) {
                 $this->error("User $id does't exist");
             }
-            try {
-                $user->removeFromIndex();
-            } catch (\Exception $exception) {
-                $this->error($exception->getMessage());
-            }
             $user->addToIndex();
             $this->info("Import user $id into ElasticSearch Successfully");
         } else {
             User::chunk(1000, function ($users) {
-                foreach ($users as $user) {
-                    try {
-                        $user->removeFromIndex();
-                    } catch (\Exception $exception) {
-                        $this->error($exception->getMessage());
-                    }
-                }
                 $users->addToIndex();
             });
             $this->info("\r\nImport Users into ElasticSearch Successfully");
@@ -139,22 +127,10 @@ class SearchImport extends Command
             if (!$thread) {
                 $this->error("Thread $id does't exist");
             }
-            try {
-                $thread->removeFromIndex();
-            } catch (\Exception $exception) {
-                $this->error($exception->getMessage());
-            }
             $thread->addToIndex();
             $this->info("Import thread $id into ElasticSearch Successfully");
         } else {
             Thread::chunk(1000, function ($threads) {
-                foreach ($threads as $thread) {
-                    try {
-                        $thread->removeFromIndex();
-                    } catch (\Exception $exception) {
-                        $this->error($exception->getMessage());
-                    }
-                }
                 $threads->addToIndex();
             });
             $this->info("\r\nImport Threads into ElasticSearch Successfully");
@@ -168,22 +144,10 @@ class SearchImport extends Command
             if (!$question) {
                 $this->error("Question $id does't exist");
             }
-            try {
-                $question->removeFromIndex();
-            } catch (\Exception $exception) {
-                $this->error($exception->getMessage());
-            }
             $question->addToIndex();
             $this->info("Import question $id into ElasticSearch Successfully");
         } else {
             Question::chunk(1000, function ($questions) {
-                foreach ($questions as $question) {
-                    try {
-                        $question->removeFromIndex();
-                    } catch (\Exception $exception) {
-                        $this->error($exception->getMessage());
-                    }
-                }
                 $questions->addToIndex();
             });
             $this->info("\r\nImport Questions into ElasticSearch Successfully");
@@ -197,22 +161,10 @@ class SearchImport extends Command
             if (!$answer) {
                 $this->error("Answer $id does't exist");
             }
-            try {
-                $answer->removeFromIndex();
-            } catch (\Exception $exception) {
-                $this->error($exception->getMessage());
-            }
             $answer->addToIndex();
             $this->info("Import answer $id into ElasticSearch Successfully");
         } else {
             Answer::chunk(100, function ($answers) {
-                foreach ($answers as $answer) {
-                    try {
-                        $answer->removeFromIndex();
-                    } catch (\Exception $exception) {
-                        $this->error($exception->getMessage());
-                    }
-                }
                 $answers->addToIndex();
             });
 

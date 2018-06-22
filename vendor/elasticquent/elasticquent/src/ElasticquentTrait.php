@@ -508,7 +508,7 @@ trait ElasticquentTrait
                                 'match' => [
                                     'body' => [
                                         'query' => $term,
-                                        'minimum_should_match' => '75%'
+                                        'minimum_should_match' => '50%'
                                     ]
                                 ]
                             ],
