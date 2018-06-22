@@ -61,9 +61,11 @@ class SubNodeController extends Controller
             if ($subNode->node_id <> $subNodeData['node_id']) {
                 $oldNode = Node::find($subNode->node_id);
                 $newNode = Node::find($subNodeData['node_id']);
-                $subNode->threads()->update(['node_id' => $subNodeData['node_id']]);
-                $oldNode->update(['thread_count' => $oldNode->threads()->count()]);
-                $newNode->update(['thread_count' => $newNode->threads()->count()]);
+                $subNode->threads()->update(['node_id' => $newNode->id]);
+                $oldNode->update(['thread_count' => $oldNode->threads()->visible()->count()]);
+                $oldNode->update(['reply_count' => $oldNode->replies()->where('replies.status', 0)->count()]);
+                $newNode->update(['thread_count' => $newNode->threads()->visible()->count()]);
+                $newNode->update(['reply_count' => $newNode->replies()->where('replies.status', 0)->count()]);
             }
             $subNode->update($subNodeData);
 
