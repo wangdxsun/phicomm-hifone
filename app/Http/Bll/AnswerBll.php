@@ -173,7 +173,7 @@ class AnswerBll extends BaseBll
             //通知被采纳人
             event(new AnswerWasAdoptedEvent(Auth::user(), $answer->user, $answer));
             //给被采纳人加悬赏值
-            dispatch(new RewardScore($answer->user, $answer->question->score));
+            dispatch(new RewardScore($answer->user, $answer->question->score, '回答被采纳'));
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollBack();

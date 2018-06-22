@@ -13,7 +13,7 @@ class RewardScoreHandler
         $data = [
             'userId'          => $rewardScore->user->phicomm_id,
             'score'           => $rewardScore->score,
-            'name'            => 'question_reward',
+            'name'            => $rewardScore->name,
             'serialNumber'    => $this->orderNumber($rewardScore),
         ];
 

@@ -86,7 +86,7 @@ class QuestionBll extends BaseBll
                 getClientIp()
             ));
             //永久扣除用户智慧果
-            dispatch(new RewardScore(Auth::user(), $questionData['score'] * -1));
+            dispatch(new RewardScore(Auth::user(), $questionData['score'] * -1, '悬赏提问'));
 
             if ($this->needNoAudit($question)) {
                 $this->autoAudit($question);
