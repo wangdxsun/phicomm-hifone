@@ -32,7 +32,7 @@ class AnswerBll extends BaseBll
     {
         $questions = Question::searchQuestionTitle($keyword)->load(['user', 'tags'])->paginate(15);
         foreach ($questions as $question) {
-            $question->answer = Answer::searchAnswer($keyword, $question->id)->first();
+            $question->answer = Answer::searchAnswer($keyword, $question->id)->load(['user'])->first();
         }
 
         return $questions;
