@@ -39,7 +39,7 @@ class Pusher
         if (empty($uid)) {
             return;
         }
-        $ticker = $msg_type == '0' ? 'ticker' : '';
+        $ticker = $msg_type == '0' ? array_get($data, 'title') : '';
 
         //云服务参数
         $parameters = [
