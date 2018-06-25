@@ -26,7 +26,6 @@ class Notifier
     public function batchNotify($type, User $author, $users, $object, $content = null)
     {
         foreach ($users as $user) {
-            $user = $user instanceof User ? $user : $user->user;
             dispatch((new Notify($type, $author, $user, $object))->onQueue('low'));
         }
     }

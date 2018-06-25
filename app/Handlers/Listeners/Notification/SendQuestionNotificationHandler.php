@@ -16,11 +16,11 @@ class SendQuestionNotificationHandler
     public function newQuestionNotify(Question $question)
     {
         //通知关注我的用户
-        $question->user->followers()->chunk(100, function ($followers) use ($question) {
+        $question->user->followedUsers()->chunk(100, function ($users) use ($question) {
             app('notifier')->batchNotify(
                 'followed_user_new_question',
                 $question->user,
-                $followers,
+                $users,
                 $question
             );
         });

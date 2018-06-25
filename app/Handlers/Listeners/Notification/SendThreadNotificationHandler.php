@@ -34,11 +34,11 @@ class SendThreadNotificationHandler
     protected function newThreadNotify(Thread $thread)
     {
         // Notify followed users
-        $thread->user->followers()->chunk(100, function ($followers) use ($thread) {
+        $thread->user->followedUsers()->chunk(100, function ($users) use ($thread) {
             app('notifier')->batchNotify(
                 'followed_user_new_thread',
                 $thread->user,
-                $followers,
+                $users,
                 $thread
             );
         });
