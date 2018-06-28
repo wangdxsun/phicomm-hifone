@@ -2,12 +2,14 @@
 
 namespace Hifone\Jobs;
 
-use Hifone\Jobs\Job;
+use Hifone\Exceptions\HifoneException;
+use Hifone\Models\Thread;
+use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SayHello extends Job implements ShouldQueue
+class SayHello extends Job implements ShouldQueue, SelfHandling
 {
     use InteractsWithQueue, SerializesModels;
 
@@ -31,5 +33,21 @@ class SayHello extends Job implements ShouldQueue
     public function handle()
     {
         \Log::debug('Hello '.$this->name);
+
+        $data = [
+            'author_id'     => 1824,
+            'user_id'       => 1755,
+            'body'          => 'jql test',
+            'type'          => 'followed_user_new_thread',
+        ];
+        $thread = Thread::find(2145);
+        $thread->notifications()->create($data);
+
+//        throw new HifoneException('exception');
+    }
+
+    public function failed()
+    {
+        \Log::debug('failed');
     }
 }

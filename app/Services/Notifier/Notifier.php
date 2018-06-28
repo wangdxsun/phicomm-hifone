@@ -16,8 +16,6 @@ use Hifone\Models\User;
 
 class Notifier
 {
-    protected $notifiedUsers = [];
-
     public function notify($type, User $author, User $toUser, $object)
     {
         dispatch(new Notify($type, $author, $toUser, $object));
