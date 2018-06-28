@@ -46,7 +46,7 @@ class NotifyHandler
         } elseif (in_array($notify->type, ['followed_user_new_thread', 'followed_user_new_question'])) {
             $notify->user->increment('notification_follow_count', 1);
 
-        } elseif (in_array($notify->type, [ 'question_new_answer'])) {
+        } elseif (in_array($notify->type, ['question_new_answer'])) {
             $notify->user->increment('notification_qa_count', 1);
         }
 
